@@ -1,0 +1,10 @@
+
+Options -Indexes
+
+php_flag display_errors On
+php_flag display_startup_errors Off
+php_flag html_errors On
+
+php_flag magic_quotes_gpc on
+php_flag register_globals off
+php_value session.use_trans_sid 0

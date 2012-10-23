@@ -1,0 +1,16 @@
+$Id:$
+
+In this experience the 'sink' node has network connectivity
+(tun module) with the real host. Before start the Netkit script
+you must create a tap device as normal user:
+
+realHost$ ifname=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname 192.168.77.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+

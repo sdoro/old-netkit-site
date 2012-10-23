@@ -1,0 +1,195 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: routingTable.html,v 1.16 2005/10/23 13:41:18 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - zebra routingTable</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 8</h1>
+<h2 class="center">Reti di reti</h2>
+
+
+<p>
+Per il routing IP statico useremo la tabella di progetto, dove
+ogni riga &egrave; una network e ogni colonna un router. Dal capitolo
+5 del libro &quot;Inter<code>net</code>working&quot; troviamo alcuni metodi
+per costruire le tabelle per il routing statico. Vediamo a titolo di
+esempio il metodo &quot;ad alberi d'inoltro&quot; che sono ognuno
+radicati nei router della rete.
+</p>
+
+<p>
+Lo step principale consiste nello scegliere una <code>rete</code> e per ogni coppia
+(router, <code>rete</code>) determinare il percorso che li congiunge riportandolo in tabella
+(procedendo quindi nella tabella in orizzontale).
+Nel far questo ci possiamo aiutare colorando il cammino appena scelto.
+Questo passo viene ripetuto per tutte le destinazioni (procedendo in
+verticale). Nelle prime fasi ci troveremo abbastanza liberi nelle scelte
+ma poi ci troveremo a fare delle scelte coerenti con gli alberi gi&agrave;
+determinati.
+</p>
+
+<p>
+<table border=1>
+<tr>
+  <td rowspan="2">&nbsp;Label&nbsp;</td>
+  <td rowspan="2">&nbsp;Network&nbsp;</td>
+  <td colspan="5">&nbsp;router&nbsp;</td>
+</tr>
+<tr>
+  <td>&nbsp;r1&nbsp;</td>
+  <td>&nbsp;r2&nbsp;</td>
+  <td>&nbsp;r3&nbsp;</td>
+  <td>&nbsp;r4&nbsp;</td>
+  <td>&nbsp;r5&nbsp;</td>
+</tr>
+
+<tr>
+ <td>&nbsp;A&nbsp;</td>
+ <td>&nbsp;100.1.1.0/24&nbsp;</td>
+ <td>-</td>
+ <td>r1</td>
+ <td>r2</td>
+ <td>r1</td>
+ <td>r4</td>
+</tr>
+
+<tr>
+ <td>&nbsp;B&nbsp;</td>
+ <td>&nbsp;100.1.2.0/24&nbsp;</td>
+ <td>r2</td>
+ <td>-</td>
+ <td>r2</td>
+ <td>r3</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;C&nbsp;</td>
+ <td>&nbsp;100.1.3.0/24&nbsp;</td>
+ <td>r4</td>
+ <td>r3</td>
+ <td>-</td>
+ <td>r3</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;D&nbsp;</td>
+ <td>&nbsp;100.1.4.0/24&nbsp;</td>
+ <td>r4</td>
+ <td>r3</td>
+ <td>r4</td>
+ <td>-</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;E&nbsp;</td>
+ <td>&nbsp;100.1.0.0/30&nbsp;</td>
+ <td>-</td>
+ <td>-</td>
+ <td>r2</td>
+ <td>r1</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;F&nbsp;</td>
+ <td>&nbsp;100.1.0.4/30&nbsp;</td>
+ <td>r2</td>
+ <td>-</td>
+ <td>-</td>
+ <td>r3</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;G&nbsp;</td>
+ <td>&nbsp;100.1.0.8/30&nbsp;</td>
+ <td>-</td>
+ <td>r3</td>
+ <td>-</td>
+ <td>r3</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;H&nbsp;</td>
+ <td>&nbsp;100.1.0.12/24&nbsp;</td>
+ <td>-</td>
+ <td>r1</td>
+ <td>r4</td>
+ <td>-</td>
+ <td>r4</td>
+</tr>
+
+<tr>
+ <td>&nbsp;I&nbsp;</td>
+ <td>&nbsp;100.1.0.16/30&nbsp;</td>
+ <td>r4</td>
+ <td>r3</td>
+ <td>-</td>
+ <td>-</td>
+ <td>r4</td>
+</tr>
+
+
+<tr>
+ <td>&nbsp;L&nbsp;</td>
+ <td>&nbsp;100.2.0.0/30&nbsp;</td>
+ <td>r4</td>
+ <td>r3</td>
+ <td>r4</td>
+ <td>-</td>
+ <td>-</td>
+</tr>
+
+</table>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/10/23 13:41:18 $
+</span>
+</address>
+
+
+</body>
+
+</html>

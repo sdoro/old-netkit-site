@@ -1,0 +1,17 @@
+# $Id: hosts,v 1.1 2006/10/15 11:18:51 doros Exp $
+
+127.0.0.1   localhost
+::1         ip6-localhost ip6-loopback
+fe00::0     ip6-localnet
+ff00::0     ip6-mcastprefix
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
+ff02::3     ip6-allhosts
+
+10.0.0.1     stazione1
+10.0.0.2     stazione2
+10.0.0.3     stazione3
+10.0.0.4     stazione4
+10.0.0.5     stazione5
+
+# bot

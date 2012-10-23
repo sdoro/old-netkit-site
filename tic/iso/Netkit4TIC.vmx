@@ -1,0 +1,32 @@
+# $Id: Netkit4TIC.vmx,v 1.1 2007-02-11 21:44:56 doros Exp $
+
+config.version = "8"
+virtualHW.version = "3"
+memsize = "256"
+MemAllowAutoScaleDown = "FALSE"
+
+ide0:0.present = "TRUE"
+ide0:0.fileName = "Netkit4TIC.iso"
+ide0:0.deviceType = "cdrom-image"
+ide0:0.autodetect = "TRUE"
+ide0:0.startConnected = "TRUE"
+
+floppy0.present = "FALSE"
+
+displayName = "Netkit4TIC"
+guestOS = "other26xlinux"
+nvram = "Netkit4TIC.nvram"
+
+ethernet0.present = "TRUE"
+ethernet0.addressType = "generated"
+uuid.location = "66 4d 44 38 1f f5 47 f2-5c 5e ef be 43 f8 32 49"
+uuid.bios = "66 4d 44 38 1f f5 47 f2-5c 5e ef be 43 f8 32 49"
+tools.remindInstall = "TRUE"
+ethernet0.generatedAddress = "00:0c:29:f8:32:49"
+ethernet0.generatedAddressOffset = "0"
+
+workingDir = "."
+
+tools.syncTime = "TRUE"
+
+checkpoint.vmState = "Netkit4TIC.vmss"

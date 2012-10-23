@@ -1,0 +1,3 @@
+# /etc/hosts
+# $Id: hosts,v 1.2 2006/06/30 06:42:24 doros Exp $
+127.0.0.1	localhost gateR

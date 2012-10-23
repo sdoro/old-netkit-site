@@ -1,0 +1,44 @@
+#!/bin/false
+# $NETKIT_HOME/bin/script_utils.netkit4TIC
+# $Id: script_utils.netkit4TIC,v 1.1 2006/01/12 15:30:23 doros Exp $
+
+# This script contains support definitions, functions and other shell stuff for
+# use within the other Netkit scripts. It is not intended for standalone usage.
+
+# Here we assume that the NETKIT_HOME environment variable has been properly set
+# (other scripts will take care about that).
+
+# Read Netkit configuration
+# Warning: at least one of the following files MUST exist.
+
+# set -x 
+
+[ -f "$NETKIT_HOME/netkit4TIC.conf" ] && source "$NETKIT_HOME/netkit4TIC.conf"
+
+# Check whether some environment variables override default settings
+if [ ! -z "$NETKIT_VM_TYPE" ] ; then
+  if [ "$NETKIT_VM_TYPE" == "etch" ] ; then
+    VM_KERNEL=$ETCH_KERNEL
+  else
+    if [ "$NETKIT_VM_TYPE" == "lenny" ] ; then
+      VM_KERNEL=$LENNY_KERNEL
+    else
+      if [ "$NETKIT_VM_TYPE" == "bering" ] ; then
+        VM_KERNEL=$BERING_KERNEL
+      fi
+    fi
+  fi
+fi
+
+# set VM_MODEL_FS and KERNEL_APPEND for bering vm
+if [ "$VM_KERNEL" == "$BERING_KERNEL" ] ; then
+  VM_KERNEL=$BERING_KERNEL
+  VM_MODEL_FS=$BERING_FS
+  NETKIT_VM_TYPE=bering
+  KERNEL_APPEND="initrd=$NETKIT_HOME/fs/initrd.lrp rw root=/dev/ram0 init=/linuxrc devfs=nomount boot=/dev/ubd0:minix LEAFCFG=/dev/ubd0:minix $KERNEL_APPEND"
+fi
+
+# set +x 
+
+#
+# bot

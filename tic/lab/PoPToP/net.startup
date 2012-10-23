@@ -1,0 +1,8 @@
+# $Id: net.startup,v 1.2 2007-02-03 17:21:20 doros Exp $
+ifconfig eth0 203.1.1.1
+route add default gw 203.1.1.254
+# add  ppp_async kernel module
+modprobe ppp_async
+# add mppe kernel module
+insmod -f /root/ppp_mppe.o > /tmp/insmod-warnings.txt
+dmesg | tail -n 2

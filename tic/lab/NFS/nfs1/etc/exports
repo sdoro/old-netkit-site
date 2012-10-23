@@ -1,0 +1,8 @@
+# $Id: exports,v 1.2 2009-10-04 14:06:37 doros Exp $
+#
+# zuccante example
+/staff  192.168.50.0/255.255.255.0(rw,no_root_squash,no_subtree_check)
+#
+# IBM example
+/dir1    192.168.50.0/255.255.255.0(rw,no_root_squash,no_subtree_check)
+/dir211  192.168.50.0/255.255.255.0(rw,no_root_squash,no_subtree_check)

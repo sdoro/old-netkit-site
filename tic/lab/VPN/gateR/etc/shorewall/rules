@@ -1,0 +1,20 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.6 2008-11-18 14:55:35 doros Exp $
+#
+#ACTION         SOURCE    DEST
+#
+SMTP/ACCEPT     fw        net
+SMTP/ACCEPT     loc       net 
+DNS/ACCEPT      fw        net
+SSH/ACCEPT      loc       fw   
+SSH/ACCEPT      net       fw 
+Ping/ACCEPT     loc       fw
+Ping/ACCEPT     net       fw
+Ping/ACCEPT     fw        loc
+Ping/ACCEPT     fw        net
+#
+# VPN
+Ping/ACCEPT     loc       vpn
+SSH/ACCEPT      loc       vpn
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

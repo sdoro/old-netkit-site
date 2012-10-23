@@ -1,0 +1,28 @@
+# /etc/network/interfaces -- configuration file for LEAF network
+# $Id:$
+#
+# Loopback interface.
+auto lo
+iface lo inet loopback
+#
+auto eth0
+iface eth0 inet static
+        address 88.51.209.10
+        netmask 255.255.255.224
+        broadcast 88.51.209.31
+        gateway 88.51.209.1
+#
+auto eth1
+iface eth1 inet static
+        address 10.0.1.190
+        netmask 255.255.255.0
+        broadcast 10.0.1.255
+#
+auto eth2
+iface eth2 inet static
+        address 192.168.100.190
+        netmask 255.255.255.0
+        broadcast 192.168.100.255
+        up /etc/network/myroute-eth2
+#
+# bot

@@ -1,0 +1,94 @@
+;; $Id: net.ds,v 1.3 2007-05-12 15:36:07 doros Exp $
+(begin
+;;(debug)
+(if (or
+       (contains (application_name) "(re)")
+       (matches (application_name) "^re$")
+    )
+  (begin
+      (geometry "484x69+4+190")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(ROOT)")
+        (matches (application_name) "^ROOT$")
+    )
+  (begin
+      (geometry "484x95+472+40")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(net)")
+        (matches (application_name) "^net$")
+    )
+  (begin
+      (geometry "484x95+504+67")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(fdns)")
+        (matches (application_name) "^fdns$")
+    )
+  (begin
+      (geometry "484x95+536+85")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(fw)")
+        (matches (application_name) "^fw$")
+    )
+  (begin
+      (geometry "484x69+14+352")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(srv1)")
+        (matches (application_name) "^srv1$")
+    )
+  (begin
+      (geometry "484x160+224+304")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(srv2)")
+        (matches (application_name) "^srv2$")
+    )
+  (begin
+      (geometry "484x160+520+276")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(ri)")
+        (matches (application_name) "^ri$")
+    )
+  (begin
+      (geometry "484x69+224+508")
+      (set_workspace 2)
+    )
+  )
+
+(if (or
+        (contains (application_name) "(SSOserver)")
+        (matches (application_name) "^SSOserver$")
+    )
+  (begin
+      (geometry "484x121+536+596")
+      (set_workspace 2)
+    )
+  )
+
+)

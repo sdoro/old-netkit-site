@@ -1,0 +1,6 @@
+1712ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿³ 1a>>>   1e           KNOPPIX V6.0.1 CHEATCODES (F1 for main page)           1a<<<12 ³ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ17
+1bThe KNOPPIX autoconfiguration scripts accept the following 17
+1boot options, which can be combined:17
+70ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿³knoppix lang=us                                        Set keyboard/language  ³³knoppix desktop=lxde                                   Chose desktop if avail.³³knoppix screen=1280x1024 depth=24        Use given resolution for graphics    ³³knoppix tohd=/dev/hda1                   Copy to harddisk                     ³³fb1280x1024 | fb1024x768 | fb800x600     Use framebuffer graphics (notebooks) ³³knoppix acpi=off nolapic hpet=off nodma  "Cheats", can solve problems         ³³knoppix vsync=85 hsync=78                85Hz vert. / 78kHz horiz. monitor res³³knoppix 2                                Runlevel 2, textmode only            ³³knoppix no{scsi|pcmcia|usb|agp|swap|apm|apic|mce|ddc} turn off HW-detection   ³ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ12 
+1bMore information can be found inside directory "KNOPPIX".1f
+

@@ -1,0 +1,5 @@
+# /etc/krb5kdc/kadm5.acl
+# $Id: kadm5.acl,v 1.1 2005/09/01 20:03:05 doros Exp $
+kadmin/admin@ISTITUTO.IT       *
+krbadm@ISTITUTO.IT             *
+*/*@ISTITUTO.IT                i

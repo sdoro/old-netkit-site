@@ -1,0 +1,155 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: LTSP.html,v 1.11 2004/05/23 17:03:37 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - samba</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 7</h1>
+<h2 class="center">Sistemi operativi di rete</h2>
+<h3>Linux Terminal Server Project (LTSP)</h3>
+
+
+<p>
+<a href="http://www.ltsp.org/" title="link esterno">LTSP</a>
+fornisce un metodo per organizzare una rete con macchine
+relativamente a basso costo, in modalit&agrave; grafica
+o in modalit&agrave; testo, utilizzando un server centrale
+GNU/Linux (consiglio una lettura sul modello
+<a href="http://www.thinclient.net/technology/history-short.htm" title="">thin-client</a>).<br>
+&Egrave; notevole il risparmio di risorse che una tale
+configurazione pu&ograve; dare: ad esempio una quarantina
+di macchine con browser e OpenOffice aperto possono essere
+tranquillamente gestire da un bi-processore Pentium3 a 650GHz
+e 1 GB di RAM. Per una dimensione pi&ugrave; elevata rimando alla lettura
+<a href="http://www.thelearningmachine.co.uk/thelearningmachine/hull.html" title="link esterno">City Learning Centre</a>
+dove per servire circa 120 thin client bastano sei server con
+processore Athlon 1800 con 1.5GB di RAM e 60GB di hard disk ciascuno.
+</p>
+
+<p>
+Le singole macchine non necessitano di disco fisso
+poich&egrave; fanno il boot utilizzando un floppy o nel caso
+la scheda di rete abbia una eeprom utilizzano il suo contenuto.
+Nel passo successivo alla inizializzazione della scheda di rete
+avviene la richiesta al server locale DHCP di un indirizzo
+IP assegnato attraverso il MAC della scheda stessa. In seguito
+attraverso il protocollo tftp (trivial ftp) viene richiesto il
+download del kernel appropriato per la stazione e quindi il boot
+dello stesso. Come ultima macrofase c'&egrave; il montaggio
+del filesystem attraverso NFS.</p>
+
+<p>
+Il software da installare per la sola versione &quot;text&quot;
+pu&ograve; essere scaricato da
+<a href="http://termserv.berlios.de/" title="link esterno">LTSP</a>
+e consiste nei due pacchetti:
+</p>
+
+<ul>
+  <li>ltsp-core-i386_3.0.7-3_all.deb</li>
+  <li>ltsp-kernel-2.4.22-i386_3.0.12-0_all.deb</li>
+</ul>
+
+<p>
+Per quanto riguarda invece le funzionalit&agrave; di base (se non
+gi&agrave; installati):
+</p>
+
+<ul>
+  <li>nfs-user-server_2.2beta47-12_i386.deb</li>
+  <li>tftpd_0.17-9_i386.deb</li>
+</ul>
+
+<p>
+Per la configurazione del server:
+</p>
+
+<ul>
+  <li><a href="../lab/LTSP/dhcpd.conf"
+  title="file di configurazione">/etc/dhcpd.conf</a>
+  : in questo file per ogni MAC si associano: un indirizzo
+  IP, un nome host, l'indirizzo IP del server, il default
+  gateway, il nome del kernel da caricare e la directory da
+  montare;</li>
+  
+  <li><a href="../lab/LTSP/hosts"
+  title="file di configurazione">/etc/hosts</a>
+  : serve per la risoluzione dei nomi in IP (DNS);
+  </li>
+
+  <li>
+  <a href="../lab/LTSP/lts.conf"
+  title="file di configurazione">/opt/ltsp/i386/etc/lts.conf</a> 
+  : in questo file ci sono le configurazioni di tutte le stazioni
+  a livello di X, tipo di mouse, area di swap, applicazioni
+  locali, run level e altro.
+  </li>
+</ul>
+
+<p>
+Per la configurazione delle stazioni occorre
+prima descrivere
+i primi passi del funzionamento dei pc al momento dell'accensione. In
+tale momento quando il bios cerca le eventuali rom di espansione
+controlla se sono contenute nella eeprom della scheda
+di rete. Se vi &egrave; caricato del codice
+<a href="http://etherboot.org/" title="link esterno">Etherboot</a>,
+viene eseguito e i primi due passi sono la ricerca della
+scheda di rete e in caso positivo viene fatta una richiesta DHCP
+sulla rete locale.<br>
+Etherboot &egrave; un software per la creazione di immagini ROM
+che sono in grado di fare download di codice dalla rete per poi
+essere eseguito su archittetture pc x86.
+</p>
+
+<p>
+Per il nostro caso useremo il supporto offerto da
+<a href="http://www.rom-o-matic.net/"
+title="link esterno">www.Rom-O-Matic.net</a> che con
+una semplice interfaccia web ci permette di scaricare un file
+Etherboot specifico per la scheda di rete selezionata. In seguito
+con un semplice comando possiamo costruirci un floppy che al
+momento dell'accensione eseguir&agrave; proprio gli stessi passi descritti in precedenza.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/05/23 17:03:37 $
+</span>
+</address>
+
+
+</body>
+
+</html>

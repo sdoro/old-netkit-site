@@ -1,0 +1,4 @@
+# /etc/host
+# $Id: hosts,v 1.1 2003/08/28 17:10:32 doros Exp $
+
+127.0.0.1         localhost

@@ -1,0 +1,7 @@
+#
+# /etc/shorewall/tunnels
+# $Id: tunnels,v 1.2 2006/06/30 06:48:06 doros Exp $
+#
+# TYPE			ZONE	GATEWAY		GATEWAY ZONE
+ipsec			net	212.1.1.1
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

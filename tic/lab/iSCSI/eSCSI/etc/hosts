@@ -1,0 +1,8 @@
+#
+# /etc/hosts
+# $Id: hosts,v 1.1 2008-09-21 19:54:23 doros Exp $
+
+127.0.0.1     localhost eSCSI
+
+#
+# bot

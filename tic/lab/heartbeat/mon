@@ -1,0 +1,158 @@
+#!/bin/sh -e
+
+# $Id: mon,v 1.2 2005/10/17 15:45:10 doros Exp $
+# /etc/init.d/mon
+
+# These specify the user and group that mon runs as.  You can use group
+# daemon instead of group shadow if you want to limit its permissions,
+# but then it won't be able to authenticate users against the shadow
+# password file.
+
+user=root
+group=shadow
+
+# Don't let group shadow write to my files.
+
+umask 22
+
+# This specifies mon's configuration file.  If this file name ends with
+# .m4 it's preprocssed with m4.  The shell code after the assignment
+# causes this script to use a .m4 version if it exists.
+
+cfg=/etc/mon/mon.cf
+[ -f $cfg.m4 ] && cfg=$cfg.m4
+
+cp /root/disabled /var/state/mon/disabled
+chown daemon /var/state/mon/disabled
+
+# These are the args which are passed to mon.  -f tells it to fork and
+# run as a daemon, -c just makes use of the config file setting from
+# above (notably, so that a .m4 version is picked up).
+
+args="-f -l -c $cfg"
+
+# You're less likely to need to change any of the others.
+
+script=`basename "$0"`
+daemon=/usr/sbin/mon
+pid=/var/run/mon/mon.pid
+desc='monitor daemon'
+name=mon
+
+# Add system dirs for start-stop-daemon.
+PATH=$PATH:/sbin:/usr/sbin
+
+[ -f $daemon -a -f $cfg ] || exit 0
+
+# Don't bother if the user hasn't configured the package, there is no
+# default configuration but there is a default config file (which just
+# contains comments).
+
+egrep -v '^[ 	]*$|^#' $cfg >/dev/null || exit 0
+
+warn() {
+    echo "$script:" "$@" >&2
+}
+
+die() {
+    warn "$@"
+    exit 1
+}
+
+usage() {
+    [ $# = 0 ] || warn "$@"
+    warn "usage: \`$script <action>'"
+    warn "valid actions: start stop restart reload force-reload"
+    exit 1
+}
+
+# I originally used su to start the daemon as user daemon, but ran into
+# trouble with the differing requirements of su and secure-su.  The GNU
+# getopt's troublsome behavior of looking for switches anywhere on the
+# command line requires that one use -- if one wants to pass switches
+# to the shell, but secure-su doesn't allow the --.  One could set
+# POSIXLY_CORRECT to prevent this poor getopt_long() behavior, but then
+# the sub-command would have that in its environment.  In disgust I
+# gave up and switched to using Perl.
+
+daemon_run() {
+    perl -we '
+    	$user = shift;
+	$group = shift;
+    	defined($uid = getpwnam $user)
+	    or die "Cannot find uid for user $user\n";
+	defined($gid = getgrnam $group)
+	    or die "Cannot find gid for group $group\n";
+	$( = $gid;
+    	$) = "$gid $gid";
+	if ($( ne "$gid $gid" || $) ne "$gid $gid") {
+	    die "Error setting group ids, real/effective is now $(/$)\n";
+	}
+	$< = $uid;
+	$> = $uid;
+	if ($> != $uid || $< != $uid) {
+	    die "Error setting user ids, real/effective is now $</$>\n";
+	}
+	exec @ARGV or die "Error running $ARGV[0]: $!\n";
+    ' "$user" "$group" "$@" ||
+	die "return $? setting ids and running:" "$@"
+}
+
+[ $# = 1 ] || usage "wrong number of args (got $# expected 1), args are:" "$@"
+
+action=$1
+set -- --pidfile $pid --startas $daemon -- $args
+
+stop_mon() {
+    running_mon_pid=`cat $pid 2>/dev/null` || true
+    daemon_is_running() {
+	[ -f $pid -a /proc/"$running_mon_pid"/exe -ef /usr/bin/perl ]
+    }
+
+    start-stop-daemon --stop --oknodo --quiet "$@"
+    daemon_is_running || return 0
+    sleep 1
+    daemon_is_running || return 0
+
+    # Wait for the daemon to exit before continuing, so that a subsequent
+    # start doesn't fail if it happens too soon.
+
+    echo -n " [waiting for mon (pid $running_mon_pid) to exit..."
+    n=0
+    while daemon_is_running
+    do
+	n=`expr $n + 1`
+	[ $n = 60 ] && die "giving up, mon still hasn't exited"
+	echo -n .
+	sleep 1
+    done
+    echo -n "]"
+}
+
+case x-$action in
+    x-start)
+	echo -n "Starting $desc: $name"
+	daemon_run start-stop-daemon --start "$@"
+	echo .
+	;;
+    x-stop)
+	echo -n "Stopping $desc: $name"
+	stop_mon "$@"
+	echo .
+	;;
+    x-restart)
+    	echo -n "Restarting $desc: $name"
+	stop_mon "$@"
+	daemon_run start-stop-daemon --start "$@"
+	echo .
+	;;
+    x-reload | x-force-reload)
+	echo "Reloading $desc configuration files."
+	start-stop-daemon --stop --signal 1 "$@"
+	;;
+    *)
+    	usage "invalid action \`$action'"
+	;;
+esac
+
+exit 0

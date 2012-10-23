@@ -1,0 +1,27 @@
+; $Id: 10.10.10.in-addr.arpa.zone,v 1.3 2004/04/12 22:25:09 doros Exp $
+;
+; ##############################################################
+; Start of Authority (Inverse Address Arpa) for 10.10.10.0/28
+; ##############################################################
+@ 604800 IN SOA ns1.tic.fdns.net. ns1.tic.fdns.net. (
+     2003052104 ; serial
+     10800 ; refresh (3 hour)
+     3600 ; retry (1 hour)
+     604800 ; expire (7 days)
+     86400 ) ; minimum (1 day)
+
+; ##############################################################
+; Specify Name Servers for all Reverse Lookups (IN-ADDR.ARPA)
+; ##############################################################
+@   604800      IN NS  ns1.tic.fdns.net.
+@   604800      IN NS  ns2.tic.fdns.net.
+
+; ##############################################################
+; Inverse Address Arpa Records (PTR's)
+; ##############################################################
+65     86400   IN PTR  srv1.tic.fdns.net.
+66     86400   IN PTR  srv2.tic.fdns.net.
+67     86400   IN PTR  fw.tic.fdns.net.
+78     86400   IN PTR  ri.tic.fdns.net.
+61     86400   IN PTR  pf1.tic.fdns.net.
+1      86400   IN PTR  SSO-server.tic.fdns.net.

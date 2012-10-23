@@ -1,0 +1,31 @@
+; /etc/bind/db.istituto
+; $Id: db.istituto,v 1.2 2005/12/22 06:54:11 doros Exp $
+;
+$TTL   60000
+@               IN  SOA     istituto.it.    root.istituto.it. (
+                        2004102804 ; serial
+                             28800 ; refresh
+                             14400 ; retry
+                           3600000 ; expire
+                                 0 ; default_ttl
+                        )
+
+@               IN  NS      ns.istituto.it.
+
+; Real IP
+ROOT-SERVER.    IN  A  192.168.50.1
+ns              IN  A  192.168.50.1
+
+ldap            IN  A  192.168.50.1
+CLNT            IN  A  192.168.50.11
+Core            IN  A  192.168.50.101
+Home            IN  A  192.168.50.102
+
+dualSamba       IN  CNAME Core
+;dualSamba       IN  CNAME Home
+
+sambaCore       IN  CNAME core
+sambaHome       IN  CNAME home
+
+;
+;; bot

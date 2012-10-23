@@ -1,0 +1,10 @@
+ifconfig eth0 192.168.77.2 up
+# configure IP address
+ifconfig eth1 10.10.10.77 \
+    netmask 255.255.255.240 broadcast 10.10.10.79 up
+ifconfig eth1 hw ether 00:00:00:00:00:77
+route add default gw 10.10.10.78
+/etc/init.d/cron start
+/etc/init.d/squid start
+/etc/init.d/dansguardian start
+/etc/init.d/apache start

@@ -1,0 +1,13 @@
+# $Id: geoBlog.startup,v 1.1 2008-08-27 21:39:21 doros Exp $
+# setup IP address
+ifconfig eth0 192.168.77.2
+route add default gw 192.168.77.1
+#
+/etc/init.d/mysql start
+mysql < /root/db.sql
+mysql -D urban < /root/urban.sql
+mysql -D geoblog_admin < /root/geoblog_admin.sql
+#
+ln -s /var/www/gb/spec_cons.php /var/www/gb/index.php
+/etc/init.d/apache2 start
+# bot

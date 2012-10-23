@@ -1,0 +1,57 @@
+# $Id: school.ldif,v 1.5 2009-10-25 21:05:22 doros Exp $
+
+dn: automountMapName=/net,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net
+
+dn: cn=headquarters,automountMapName=/net,dc=istituto,dc=it
+objectClass: automount
+automountKey: headquarters
+cn: headquarters
+automountInformation: -fstype=autofs ldap://ldap.istituto.it/automountMapName=/net/headquarters, dc=istituto,dc=it
+
+dn: cn=branch,automountMapName=/net,dc=istituto,dc=it
+objectClass: automount
+automountKey: branch
+cn: branch
+automountInformation: -fstype=autofs ldap://ldap.istituto.it/automountMapName=/net/branch,dc=istituto,dc=it
+
+dn: automountMapName=/net/headquarters,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/headquarters
+
+dn: automountMapName=/net/branch,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/branch
+
+dn: cn=staff,automountMapName=/net/headquarters,dc=istituto,dc=it
+objectClass: automount
+automountKey: staff
+cn: staff
+automountInformation: -fstype=nfs nfs1.istituto.it:/staff
+description: /net/headquarters/staff home directories
+
+dn: cn=student,automountMapName=/net/headquarters,dc=istituto,dc=it
+objectClass: automount
+automountKey: student
+cn: student
+automountInformation: -fstype=nfs nfs2.istituto.it:/student
+description: /net/headquarters/student home directories
+
+dn: cn=staff,automountMapName=/net/branch,dc=istituto,dc=it
+objectClass: automount
+automountKey: staff
+cn: staff
+automountInformation: -fstype=nfs nfs3.istituto.it:/staff
+description: /net/branch/staff home directories
+
+dn: cn=student,automountMapName=/net/branch,dc=istituto,dc=it
+objectClass: automount
+automountKey: student
+cn: student
+automountInformation: -fstype=nfs nfs4.istituto.it:/student
+description: /net/branch/student home directories
+

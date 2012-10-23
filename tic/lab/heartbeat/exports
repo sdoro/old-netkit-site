@@ -1,0 +1,4 @@
+# /etc/exports
+# $Id: exports,v 1.1 2005/08/15 19:13:47 doros Exp $
+
+/nfs  193.206.185.0/255.255.255.0(rw,no_root_squash)

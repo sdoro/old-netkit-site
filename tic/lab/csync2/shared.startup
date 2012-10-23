@@ -1,0 +1,39 @@
+#!/bin/sh
+# $Id: shared.startup,v 1.1 2008-01-04 16:20:35 doros Exp $
+
+# install missing packages
+DEBIAN_FRONTEND=noninteractive && \
+dpkg -i /hostlab/debian/csync2_1.30-1_i386.deb \
+        /hostlab/debian/librsync1_0.9.7-1_i386.deb \
+        /hostlab/debian/libsqlite0_2.8.16-1_i386.deb
+# configure csync2
+cp /etc/csync2.conf /etc/csync2.cfg
+# setup xinetd
+cat /etc/services.xinetd >> /etc/services
+/etc/init.d/xinetd restart
+# setup csync2
+openssl genrsa \
+  -out /etc/csync2_ssl_key.pem 1024
+        (sleep 2; echo ""; 
+         sleep 2; echo ""; 
+         sleep 2; echo ""; 
+         sleep 2; echo ""; 
+         sleep 2; echo ""; 
+         sleep 2; echo "admin";
+         sleep 2; echo "admin@istituto.it";
+         sleep 2; echo ""; 
+         sleep 2; echo "") | \
+openssl req -new \
+  -key /etc/csync2_ssl_key.pem \
+  -out /etc/csync2_ssl_cert.csr
+openssl x509 -req -days 600 \
+  -in       /etc/csync2_ssl_cert.csr \
+  -signkey  /etc/csync2_ssl_key.pem \
+  -out      /etc/csync2_ssl_cert.pem
+chmod go= /etc/csync2_ssl_key.pem
+rm /etc/csync2_ssl_cert.csr
+# csync2 stuf
+mkdir -p /var/backups/csync2
+
+#
+# bot

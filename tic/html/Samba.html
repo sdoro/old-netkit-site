@@ -1,0 +1,112 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: Samba.html,v 1.21 2006/02/14 16:05:08 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - samba</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="LDAP.html">
+  <link rel="Next" title="Next" href="module10.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 9</h1>
+<h2 class="center">Amministrazione e gestione di una rete</h2>
+<h3>Samba</h3>
+
+<p>
+	Un host con Samba installato pu&ograve; mascherarsi come server di
+	una rete M$ offrendo i seguenti servizi:
+</p>
+
+    <ul>
+	  <li>condivisione di filesystem</li>
+	  <li>condivisione di stampanti</li>
+	  <li>dare supporto a Risorse di Rete</li>
+	  <li>autenticazione dei client ad un dominio</li>
+	  <li>risoluzione dei nomi WINS</li>
+	</ul>
+
+<p>
+	La documentazione &egrave; disponibile presso la 
+	<a href="http://www.samba.org/" title="link esterno">home page</a> dove
+	&egrave; possibile anche consultare il libro 
+	<a href="http://www.oreilly.com/catalog/samba/" title="link esterno">Using Samba</a>
+	tradotto in italiano dalla
+	<a href="http://www.hopslibri.it/samba/root.html" title="link esterno">hopslibri</a>
+	che ne permette il download.<br>
+	
+	Le caratteristiche pi&ugrave; importanti della release 3.0:
+</p>
+
+	<ul>
+	  <li>Supporto di Active Directory: Samba 3.0 &egrave; in grado
+	  di unirsi ad ADS come server membro e autentica utenti
+	  usando LDAP/Kerberos.</li>
+	  <li>Miglioramento del supporto delle stampa in Windows 2000/XP/2003
+	  incluso attributi di stampa presenti in active directory.</li>
+	  <li>Supporto di caratteri UNICODE</li>
+	</ul>
+
+<p>
+	Un test fatto da
+	<a href="http://www.itweek.co.uk/" title="link esterno">ITWEEK</a>
+	mostra che una macchina Samba3 server senza configurazioni particolari
+	supera la stessa macchina con Windows 2003 server senza configurazioni
+	particolari di un fattore 2.5. Leggi 
+	<a href="http://www.itweek.co.uk/News/1144312" title="">l'articolo</a>
+	e controlla i
+	<a href="http://www.itweek.co.uk/ITWeek/itw_graph_1144289.jsp" title="">grafici</a>.
+</p>
+	
+<p>
+	Nel laboratorio virtuale abbiamo cercato di
+	<a href="uml-Samba.html" title="esperienza Netkit4TIC">sperimentare</a>
+	alcune funzionalit&agrave; della suite di Samba a partire da una seplice
+	rete di due pc che usano la stessa 
+	configurazione mostrata nei materiali del MIUR
+	per finire con due reti fisiche
+	su cui &egrave; definito lo stesso workgroup.
+</p>
+
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/02/14 16:05:08 $
+</span>
+</address>
+
+
+
+
+</body>
+
+</html>

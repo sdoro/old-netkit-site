@@ -1,0 +1,15 @@
+# $Id: boot-server.startup,v 1.2 2006/08/31 14:54:03 doros Exp $
+
+ifconfig eth0 192.168.77.2
+route add default gw 192.168.77.1
+# install a PXE capable tftp server
+export DEBIAN_FRONTEND=noninteractive
+dpkg -P tftpd
+dpkg --no-force-overwrite -i /hostwd/tftpd-hpa_0.40-4.1_i386.deb
+# change startup options and restart
+mv /etc/default/tftpd-hpa2 /etc/default/tftpd-hpa
+/etc/init.d/tftpd-hpa restart
+# install PXEinstall.tgz
+tar zxf /hostwd/pxeinstall.tgz -C /tftpboot
+# start dhcpd
+/etc/init.d/dhcp3-server start

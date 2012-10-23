@@ -1,0 +1,41 @@
+$Id: README,v 1.4 2008-01-13 12:49:10 doros Exp $
+
+We modified the splash.lss file so that we have a Matrix logo
+in place of the Knoppix graphic.
+
+The graphic is in a somewhat odd format, called LSS16. As the name
+indicates, it is limited to 16 colors. To edit the graphic, first
+convert it to a PPM:
+
+    lss16toppm < splash.lss > splash.ppm
+
+(Adding -map flag it output the color map to standard error).
+Next, edit the file using The Gimp. Save the resulting file as an
+indexed gif with no more than 14 colors (plus black and white, for a
+total of 16). Then, convert the file to a pnm/ppm:
+
+    giftopnm < splash.gif > splash.ppm
+
+To actually convert the ppm to a n lss, use this command:
+
+    ppmtolss16 < splash.ppm > splash.lss
+
+
+A also good link:
+
+http://sweb.cz/Frantisek.Rysanek/splash/isolinux-splash-HOWTO.html
+
+
+
+Also:
+pngtopnm < file.png | \
+  ppmquant 16 | \
+  ppmtolss16 "#ffffff=7" "#000000=15" > file.lss
+
+or:
+giftopnm < file.gif | \
+  ppmquant 16 | \
+  ppmtolss16 "#ffffff=7" "#000000=15" > file.lss
+
+
+

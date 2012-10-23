@@ -1,0 +1,9 @@
+# /etc/hosts.allow: list of hosts that are allowed to access the system.  See
+#		    hosts_access(5) and /usr/doc/net/portmapper.txt
+#
+# Example:    ALL: LOCAL @some_netgroup
+#             ALL: .foobar.edu EXCEPT terminalserver.foobar.edu
+#
+# Allow anything from the local net
+ALL: 192.168.0.0/255.255.255.0
+ 

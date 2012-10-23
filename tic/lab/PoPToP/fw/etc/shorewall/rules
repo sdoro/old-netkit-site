@@ -1,0 +1,18 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.3 2007-02-20 15:17:49 doros Exp $
+#
+#ACTION         SOURCE    DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+#	Accept DNS connections from the firewall to the network
+#
+DNS/ACCEPT      fw        net
+SSH/ACCEPT      loc       fw
+#
+#	Allow Ping To And From Firewall
+#
+Ping/ACCEPT     loc       fw
+Ping/ACCEPT     net       fw
+Ping/ACCEPT     fw        loc
+Ping/ACCEPT     fw        net
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

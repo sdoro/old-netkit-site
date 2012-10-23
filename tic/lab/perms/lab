@@ -1,0 +1,155 @@
+#!/bin/sh
+# $Id: lab,v 1.3 2005/10/19 12:45:58 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 2
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    vstart vHost --mem=64 $X
+    waitfinish vHost
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started *** "
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash vHost
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ "$1" = "clean" ]; then
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+    # and it is NEVER executed by in the host environment
+    #
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+
+    vHost)
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        echo 'export SCRIPTDIR='$SCRIPTDIR >> /etc/profile
+        # create groups
+        groupadd teachers
+        groupadd students
+        # create users
+        useradd -m david -g teachers
+        useradd -m joe.bloggs -g students
+        useradd -m doug.envy -g students
+        # set password
+        (sleep 1; echo "not24get"; sleep 1; echo "not24get") | passwd david 
+        (sleep 1; echo "not24get"; sleep 1; echo "not24get") | passwd joe.bloggs
+        (sleep 1; echo "not24get"; sleep 1; echo "not24get") | passwd doug.envy
+        # make directory structure
+        chmod u=rwx,g=,o=x /home/david
+        touch /home/david/phone.book
+        chown david:teachers /home/david/phone.book
+        chmod u=rwx,go= /home/david/phone.book
+
+        mkdir /home/david/85321
+        chown david:teachers /home/david/85321
+        chmod u=rwx,g=,o=rx /home/david/85321
+        touch /home/david/85321/assign.txt
+        chown david:teachers /home/david/85321/assign.txt
+        chmod u=rwx,g=,o=r /home/david/85321/assign.txt
+        echo "good luck!" > /home/david/85321/assign.txt
+
+        mkdir /home/david/85321/students
+        chmod u=rwx,go=,o=wx /home/david/85321/students
+        chown david:teachers /home/david/85321/students
+        touch /home/david/85321/students/joe.bloggs
+        chown joe.bloggs:students /home/david/85321/students/joe.bloggs
+
+        mkdir /home/david/85321/solutions
+        chown david:teachers /home/david/85321/solutions
+        chmod u=rwx,go= /home/david/85321/solutions
+        touch /home/david/85321/solutions/assign.sol
+        chown david:teachers /home/david/85321/solutions/assign.sol
+        chmod a=rwx /home/david/85321/solutions/assign.sol
+
+        notifyfinish vHost
+        ;;
+
+
+    #
+    #
+    ################################################# end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

@@ -1,0 +1,3 @@
+# $Id: apache2,v 1.2 2006/01/25 17:05:09 doros Exp $
+# 0 = start on boot; 1 = don't start on boot
+NO_START=0

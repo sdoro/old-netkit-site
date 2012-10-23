@@ -1,0 +1,77 @@
+#!/bin/sh
+# $Id: netkit-phase2-ub,v 1.1 2006/06/27 20:03:05 doros Exp $
+
+RCDLINKS="0,K10 2,S99 3,S99 4,S99 5,S99 6,K10"
+
+case "$1" in
+  start)
+      echo
+      echo "--- Starting Netkit phase 2 startup script"
+
+      V_COMMAND=`cat /proc/cmdline | awk -v FS== -v RS=' ' '($1=="exec") {print "export COMMAND=" $2}'`
+      V_TEST=`cat /proc/cmdline | awk -v FS== -v RS=' ' '($1=="test") {print "export TEST=" $1}'`
+      V_HOSTNAME=`cat /proc/cmdline | awk -v FS== -v RS=' ' '($1=="name") {print "export HOSTNAME=" $2}'`
+
+      eval "$V_COMMAND"
+      eval "$V_TEST"
+      eval "$V_HOSTNAME"
+
+      if [ -f /hostlab/shared.startup ]; then
+          echo
+          echo "Starting shared startup script ..."
+          /bin/sh -c '. /hostlab/shared.startup'
+      fi
+
+      if [ -f /hostlab/$HOSTNAME.startup ]; then
+            echo
+            echo "Starting $HOSTNAME specific startup script ..."
+            /bin/sh -c '. /hostlab/$HOSTNAME.startup'
+      fi
+
+      if [ -x "$COMMAND" ]; then
+          echo
+          echo "Executing: $COMMAND ..."
+          $COMMAND
+      fi
+
+      echo
+      echo "Virtual host $HOSTNAME ready."
+      [ -d /hostwd ] && touch /hostwd/$HOSTNAME.ready
+
+      if [ ! -z "$TEST" ]; then
+          echo
+          echo "Executing test...."
+          /etc/init.d/netkit-test-phase
+      fi
+
+      echo
+      echo "--- Netkit phase 2 init script terminated"
+      ;;
+
+  stop)
+      echo "--- Starting Netkit phase 2 shutdown script"
+
+      if [ -f /hostlab/$HOSTNAME.shutdown ]; then
+          echo
+          echo "Starting $HOSTNAME specific shutdown script ..."
+          /bin/sh -c '. /hostlab/$HOSTNAME.shutdown'
+      fi
+
+      if [ -f /hostlab/shared.shutdown ]; then
+          echo
+          echo "Starting shared shutdown script ..."
+          /bin/sh -c '. /hostlab/shared.shutdown'
+      fi
+
+
+      echo
+      echo "--- Netkit phase 2 shutdown script terminated"
+      ;;
+
+
+  *)
+      echo "Usage: $0 {start|stop}"
+      exit 1
+    ;;
+
+esac

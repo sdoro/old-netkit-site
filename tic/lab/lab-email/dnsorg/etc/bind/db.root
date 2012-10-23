@@ -1,0 +1,6 @@
+; $Id: db.root,v 1.1 2005-01-14 22:52:18 doros Exp $
+
+$TTL   60000
+.                   IN  NS    ROOT-SERVER.
+ROOT-SERVER.        IN  A     192.168.0.5
+

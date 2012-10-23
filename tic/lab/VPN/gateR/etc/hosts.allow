@@ -1,0 +1,2 @@
+# Allow anything from the local net
+ALL: 10.10.0.0/255.255.0.0

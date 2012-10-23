@@ -1,0 +1,123 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: netusage.html,v 1.14 2005/11/01 15:51:34 doros Exp $ -->
+
+
+<head>
+  <title>Monitoraggio uso della rete</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Next" title="Next" href="squid.html">
+</head>
+
+<body>
+
+
+<h3>Raccolta dati per la rete</h3>
+
+<p>
+Per la raccolta dei dati di funzionamento della rete
+ho utilizzato software libero (Open Source).
+Per la realizzazione del monitoraggio mi sono ispirato alla
+documentazione in materia che ho trovato in Internet. Due letture
+interessanti da leggere sull'argomento:
+</p>
+<ul>
+  <li><a href="http://www-zeuthen.desy.de/~schoene/unter_texte/texte/network_sknabe.pdf"
+         title="link esterno">Network-Monitoring using ntop and SNMP</a></li>
+  <li><a href="http://www.mitre.org/work/tech_papers/tech_papers_01/mills_pointsolution/mills_pointsolution.pdf"
+         title="link esterno">Point Solutions in an Enterprise Management
+World: The Network Management Appliance</a></li>
+</ul>
+<p>
+&Egrave; interessante notare come la soluzione Open Source sia energicamente
+sostenuta in entrambe gli articoli ed &egrave; doveroso sottolineare
+che l'ambiente in cui viene realizzato il monitoraggio sia la
+U.S. Army V Corps.
+</p>
+
+<p>
+Seguendo quanto sopra esposto abbiamo installato il seguente software:
+</p>
+
+<ul>
+  <li><a href="http://www.net-snmp.org/"
+         title="link esterno">ucd-snmp</a><br>
+      Normalmente i router di fascia alta hanno capacit&agrave; SNMP
+      che vuol dire che hanno configurato un agent SNMP per rispondere
+      alle richieste di informazioni di una stazione remota.</li>
+  <li><a href="http://people.ee.ethz.ch/~oetiker/webtools/mrtg/"
+         title="link esterno">mrtg</a><br>
+      Questo software &egrave;
+      particolarmente indicato per disegnare il traffico da uno o
+      pi&ugrave; router. Attraverso regolari richieste SNMP vengono
+      raccolte le informazioni sul funzionamento dei sistemi remoti
+      e in seguito costruisce dei grafici per rappresentare l'andamento
+      delle quantit&agrave; da tenere sotto controllo.
+      Nel nostro
+      caso la stazione remota chiede informazioni solo a scopo
+      statistico (monitoraggio) e costruisce il seguente
+      <a href="/tic/mrtg/mrtg-routers.html"
+         title="statistiche MRTG">grafico</a>. In seguito
+      selezionando lo stesso grafico si ottengono l'andamento
+      nella settimana, nel mese e nell'anno.</li>
+  <li><a href="http://www.ntop.org/"
+         title="link esterno">ntop</a><br>
+      &Egrave; un tool per il monitoraggio di reti. Colleziona le
+      informazioni della rete in un database monitorando i protocolli
+      usati e quali host li usano. Mette a disposizione una
+      interfaccia Web
+      attraverso la quale si possono fare investigazioni
+      sull'uso della rete. Per accedervi occorre avere una autorizzazione
+      e quindi una password; successivamente seleziona
+      <a href="/ntop/" title="">ntop</a>.</li>
+  <li><a href="http://people.ee.ethz.ch/~oetiker/webtools/rddtool/" 
+         title="link esterno">RRDtool</a><br>
+      Il Round Robin Database Tool &egrave; 
+      sia un piccolo database che un tool grafico per alcune tipologie
+      di dati. &Egrave; pi&ugrave; flessibile di MRTG e quindi pi&ugrave;
+      complesso. Ntop raccoglie il monitoraggio della rete in un
+      database rrd e quindi possiamo richiedere la visualizzazione ad
+      Ntop stesso attivando la sequenza di menu Stats-&gt;Traffic e
+      in seguito l'icona associata a &quot;RRD Stats&quot;
+      oppure da questa pagina selezionando
+      <a href="/rdd/index.html"
+         title="statistiche rrdtool">grafici rrdtool</a>.</li>
+</ul>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/11/01 15:51:34 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

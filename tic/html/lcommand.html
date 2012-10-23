@@ -1,0 +1,88 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: lcommand.html,v 1.1 2006/09/29 16:10:36 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - Netkit scripting</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Netkit l-command scripting</h2>
+
+
+<p>
+Lo script di tipo l-command per la costruzione di una esperienza virtuale
+&egrave; uno source shell che segue un prefissato template
+la cui sintassi &egrave; dettagliata in <code>man lstart</code>.
+&Egrave; una lista di assegnamenti del tipo vm[arg]=value dove:
+<ul>
+  <li>se arg &egrave; un intero rappresenta il numero corrispondente
+      ad eth<span class="yellow">arg</span> e value &egrave; il nome
+      del dominio di collisione.
+  </li>
+  <li>se arg &egrave; una stringa questa deve essere il nome
+      di un parametro legale del comando vstart.
+  </li>
+</ul>
+</p>
+
+<pre>
+# lab.conf: main lab configuration file
+
+# define the set of virtual machines that are part of the lab
+machines="pc1 pc2 router"
+
+# pc1 vm
+pc1[0]=CD1                   # --eth0=CD1
+pc1[mem]=64                  # --mem=64
+
+# pc2 vm
+pc2[0]=CD2                   # --eth0=CD2
+
+# router vm
+router[0]=CD1                # --eth0=CD1
+router[1]=CD2                # --eth1=CD2
+router[mem]=128              # --mem=128
+</pre>
+
+
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/09/29 16:10:36 $
+</span>
+</address>
+
+
+</body>
+
+</html>

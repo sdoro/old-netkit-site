@@ -1,0 +1,456 @@
+#!/bin/sh
+# $Id: lab,v 1.15 2005/10/19 12:43:08 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 2
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    f=~/.Xdefaults-`hostname`
+    rm -f $f.save
+    if [ -f $f ] ; then
+      mv $f $f.save
+    fi
+
+    echo "*xterm*geometry: 80x5+256+26">$f
+    vstart router --append="eth0=tuntap,tap0" --eth1=A  --eth2=B --eth3=C --mem=64 $X
+    waitfinish router
+
+    echo "*xterm*geometry: 80x7-18+190">$f
+    vstart ldap --eth0=A  --mem=64 $X
+    waitfinish ldap
+
+    echo "*xterm*geometry: 80x9-18+315">$f
+    vstart istituto-PDC --eth0=A  --mem=64 $X
+    waitfinish istituto-PDC
+
+    echo "*xterm*geometry: 80x7-17+466">$f
+    vstart ACLNT-A1 --eth0=A  --mem=32 $X
+    waitfinish ACLNT-A1
+
+    echo "*xterm*geometry: 80x7+3+457">$f
+    vstart istituto-BDC-A2 --eth0=B  --mem=64 $X
+    waitfinish istituto-BDC-A2
+
+    echo "*xterm*geometry: 80x7+3-64">$f
+    vstart ACLNT-A2 --eth0=B --mem=32 $X
+    waitfinish ACLNT-A2
+
+    echo "*xterm*geometry: 80x6+3+162">$f
+    vstart istituto-BDC-A3 --eth0=C  --mem=64 $X
+    waitfinish istituto-BDC-A3
+
+    echo "*xterm*geometry: 80x6+3+273">$f
+    vstart ACLNT-A3 --eth0=C --mem=32 $X
+    waitfinish ACLNT-A3
+
+    if [ -f $f.save ] ; then
+      mv $f.save $f
+    else 
+      rm -f $f
+    fi
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started ***"
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash ldap
+    vcrash istituto-PDC
+    vcrash ACLNT-A1
+    vcrash router
+    vcrash istituto-BDC-A2
+    vcrash ACLNT-A2
+    vcrash istituto-BDC-A3
+    vcrash ACLNT-A3
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+     if [ `grep tap0 /proc/net/dev|wc -l` = 0 ] ; then
+       echo "missing tap0 device"
+       exit 1
+     fi
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+	# and it is NEVER executed by in the host environment
+	#
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+
+    ldap)
+        # configure IP address 
+        ifconfig eth0 192.168.10.4 up
+        route add default gw 192.168.10.3
+        # configure and start bind
+        cp $SCRIPTDIR/dns/db.root /etc/bind/db.root
+        cp $SCRIPTDIR/dns/db.192.168.* /etc/bind
+        cp $SCRIPTDIR/dns/db.istituto /etc/bind/db.istituto
+        cp $SCRIPTDIR/dns/named.conf /etc/bind/named.conf
+        /etc/init.d/bind9 start
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # LDAP
+        gzip -dc $SCRIPTDIR/samba.schema.gz > /etc/ldap/schema/samba.schema
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        # initialize LDAP database
+        mv /etc/ldap/slapd.conf /etc/ldap/slapd.conf.org
+        cp $SCRIPTDIR/boot-slapd.conf /etc/ldap/slapd.conf
+        rm -f /var/lib/ldap/*
+        /etc/init.d/slapd start; sleep 2
+        ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,dc=istituto,dc=it" -w not24get -f $SCRIPTDIR/boot-base.ldif
+        /etc/init.d/slapd stop
+        # restart LDAP with definitive setting
+        cp $SCRIPTDIR/slapd.access /etc/ldap/slapd.access
+        cp $SCRIPTDIR/slapd.conf-master /etc/ldap/slapd.conf
+        /etc/init.d/slapd start
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf-master /etc/libnss-ldap.conf
+        cp $SCRIPTDIR/ldap.secret /etc/ldap.secret
+        chmod 600 /etc/ldap.secret
+
+        notifyfinish ldap
+        ;;
+
+    istituto-PDC)
+        # config IP for private network
+        ifconfig eth0 192.168.10.1 up
+        # routing table
+        route add default gw 192.168.10.3
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # configure samba
+        cp $SCRIPTDIR/wins-pdc.dat /var/lib/samba/wins.dat
+        mv /etc/samba/smb.conf /etc/samba/smb.conf.org
+        cp $SCRIPTDIR/smb.conf /etc/samba/smb.conf
+        # config and start xinetd (for SWAT)
+        cp $SCRIPTDIR/xinetd.conf /etc/xinetd.conf
+        /etc/init.d/xinetd start
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf-master /etc/libnss-ldap.conf
+        cp $SCRIPTDIR/ldap.secret /etc/ldap.secret
+        chmod 600 /etc/ldap.secret
+        # Configure smbldap-tools
+        cp $SCRIPTDIR/smbldap.conf /etc/smbldap-tools/smbldap.conf
+        chmod 644 /etc/smbldap-tools/smbldap.conf
+        cp $SCRIPTDIR/smbldap_bind.conf /etc/smbldap-tools/smbldap_bind.conf
+        chmod 600 /etc/smbldap-tools/smbldap_bind.conf
+        # make samba directory
+        mkdir /home/netlogon
+        chmod 0775 /home/netlogon
+        mkdir /home/profiles
+        chmod 1775 /home/profiles
+        mkdir /home/printers
+        mkdir /home/public
+        chmod a+rwx /home/public
+        # cleanup passwd file (it contains also the server SID)
+        rm /var/lib/samba/*.tdb
+        smbpasswd -w samba
+        # set SID
+        net setlocalsid 'S-1-5-21-3840722988-1065274203-713729200'
+        # start samba
+        /etc/init.d/samba start
+        # add sambaDomainName entry in LDAP 
+        net getlocalsid
+        # stop samba
+        /etc/init.d/samba stop
+        # start populate
+        /usr/sbin/smbldap-populate
+        # make users account
+        smbldap-useradd -a toni
+        smbldap-useradd -a nane
+        # start all services
+        /etc/init.d/samba start
+        # set Administrator passwd
+        (sleep 2; echo "not24get"; sleep 2; echo "not24get") | \
+          smbldap-passwd Administrator
+        # join myself to domain
+        net rpc join -U Administrator%not24get
+
+        notifyfinish istituto-PDC
+        ;;
+
+    ACLNT-A1)
+        # config IP for private network
+        ifconfig eth0 192.168.10.2 up
+        # routing table
+        route add default gw 192.168.10.3
+        # Configure samba
+        mv /etc/samba/smb.conf /etc/samba/smb.conf.org
+        cp $SCRIPTDIR/smb-c1.conf /etc/samba/smb.conf
+        rm -f /var/log/samba/log.*
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # set passwd
+        rm /var/lib/samba/*.tdb
+        smbpasswd -w samba
+        # get remote SID
+        net rpc getsid netkitwg -S istituto-PDC
+        # start services
+        /etc/init.d/samba start
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf /etc/libnss-ldap.conf
+        # join myself to domain
+        net rpc join -U Administrator%not24get
+
+        notifyfinish ACLNT-A1
+        ;;
+
+    router)
+        # config IP for tap device
+        ifconfig eth0 192.168.77.2 up
+        # config IP for private network
+        ifconfig eth1 192.168.10.3 up
+        ifconfig eth2 192.168.20.3 up
+        ifconfig eth3 192.168.30.3 up
+        # routing table
+        route add -net 192.168.10.0 netmask 255.255.255.0 gw 192.168.10.3
+        route add -net 192.168.20.0 netmask 255.255.255.0 gw 192.168.20.3
+        route add -net 192.168.30.0 netmask 255.255.255.0 gw 192.168.30.3
+        route add default gw 192.168.77.1
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+
+        notifyfinish router
+        ;;
+
+    istituto-BDC-A2)
+        # config IP for private network
+        ifconfig eth0 192.168.20.1 up
+        # routing table
+        route add default gw 192.168.20.3
+        # configure samba
+        cp $SCRIPTDIR/wins-bdc-a2.dat /var/lib/samba/wins.dat
+        mkdir /home/public
+        #cp $SCRIPTDIR/wins-istituto-BDC-A2.dat /var/lib/samba/wins.dat
+        mv /etc/samba/smb.conf /etc/samba/smb.conf.org
+        cp $SCRIPTDIR/smb-b1.conf /etc/samba/smb.conf
+        rm -f /var/log/samba/log.*
+        # configure inetd SWAT startup
+        cp $SCRIPTDIR/xinetd.conf /etc/xinetd.conf
+        /etc/init.d/xinetd start
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # set passwd
+        rm /var/lib/samba/*.tdb
+        smbpasswd -w samba
+        # get remote SID
+        net rpc getsid netkitwg -S istituto-PDC
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf /etc/libnss-ldap.conf
+        # start samba
+        /etc/init.d/samba start
+        # join myself to domain
+        net rpc join -U Administrator%not24get -S istituto-PDC
+
+        notifyfinish istituto-BDC-A2
+        ;;
+
+    ACLNT-A2)
+        # config IP for private network
+        ifconfig eth0 192.168.20.2 up
+        # routing table
+        route add default gw 192.168.20.3
+        # Configure samba
+        mv /etc/samba/smb.conf /etc/samba/smb.conf.org
+        cp $SCRIPTDIR/smb-c2.conf /etc/samba/smb.conf
+        rm -f /var/log/samba/log.*
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # set passwd
+        rm /var/lib/samba/*.tdb
+        smbpasswd -w samba
+        # get remote SID
+        net rpc getsid netkitwg -S istituto-PDC
+        # start services
+        /etc/init.d/samba start
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf /etc/libnss-ldap.conf
+        # join myself to domain
+        net rpc join -U Administrator%not24get -S istituto-PDC
+
+        notifyfinish ACLNT-A2
+        ;;
+
+    istituto-BDC-A3)
+        # config IP for private network
+        ifconfig eth0 192.168.30.1 up
+        # routing table
+        route add default gw 192.168.30.3
+        # configure samba
+        cp $SCRIPTDIR/wins-bdc-a3.dat /var/lib/samba/wins.dat
+        mkdir /home/public
+        #cp $SCRIPTDIR/wins-istituto-BDC-A3.dat /var/lib/samba/wins.dat
+        mv /etc/samba/smb.conf /etc/samba/smb.conf.org
+        cp $SCRIPTDIR/smb-b2.conf /etc/samba/smb.conf
+        rm -f /var/log/samba/log.*
+        # configure inetd SWAT startup
+        cp $SCRIPTDIR/xinetd.conf /etc/xinetd.conf
+        /etc/init.d/xinetd start
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # set passwd
+        rm /var/lib/samba/*.tdb
+        smbpasswd -w samba
+        # get remote SID
+        net rpc getsid netkitwg -S istituto-PDC
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf /etc/libnss-ldap.conf
+        # start samba
+        /etc/init.d/samba start
+        # join myself to domain
+        net rpc join -U Administrator%not24get -S istituto-PDC
+
+        notifyfinish istituto-BDC-A3
+        ;;
+
+    ACLNT-A3)
+        # config IP for private network
+        ifconfig eth0 192.168.30.2 up
+        # routing table
+        route add default gw 192.168.30.3
+        # Configure samba
+        mv /etc/samba/smb.conf /etc/samba/smb.conf.org
+        cp $SCRIPTDIR/smb-c3.conf /etc/samba/smb.conf
+        rm -f /var/log/samba/log.*
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # set passwd
+        rm /var/lib/samba/*.tdb
+        smbpasswd -w samba
+        # get remote SID
+        net rpc getsid netkitwg -S istituto-PDC
+        # start services
+        /etc/init.d/samba start
+        # nss
+        mv /etc/ldap/ldap.conf /etc/ldap/ldap.conf.org
+        cp $SCRIPTDIR/ldap.conf /etc/ldap/ldap.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf.org
+        cp $SCRIPTDIR/nsswitch-SAMBA.conf /etc/nsswitch.conf
+        mv /etc/libnss-ldap.conf /etc/libnss-ldap.conf.org
+        cp $SCRIPTDIR/libnss-ldap.conf /etc/libnss-ldap.conf
+        # join myself to domain
+        net rpc join -U Administrator%not24get -S istituto-PDC
+
+        notifyfinish ACLNT-A3
+        ;;
+
+
+    #
+    #
+    ############################################## end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

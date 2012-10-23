@@ -1,0 +1,175 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-perms.html,v 1.2 2005/03/09 07:14:41 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-perms</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="uml-pam.html">
+  <link rel="Next" title="Next" href="uml-quotaACL.html">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su file e directory</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-pam.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-quotaACL.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+<p>
+Questa esperienza si basa sul paragrafo
+"File permissions and directory"
+del libro
+"An introduction to Linux Systems Administration" di
+David Jones, Bruce Jamieson.
+L'esercizio ha lo scopo di rinforzare la comprensione 
+dell'effetto delle permission sulle directory. Il testo:
+
+<p>
+<cite  class="border">
+Supponiamo di essere in ambiente
+"educational" e quindi che ci sia un utente del gruppo teachers
+e uno o pi&ugrave; utenti di tipo students (sulla stessa macchina).
+Si vogliono realizzare le seguenti funzionalit&agrave;:<br>
+1. Lo studente deve accedere agli esercizi proposti<br>
+2. Lo studente deve poter salvare nello spazio del docente
+      la soluzione degli esercizi<br>
+3. Lo studente non deve accedere alle altre informazioni<br>
+</cite>
+
+</p>
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Soluzione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Scarica il <a href="perms.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente il tutto. Lo schema proposto
+(<a href="pdf/perms.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/perms.xml" title="file per Dia">xml</a>)
+della struttura delle directory viene costruito dallo script:
+</p>
+
+<pre>
+user@realHost$ ./lab start
+</pre>
+
+<p>
+Ecco una sessione di verifica:
+</p>
+
+<pre><span class="blue">
+vHost login:</span> joe.bloggs<span class="blue">
+Password:</span> not24get<span class="blue">
+joe.bloggs@vHost$</span> ls -l /home/david<span class="blue">
+ls: /home/david: Permission denied
+joe.bloggs@vHost$</span> ls -l /home/david/85321<span class="blue">
+total 2
+-rwx---r--  1 david teachers    0 Mar  4 13:48 assign.txt
+drwx------  2 david teachers 1024 Mar  4 13:48 solutions
+drwx----wx  2 david teachers 1024 Mar  4 13:48 students
+joe.bloggs@vHost$</span> cat /home/david/85321/assign.txt<span class="blue">
+good luck!
+joe.bloggs@vHost$</span> ls -l /home/david/85321/students/<span class="blue">
+ls: /home/david/85321/students/: Permission denied
+joe.bloggs@vHost$</span> cat /home/david/85321/solutions/assign.sol<span class="blue">
+cat: /home/david/85321/solutions/assign.sol: Permission denied
+joe.bloggs@vHost$</span> echo "no go words" > my-solution<span class="blue">
+joe.bloggs@vHost$</span> cp my-solution /home/david/85321/students/joe.bloggs<span class="blue">
+joe.bloggs@vHost$</span>
+</pre>
+
+<p>
+a questo punto un altro studente pu&ograve; sovrascrivere il lavoro
+del buon <code>joe.bloggs</code> (conoscendo il nome dello studente) ?
+Allo scopo abbiamo costruito anche uno studente <code>doug.envy</code>
+sempre con la stessa password e ... prova!
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/03/09 07:14:41 $
+</span>
+</address>
+
+
+</body>
+
+</html>

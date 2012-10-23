@@ -1,0 +1,114 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module17.html,v 1.32 2005/01/17 14:24:41 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 17</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="module16.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 17</h1>
+<h2 class="center">Internet Server</h2>
+
+<p>
+Nel corso delle lezioni in aula potranno essere visti e provati i
+seguenti server e le relative configurazioni:
+</p>
+
+<ul>
+	<li><b>DNS:</b> <a id=bind href="http://www.isc.org/products/BIND/" title="link esterno">BIND</a>
+	(Berkeley Internet Name Domain).<br>
+	Approfondimento
+	<a href="bind.html" title="approfondimento">bind</a>.</li>
+
+	<li><b>Mail:</b> <a id=mta href="http://www.postfix.org/" title="link esterno">Postfix</a>
+	(Mail Transport Agent).<br>
+	Approfondimento
+	<a href="email.html" title="approfondimento">e-mail</a>.</li>
+	
+	<li><b>DataBase:</b> <a id=mysql href="http://www.mysql.org/" title="link esterno">MySQL</a> .<br>
+	Approfondimento
+	<a href="mysql.html" title="approfondimento">MySql</a>.</li>
+
+	<li><b>Web:</b> <a id=apache href="http://httpd.apache.org/" title="link esterno">Apache</a><br>
+	Approfondimento
+	<a href="apache.html" title="approfondimento">Apache</a>.</li>
+	
+	
+	<li><b>proxy:</b> <a id=proxy href="http://squid.nlanr.net/" title="link esterno">Squid</a>.<br>
+    Approfondimento
+	<a href="squid.html" title="approfondimento">Squid</a>.</li>
+	
+	<li><b>list:</b> <a id=list href="http://www.gnu.org/software/mailman/mailman.html" title="link esterno">Mailman</a>
+	(solo Unix)</li>
+	
+	<li><b>newsgroup:</b> <a id=news href="http://www.isc.org/products/INN/" title="link esterno">INN</a> (solo Unix)</li>
+	
+	<li><b>ftp:</b> no grazie. Meglio <a href="http://www.openssh.com/" title="link esterno">SSH</a>.<br>
+	Un ottimo client per macchine M$ lo puoi scaricare da
+	<a href="http://winscp.vse.cz/eng/download.php" title="link esterno">WinSCP</a>. Provalo! Per sicurezza
+	configuralo in modo che scelga la versione 2 del protocollo e se ti sei
+	stancato di digitare la password prova a scoprire come si fa a generare la
+	coppia di chiavi e dove/come vanno installate e quali permission devo avere.<br>
+	Un ssh client per macchine M$ lo puoi scaricare da
+	<a href="ftp://metalab.unc.edu/pub/packages/security/ssh/SSHSecureShellClient-3.2.9.exe"
+	   title="link esterno">SSH Client</a>.
+	Se non vuoi installare nulla dal lato client allora usa dal lato server 
+	<a href="http://www.appgate.com/mindterm/" title="link esterno">MindTerm</a> un applet java.
+	&Egrave; installato e configurato su questo sistema e se vuoi usarlo chiedi un
+	account al tuo <a href="index.html#tutor">tutor</a> e poi prova a
+	<a href="../netkit/ssh/ssh.html">connetterti</a> (attenzione che l'applet &egrave; 600KB).</li>
+	
+	<li><b>gestione versioni:</b> <a id=cvs href="http://www.cvshome.org/products/INN/" title="link esterno">CVS</a><br>
+	Questo programma &egrave; utilizzato per memorizzare i sorgenti dei programmi e
+	quindi a gestirne le versioni. Quasi tutto il software Open Source &egrave;
+	memorizzato in server che utilizzano CVS. Pu&ograve essere usato anche per memorizzare
+	documentazione o file di configurazione ma solo in formato testo. Esistono dei client
+	per la consultazione del repository. Uno dei pi&ugrave famosi per M$ &egrave;
+	<a href="http://www.wincvs.org/" title="link esterno">WinCVS</a>. Per Linux esiste invece 
+	<a href="http://www.kde.org" title="link esterno">Cervisia</a> ma in generale &egrave; 
+	preferibile l'interfaccia browser
+	<a href="http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/" title="link esterno">CVSWeb</a>.</li>
+	
+	<li><b>FAQ:</b> <a href="http://faqomatic.sourceforge.net/" title="link esterno">Faq-O-Matic</a></li>
+</ul>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/01/17 14:24:41 $
+</span>
+</address>
+
+
+</body>
+
+</html>

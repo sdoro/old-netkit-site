@@ -1,0 +1,19 @@
+*** lab.conf	Fri Jun 30 01:43:12 2006
+--- new-lab.conf	Sun Feb  4 09:09:04 2007
+***************
+*** 21,27 ****
+  fw[append]=LRP=root,config,etc,local,iptables,shorwall,ulogd,libz,libcrpto,sshd,libm,mawk,customvm
+  
+  
+! left[0]="B"
+  left[mem]=24
+  
+  
+--- 21,27 ----
+  fw[append]=LRP=root,config,etc,local,iptables,shorwall,ulogd,libz,libcrpto,sshd,libm,mawk,customvm
+  
+  
+! left[0]="A"
+  left[mem]=24
+  
+  

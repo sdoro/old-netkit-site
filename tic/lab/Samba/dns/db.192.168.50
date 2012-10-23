@@ -1,0 +1,22 @@
+; reverse lookup database 
+; /etc/bind/db.192.168.50
+; $Id: db.192.168.50,v 1.2 2005/01/30 12:54:39 doros Exp $
+;
+$TTL    1
+@               IN      SOA     1.50.168.192.in-addr.arpa.    nobody.nowere. (
+                        2002102801 ; serial
+                        28 ; refresh
+                        14 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@                             IN      NS      1.50.168.192.in-addr.arpa.
+1.50.168.192.in-addr.arpa.    IN      A       192.168.50.1
+1 PTR         ldap.
+10 PTR        SRV.
+11 PTR        CLNT.
+
+; completed such as interbusiness.it
+$GENERATE   2-9   $ PTR host$-50.pool192168.monopolio.it.
+$GENERATE  12-254 $ PTR host$-50.pool192168.monopolio.it.
+; bot

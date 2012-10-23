@@ -1,0 +1,7 @@
+#!/bin/sh 
+# ppplogin - script to fire up pppd on login 
+mesg n 
+stty -echo 
+exec /usr/sbin/pppd -detach silent 10.0.0.1:10.0.0.2
+
+

@@ -1,0 +1,25 @@
+# $Id: bridge.startup,v 1.2 2007-12-15 15:41:00 doros Exp $
+#
+ifconfig eth0 up
+ifconfig eth0 hw ether 00:00:00:02:00:00
+ifconfig eth1 up
+ifconfig eth1 hw ether 00:00:00:02:00:01
+ifconfig eth2 up
+ifconfig eth2 hw ether 00:00:00:02:00:02
+# load 802.1q module
+modprobe 8021q
+# make vlan 2
+vconfig add eth0 2
+ifconfig eth0.2 up
+# make vlan 3
+vconfig add eth0 3
+ifconfig eth0.3 up
+# make a bridge
+brctl addbr br0
+brctl addif br0 eth0.2
+brctl addif br0 eth0.3
+brctl addif br0 eth1
+brctl addif br0 eth2
+ifconfig br0 up
+#
+# bot

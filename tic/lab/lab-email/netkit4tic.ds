@@ -1,0 +1,48 @@
+;; $Id: netkit4tic.ds,v 1.1 2006-11-18 17:49:18 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "pc2")
+  (begin
+      (geometry "484x316+532+398")
+    )
+  )
+
+(if (contains (application_name) "pc1")
+  (begin
+      (geometry "484x316+4+398")
+    )
+  )
+
+(if (contains (application_name) "dnslug")
+  (begin
+      (geometry "484x69+4+270")
+    )
+  )
+
+(if (contains (application_name) "dnsnano")
+  (begin
+      (geometry "484x69+532+270")
+    )
+  )
+
+(if (contains (application_name) "dnsnet")
+  (begin
+      (geometry "484x69+520+144")
+    )
+  )
+
+(if (contains (application_name) "dnsorg")
+  (begin
+      (geometry "484x69+15+144")
+    )
+  )
+
+(if (contains (application_name) "dnsroot")
+  (begin
+      (geometry "484x69+262+42")
+    )
+  )
+
+
+
+)

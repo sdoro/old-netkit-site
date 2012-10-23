@@ -1,0 +1,6 @@
+# /etc/cron.d/rdd
+# $Id: cron.txt,v 1.1 2004/02/24 10:54:48 doros Exp $
+#
+DIR=/var/www/rrd
+#
+0-59/5 * * * * root $DIR/update.sh 2> /dev/null

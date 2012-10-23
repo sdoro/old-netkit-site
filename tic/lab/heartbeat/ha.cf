@@ -1,0 +1,38 @@
+# /etc/ha.d/ha.cf
+# $Id: ha.cf,v 1.1 2005/08/15 19:08:21 doros Exp $
+
+# File to wirte debug messages to
+debugfile      /var/log/ha-debug
+
+# File to write other messages to
+logfile        /var/log/ha-log
+
+# Facility to use for syslog()/logger
+logfacility    local0
+
+# keepalive: how many seconds between heartbeats
+keepalive      2
+
+# deadtime: seconds-to-declare-host-dead
+deadtime       10
+
+# On some machines/OSes, etc. the network takes a while to come up
+# and start working right after you've been rebooted.  As a result
+# we have a separate dead time for when things first come up.
+# It should be at least twice the normal dead time.
+initdead       120
+
+# What UDP port to use for communication?
+udpport        694
+
+# What interfaces to heartbeat over?
+bcast          bond0
+
+#
+auto_failback  on
+
+# Tell what machines are in the cluster
+node           left right
+
+#
+# bot

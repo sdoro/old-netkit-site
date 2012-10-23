@@ -1,0 +1,113 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: X509.html,v 1.11 2004/05/23 17:04:18 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - X509</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 1</h1>
+<h2 class="center">I certificati X.509</h2>
+
+<p>
+Riportiamo di seguito alcune informazioni essenziali sullo standard X.509
+tratte dalla documentazione <a href="http://www.modssl.org/">modssl</a>.
+</p>
+
+<h3>Informazioni contenute nei certificati</h3>
+
+<p>
+Un certificato associa una chiave pubblica con la reale identit&agrave; di
+un individuo, un server, o altra entit&agrave; conosciuta come &quot;subject&quot;.
+Come viene illustrato nella seguente tabella,
+le informazioni legate al subject includono informazioni per identificarlo
+(distinguished name), e la chiave pubblica (public key). Sono incluse anche
+l'identificazione e la firma della Autorit&agrave; Certificante (Certificate Authority)
+che ha rilasciato (issuer) il certificato assieme al periodo di validit&agrave; del
+certificato stesso.
+</p>
+
+<p>
+<table>
+<tr valign="top"><td><b>Subject:</b></td>
+<td>Distinguished Name, Public Key</td></tr>
+<tr valign="top"><td><b>Issuer:</b></td>
+<td>Distinguished Name, Signature</td></tr>
+
+<tr><td><b>Period of Validity:</b></td>
+<td>Not Before Date, Not After Date</td></tr>
+<tr><td><b>Administrative Information:</b></td>
+<td>Version, Serial Number</td></tr>
+<tr><td><b>Extended Information:</b></td>
+<td>Basic Contraints, Netscape Flags, etc.</td></tr>
+</table>
+
+<p>
+Il distinguished name &egrave; usato per offrire una identit&agrave;
+in un particolare contesto --
+per esempio, un individuo pu&ograve; avere sia un certificato personale che un
+altro come identificativo di impiegato nella ditta in cui lavora. I
+Distinguished names sono definiti dallo standard 
+<a href="ftp://ftp.bull.com/pub/OSIdirectory/ITUnov96/X.509/97x509final.doc">X.509</a>
+che definisce i campi, i nomi dei campi e le abbreviazioni usate per riferire
+i nomi dei campi (vedi la seguente tabella).
+</p>
+
+<table>
+<tr valign="top"><td><b>campo DN:</b></td><td><b>Abbrev.:</b></td><td><b>Descrizione:</b></td>
+
+<td><b>Esempio:</b></td>
+<tr valign="top"><td>Common Name</td><td>CN</td>
+<td>Nome del certificato</td><td>CN=Linus Torwald</td></tr>
+<tr valign="top"><td>Organization or Company</td><td>O</td>
+<td>Nome dell'organizazione</td><td>O=Open Source, Ltd.</td></tr>
+<tr valign="top"><td>Organizational Unit</td><td>OU</td>
+
+<td>Nome del dipartimento</td><td>OU=Ricerca&amp;Sviluppo</td></tr>
+<tr valign="top"><td>City/Locality</td><td>L</td>
+<td>Nome della citt&agrave;</td><td>L=Snake City</td></tr>
+<tr valign="top"><td>State/Province</td><td>ST</td>
+<td>Nome della provincia</td><td>ST=Desert</td></tr>
+<tr valign="top"><td>Country</td><td>C</td>
+
+<td>Nome del paese (ISO code)</td><td>C=XZ</td></tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/05/23 17:04:18 $
+</span>
+</address>
+
+
+</body>
+
+</html>

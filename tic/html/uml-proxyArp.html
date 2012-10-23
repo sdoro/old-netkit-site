@@ -1,0 +1,337 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-proxyArp.html,v 1.20 2007-02-20 15:34:52 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-proxyArp</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su proxy ARP</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-QBox.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-RLab.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questo argomento &egrave; stato affrontato nella realt&agrave; quando
+ho dovuto costrure una piccola rete all'interno dell'Istituto scolastico.
+Il mio intento era quello di non
+appesantire il lavoro dei colleghi che la gestivano
+forzando una riconfigurazione della stessa.
+Ho proceduto come segue:
+per prima cosa ho chiesto e ottenuto un insieme di indirizzi IP privati
+della rete d'istituto (classe C 192.168.0.X) che mi permettessero di
+configurare una subnet. Il numero minimo
+per lo schema che avevo in mente era 8. Mi sono stati assegnati
+gli indirizzi a partire dal 192.168.0.216 fino al 192.168.0.223.<br>
+La soluzione &egrave; affiorata pensando di utilizzare 
+una tecnica chiamata &quot;proxy ARP&quot; (RFC 1027).
+</p>
+
+<p>
+La tecnica &egrave; quella di far apparire una macchina posizionata
+su una rete come appartenente ad una differente rete connessa allo
+stesso router. Tipicamente questo viene utilizzato per nascondere
+all'interno di una rete privata un nodo con IP publico. Il router
+dirotter&agrave; il traffico da e per la macchina nascosta.
+</p>
+
+<p>
+Analizzeremo una rete
+(<a href="pdf/proxy-ARP.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/proxy-ARP.xml" title="file per Dia">xml</a>)
+composta appunto da un router <code>fw</code> connesso alla
+rete d'istituto e al router d'istituto <code>schoolRouter</code>
+e connesso ad una rete privata dove ci sono due host: <code>left</code>
+con indirizzo appartenente alla rete d'istituto e <code>right</code>
+con indirizzo nella rete privata.
+</p>
+
+
+
+<p>
+Quando un host all'interno dell'istituto
+intende comunicare con <code>left</code> riconosce
+l'IP come appartente alla stessa rete e quindi l'host genera un pacchetto
+ARP per conoscerne il MAC.
+Il router risponder&agrave; con il MAC della sua
+scheda nella rete d'istituto e sar&agrave; pronto a ricevere il pacchetto.
+Successivamente per trovare il MAC dell'host di destinazione il router
+mander&agrave; un ARP nella rete sperimentale e dopo aver ricevuto la risposta
+mander&agrave; il pacchetto all'host destinazione.
+</p>
+
+<p>
+Per provare la configurazione appena descritta 
+useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Scarica il file
+<a href="Proxy-ARP.tgz" title="esperienza Netkit4TIC">tarball</a>,
+scompattalo in una sottodirectory della
+<code>HOME</code> dell'utente, entra nella directory
+<code>Proxy-ARP</code> e lancia il comando <code>lstart</code>
+<a href="proxy-arp-desktop.png" title="screenshot">(screenshot)</a>.
+</p>
+
+
+<p>
+Il file di configurazione pi&ugrave; caratterizzante &egrave;
+<code>/etc/shorewall/proxyarp</code>:
+</p>
+
+
+<pre>
+# /etc/shorewall/proxyarp
+#ADDRESS       INTERFACE    EXTERNAL    HAVEROUTE    PERSISTENT
+192.168.0.217  eth1         eth0        no           yes
+</pre>
+
+<p>
+Il file di configurazione <code>/etc/shorewall/interfaces</code>:
+</p>
+
+
+<pre>
+# /etc/shorewall/interfaces
+#ZONE   INTERFACE       BROADCAST       OPTIONS
+net     eth0            detect
+loc     eth1            detect
+</pre>
+
+<p>
+Mentre la policy rimane "standard":
+</p>
+
+<pre>
+# /etc/shorewall/policy
+#SOURCE         DEST            POLICY          LOG LEVEL
+loc             net             ACCEPT
+net             all             DROP            info
+all             all             REJECT          info
+</pre>
+
+<p>
+e le eccezioni riguardano i servizi presenti sul nodo iterno
+192.168.0.217:
+</p>
+
+<pre>
+# /etc/shorewall/rules
+#ACTION  SOURCE     DEST               PROTO   DEST  
+[...]
+# Accept http, ssh, smtp, domain, snmp from net to 192.168.0.217
+#
+Web/ACCEPT    net        loc:192.168.0.217
+SSH/ACCEPT    net        loc:192.168.0.217
+SMTP/ACCEPT   net        loc:192.168.0.217
+DNS/ACCEPT    net        loc:192.168.0.217
+SNMP/ACCEPT   net        loc:192.168.0.217
+</pre>
+
+<p>
+Per maggiore chiarezza abbiamo settato i MAC address come
+segue:
+</p>
+
+<pre>
+eth0@schoolRouter 00:00:00:AA:AA:AA
+eth0@fw           00:00:00:00:00:FA
+eth1@fw           00:00:00:00:00:FB
+eth0@left         00:00:00:BB:BB:BB
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="interattiva">Sperimentazione interattiva</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Proviamo a scatenare il proxy arp. Attiviamo allo scopo il server
+apache sul nodo "interno" <code>left</code>, proviamo ad accedervi
+dal nodo "esterno" <code>schoolRouter</code> e poi chiediamo la visualizzazione
+della ARP cache in due intervalli leggermente distanziati:
+</p>
+
+
+<pre>
+schoolRouter# lynx -dump http://192.168.0.217 | strings; \
+                echo -e ''; arp -n; <span class="yellow">sleep 5</span>; echo -e '\n'; arp -n<span class="blue">
+  Benvenuto 192.168.0.254 su 192.168.0.217
+
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.0.217            ether   <span class="yellow">00:00:00:00:00:FA</span>   C                     eth0
+
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.0.217            ether   <span class="yellow">00:00:00:00:00:FA</span>   C                     eth0
+192.168.0.216            ether   <span class="yellow">00:00:00:00:00:FA</span>   C                     eth0</span>
+</pre>
+
+<p>
+Il MAC address associato a 192.168.0.217 &egrave; dovuto alla richiesta
+iniziale di comunicazione del nodo <code>schoolRouter</code>
+verso il nodo <code>left</code>.
+Il MAC address associato a 192.168.0.217 &egrave; invece dovuto
+alla scadenza del timeout sul nodo <code>schoolRouter</code>
+(<a href="../capture/proxy-arp.acp"
+       title="file per Ethereal">eth0@schoolRouter</a>).
+</p>
+
+<p>
+L'ARP cache nel nodo <code>fw</code> &egrave; la seguente:
+</p>
+
+
+<pre>
+fw# arp -n<span class="blue">
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.0.254            ether   00:00:00:AA:AA:AA   C                     eth0
+192.168.0.217            ether   00:00:00:BB:BB:BB   C                     eth1
+192.168.0.217            *       *                   MP                    eth0</span>
+</pre>
+
+<p>
+Il nodo <code>right</code> &egrave; ovviamente raggiungibile:
+</p>
+
+<pre>
+schoolRouter# ping -c 1 192.168.1.1<span class="blue">
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=63 time=5.50 ms
+
+--- 192.168.1.1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 5.504/5.504/5.504/0.000 ms</span>
+</pre>
+
+<p>
+Abbiamo appena verificato il funzionamento del proxy ARP per
+il nodo <code>left</code>: &egrave;
+inserito fisicamente nel dominio di collisione B ma
+configurato come se fosse nel dominio di collisione A.
+Come controprova ora disabiliteremo il proxy ARP, spostiamo
+<code>left</code> nel dominio di collisione A e vediamo
+le variazioni di funzionamento in rete.
+</p>
+
+<ul>
+  <li>commentiamo
+la riga precedentemente inserita nel file <code>/etc/shorewall/proxyarp</code>
+del nodo <code>fw</code>;</li>
+  <li>rifaciamo ripartire shorewall:
+
+<pre>
+fw# /etc/init.d/shorewall restart
+</pre>
+  </li>
+  <li> in seguito per non aspettare la pulizia dell'ARP cache:
+<pre>
+schoolRouter# arp -d 192.168.0.217
+</pre>
+  </li>
+  <li>
+e infine spostiamo il nodo <code>left</code> sul dominio di
+collisione A:
+
+<pre>
+realHost$ lcrash left; \
+          patch lab.conf &lt; patch; \
+          lstart left
+</pre>
+  </li>
+</ul>
+
+<p>
+Osserviamo che la sua raggiungibilit&agrave; a livello 3 non cambia 
+ma a livello 2:
+</p>
+
+<pre>
+schoolRouter# lynx -dump http://192.168.0.217 | strings; \
+                echo -e ''; arp -n; <span class="yellow">sleep 5</span>; echo -e '\n'; arp -n<span class="blue">
+  Benvenuto 192.168.0.254 su 192.168.0.217
+
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.0.217            ether   <span class="yellow">00:00:00:BB:BB:BB</span>   C                     eth0
+
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.0.217            ether   <span class="yellow">00:00:00:BB:BB:BB</span>   C                     eth0
+</span>
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-20 15:34:52 $
+</span>
+</address>
+
+
+</body>
+
+</html>

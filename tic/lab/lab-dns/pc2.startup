@@ -1,0 +1,2 @@
+# $Id: pc2.startup,v 1.1 2006/11/18 17:49:42 doros Exp $
+/sbin/ifconfig eth0 192.168.0.222 up

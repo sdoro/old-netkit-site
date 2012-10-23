@@ -1,0 +1,3 @@
+# $Id: dnslug.startup,v 1.1 2006/11/18 17:47:04 doros Exp $
+/sbin/ifconfig eth0 192.168.0.11 up
+/etc/init.d/bind9 start

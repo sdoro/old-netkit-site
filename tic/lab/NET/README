@@ -1,0 +1,22 @@
+$Id: README,v 1.15 2007-04-30 12:41:16 doros Exp $
+
+In this experience the srv1.tic.fdns.net host has network connectivity
+(tun module) with the real host. Before start the Netkit script you
+must create a tap device as normal user:
+
+realHost$ export ifname_net=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname_net 192.168.77.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+Than you can add a routing rule:
+
+realHost# echo "1" > /proc/sys/net/ipv4/ip_forward; \
+          route add -net 192.168.20.0/24 gw 192.168.77.2; \
+          route add -net 192.168.10.0/24 gw 192.168.77.2
+

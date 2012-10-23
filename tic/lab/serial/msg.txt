@@ -1,0 +1,1 @@
+Serial line 0 assigned device '/dev/ptyp0'

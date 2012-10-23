@@ -1,0 +1,244 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-bridgeSTP.html,v 1.13 2006/10/28 07:49:47 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-bridge</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su bridge con SPT</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-bridge.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-VLAN.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+<p>
+Scarica il <a href="bridge.tgz" title="esperienza Netkit4TIC">tarball</a> contenente il tutto,
+e come al solito si parte scompattandolo in una sottodirectory della
+<code>HOME</code> dell'utente.
+</p>
+
+<p>
+Questa esperienza si basa sulla rete di laboratorio usata nel
+capitolo 4 del libro di Baldi e Nicoletti
+<a href="books.html">SWITCHED LAN</a>.
+Dal loro sito internet
+<a href="http://www.netscire.it/" title="link esterno">www.netscire.it</a>
+&egrave; possibile consultare le relative
+<a href="http://www.netscire.it/CourseMaterial/04_Bridging-STP-New_I_C.pdf"
+   title="link esterno: www.netscire.it">slide</a>.
+
+La configurazione della rete &egrave; riassunta in 
+(<a href="pdf/bridgeSTP.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/bridgeSTP.xml" title="file per Dia">xml</a>).
+</p>
+
+<p>
+Fai partire lo script 
+che preconfigura i 5 bridge a livello 2:
+</p>
+
+<pre>
+realHost$ lstart -d withstp
+</pre>
+
+<p>
+Per prima cosa controlliamo che il kernel abbia caricato gli
+opportuni moduli:
+</p>
+
+<pre>
+b# lsmod | \
+    awk '{ if (NR == 1) print $0; \
+           else if (index ($0, "bridge")) print $0; }' -<span class="blue">
+Module                  Size  Used by
+bridge                 45720  0
+atm                    40824  1 bridge</span>
+</pre>
+
+<p>
+Nello script abbiamo settato la priorit&agrave; del bridge 4 a
+28672 in modo tale che venga eletto root bridge dall'algoritmo di spanning
+tree:
+</p>
+
+<pre>
+b4# brctl  setbridgeprio br0 28672; \
+    brctl show br0<span class="blue">
+bridge name     bridge id               STP enabled     interfaces
+br0             <span class="yellow">7000</span>.080028aa5030       yes             eth0
+                                                        eth1</span>
+</pre>
+
+<p>
+Inoltre per tutti i bridge &egrave; stato impostato il 
+<code>path cost</code> al valore 10. Il comando, ad esempio,
+per il bridge 3 con due porte &egrave;:
+</p>
+
+<pre>
+b3# brctl setpathcost br0 eth0 10; \
+    brctl setpathcost br0 eth1 10
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id=experiment>Sperimentazione interattiva</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Ora prima di attivare l'attivit&agrave; di bridging attiviamo
+le catture di traffico per tutti le cinque LAN:
+</p>
+
+<pre>
+b1# tcpdump -i eth0             (LAN 1)
+b1# tcpdump -i eth1             (LAN 4)
+b1# tcpdump -i eth2             (LAN 2)
+b5# tcpdump -i eth1             (LAN 5)
+b3# tcpdump -i eth0             (LAN 3)
+</pre>
+
+
+<p>
+A questo punto attiviamo i bridge (che sono stati configurati con stp on):
+</p>
+
+<pre>
+b1# ifconfig br0 up
+b2# ifconfig br0 up
+b3# ifconfig br0 up
+b4# ifconfig br0 up
+b5# ifconfig br0 up
+</pre>
+
+<p>
+Le catture
+(<a href="../capture/bridge-stp-lan1.acp"
+    title="file per Ethereal">LAN 1</a>,
+<a href="../capture/bridge-stp-lan2.acp"
+   title="file per Ethereal">LAN 2</a>,
+<a href="../capture/bridge-stp-lan3.acp"
+   title="file per Ethereal">LAN 3</a>,
+<a href="../capture/bridge-stp-lan4.acp"
+   title="file per Ethereal">LAN 4</a>,
+<a href="../capture/bridge-stp-lan5.acp"
+   title="file per Ethereal">LAN 5</a>) mostrano la contesa
+per il root bridge vinta da b4 e poi le notifiche di topology change.
+Per controllare lo stato dello STP nel brige esiste il comando
+<code>brctl showstp br0</code> che avendo un output alquanto prolisso
+ci obbliga ad usare un filtro per ridurre la
+quantit&agrave; di output.<br>
+Per conosce lo stato delle porte:
+</p>
+
+<pre>
+b1# brctl showstp br0 | grep 'state'<span class="blue">
+ port id        8001        state           forwarding
+ port id        8002        state           forwarding
+ port id        8003        state           blocking</span>
+
+b2# brctl showstp br0 | grep 'state'<span class="blue">
+ port id        8001        state           forwarding
+ port id        8002        state           blocking</span>
+
+b3# brctl showstp br0 | grep 'state'<span class="blue">
+ port id        8001        state           forwarding
+ port id        8002        state           forwarding</span>
+
+b4# brctl showstp br0 | grep 'state'<span class="blue">
+ port id        8001        state           forwarding
+ port id        8002        state           forwarding</span>
+
+b5# brctl showstp br0 | grep 'state'<span class="blue">
+ port id        8001        state           forwarding
+ port id        8002        state           forwarding</span>
+</pre>
+
+<p>
+<a href="stp-desktop.png" title="immagine PNG">(screenshot)</a><br>
+Le porte in stato di blocking sono nei bridge 1 e 2.
+</p>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/28 07:49:47 $
+</span>
+</address>
+
+
+</body>
+
+</html>

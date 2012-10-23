@@ -1,0 +1,1179 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-krb.html,v 1.12 2006/08/30 12:25:22 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-krb5</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p id="up">
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Amministrazione, gestione e autenticazione in rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Kerberos V5</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-dualSamba.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-openafs.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+A quasi un anno della prima versione di questa esperienza,
+la lettura dell'e-book di Giuseppe Patern&ograve; dal titolo
+&quot;Single Sign-On con Kerberos e LDAP&quot; mi ha indotto
+a riscriverla <code>pesantemente</code> con credo un ottimo risultato.
+Ringrazio pubblicamente.
+</p>
+
+<p>
+Nella mappa
+(<a href="pdf/krb.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/krb.xml" title="file per Dia">xml</a>)
+della rete in esame ci sono tre nodi collegati
+allo stesso dominio di collisione 192.168.10.0/24.
+Nel nodo <code>kdc</code> (192.168.10.4) sono configurati i
+seguenti servizi:
+</p>
+<ul>
+  <li>il Key Distribution Center (KDC) per kerberos composto
+dal Kerberos Server e dal Ticket Granter per il
+realm (reame) <code>ISTITUTO.IT</code>.</li>
+  <li>il directory LDAP</li>
+  <li>il DNS per il dominio <code>istituto.it</code></li>
+</ul>
+
+<p>
+Nel nodo <code>srv</code> (192.168.10.10) saranno configurati i servizi
+ftp, telnet e http.
+Il nodo <code>client</code> (192.168.10.200) rappresenta la
+classica stazione di lavoro, ossia il posto destinato al login
+dell'utenza.
+</p>
+
+<p>
+Vogliamo configurare kerberos e ldap in modo tale da sperimentare che
+un utente gi&agrave; autenticato nel realm <code>ISTITUTO.IT</code>
+possa ottenere servizio (ftp/telnet/http) senza doversi di nuovo autenticare.
+</p>
+
+<p>
+L'elenco dei pacchetti da installare per kerberos &egrave;:
+<code>krb5-admin-server</code>, <code>krb5-kdc</code>, <code>libkrb53</code>
+a cui si aggiunge
+<code>krb5-clients</code>,
+<code>krb5-ftpd</code>,
+<code>krb5-rsh-server</code>,
+<code>krb5-telnetd</code> per kerberizzare alcuni servizi.
+</p>
+
+<p>
+Per l'elenco dei pacchetti da installare per LDAP rimandiamo all'esperienza su
+<a href="uml-LDAP.html" title="esperienza Netkit4TIC">LDAP</a>. &Egrave;
+importante notare che anche se il supporto SASL viene garantito dal
+pacchetto <code>libsasl2</code> occorre installare 
+il supporto GSSAPI realizzato da <code>libsasl2-gssapi-mit</code>.
+</p>
+
+
+<p>
+Il file con 
+<a href="krb5.tgz"
+   title="esperienza Netkit4TIC">l'esperienza</a>
+deve essere decompresso su una sottodirectory della HOME.
+In seguito, dopo aver seguito le istruzioni presenti nel file README
+occorre lanciare lo script:
+</p>
+
+<pre>
+user@realHost$ ./lab start
+</pre>
+
+<p>
+<a href="krb-desktop.png" title="immagine PNG">(screenshot)</a>
+che costruisce i tre nodi con i servizi gi&agrave; configurati e attivati.
+</p>
+
+<p>
+In seguito gli argomenti vengono esposti suddivisi
+nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li>configurazione del sistema (automagicamente ottenuta dallo
+      script <code>./lab start</code>).
+  <ul>
+     <li>configurazione <a href="#kdc"
+                           title="riferimento interno">KDC</a></li>
+     <li>configurazione <a href="#ldap"
+                           title="riferimento interno">LDAP</a></li>
+     <li>configurazione <a href="#ftp-telnet"
+                           title="riferimento interno">server ftp e telnet</a></li>
+     <li>configurazione <a href="#apache"
+                           title="riferimento interno">server apache</a></li>
+     <li>configurazione <a href="#client"
+                           title="riferimento interno">client</a></li>
+     <li>configurazione <a href="#client-reali"
+                           title="riferimento interno">client &quot;reali&quot;</a></li>
+  </ul></li>
+  <li>Sperimentazione <a href="#interattiva"
+                         title="riferimento interno">interattiva</a>
+  <ul>
+     <li>sperimentazione <a href="#i-login"
+                           title="riferimento interno">login</a></li>
+     <li>sperimentazione <a href="#i-ftp"
+                           title="riferimento interno">ftp</a></li>
+     <li>sperimentazione <a href="#i-telnet"
+                           title="riferimento interno">telnet</a></li>
+     <li>sperimentazione <a href="#i-http"
+                           title="riferimento interno">http</a></li>
+     <li>sperimentazione <a href="#i-ldap"
+                           title="riferimento interno">ldap</a></li>
+  </ul>
+</ul>
+
+
+
+<p id="kdc">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione KDC</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Procediamo con i comandi sul nodo
+<code>krc</code> per l'inizializzazione del database:
+</p>
+
+<pre>
+root@kdc# kdb5_util create -s<span class="blue">
+<span class="red">Loading random data</span>
+Initializing database '/var/lib/krb5kdc/principal' for realm 'ISTITUTO.IT',
+master key name 'K/M@ISTITUTO.IT'
+You will be prompted for the database Master Password.
+It is important that you NOT FORGET this password.
+Enter KDC database master key: </span>not24get<span class="blue">
+Re-enter KDC database master key to verify: </span>not24get
+</pre>
+
+<p>
+Il tratto evidenziato in colore indica l'attivit&agrave; di generare
+numeri casuali. Nei mondo virtuale tutte le funzioni che utilizzano generazioni
+<a href="http://en.wikipedia.org/wiki//dev/random"
+   title="Riferimento esterno a WikiPedia">casuali</a>
+basandosi sull'attivit&agrave;
+dell'hardware subiscono rallentamenti e a volte dei blocchi
+perch&egrave; l'entropia &egrave; molto bassa rispetto alla realt&agrave;.
+
+In genere quindi
+dopo lo start dell'esperienza aspetto qualche minuto e nel
+frattempo genero dell'entropia battendo alcuni comandi alla
+console della macchina virtuale. Nel caso di blocco dovuto a un comando che
+usa <code>/dev/random</code>, lo sgancio dalla shell con CTRL-Z,
+poi lo faccio proseguire in background con il comando
+<code>bg</code> e nel frattempo genero entropia con
+comandi dalla tastiera.
+</p>
+
+<p>
+Costruiamo le utenze amministrative:
+</p>
+
+<pre>
+root@kdc# kadmin.local
+kadmin.local: ktadd -k /etc/krb5kdc/kadm5.keytab kadmin/admin
+kadmin.local: ktadd -k /etc/krb5kdc/kadm5.keytab kadmin/changepw
+kadmin.local: addprinc -pw secret krbadm@ISTITUTO.IT
+kadmin.local: q
+</pre>
+
+<p>
+Ora facciamo partire il servizio:
+</p>
+
+<pre>
+root@kdc# /etc/init.d/krb5-kdc start
+</pre>
+
+<p>
+Per attivare la possibilit&agrave; di amministrare
+il kdc da remoto dovremmo anche lanciare:
+</p>
+
+<pre>
+root@kdc# /etc/init.d/krb5-admin-server start
+</pre>
+
+
+
+
+
+
+<p id="ldap">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione LDAP</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Iniziamo costruendo i principals necessari per LDAP:
+</p>
+
+<ul>
+  <li>il servizio ldap/<span class="red">kdc</span>.istituto.it@ISTITUTO.IT (ldap)</li>
+  <li>l'utente ldapadm@ISTITUTO.IT</li>
+</ul>
+
+<p>
+Occorre far notare che siccome il nome <code>kdc</code> per il DNS
+&egrave; un alias a <code>ns</code>, il principals deve essere
+ldap/<span class="red">ns</span>.istituto.it@ISTITUTO.IT.
+</p>
+
+<pre>
+root@kdc# host kdc<span class="blue">
+kdc.istituto.it is an alias for ns.istituto.it.
+ns.istituto.it has address 192.168.10.4</span>
+
+root@kdc# kadmin.local
+Authenticating as principal root/admin@ISTITUTO.IT with password.
+
+kadmin: addprinc -pw secret ldap/ns.istituto.it@ISTITUTO.IT
+kadmin: ktadd -k /etc/krb5.keytab ldap/<span class="red">ns</span>.istituto.it@ISTITUTO.IT
+
+kadmin: addprinc -pw secret ldapadm@ISTITUTO.IT
+</pre>
+
+<p>
+Per una dettagliata configurazione di un server OpenLDAP
+rimandiamo all'esperienza virtuale
+<a href="uml-LDAP.html" title="esperienza Netkit4TIC">LDAP</a>.
+La configurazione che andremo invece a fare riguarda la
+capacit&agrave; di utilizzare kerberos come sistema
+di autenticazione e di utilizzare kerberos come
+sistema di back-end per le password. Nel file di configurazione
+il primo settaggio consiste in:
+</p>
+
+<pre>
+# /etc/ldap/slapd.conf
+[...]
+sasl-realm      ISTITUTO.IT
+sasl-host       ldap.istituto.it
+[...]
+</pre>
+
+<p>
+mentre la seconda feature viene ottenuta da un modulo che
+occorre compilare a partire dai sorgenti e che si chiama
+<code>pw-kerberos.so</code>.
+</p>
+
+<p>
+Le istruzioni sono le seguenti:
+</p>
+
+<pre>
+# apt-get --download-only source slapd; \
+  dpkg-source -x openldap2.3_2.2.23-8.dsc; \
+  cd openldap2.3-2.2.23/; \
+  cd contrib/slapd-modules/passwd; \
+  gcc -shared -I../../../include -Wall -g -DHAVE_KRB5 \
+      -o pw-kerberos.so kerberos.c
+</pre>
+
+<p>
+Ora dopo aver spostato il modulo in <code>/usr/lib</code>
+possiamo richiamarlo dall'interno del file di configurazione di slapd:
+</p>
+
+
+<pre>
+# /etc/ldap/slapd.conf
+[...]
+modulepath      /usr/lib
+moduleload      pw-kerberos.so
+[...]
+</pre>
+
+<p>
+e visto che le password stanno su kerberos, possiamo
+specificare il root DN come:
+</p>
+
+<pre>
+# /etc/ldap/slapd.conf
+[...]
+rootdn          "cn=ldapadm,ou=People,dc=istituto,dc=it"
+rootpw          {KERBEROS}ldapadm@ISTITUTO.IT
+[...]
+</pre>
+
+
+
+<p>
+Inoltre occorre includere <code>krb5-kdc.schema</code> che si
+pu&ograve; reperire ad esempio da:
+</p>
+
+<pre>
+wget http://www.bayour.com/openldap/schemas/krb5-kdc.schema
+</pre>
+
+
+<p>
+Una cura particolare vanno alle ACL che vengono modificate
+dal sistema GSSAPI. Ad esempio il principal mrossi@ISTITUTO.IT
+viene visto come:
+</p>
+
+<pre>
+dn="uid=mrossi,cn=istituto.it,<span class="yellow">cn=gssapi,cn=auth</span>"
+</pre>
+
+<p>
+Da questo segue che le ACL devono prevedere questa modalit&agrave;
+di accesso. Infatti in &quot;Administrator's Guide&quot; c'&egrave;
+una sezione da leggere e applicare dal titolo
+&quot;Using SASL&quot;.<br>
+Le direttive che abbiamo applicato inserendole nella configurazione
+di slapd sono:
+</p>
+
+<pre>
+# Mapping Authentication Identities (SASL + GSSAPI case)
+sasl-regexp
+       uid=(.*),cn=istituto.it,cn=gssapi,cn=auth
+       cn=$1,ou=People,dc=istituto,dc=it
+</pre>
+
+<p>
+Sempre a proposito di ACL occorre proteggere il sistema da
+cambi di password che vanno fatti esclusivamente con kerberos:
+</p>
+
+<pre>
+# /etc/ldap/slapd.access
+[...]
+# Since we're using {KERBEROS}&lt;PRINCIPAL&gt; we can't allow the user
+# to change the password. They have to use the Kerberos 'kpasswd' to
+# do this... But the ldapadm can change (if need be).
+# Please see krb5 userPassword attribute
+access to attr=userPassword
+        by dn="cn=ldapadm,ou=People,dc=istituto,dc=it" write
+        by anonymous auth
+        by * none
+[...]
+</pre>
+
+
+<p>
+Ora siamo quasi pronti: carichiamo il database e attiviamo slapd:
+</p>
+
+<pre>
+root@srv# slapadd -l ldapentries.diff
+root@srv# /etc/init.d/slapd start
+</pre>
+
+
+
+
+
+<p id="ftp-telnet">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione server ftp e telnet</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+</p>
+
+<p>
+Definiamo dal nodo <code>srv</code>
+i &quot;principal&quot;:
+</p>
+
+<ul>
+  <li>il servizio ftp/srv.istituto.it@ISTITUTO.IT (ftp)</li>
+  <li>il servizio host/srv.istituto.it@ISTITUTO.IT (telnet)</li>
+</ul>
+
+<pre>
+root@srv# kadmin -p krbadm<span class="blue">
+Authenticating as principal krbadm with password.
+Password for krbadm@ISTITUTO.IT:</span>secret
+
+kadmin: addprinc -pw secret host/srv.istituto.it@ISTITUTO.IT
+kadmin: ktadd -k /etc/krb5.keytab host/srv.istituto.it@ISTITUTO.IT
+
+kadmin: addprinc -pw secret ftp/srv.istituto.it@ISTITUTO.IT
+kadmin: ktadd -k /etc/krb5.keytab ftp/srv.istituto.it@ISTITUTO.IT
+</pre>
+
+<p>
+Per lo startup dei server ci basiamo su <code>xinetd</code> il
+quale ha bisogno di un file di definizione per ogni servizio.
+Per ftp:
+</p>
+
+<pre>
+# /etc/xinet.d/ftp
+service ftp
+{
+        socket_type         = stream
+        wait                = no
+        nice                = 10
+        user                = root
+        server              = /usr/sbin/ftpd
+}
+</pre>
+
+<p>
+per telnet:
+</p>
+
+
+<pre>
+# /etc/xinet.d/telnet
+service telnet
+{
+        socket_type         = stream
+        wait                = no
+        nice                = 10
+        user                = root
+        server              = /usr/sbin/telnetd
+        server_args         = -h
+}
+</pre>
+
+<p>
+Terminato il lavoro di configurazione, attiviamo il servizio:
+</p>
+
+<pre>
+root@srv# /etc/init.d/xinetd start
+</pre>
+
+
+
+<p id="apache">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione server apache</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Definiamo per prima cosa, dal nodo <code>srv</code>, il principal
+relativo al servizio http:
+</p>
+
+<pre>
+root@srv# kadmin -p krbadm<span class="blue">
+Authenticating as principal krbadm with password.
+Password for krbadm@ISTITUTO.IT:</span>secret
+
+kadmin: addprinc -pw secret HTTP/srv.istituto.it@ISTITUTO.IT
+kadmin: ktadd -k /etc/krb5-srv.keytab HTTP/srv.istituto.it@ISTITUTO.IT
+
+kadmin: q
+</pre>
+
+<p>
+Per provare il servizio web occorre usare un browser come firefox che non
+&egrave; installato nelle vm ma solo sulla macchina reale. Occorre quindi
+configurare un utente della macchina reale, <code>knoppix</code> ad esempio,
+come principal del realm <code>ISTITUTO.IT</code>. Occorre inoltre settare
+il server web per accettare connessioni con kerberos almeno su una
+particolare directory.<br>
+Dividiamo la configurazione in due sezioni:
+</p>
+
+<ul>
+  <li><a href="#http-srv" title="">Configurazione server http virtuale</a></li>
+  <li><a href="#http-clnt" title="">Configurazione client http reale</a>:</li>
+</ul>
+
+
+<h4 id="http-srv">Configurazione server http virtuale</h4>
+
+
+<p>
+Abilitiamo il modulo apache per il dialogo con kerberos:
+</p>
+
+<pre>
+# /etc/apache/modules.conf
+[...]
+LoadModule auth_kerb_module /usr/lib/apache/1.3/mod_auth_kerb.so
+[...]
+</pre>
+
+<p>
+Costruiamo una pagina minimale:
+</p>
+
+<pre>
+&lt;php
+/* /protected/index.php */
+phpinfo()
+?&gt;
+</pre>
+
+
+<p>
+Configuriamo la directory <code>/protected/</code> per attivare
+kerberos:
+</p>
+
+<pre>
+# /etc/apache/http.conf
+[...]
+&lt;Directory /var/www/protected&gt;
+   Options Indexes SymLinksIfOwnerMatch
+
+   AuthType Kerberos
+   AuthName "ISTITUTO.IT Login"
+   Krb5Keytab /etc/krb5.keytab
+   KrbAuthRealms ISTITUTO.IT
+   require valid-user
+&lt;Directory&gt;
+[...]
+</pre>
+
+<p>
+Aggiustiamo il gruppo e i permessi del file <code>/etc/krb5.keytab</code>:
+</p>
+
+<pre>
+root@srv# chmod g+r,o= /etc/krb5.keytab
+root@srv# chgrp www-data /etc/krb5.keytab
+</pre>
+
+<p>
+Attiviamo il server apache:
+</p>
+
+<pre>
+root@srv# /etc/init.d/apache start
+</pre>
+
+
+
+<h4 id="http-clnt">Configurazione client http reale</h4>
+
+<p>
+Definire dal nodo <code>srv</code>
+i &quot;principal&quot;:
+</p>
+
+<ul>
+  <li>l'utente knoppix@ISTITUTO.IT</li>
+</ul>
+
+<pre>
+root@srv# kadmin -p krbadm<span class="blue">
+Authenticating as principal krbadm with password.
+Password for krbadm@ISTITUTO.IT:</span>secret
+
+kadmin: addprinc -pw secret knoppix@ISTITUTO.IT
+
+kadmin: q
+</pre>
+
+<p>
+Per configurare l'utenza knoppix della macchina reale sul realm
+<code>ISTITUTO.IT</code> occorre per prima cosa far riferimento
+al DNS della rete virtuale:
+</p>
+
+
+<pre>
+# /etc/resolv.conf
+domain istituto.it
+nameserver 192.168.10.4
+</pre>
+
+<p>
+dopo di ci&ograve; occorre installare, grazie a UNION filesystem,
+il software kerberos mancante:
+</p>
+
+<pre>
+root@realHost# dpkg -i knoppix/krb5-config_1.6_all.deb \
+                       knoppix/krb5-user_1.3.6-2sarge2_i386.deb \
+                       knoppix/libkrb53_1.3.6-2sarge2_i386.deb \
+                       knoppix/libkadm55_1.3.6-2sarge2_i386.deb
+</pre>
+
+<p>
+poi copiamo il file di configurazione:
+</p>
+
+<pre>
+root@realHost# cp krb5.conf /etc/krb5.conf
+</pre>
+
+
+<p id="client">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione client</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per prima cosa definiamo il principal associato al nostro utente
+di prova <code>mrossi@ISTITUTO.IT</code> (con password <code>bianchi</code>)
+e il principal associato al nodo <code>client</code> stesso:
+</p>
+
+<pre>
+root@client# kadmin -p krbadm<span class="blue">
+Authenticating as principal krbadm with password.
+Password for krbadm@ISTITUTO.IT:</span>secret
+
+kadmin: addprinc -pw bianchi mrossi@ISTITUTO.IT
+
+kadmin: addprinc -pw secret host/client.istituto.it@ISTITUTO.IT
+kadmin: ktadd -k /etc/krb5.keytab host/client.istituto.it@ISTITUTO.IT
+kadmin: q
+</pre>
+
+
+<p>
+Per la configurazione del nodo <code>client</code> ricorreremo
+alla configurazione di PAM per l'autenticazione e poi a NSS in
+combinazione con LDAP per la risoluzione dei nomi dei servizi.
+Tale configurazione v&agrave; replicata in ogni nodo in cui si
+vuole permettere il login: infatti tale configurazione viene
+riportata anche per il nodo <code>srv</code>.
+</p>
+
+<p>
+Come sperimentato nell'esperienza legata al
+<a href="uml-pam.html" title="Esperienza Netkit4TIC">PAM</a>
+occorre modificare i files <code>common-*</code> all'interno
+della directory <code>/etc/pam.d</code> inserendo con
+clausola <span class="yellow">sufficient</span> il modulo kerberos:
+</p>
+
+<pre>
+# /etc/pam.d/common-account
+account   sufficient pam_krb5.so
+account   required   pam_unix.so
+
+# /etc/pam.d/common-auth
+auth      sufficient pam_krb5.so nullok_secure forwardable
+auth      required   pam_unix.so nullok_secure use_first_pass
+
+# /etc/pam.d/common-password
+password  sufficient pam_krb5.so nullok obscure
+password  required   pam_unix.so nullok obscure min=4 max=8 md5 use_first_pass
+
+# /etc/pam.d/common-session
+session   sufficient pam_krb5.so forwardable
+session   required   pam_unix.so
+</pre>
+
+<p>
+In seguito configuriamo come il Name Service Switch (NSS) deve
+accedere a LDAP:
+</p>
+
+<pre>
+# /etc/libnss-ldap.conf
+host ldap.istituto.it
+base dc=istituto,dc=it
+nss_base_passwd ou=People,dc=istituto,dc=it
+nss_base_shadow ou=People,dc=istituto,dc=it
+nss_base_group  ou=Group,dc=istituto,dc=it
+</pre>
+
+<p>
+e ora l'ultimo passo &egrave; quello di attivare il NSS a
+consultare LDAP:
+</p>
+
+<pre>
+# /etc/nsswitch.conf
+passwd:         compat ldap
+group:          compat ldap
+shadow:         compat ldap
+</pre>
+
+
+
+
+<p id="client-reali">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione client &quot;reali&quot;</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la configurazione dei client reali rimandiamo al gi&agrave; citato
+documento di Patern&ograve;. Ricordiamo solo che occorre configurare
+opportunamente le tabelle di routing.
+</p>
+
+
+<p id=interattiva>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Sperimentazione interattiva</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Da questo punto in poi iniziano le attivit&agrave; interattive
+che si possono sperimentare alla conclusione dello script <code>lab</code>.
+</p>
+
+
+<p id="i-login">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Login</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per sperimentare il login ci posizioniamo
+sul nodo <code>client</code> e ci loggiamo come utente <code>mrossi</code>
+(password: <code>bianchi</code>):
+</p>
+
+<pre>
+client login: mrossi<span class="blue">
+Password for mrossi@ISTITUTO.IT:</span>bianchi 
+
+mrossi@client$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_500_p6FFBQ
+Default principal: mrossi@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 21:12:33  08/21/05 07:12:32  host/client.istituto.it@ISTITUTO.IT
+08/20/05 21:12:33  08/21/05 07:12:32  krbtgt/ISTITUTO.IT@ISTITUTO.IT</span>
+</pre>
+
+<p>
+possiamo verificare che il login &egrave; avvenuto correttamente
+e ha prodotto un token relativo alla &quot;workstation&quot;
+<code>client</code> e un Ticket Granting Ticket (TGT)
+<a href="krb-desktop-login.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+
+<p id="i-ftp">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Accesso ftp kerberizzato</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per sperimentare il servizio ftp, sempre dal nodo <code>client</code>
+diamo il comando:
+</p>
+
+<pre>
+mrossi@srv$ ftp srv<span class="blue">
+Connected to srv.istituto.it.
+220 srv FTP server (Version 5.60) ready.
+334 Using authentication type GSSAPI; ADAT must follow
+GSSAPI accepted as authentication type
+GSSAPI authentication succeeded
+Name (srv:mrossi):</span>INVIO<span class="blue">
+232 GSSAPI user mrossi@ISTITUTO.IT is authorized as mrossi
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&gt; quit
+221 Goodbye.</span>
+</pre>
+
+
+
+<p>
+verifichiamo che l'utente ha acquisito automaticamente 
+anche il token per il servizio ftp
+<a href="krb-desktop-ftp.png" title="immagine PNG">(screenshot)</a>:
+</p>
+
+<pre>
+mrossi@srv$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_500_p6FFBQ
+Default principal: mrossi@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 21:12:33  08/21/05 07:12:32  host/client.istituto.it@ISTITUTO.IT
+08/20/05 21:12:33  08/21/05 07:12:32  krbtgt/ISTITUTO.IT@ISTITUTO.IT
+08/20/05 21:15:12  08/21/05 07:12:32  ftp/srv.istituto.it@ISTITUTO.IT</span>
+</pre>
+
+
+
+
+<p id="i-telnet">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Accesso telnet kerberizzato</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per sperimentare il servizio telnet, sempre dal nodo <code>client</code>
+diamo il comando:
+</p>
+
+<pre>
+mrossi@srv$ telnet -l mrossi srv<span class="blue">
+telnet -l mrossi srv
+Trying 192.168.10.10...
+Connected to srv.istituto.it (192.168.10.10).
+Escape character is '^]'.
+[ Kerberos V5 accepts you as ``mrossi@ISTITUTO.IT'' ]
+Last login: Thu Aug 18 18:32:30 from client
+Linux x 2.4.26-bs1 #2 Sun Jul 31 10:36:46 CEST 2005 i686 GNU/Linux</span>
+mrossi@srv$ exit<span class="blue">
+logout
+Connection closed by foreign host.</span>
+</pre>
+
+<p>
+verifichiamo che l'utente ha acquisito automaticamente 
+anche il token per il servizio telnet
+<a href="krb-desktop-telnet.png" title="immagine PNG">(screenshot)</a>:
+</p>
+
+<pre>
+mrossi@srv$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_500_p6FFBQ
+Default principal: mrossi@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 21:12:33  08/21/05 07:12:32  host/client.istituto.it@ISTITUTO.IT
+08/20/05 21:12:33  08/21/05 07:12:32  krbtgt/ISTITUTO.IT@ISTITUTO.IT
+08/20/05 21:15:12  08/21/05 07:12:32  ftp/srv.istituto.it@ISTITUTO.IT
+08/20/05 21:17:04  08/21/05 07:12:32  host/srv.istituto.it@ISTITUTO.IT</span>
+</pre>
+
+
+
+<p id="i-http">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Accesso http kerberizzato</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Ora possiamo chiedere un token e verificare il risultato:
+</p>
+
+<pre>
+knoppix@realHost$ kinit<span class="blue">
+Password for knoppix@ISTITUTO.IT:</span>secret
+
+knoppix@realHost$  klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_1000
+Default principal: knoppix@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 15:28:32  08/21/05 01:28:29  krbtgt/ISTITUTO.IT@ISTITUTO.IT</span>
+</pre>
+
+<p>
+<a href="krb-desktop-knoppix.png" title="immagine PNG">(screenshot)</a>.<br>
+Prima di provare l'accesso http configuriamo firefox affinch&egrave;
+utilizzi
+<a href="krb-firefox-setting.png" title="immagine PNG">kerberos</a>
+non solo per le sessioni https.<br>
+Ora proviamo l'accesso http:
+</p>
+
+<pre>
+knoppix@realHost$ mozilla http://srv/protected/index.php
+</pre>
+
+<p>
+Dallo <a href="krb-firefox-browsing.png" title="immagine PNG">(screenshot)</a>
+possiamo verificare che <code>REMOTE_USER</code> &egrave;
+valorizzato a <code>knoppix@ISTITUTO.IT</code> riportando quindi
+anche il Kerberos Principal.<br>
+Controlliamo i token a disposizione:
+</p>
+
+<pre>
+knoppix@realHost$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_1000
+Default principal: knoppix@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 15:28:32  08/21/05 01:28:29  krbtgt/ISTITUTO.IT@ISTITUTO.IT
+08/20/05 15:37:15  08/21/05 01:28:29  HTTP/srv.istituto.it@ISTITUTO.IT</span>
+</pre>
+
+
+
+<p id="i-ldap">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Accesso ldap kerberizzato</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Verifichiamo i SASL supportati dal lato server:
+</p>
+
+<pre>
+root@srv# ldapsearch -h ldap -x -b "" -s base \
+  -LLL supportedSASLMechanisms<span class="blue">
+supportedSASLMechanisms: <span class="yellow">GSSAPI</span>
+supportedSASLMechanisms: NTLM
+supportedSASLMechanisms: OTP
+supportedSASLMechanisms: DIGEST-MD5
+supportedSASLMechanisms: CRAM-MD5</span>
+</pre>
+
+
+
+<p>
+e ora controlliamo il database:
+</p>
+
+<pre>
+root@srv# ldapsearch -h ldap -x -b "dc=istituto,dc=it" -W \
+  -D "cn=ldapadm,ou=People,dc=istituto,dc=it"  "objectClass=*"<span class="blue">
+Enter LDAP Password:</span>secret
+[...]
+</pre>
+
+<p>
+Facciamo la controprova: cambiamo la password del principal
+ldapadm in kerberos e vediamo se tutto continua a tornare:
+</p>
+
+<pre>
+root@srv# kadmin -p krbadm<span class="blue">
+Authenticating as principal krbadm with password.
+Password for krbadm@ISTITUTO.IT:</span> secret<span class="blue">
+kadmin:</span> cpw ldapadm<span class="blue">
+Enter password for principal "ldapadm":</span> qwerty<span class="blue">
+Re-enter password for principal "ldapadm":</span> qwerty<span class="blue">
+Password for "ldapadm@ISTITUTO.IT" changed.
+kadmin:</span> q
+</pre>
+
+
+<pre>
+root@srv# ldapsearch -h ldap -x -b "dc=istituto,dc=it" -W \
+  -D "cn=ldapadm,ou=People,dc=istituto,dc=it"  "objectClass=*"<span class="blue">
+Enter LDAP Password:</span>qwerty
+[...]
+</pre>
+
+<p>
+Funziona: effettivamente va a pescare la password su kerberos!
+</p>
+
+
+<p>
+Lo schema di autorizzazioni (ACL) abilita la modifica al solo
+utente amministrativo. Abbiamo voluto verificare questo vincolo
+utilizzando il browser grafico <code>gq</code> che purtroppo
+ha le funzionalit&agrave; GSSAPI disabilitate perch&egrave; con
+troppi bachi. In modalit&agrave; &quot;simple&quot; abbiamo ottenuto
+<a href="krb-gq-01.png" title="screenshot">questo</a>
+risultato nel caso di BIND con <code>cn=ldapadm,ou=People,dc=istituto,dc=it</code> e
+<a href="krb-gq-02.png" title="screenshot">quest'altro</a>
+risultato nel caso di BIND con <code>cn=Mario Rossi,ou=People,dc=istituto,dc=it</code>.
+</p>
+
+<p>
+Lasciamo al lettore l'esercizio di verificare la
+&quot;visibilit&agrave;&quot; del campo <code>userPassword</code>
+utilizzando GSSAPI.
+</p>
+
+
+<p>
+Per controllare l'autenticazione con kerberos:
+</p>
+
+<pre>
+client login: mrossi<span class="blue">
+Password for mrossi@ISTITUTO.IT:</span>bianchi
+mrossi@client$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_500_CcEKZG
+Default principal: mrossi@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 21:44:25  08/21/05 07:44:25  host/client.istituto.it@ISTITUTO.IT
+08/20/05 21:44:25  08/21/05 07:44:25  krbtgt/ISTITUTO.IT@ISTITUTO.IT</span>
+
+mrossi@client$ ldapsearch -h ldap -b "dc=istituto,dc=it" "objectClass=*"<span class="blue">
+SASL/GSSAPI authentication started
+SASL username: mrossi@ISTITUTO.IT
+SASL SSF: 56
+SASL installing layers
+[...]</span>
+
+mrossi@client$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_500_CcEKZG
+Default principal: mrossi@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/20/05 21:44:25  08/21/05 07:44:25  host/client.istituto.it@ISTITUTO.IT
+08/20/05 21:44:25  08/21/05 07:44:25  krbtgt/ISTITUTO.IT@ISTITUTO.IT
+08/20/05 21:45:55  08/21/05 07:44:25  ldap/ns.istituto.it@ISTITUTO.IT</span>
+</pre>
+
+<p>
+<a href="krb-desktop-ldap.png" title="immagine PNG">(screenshot)</a>
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/08/30 12:25:22 $
+</span>
+</address>
+
+
+</body>
+</html>

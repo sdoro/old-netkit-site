@@ -1,0 +1,24 @@
+# /etc/network/interfaces
+# $Id: interfaces,v 1.2 2005/11/06 21:26:30 doros Exp $
+
+# Loopback interface.
+auto lo
+iface lo inet loopback
+
+# bridge
+auto br0
+iface br0 inet static
+    address 192.168.1.1
+    masklen 24
+    netmask 255.255.255.0
+    broadcast 192.168.1.255
+    pre-up /sbin/ip link set eth0 up
+    pre-up /sbin/ip link set eth1 up
+    pre-up ip link set eth0 address 00:00:00:00:00:0A
+    pre-up ip link set eth1 address 00:00:00:00:00:0B
+    pre-up /usr/sbin/brctl addbr br0
+    pre-up /usr/sbin/brctl addif br0 eth0
+    pre-up /usr/sbin/brctl addif br0 eth1
+
+#
+# bot

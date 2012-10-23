@@ -1,0 +1,32 @@
+# ~/.muttrc
+# $Id: .muttrc,v 1.3 2005-11-13 09:19:44 doros Exp $
+
+set pager_context=1
+set pager_index_lines=6             # show a mini-index in pager
+set status_on_top                   # put status line at top
+set sort=threads                    # sort by message threads in index
+
+set record="$HOME/MuttMail/sent"    # sent mail is saved here
+set delete=yes                      # delete without prompting
+set include=yes                     # quote msg in reply
+set fast_reply=yes                  # no prompting on reply
+set beep=no                         # no noise
+set confirmappend=no                # no prompt for save to =keep
+
+set folder = $HOME/MuttMail
+mailboxes =sent
+
+save-hook .* =keep                  # default mbox to (s)ave mail is =keep
+
+# draconian header weeding
+ignore *
+unignore from date subject
+
+# how often (in seconds) mutt should look for new mail.
+set mail_check=20
+# controls the number of seconds Mutt will wait for a key to be pressed
+# in the main menu before timing out and checking for new mail. A value
+# of zero or less will cause Mutt to never time out.
+set timeout=20
+
+# bot

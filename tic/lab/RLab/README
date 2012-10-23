@@ -1,0 +1,21 @@
+$Id: README,v 1.14 2007-04-28 21:50:12 doros Exp $
+
+In this experience the pc-ext host has network connectivity (tun
+module) with the real host. Before start the Netkit script you must
+create a tap device as normal user:
+
+realHost$ export ifname_rlab=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname_rlab 192.168.79.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+Than you can add a routing rule:
+
+realHost# echo "1" > /proc/sys/net/ipv4/ip_forward; \
+          route add -net 192.168.0.0/24 gw 192.168.79.2
+

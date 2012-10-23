@@ -1,0 +1,127 @@
+diff -ur linux-2.4.19/drivers/net/tulip/interrupt.c linux-2.4.19-tulip-vlan/drivers/net/tulip/interrupt.c
+--- linux-2.4.19/drivers/net/tulip/interrupt.c	Fri Nov  9 21:45:35 2001
++++ linux-2.4.19-tulip-vlan/drivers/net/tulip/interrupt.c	Mon Sep 16 13:17:40 2002
+@@ -122,14 +122,36 @@
+ 	/* If we own the next entry, it is a new packet. Send it up. */
+ 	while ( ! (tp->rx_ring[entry].status & cpu_to_le32(DescOwned))) {
+ 		s32 status = le32_to_cpu(tp->rx_ring[entry].status);
++		short pkt_len;
+ 
+ 		if (tulip_debug > 5)
+ 			printk(KERN_DEBUG "%s: In tulip_rx(), entry %d %8.8x.\n",
+ 				   dev->name, entry, status);
+ 		if (--rx_work_limit < 0)
+-			break;
+-		if ((status & 0x38008300) != 0x0300) {
+-			if ((status & 0x38000300) != 0x0300) {
++		        break;
++			
++		/*
++		  Omit the four octet CRC from the length.
++		  (May not be considered valid until we have
++		  checked status for RxLengthOver2047 bits)
++                */
++		pkt_len = ((status >> 16) & 0x7ff) - 4;
++
++		/*
++		  Maximum pkt_len is 1518 (1514 + vlan header)
++		  Anything higher than this is always invalid
++		  regardless of RxLengthOver2047 bits
++		*/
++
++		if ((status & (RxLengthOver2047 |
++			       RxDescCRCError |
++			       RxDescCollisionSeen |
++			       RxDescRunt |
++			       RxDescDescErr |
++			       RxWholePkt))        != RxWholePkt
++		    || pkt_len > 1518 ) {
++			if ((status & (RxLengthOver2047 |
++				       RxWholePkt))         != RxWholePkt) {
+ 				/* Ingore earlier buffers. */
+ 				if ((status & 0xffff) != 0x7fff) {
+ 					if (tulip_debug > 1)
+@@ -138,31 +160,21 @@
+ 							   dev->name, status);
+ 					tp->stats.rx_length_errors++;
+ 				}
+-			} else if (status & RxDescFatalErr) {
++			} else {
+ 				/* There was a fatal error. */
+ 				if (tulip_debug > 2)
+ 					printk(KERN_DEBUG "%s: Receive error, Rx status %8.8x.\n",
+ 						   dev->name, status);
+ 				tp->stats.rx_errors++; /* end of a packet.*/
+-				if (status & 0x0890) tp->stats.rx_length_errors++;
++				if (pkt_len > 1518 ||
++				    status & RxDescRunt) tp->stats.rx_length_errors++;
+ 				if (status & 0x0004) tp->stats.rx_frame_errors++;
+ 				if (status & 0x0002) tp->stats.rx_crc_errors++;
+ 				if (status & 0x0001) tp->stats.rx_fifo_errors++;
+ 			}
+ 		} else {
+-			/* Omit the four octet CRC from the length. */
+-			short pkt_len = ((status >> 16) & 0x7ff) - 4;
+ 			struct sk_buff *skb;
+ 
+-#ifndef final_version
+-			if (pkt_len > 1518) {
+-				printk(KERN_WARNING "%s: Bogus packet size of %d (%#x).\n",
+-					   dev->name, pkt_len, pkt_len);
+-				pkt_len = 1518;
+-				tp->stats.rx_length_errors++;
+-			}
+-#endif
+-
+ #ifdef CONFIG_NET_HW_FLOWCONTROL
+                         drop = atomic_read(&netdev_dropping);
+                         if (drop)
+diff -ur linux-2.4.19/drivers/net/tulip/tulip.h linux-2.4.19-tulip-vlan/drivers/net/tulip/tulip.h
+--- linux-2.4.19/drivers/net/tulip/tulip.h	Fri Nov  9 21:45:35 2001
++++ linux-2.4.19-tulip-vlan/drivers/net/tulip/tulip.h	Mon Sep 16 11:55:33 2002
+@@ -186,11 +186,44 @@
+ 
+ enum desc_status_bits {
+ 	DescOwned = 0x80000000,
+-	RxDescFatalErr = 0x8000,
++
++        /* 
++	   Error summary flag is logical or of 'CRC Error',
++	   'Collision Seen', 'Frame Too Long', 'Runt' and 
++	   'Descriptor Error' flags generated within tulip chip.
++	*/
++        RxDescErrorSummary = 0x8000, 
++	
++	RxDescCRCError = 0x0002,
++        RxDescCollisionSeen = 0x0040,
++	
++        /* 
++	   'Frame Too Long' flag is set if packet length including CRC
++	   exceeds 1518.  However, a full sized VLAN tagged frame is
++	   1522 bytes including CRC.
++	   
++	   The tulip chip does not block oversized frames, and if this
++	   flag is set on a receive descriptor it does not indicate
++	   the frame has been truncated.  The receive descriptor also
++	   includes the actual length.  Therefore we can safety ignore
++	   this flag and check the length ourselves. 
++        */
++        RxDescFrameTooLong = 0x0080,
++	RxDescRunt = 0x0800,
++	RxDescDescErr = 0x4000,
+ 	RxWholePkt = 0x0300,
++	
++	/*
++	  Top three bits of 14 bit frame length (status bits 27-29) 
++          should never be set as that would make frame over 2047 bytes.
++	  The Receive Watchdog flag (bit 4) may indicate the length is
++          over 2048 and the length field is invalid.
++	*/
++	RxLengthOver2047 = 0x38000010
+ };
+ 
+ 
++
+ enum t21041_csr13_bits {
+ 	csr13_eng = (0xEF0<<4), /* for eng. purposes only, hardcode at EF0h */
+ 	csr13_aui = (1<<3), /* clear to force 10bT, set to force AUI/BNC */

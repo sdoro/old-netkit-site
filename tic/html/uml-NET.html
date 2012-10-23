@@ -1,0 +1,529 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-NET.html,v 1.51 2007-05-07 07:47:41 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-NET</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 10 - Progetto di reti</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Progetto e configurazione di una rete</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-IDS.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>.
+</p>
+
+
+<p>
+Scarica il <a href="NET.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente tutto il necessario e
+scompattalo in una sottodirectory della tua <code>HOME</code> directory.<br>
+Usa questo utile 
+<a href="http://jodies.de/ipcalc" title="IP calculator">IP calculator</a>
+(<code>apt-get show ipcalc</code>) per calcolare network, netmask,
+broadcast, hostMin e hostMax (IPv4 only).
+</p>
+
+
+
+<p>
+Questa esercitazione &egrave; intesa come
+banco di prova per una rete reale. Credo di poter
+affermare con serenit&agrave; che il numero di ore 
+spese per l'installazione e la configurazione di una rete virtuale
+sia nettamente inferiore alla sua controparte reale visto che
+il risultato finale sono file di configurazione 
+funzionanti &quot;al primo tentativo&quot;.
+</p>
+
+
+
+<p>
+La lista dei passi:
+</p>
+
+<ul>
+  <li>configurazione del server
+      DNS <a href="#domain">Bind</a></li>
+  <li>configurazione del Mail Transport Agent
+      (MTA) <a href="#mta">Postfix</a></li>
+</ul>
+
+
+
+
+
+<p>
+La mappa
+(<a href="pdf/uml-pnum.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/uml-pnum.xml" title="file per Dia">xml</a>)
+ della rete &egrave;, con buona approssimazione,
+quella della rete sperimentale che puoi trovare nel
+<a href="module10.html">modulo 10</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="domain">Configurazione DNS</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per prima cosa consiglio di leggere la documentazione sull'implementazione
+DNS di
+<a href="bind.html" title="approfondimento">bind</a> e in seguito
+provare l'esperienza virtuale su
+<a href="uml-dns.html"
+   title="esperienza Netkit4TIC">DNS</a>.
+</p>
+
+<p>
+In questa prima versione sono stati
+configurati i DNS in modo da poter usare il dominio <code>tic.fdns.net</code>.
+L'esercizio &egrave; completo con la simulazione del DNS per il
+<code>ROOT-SERVER</code>, per i domini <code>net</code>,
+<code>fdns.net</code>,
+<code>tic.fdns.net</code> e il dominio "inverso" <code>in-addr.arpa</code>.
+Per quest'ultimo abbiamo deciso che il dominio
+<code>5.57.216.in-addr.arpa</code> sia gestito da <code>ns.net</code> mentre
+<code>5.57.217.in-addr.arpa</code> da <code>ns.fdns.net</code>. Per
+la delegazione di <code>216/29.5.57.217.in-addr.arpa</code> a
+<code>ns1.tic.fdns.net</code> ho usato la documentazione presente in
+<a href="http://www.ietf.org/rfc/rfc2317.txt"
+       title="link esterno">RFC 2317</a>.
+
+</p>
+
+<p>
+Sollecitiamo l'intero sistema di risoluzione in modo da analizzare
+il funzionamento e i meccanismi dei sistemi coinvolti:
+</p>
+
+<pre>
+SSO-server# host ns.fdns.net<span class="blue">
+ns.fdns.net has address 216.57.5.215</span>
+</pre>
+
+<p>
+Ogni nodo ben configurato ha il risolutore dei nomi impostato
+per chiedere il servizio al propio gestore di dominio.
+Tale configurazione &egrave; memorizzata nel file
+<code>/etc/resolv.conf</code>. Quando il server
+interpellato (<code>srv1.tic.fdns.net</code>) riconosce 
+di non essere autoritativo chieder&agrave; la risoluzione al
+<code>ROOT</code> server che in seguito rimander&agrave; al
+server autoritativo per <code>net</code> che a sua volta rimander&agrave;
+al server autoritativo per <code>fdns.net</code> che a sua volta rimander&agrave;
+al server autoritativo per <code>tic.fdns.net</code> che alla fine
+risolver&agrave; il nome in indirizzo. A questo punto il primo server
+interpellato ha la risoluzione dell'indirizzo e la comunicher&agrave;
+al client. Nello stesso tempo memorizza in una cache il risultato
+in modo tale da rispondere velocemente ad una successiva identica
+richiesta.
+</p>
+
+<p>
+Ecco le tracce di quello che succede nel server
+<code>ns1.tic.fdns.net</code> rispettivamente nell'interfaccie
+<a href="../capture/net-resolv-tic-eth0.acp"
+   title="file per Ethereal">eth0</a> ed
+<a href="../capture/net-resolv-tic-eth1.acp"
+   title="file per Ethereal">eth1</a>
+durante la richiesta dell'host <code>SSO-server</code>. Se
+lo stesso server richiede in seguito la stessa informazione
+non troveremo alcuna attivit&agrave; sull'interfaccia <code>eth0</code>
+e invece una rapida risposta sull'interfaccia
+<a href="../capture/net-resolv2-tic-eth1.acp"
+   title="file per Ethereal">eth1</a>.
+</p>
+
+<p>
+Per ottenere la lista dei root server nel caso reale avremmo dato
+il comando:
+</p>
+
+<pre>
+$ dig @ns.icann.org ns +nocomment +nostats +nocmd +noquestion
+</pre>
+
+<p>
+mentre nel nostro caso virtuale:
+</p>
+
+<pre>
+SSO-server# dig @ns.fdns.net ns +nocomment +nostats +nocmd +noquestion<span class="blue">
+.                       604452  IN      NS      ROOT-SERVER.
+ROOT-SERVER.            604452  IN      A       216.57.5.213</span>
+</pre>
+
+<p>
+cambia solo il risultato ;-)
+</p>
+
+<p>
+Verifichiamo ora la view esterna:
+</p>
+
+<pre>
+fdns# dig tic.fdns.net any +nocomment +nostats +nocmd +noquestion<span class="blue">
+tic.fdns.net.           604680  IN      MX      20 smtp2.tic.fdns.net.
+tic.fdns.net.           604680  IN      MX      0 smtp.tic.fdns.net.
+tic.fdns.net.           604680  IN      NS      ns2.tic.fdns.net.
+tic.fdns.net.           604680  IN      NS      ns1.tic.fdns.net.
+tic.fdns.net.           604680  IN      SOA     ns.tic.fdns.net. \
+   root.ns.tic.fdns.net. 2003061901 10800 3600 604800 86400
+tic.fdns.net.           604680  IN      A       217.57.5.219
+tic.fdns.net.           604680  IN      NS      ns1.tic.fdns.net.
+tic.fdns.net.           604680  IN      NS      ns2.tic.fdns.net.
+ns1.tic.fdns.net.       604680  IN      A       217.57.5.219
+ns2.tic.fdns.net.       604680  IN      A       217.57.5.220</span>
+</pre>
+
+<p>
+e quella interna:
+</p>
+
+<pre>
+SSO-server# dig tic.fdns.net any +nocomment +nostats +nocmd +noquestion<span class="blue">
+tic.fdns.net.           604800  IN      A       10.10.10.65
+tic.fdns.net.           604800  IN      SOA     tic.fdns.net. \
+  root.tic.fdns.net. 2003061902 10800 3600 604800 86400
+tic.fdns.net.           604800  IN      NS      ns1.tic.fdns.net.
+tic.fdns.net.           604800  IN      NS      ns2.tic.fdns.net.
+tic.fdns.net.           604800  IN      MX      0 smtp.tic.fdns.net.
+tic.fdns.net.           604800  IN      MX      20 smtp2.tic.fdns.net.
+ns1.tic.fdns.net.       604800  IN      A       10.10.10.65
+ns2.tic.fdns.net.       604800  IN      A       10.10.10.66</span>
+</pre>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="mta">Configurazione MTA</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questa esercitazione &egrave; stato
+configurato l'MTA di tic.fdns.net in modo da poter testare l'invio
+di posta verso
+il dominio <code>tic.fdns.net</code>. Il servizio &egrave; gestito da Postfix
+(in precedenza da
+<a href="sendmail.html" title="approfonfimento">sendmail</a>).
+L'esercizio si basa sullo step precedente e nel settaggio di Postfix
+sui nodi <code>ns.net</code>, <code>ns.fdns.net</code> e
+<code>ns.tic.fdns.net</code>.
+Per questo lavoro ho attinto dall'esperienza su
+<a href="uml-email.html"
+   title="esperienza Netkit4TIC">lab-eMail</a>
+in cui viene usato Postfix come MTA. In aggiunta abbiamo installato
+<code>ipopd</code> come server POP e <code>uw-imapd</code> come server IMAP
+entrambi con TLS e Kerberos abilitati. Tali servizi sono attivati
+"a richiesta" da <code>xinetd</code> (il successore dell'Internet
+super-server <code>inetd</code>).
+</p>
+
+<p>
+Il client che abbiamo usato &egrave;
+<a href="http://www.mutt.org/" title="link esterno">Mutt</a> che ha capacit&agrave;
+di connessione SSL con protocollo POP o IMAP. Inoltre abbiamo installato
+<code>squirrelmail</code> in modo da provare anche una interfaccia WEB mail.
+</p>
+
+<p>
+Per le stazioni che non hanno un proprio
+server di posta abbiamo configurato Postfix nella modalit&agrave;
+&quot;null client&quot;.
+</p>
+
+<p>
+Iniziamo con un test del funzionamento della configurazione della e-mail
+con lo scopo di mostrare la struttura di un messaggio di posta
+utilizzando il comando <code>telnet</code>.
+<br>
+Nella macchina <code>srv1</code> sono gi&agrave; definiti due
+utenti <code>tizio</code> e <code>caio</code> con password
+<code>not24get</code>. 
+Supponiamo che l'utente <code>tizio</code> all'interno del
+nodo
+<code>ns.fdns.net</code> voglia spedire
+una mail all'utente <code>caio@tic.fdns.net</code>:
+</p>
+
+<pre>
+fdns# telnet mail.tic.fdns.net 25<span class="blue">
+Trying 217.57.5.219...
+Connected to mail.tic.fdns.net.
+Escape character is '^]'.  <span class="blue">
+220 mail.tic.fdns.net ESMTP Postfix (Debian/GNU)</span>
+HELO ns.fdns.net
+250 mail.tic.fdns.net</span>
+MAIL FROM: &lt;root@fdns.net&gt; <span class="blue">
+250 Ok </span>
+RCPT TO: &lt;caio@tic.fdns.net&gt; <span class="blue">
+250 Ok </span>
+DATA <span class="blue">
+354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</span>
+Questo e' un messaggio composta da una sola riga a scopo di test
+.<span class="blue">
+250 Ok: queued as E4CC012262
+</span>QUIT<span class="blue">
+221 bye
+</span>Connection closed by foreign host.
+</pre>
+
+<p>
+Ora utilizzamo invece Mutt sempre dal nodo <code>ns.fdns.net</code>
+per spedire un secondo messaggio di test a <code>caio@tic.fdns.net</code>.
+</p>
+
+<pre>
+fdns# mutt -s test caio@tic.fdns.net < test-mail.txt
+</pre>
+
+<p>
+Ora proviamo ad accedere, anche da nodi diversi,
+alla casella di caio attraverso
+protocollo POP3 verificando l'avvenuta
+recapitazione del messaggio:
+</p>
+
+<pre>
+fdns# mutt -f pop://caio@pop.tic.fdns.net/
+SSO-server# mutt -f pop://caio@pop.tic.fdns.net/
+</pre>
+
+<p>
+oppure attraverso il protocollo imap:
+</p>
+
+<pre>
+fdns# mutt -f imap://caio@imap.tic.fdns.net/
+SSO-server# mutt -f imap://caio@imap.tic.fdns.net/
+</pre>
+
+<p>
+Volendo ora provare l'interfaccia WEB, attiviamo sia il server
+Apache che il server MySQL essenziali per <code>squirrelmail</code>:
+</p>
+
+<pre>
+srv1.tic.fdns.net# /etc/init.d/apache start
+srv1.tic.fdns.net# /etc/init.d/mysql start
+</pre>
+
+
+<p>
+Per accedere alle mailbox via WEB 
+useremo <span class="yellow"> la
+<a href="lab.html#ip" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>)</span> che ci
+permette l'uso del browser dell'host reale:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://192.168.77.2/squirrelmail
+</pre>
+
+<p>
+ed ecco come
+<a href="NET-webmail.png" title="screenshot">appare</a>
+dopo essersi autenticati come utente caio.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=backup>Verifica server di backup</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Il servizio DNS e il servizio Mail del dominio <code>tic.fdns.net</code>
+sono configurati come servizi primari nel nodo <code>srv1</code>
+e come servizi secondari nel nodo <code>srv2</code>.
+La verifica di questa impostazione pu&ograve; essere fatta da un
+qualsiasi nodo con il comando:
+</p>
+
+<pre>
+SSO-server# host -t mx tic.fdns.net<span class="blue">
+tic.fdns.net mail is handled by 20 smtp2.tic.fdns.net.
+tic.fdns.net mail is handled by 0 smtp.tic.fdns.net.</span>
+fdns# host -t mx tic.fdns.net<span class="blue">
+tic.fdns.net mail is handled by 20 smtp2.tic.fdns.net.
+tic.fdns.net mail is handled by 0 smtp.tic.fdns.net.</span>
+</pre>
+
+<p>
+Ora mettiamo alla prova la ricezione della posta nel caso
+che il server smtp primario sia non operativo (ad esempio
+per guasto o per manutenzione):
+</p>
+
+<pre>
+srv1# /etc/init.d/postfix stop<span class="blue">
+Stopping mail transport agent: Postfix.</span>
+</pre>
+
+
+<p>
+Spediamo una mail ad un utente del dominio:
+</p>
+
+<pre>
+SSO-server# mutt -s test tizio@tic.fdns.net &lt; test-mail.txt
+</pre>
+
+<p>
+Il servizio SMTP del nodo <code>SSO-server.tic.fdns.net</code> quando
+tenter&agrave; di mettersi in comunicazione con il gestore della
+mail del dominio <code>tic.fdns.net</code> ossia con
+<code>smtp.tic.fdns.net</code>
+non ricever&agrave;
+risposta e quindi il messaggio verr&agrave; mandato al nodo
+<code>smtp2.tic.fdns.net</code>
+il quale a sua volta tenter&agrave; di mandarlo al nodo
+<code>smtp.tic.fdns.net</code> che per&ograve; &egrave; down.
+Il messaggio viene perci&ograve; accodato nel nodo
+<code>smtp2.tic.fdns.net</code>
+che a intervalli di tempo tenter&agrave; l'invio verso il
+server <code>smtp.tic.fdns.net</code>.<br>
+Al ripristino del servizio:
+</p>
+
+<pre>
+srv1# /etc/init.d/postfix start<span class="blue">
+Starting mail transport agent: Postfix.</span>
+</pre>
+
+<p>
+simuliano, per impazienza, un flush delle code del server secondario:
+</p>
+
+
+<pre>
+srv2# mailq -q
+</pre>
+
+<p>
+e sperimenteremo la ricezione della mail da parte dell'utente
+<code>tizio@tic.fdns.net</code>. Tutto questo &egrave; tracciato
+nella cattura del traffico smtp
+<a href="../capture/email-backup.acp"
+   title="file per Ethereal">(FILE ACP)</a>
+e nel seguente
+<a href="uml-NET.png" title="Netkit4TIC screenshot">screenshot</a>.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-05-07 07:47:41 $
+</span>
+</address>
+
+
+</body>
+
+</html>

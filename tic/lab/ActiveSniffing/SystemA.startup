@@ -1,0 +1,4 @@
+# $Id: SystemA.startup,v 1.1 2008-01-03 16:31:23 doros Exp $
+ifconfig eth0 192.168.1.1 up
+ifconfig eth1 192.168.0.100 up
+ifconfig eth1 hw ether 00:00:00:AA:AA:AA

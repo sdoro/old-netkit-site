@@ -1,0 +1,8 @@
+
+Per la raggiungib. di www occorre:
+
+V_NEXT_HOP=2001:5c0:1101:f700:200:ff:fe00:1
+
+route -A inet6 add 2001:5c0:1101:f701::/64 gw $V_NEXT_HOP dev tap0
+
+

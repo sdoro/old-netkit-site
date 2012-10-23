@@ -1,0 +1,498 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=en>
+<!-- $Id: uml-csync2.html,v 1.4 2008-01-04 16:21:37 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-csync2</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p> 
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratory</h1>
+<h2 class="center">Module 7 - Network Operating System</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Cluster synchronization with csync2</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-RAID.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-HA.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+This lab experience can be directly used in any pc using the live-{CD,USB}
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+downloadable from
+<a href="http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/"
+   title="external link">http://tocai.dia.uniroma3.it/</a>.
+</p>
+
+
+
+<p>
+The experience is  based on four nodes:
+<code>telnet</code>, <code>ftp</code>, <code>ssh</code> and  <code>apache</code>.
+They are organized in tree groups: (telnet,ftp), (ssh,apache) and
+(telnet, ftp, ssh, apache).
+For clarity the nodes are standalone servers but in our daily work 
+the nodes are part of two (and even more) HA-clusters in an
+active-active configuration.
+</p>
+
+<p>
+The csync web documentations:
+</p>
+
+<ul>
+  <li>
+     Managing distributed config files and application images, Clifford Wolf
+  </li>
+  <li>
+     Cluster synchronization with Csync2, Clifford Wolf
+  </li>
+</ul>
+
+
+<p id="package">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Building csync2 for Debian Sarge from Debian Etch source</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Even if csync2 (for Sarge)
+is already installed in the live-{CD,USB} we want remind
+the steps necessary to build it.<br>
+Actually (April 2007) the csync2 Debian package is only present
+in Etch release 
+so we must rebuild the package for the Sarge release.
+</p>
+
+<p>
+You will need all of csync2*dsc, csync2*tar.gz and csync2*diff.gz
+to compile the source:
+</p>
+
+<pre>
+$ SITE=ftp.debian.org; \
+  PREFIX=debian/pool/main/c/csync2; \
+  wget http://$SITE/$PREFIX/csync2_1.30-1.dsc \
+       http://$SITE/$PREFIX/csync2_1.30.orig.tar.gz \
+       http://$SITE/$PREFIX/csync2_1.30-1.diff.gz
+</pre>
+
+<p>
+the following command extract the package into a directory called csync2-1.30:
+</p>
+
+<pre>
+# dpkg-source -x csync2_1.30-1.dsc
+</pre>
+
+<p>
+to compile the package you may cd into csync2-1.30 directory
+and issue the command:
+</p>
+
+<pre>
+# cd csync2-1.30/
+# fakeroot dpkg-buildpackage -b -uc
+</pre>
+
+<p>
+the generated package stands in parent directory.<br>
+The package depends on librsync1 and on libsqlite0 that are
+already present in Sarge.
+</p>
+
+
+
+
+<p id="configure">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configure</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Even if csync2 is already configurated from the script we want remind
+the main steps.<br>
+We want simulate two HA-clusters with one group for each cluster plus one
+another group for shared operations.
+In the first group (<code>g1</code>)
+we have <code>telnet</code> and <code>ftp</code> nodes.
+In the second (<code>g2</code>)
+group we have <code>ssh</code> and <code>apache</code> nodes.
+In the last group (<code>g3</code>) we have all nodes.
+</p>
+
+<pre>
+# /etc/csync2.cfg
+
+#nossl telnet ftp ssh apache;
+
+group g1 {
+  host telnet ftp;                         # hosts list
+  key /etc/csync2.key_g1;                  # pre-shared key
+
+  include /etc/xinetd.d;
+
+  action {                                 # action section for apache
+    pattern /etc/xinetd.d;
+    exec "/etc/init.d/xinetd restart";
+    logfile "/var/log/csync2_action.log";
+  } 
+  
+  backup-directory /var/backups/csync2/g1;
+  backup-generations 3;                    # backup old files
+}
+
+group g2 {
+  host ssh apache;                         # hosts list
+  key /etc/csync2.key_g2;                  # pre-shared key
+
+  include /etc/apache;
+  include /etc/ssh;
+
+  action {                                 # action section for apache
+    pattern /etc/apache/httpd.conf;
+    exec "apachectl graceful";
+    logfile "/var/log/csync2_action.log";
+  } 
+  
+  action {                                 # action section bind
+    pattern /etc/ssh/sshd_config;
+    exec "/etc/init.d/ssh restart";
+    logfile "/var/log/csync2_action.log";
+  }
+
+  backup-directory /var/backups/csync2/g2;
+  backup-generations 3;                    # backup old files
+}
+
+group g3 {
+  host telnet ftp ssh apache;              # hosts list
+  key /etc/csync2.key_g3;                  # pre-shared key
+
+  include /etc/hosts;
+
+  backup-directory /var/backups/csync2/g3;
+  backup-generations 3;                    # backup old files
+}
+</pre>
+
+<p>
+The servers talk with each other using TCP port 30865. The servers
+use xinetd (or inetd) to startup:
+</p>
+
+<pre>
+# /etc/xinetd.d/csync2
+service csync2
+{
+  flags       = REUSE
+  socket_type = stream
+  wait        = no
+  user        = root
+  group       = root
+  server      = /usr/sbin/csync2
+  server_args = -i
+  disable     = no
+  # only_from = 192.168.100.1 192.168.100.2 192.168.100.3 192.168.100.4
+}
+</pre>
+
+<p>
+To avoid csync2 startup error we submit a fake csync2.key_g2 file
+for g1 group and fake csync2.key_g1 file for g2 group.
+</p>
+
+<p>
+To complete the csync2 configuration we must generate an SSL
+certificate for each node. First we setup main openssl configuration
+file:
+</p>
+
+<pre>
+# /etc/ssl/openssl.cnf
+[...]
+countryName_default             = IT
+stateOrProvinceName_default     = Italy
+localityName_default            = Mestre-Venezia
+0.organizationName_default      = MIUR
+organizationalUnitName_default  = R&amp;D
+[...]
+</pre>
+
+<p>
+To generate the pre shared keys (for security one for each group):
+</p>
+
+<pre>
+# csync2 -k /etc/csync2.key_g1
+# csync2 -k /etc/csync2.key_g2
+# csync2 -k /etc/csync2.key_g3
+</pre>
+
+<p>
+and we copy it in relative (group) nodes.
+</p>
+
+
+<p>
+Now we generate the certificate for <code>telnet</code> node:
+</p>
+
+
+<pre>
+telnet# openssl genrsa \
+          -out      /etc/csync2_ssl_key.pem 1024 &amp;&amp; \
+        openssl req -new \
+          -key      /etc/csync2_ssl_key.pem \
+          -out      /etc/csync2_ssl_cert.csr &amp;&amp; \
+        openssl x509 -req -days 600 \
+          -in       /etc/csync2_ssl_cert.csr \
+          -signkey  /etc/csync2_ssl_key.pem \
+          -out      /etc/csync2_ssl_cert.pem &amp;&amp; \
+        chmod go= /etc/csync2_ssl_key.pem
+</pre>
+
+<p>
+last we generate the certificate for <code>apache</code> node:
+</p>
+
+<pre>
+apache# openssl genrsa \
+          -out      /etc/csync2_ssl_key.pem 1024 &amp;&amp; \
+        openssl req -new \
+          -key      /etc/csync2_ssl_key.pem \
+          -out      /etc/csync2_ssl_cert.csr &amp;&amp; \
+        openssl x509 -req -days 600 \
+          -in       /etc/csync2_ssl_cert.csr \
+          -signkey  /etc/csync2_ssl_key.pem \
+          -out      /etc/csync2_ssl_cert.pem &amp;&amp; \
+        chmod go= /etc/csync2_ssl_key.pem
+</pre>
+
+
+
+
+<p id="experiment">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Now test it</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Download the
+<a href="csync2.tgz"
+   title="esperienza Netkit4TIC">tarball</a>,
+untar it in a <code>HOME</code> subdirectory and
+execute the following command:
+</p>
+
+<pre>
+realHost$ lstart
+</pre>
+
+
+<p>
+Now we are ready to test the csync2 capability.
+The first step is synchronizing the files:
+</p>
+
+<pre>
+telnet# csync2 -x
+ftp# csync2 -x
+ssh# csync2 -x
+apache# csync2 -x
+</pre>
+
+<p>
+the first time csync2 create its database and after it try to synchronize.
+Now we simulate a conflict in g2 group:
+</p>
+
+<pre>
+ssh# echo "# from ssh #" &gt;&gt; /etc/apache/httpd.conf
+apache# echo "# from apache #" &gt;&gt; /etc/apache/httpd.conf
+</pre>
+
+<p>
+csync2 can not know which version is the right one:
+</p>
+
+<pre>
+apache# csync2 -x<span class="blue">
+While syncing file /etc/apache/httpd.conf:
+ERROR from peer ssh: File is also marked dirty here!
+Finished with 1 errors.</span>
+ssh# csync2 -x<span class="blue">
+While syncing file /etc/apache/httpd.conf:
+ERROR from peer apache: File is also marked dirty here!
+Finished with 1 errors.</span>
+</pre>
+
+<p>
+We decide that <code>ssh</code> node contains the right file
+<a href="csync2-desktop.png" title="immagine PNG">(screenshot)</a>:
+</p>
+
+<pre>
+ssh# csync2 -f /etc/apache/httpd.conf
+ssh# csync2 -xv<span class="blue">
+Connecting to host apache (SSL) ...
+Updating /etc/apache/httpd.conf on apache ...
+Finished with 0 errors.</span>
+apache# csync2 -xv
+apache# find /var/backups/csync2/ <span class="blue">
+/var/backups/csync2/
+/var/backups/csync2/g1
+/var/backups/csync2/g2
+/var/backups/csync2/g2/etc_apache_httpd.conf.0
+/var/backups/csync2/g3</span>
+</pre>
+
+<p>
+As side effect it is performed the action to restart apache.
+Also if we change (from apache node) the ssh configuration files
+it is performed a ssh restart.
+</p>
+
+<pre>
+apache# # tail -n 1 /var/log/csync2_action.log<span class="blue">
+/usr/sbin/apachectl graceful: httpd gracefully restarted</span>
+</pre>
+
+<p>
+Now we change <code>/etc/hosts</code> in a <code>ftp</code>
+and we look at propagation in all g3 nodes:
+</p>
+
+<pre>
+ftp# echo "#" &gt;&gt; /etc/hosts
+ftp# csync2 -xv<span class="blue">
+Marking file as dirty: /etc/hosts
+Connecting to host telnet (SSL) ...
+Updating /etc/hosts on telnet ...
+Connecting to host apache (SSL) ...
+Updating /etc/hosts on apache ...
+Connecting to host ssh (SSL) ...
+Updating /etc/hosts on ssh ...
+Finished with 0 errors.</span>
+apache# find /var/backups/csync2/<span class="blue">
+/var/backups/csync2/
+/var/backups/csync2/g1
+/var/backups/csync2/g2
+/var/backups/csync2/g2/etc_apache_httpd.conf.0
+/var/backups/csync2/g3
+/var/backups/csync2/g3/etc_hosts.0</span>
+</pre>
+
+<p>
+Last we change some files from ftp node relative to g1 and g2 groups
+and we observer the results:
+</p>
+
+<pre>
+ftp# echo "# from ftp #" &gt;&gt; /etc/xinetd.d/telnet; \
+     echo "# from ftp #" &gt;&gt; /etc/apache/httpd.conf; \
+     csync2 -xv<span class="blue">
+Marking file as dirty: /etc/xinetd.d/telnet
+Connecting to host telnet (SSL) ...
+Updating /etc/xinetd.d/telnet on telnet ...
+Finished with 0 errors.</span>
+</pre>
+
+
+<p>
+as we expect.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+<tr>
+<td class=content>
+</td>
+<td class=navigation>
+<a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+</td>
+</tr>
+</table>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2008-01-04 16:21:37 $
+</span>
+</address>
+
+
+</body>
+
+</html>

@@ -1,0 +1,2 @@
+Testo di prova
+versione $Revision: 1.2 $

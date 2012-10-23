@@ -1,0 +1,9 @@
+$Id: README,v 1.2 2004/03/14 20:48:03 doros Exp $
+
+This scripts uses ntop rrd file and put the result into /var/www/rrd:
+- clone.sh makes /var/www/rrd directory
+- update.sh makes graph files in /var/www/rrd
+- mk-index.sh makes /var/www/rrd/index.html file
+
+Also I have installed and configurated apache.
+

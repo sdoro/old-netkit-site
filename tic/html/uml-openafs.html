@@ -1,0 +1,948 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-openafs.html,v 1.2 2005/09/06 15:38:20 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-openafs</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-krb.html">
+  <link rel="Next" title="Next" href="uml-NetPractice.html">
+</head>
+
+<body>
+
+<p id="up">
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Amministrazione, gestione e autenticazione in rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su AFS file system con openAFS</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-krb.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+
+
+
+<p>
+Nella mappa
+(<a href="pdf/afs.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/afs.xml" title="file per Dia">xml</a>)
+della rete in esame ci sono tre nodi collegati
+allo stesso dominio di collisione 192.168.10.0/24.
+Nel nodo <code>kdc</code> (192.168.10.4) sono configurati i
+seguenti servizi:
+</p>
+<ul>
+  <li>il Key Distribution Center (KDC) per kerberos composto
+dal Kerberos Server e dal Ticket Granter per il
+realm (reame) <code>ISTITUTO.IT</code>.</li>
+  <li>il directory LDAP</li>
+  <li>il DNS per il dominio <code>istituto.it</code></li>
+</ul>
+
+<p>
+Nel nodo <code>alfa</code> (192.168.10.100) sar&agrave; configurato
+il servizio AFS per la cella di nome <code>istituto.it</code>.
+Il nodo <code>client</code> (192.168.10.200) rappresenta la
+classica stazione di lavoro, ossia il posto destinato al login
+dell'utenza.
+</p>
+
+
+
+
+
+
+<p>
+Vogliamo configurare kerberos, LDAP e AFS in modo tale da sperimentare che
+un utente gi&agrave; autenticato nel realm <code>ISTITUTO.IT</code>
+possa ottenere servizio AFS per la propria home directory.
+</p>
+
+<p>
+Per l'elenco dei pacchetti da installare per kerberos rimandiamo
+all'esperienza su
+<a href="uml-krb.html" title="esperienza Netkit4TIC">Kerberos</a>.
+</p>
+
+<p>
+L'elenco dei pacchetti da installare per AFS &egrave;:
+<code>libpam-openafs-session</code>,
+<code>openafs-client</code>,
+<code>openafs-dbserver</code>,
+<code>openafs-fileserver</code>,
+<code>openafs-krb5</code>,
+<code>openafs-modules-2.4.26-bs1</code>.<br>
+Quest'ultimo pacchetto &egrave; generato
+e confezionato per il mondo virtuale che stiamo usando. In
+generale &egrave; legato al kernel della macchina.
+</p>
+
+<p>
+Nella distribuzione Debian tali pacchetti hanno le seguenti
+rimappature dei cammini (&quot;FHS-compatible path names&quot;):
+</p>
+
+<pre>
+/usr/afs/etc        /etc/openafs/server
+/usr/afs/local      /etc/openafs/server-local
+/usr/afs/db         /var/lib/openafs/db
+/usr/afs/logs       /var/log/openafs
+/usr/afs/bin        /usr/lib/openafs
+</pre>
+
+<p>
+Il file con 
+<a href="openafs.tgz"
+   title="esperienza Netkit4TIC">l'esperienza</a>
+deve essere decompresso su una sottodirectory della HOME.
+In seguito, dopo aver seguito le istruzioni presenti nel file README
+occorre lanciare lo script:
+</p>
+
+<pre>
+user@realHost$ ./lab start
+</pre>
+
+<p>
+<a href="afs-desktop.png" title="immagine PNG">(screenshot)</a>
+che costruisce i tre nodi con i servizi gi&agrave; configurati e attivati.
+</p>
+
+<p>
+In seguito gli argomenti vengono esposti suddivisi
+nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li>configurazione del sistema (automagicamente ottenuta dallo
+      script <code>./lab start</code>).
+  <ul>
+     <li>configurazione <a href="#kdc"
+                           title="riferimento interno">KDC</a></li>
+     <li>configurazione AFS
+     <ul>
+        <li><a href="#afs-noauth"
+               title="riferimento interno">Configurazione iniziale di OpenAFS</a></li>
+        <li><a href="#afs-volume"
+               title="riferimento interno">Costruzione della cella</a></li>
+        <li><a href="#afs-home"
+               title="riferimento interno">Costruzione delle home per l'utenza</a></li>
+     </ul>
+     <li>configurazione <a href="#client"
+                           title="riferimento interno">client</a></li>
+     <li>configurazione <a href="#client-reali"
+                           title="riferimento interno">client &quot;reali&quot;</a></li>
+  </ul></li>
+  <li>Sperimentazione <a href="#interattiva"
+                         title="riferimento interno">interattiva</a>
+  <ul>
+     <li>sperimentazione <a href="#i-login"
+                           title="riferimento interno">login con HOME in AFS</a></li>
+     <li>sperimentazione <a href="#i-alfa"
+                           title="riferimento interno">amministrazione AFS</a></li>
+  </ul>
+</ul>
+
+
+
+<p id="kdc">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione KDC</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Procediamo con i comandi sul nodo
+<code>krc</code> per l'inizializzazione del database:
+</p>
+
+<pre>
+root@kdc# kdb5_util create -s<span class="blue">
+<span class="red">Loading random data</span>
+Initializing database '/var/lib/krb5kdc/principal' for realm 'ISTITUTO.IT',
+master key name 'K/M@ISTITUTO.IT'
+You will be prompted for the database Master Password.
+It is important that you NOT FORGET this password.
+Enter KDC database master key: </span>not24get<span class="blue">
+Re-enter KDC database master key to verify: </span>not24get
+</pre>
+
+<p>
+Il tratto evidenziato in colore indica l'attivit&agrave; di generare
+numeri casuali. Nei mondo virtuale tutte le funzioni che utilizzano generazioni
+<a href="http://en.wikipedia.org/wiki//dev/random"
+   title="Riferimento esterno a WikiPedia">casuali</a>
+basandosi sull'attivit&agrave;
+dell'hardware subiscono rallentamenti e a volte dei blocchi
+perch&egrave; l'entropia &egrave; molto bassa rispetto alla realt&agrave;.
+
+In genere quindi
+dopo lo start dell'esperienza aspetto qualche minuto e nel
+frattempo genero dell'entropia battendo alcuni comandi alla
+console della macchina virtuale. Nel caso di blocco dovuto a un comando che
+usa <code>/dev/random</code>, lo sgancio dalla shell con CTRL-Z,
+poi lo faccio proseguire in background con il comando
+<code>bg</code> e nel frattempo genero entropia con
+comandi dalla tastiera.
+</p>
+
+<p>
+Costruiamo le utenze amministrative:
+</p>
+
+<pre>
+root@kdc# kadmin.local
+kadmin.local: ktadd -k /etc/krb5kdc/kadm5.keytab kadmin/admin
+kadmin.local: ktadd -k /etc/krb5kdc/kadm5.keytab kadmin/changepw
+kadmin.local: addprinc -pw secret krbadm@ISTITUTO.IT
+kadmin.local: addprinc -pw secret afsadm@ISTITUTO.IT
+kadmin.local: q
+</pre>
+
+<p>
+Ora facciamo partire il servizio:
+</p>
+
+<pre>
+root@kdc# /etc/init.d/krb5-kdc start
+</pre>
+
+<p>
+Per attivare la possibilit&agrave; di amministrare
+il kdc da remoto dovremmo anche lanciare:
+</p>
+
+<pre>
+root@kdc# /etc/init.d/krb5-admin-server start
+</pre>
+
+
+
+
+
+
+<p id="afs-noauth">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione iniziale di OpenAFS</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Ogni nodo file server AFS deve possedere almeno un volume
+dedicato ai volumi AFS. A questo scopo ad ogni macchina virtuale
+di tipo server &egrave; stato passato un backing-store di 20000 KB
+che servir&agrave; da volume. Lo formattiamo <code>ext3</code>
+e lo montiamo in <code>/vicepa</code>.
+</p>
+
+<p>
+Inoltre ogni nodo AFS (client o server) deve possedere una cache
+e quindi ad ogni macchina virtuale
+&egrave; stato passato un backing-store di 12000 KB (nel
+caso pratico sono consigliati 50000 KB). Questo valore &egrave;
+memorizzato nel file <code>/etc/openafs/cacheinfo</code>:
+</p>
+
+<pre>
+/afs:/var/cache/openafs:10000
+</pre>
+
+
+<p>
+che formattiamo <code>ext3</code>
+e che montiamo in <code>/var/cache/openafs</code>.
+</p>
+
+
+<p>
+Occorre fare attenzione a questa fase poich&egrave;
+<span class="red">il Basic OverSeer (BOS) service &egrave; attivato
+con le autorizzazioni disabilitate</span>
+e quindi nel caso pratico l'operazione
+deve essere eseguita con la macchina scollegata dalla rete
+o con altre accortezze che ne garantiscano l'inaccessibilit&agrave;.
+</p>
+
+<pre>
+root@alfa# bosserver -noauth
+</pre>
+
+
+<p>
+La prima cosa da fare &egrave; scegliere un nome per la cella
+che si vuole configurare. Tipicamente si sceglie il nome del proprio
+dominio e si riporta
+nel file <code>/etc/openafs/ThisCell</code>:
+</p>
+
+<pre>
+istituto.it
+</pre>
+
+<p>
+Aggiungiamo le informazioni della nostra cella al database
+delle celle pubbliche <code>/etc/openafs/CellServDB</code>:
+</p>
+
+<pre>
+[...]
+&gt;istituto.it            #Netkit4TIC AFS cell
+192.168.100.222                 #alfa.istituto.it
+</pre>
+
+<p>
+Costruiamo la cella:
+</p>
+
+<pre>
+root@alfa# bos setcellname -server alfa.istituto.it \
+  -cell istituto.it -name istituto.it -localauth
+</pre>
+
+<p>
+Verifichiamo che il nome della cella sia corretto:
+</p>
+
+<pre>
+root@alfa# bos listhosts alfa.istituto.it -localauth<span class="blue">
+Cell name is istituto.it
+    Host 1 is alfa.istituto.it</span>
+</pre>
+
+<p>
+Il file dove vengono memorizzate le precedenti informazioni
+&egrave; <code>/etc/openafs/server/Cell</code>.
+Ora costruiamo i processi server:
+</p>
+
+<pre>
+<span class="yellow"># Protection Server</span>
+root@alfa# bos create -server alfa -instance ptserver -type simple \
+          -cmd /usr/lib/openafs/ptserver -cell istituto.it -localauth
+<span class="yellow"># Volume Location Server</span>
+root@alfa# bos create -server alfa -instance vlserver -type simple \
+          -cmd /usr/lib/openafs/vlserver -cell istituto.it -localauth
+<span class="yellow"># Backup Server</span>
+root@alfa# bos create -server alfa -instance buserver -type simple \
+          -cmd /usr/lib/openafs/buserver -cell istituto.it -localauth
+<span class="yellow"># Processo fs composto da File Server, Volume Server e Salvager</span>
+root@alfa# bos create -server alfa -instance fs -type fs \
+          -cmd /usr/lib/openafs/fileserver \
+          -cmd /usr/lib/openafs/volserver \
+          -cmd /usr/lib/openafs/salvager -cell istituto.it -localauth
+</pre>
+
+<p>
+Proseguiamo costruendo i principals necessari per AFS.
+Poich&egrave; la nostra cella ha lo stesso nome del
+reame Kerberos costruiremo un principal chiamato afs@ISTITUTO.IT:
+</p>
+
+<pre>
+root@kdc# kadmin.local
+Authenticating as principal root/admin@ISTITUTO.IT with password.
+
+kadmin: addprinc -randkey afs/istituto@ISTITUTO.IT
+kadmin: ktadd -e des-cbc-crc:afs3 -k /etc/krb5.keytab.afs afs/istituto@ISTITUTO.IT
+kadmin: q
+</pre>
+
+<p>
+In seguito spostiamo la chiave sul database del server
+<code>/etc/openafs/server/KeyFile</code> ma prima 
+verifichiamo la versione della chiave (che sappiamo essere 3):
+</p>
+
+<pre>
+root@kdc# kadmin.local -q "getprinc afs/istituto.it@ISTITUTO.IT" | grep ^Key:<span class="blue">
+Key: vno 3, DES cbc mode with CRC-32, no salt</span>
+root@alfa# asetkey add 3 /etc/krb5.keytab.afs afs/istituto.it
+root@alfa# <span class="red">rm -f /etc/krb5.keytab.afs</span>
+</pre>
+
+
+<p>
+Ora dobbiamo costruire l'utenza amministrativa (afsadm):
+</p>
+
+<pre>
+root@alfa# bos adduser alfa afsadm -cell istituto.it -localauth
+root@alfa# pts createuser -name afsadm -cell istituto.it  -id 2001 -noauth
+root@alfa# pts adduser afsadm system:administrators -cell istituto.it -noauth
+root@alfa# pts membership afsadm -cell istituto.it -noauth
+</pre>
+
+<p>
+Tale utenza viene registrata nel file
+<code>/etc/openafs/server/UserList</code>.
+</p>
+
+
+<p>
+Creiamo il volume <code>root.afs</code>:
+</p>
+
+<pre>
+root@alfa# vos create alfa /vicepa root.afs -localauth
+</pre>
+
+<p>
+Abbiamo terminato l'inizializzazione "senza protezione" e quindi
+chiuderemo il server e lo faremo ripartire in modalit&agrave; sicura:
+</p>
+
+<pre>
+root@alfa# bos shutdown alfa -wait -localauth
+root@alfa# /etc/init.d/openafs-fileserver start
+root@alfa# /etc/init.d/openafs-client start
+</pre>
+
+<p>
+L'attivazione della parte client &egrave; ovviamente opzionale.
+</p>
+
+
+
+
+<p id="afs-volume">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Costruzione della cella</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per poter operare come amministratore occorre assumere le
+credenziale ed acquisire il token AFS:
+</p>
+
+<pre>
+root@alfa# kinit afsadm<span class="blue">
+Password for afsadm@ISTITUTO.IT:</span>secret
+root@alfa# aklog
+root@alfa# klist -5
+Ticket cache: FILE:/tmp/krb5cc_0<span class="blue">
+Default principal: afsadm@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+08/30/05 21:12:02  08/31/05 07:11:59  krbtgt/ISTITUTO.IT@ISTITUTO.IT
+08/30/05 21:12:10  08/31/05 07:11:59  afs/istituto.it@ISTITUTO.IT</span>
+</pre>
+
+<p>
+Creiamo il volume d'ingresso <code>root.cell</code> che
+sar&agrave; montato come <code>/afs/istituto.it</code> e che
+potr&agrave; essere leggibile da tutti:
+</p>
+
+<pre>
+root@alfa# vos create alfa /vicepa root.cell
+root@alfa# fs mkmount /afs/istituto.it root.cell
+root@alfa# fs setacl /afs system:anyuser read
+root@alfa# fs setacl /afs/istituto.it system:anyuser read
+</pre>
+
+<p>
+Indichiamo che entrambe i volumi devono avere repliche
+read-only e occorre creare il punto d'ingresso per
+l'albero in read/write usando un mount point speciale:
+</p>
+
+<pre>
+root@alfa# vos addsite alfa a root.afs<span class="blue">
+Added replication site alfa /vicepa for volume root.afs</span>
+root@alfa# vos addsite alfa a root.cell<span class="blue">
+Added replication site alfa /vicepa for volume root.cell</span>
+root@alfa# fs mkmount /afs/.istituto.it root.cell -rw
+root@alfa# vos release root.afs<span class="blue">
+Released volume root.afs successfully</span>
+root@alfa# vos release root.cell<span class="blue">
+Released volume root.cell successfully</span>
+</pre>
+
+
+
+
+
+<p id="afs-home">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Costruzione delle home per l'utenza</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Iniziamo con la costruzione della home:
+</p>
+
+<pre>
+root@alfa# vos create alfa /vicepa home
+root@alfa# fs mkmount /afs/.istituto.it/home home
+root@alfa# fs setacl /afs/.istituto.it/home system:anyuser read
+root@alfa# vos addsite alfa /vicepa home
+root@alfa# vos release home
+root@alfa# vos release root.cell
+</pre>
+
+<p>
+Costruiamo un utente:
+</p>
+
+<pre>
+root@alfa# kadmin.local -q "addprinc -pw bianchi mrossi@ISTITUTO.IT" -w secret
+root@alfa# pts creategroup users -id -3001
+
+root@alfa# pts createuser mrossi -id 2002
+root@alfa# pts adduser mrossi users
+root@alfa# vos create alfa /vicepa home.mrossi
+root@alfa# fs mkmount /afs/.istituto.it/home/mrossi home.mrossi
+root@alfa# vos release home
+root@alfa# fs setacl /afs/istituto.it/home/mrossi mrossi all
+root@alfa# fs setquota /afs/istituto.it/home/mrossi -max 2000
+</pre>
+
+
+
+
+
+<p id="client">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione client</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per prima cosa definiamo il principal associato al nostro utente
+di prova <code>mrossi@ISTITUTO.IT</code> (con password <code>bianchi</code>)
+e il principal associato al nodo <code>client</code> stesso:
+</p>
+
+<pre>
+root@client# kadmin -p krbadm<span class="blue">
+Authenticating as principal krbadm with password.
+Password for krbadm@ISTITUTO.IT:</span>secret
+
+kadmin: addprinc -pw bianchi mrossi@ISTITUTO.IT
+
+kadmin: addprinc -pw secret host/client.istituto.it@ISTITUTO.IT
+kadmin: ktadd -k /etc/krb5.keytab host/client.istituto.it@ISTITUTO.IT
+kadmin: q
+</pre>
+
+
+<p>
+Per la configurazione del nodo <code>client</code> ricorreremo
+alla configurazione di PAM per l'autenticazione e poi a NSS in
+combinazione con LDAP per la risoluzione dei nomi dei servizi.
+</p>
+
+<p>
+Come sperimentato nell'esperienza legata al
+<a href="uml-pam.html" title="Esperienza Netkit4TIC">PAM</a>
+occorre modificare i files <code>common-*</code> all'interno
+della directory <code>/etc/pam.d</code> inserendo con
+clausola <span class="yellow">sufficient</span> il modulo kerberos:
+</p>
+
+<pre>
+# /etc/pam.d/common-account
+account   sufficient pam_krb5.so
+account   required   pam_unix.so
+
+# /etc/pam.d/common-auth
+auth      sufficient pam_krb5.so nullok_secure forwardable
+auth      required   pam_unix.so nullok_secure use_first_pass
+
+# /etc/pam.d/common-password
+password  sufficient pam_krb5.so nullok obscure
+password  required   pam_unix.so nullok obscure min=4 max=8 md5 use_first_pass
+
+# /etc/pam.d/common-session
+session   sufficient pam_krb5.so forwardable
+session   optional   <span class="yellow">pam_openafs_session.so</span>
+session   required   pam_unix.so
+</pre>
+
+<p>
+In seguito configuriamo come il Name Service Switch (NSS) deve
+accedere a LDAP:
+</p>
+
+<pre>
+# /etc/libnss-ldap.conf
+host ldap.istituto.it
+base dc=istituto,dc=it
+nss_base_passwd ou=People,dc=istituto,dc=it
+nss_base_shadow ou=People,dc=istituto,dc=it
+nss_base_group  ou=Group,dc=istituto,dc=it
+</pre>
+
+<p>
+e ora l'ultimo passo &egrave; quello di attivare il NSS a
+consultare LDAP:
+</p>
+
+<pre>
+# /etc/nsswitch.conf
+passwd:         compat ldap
+group:          compat ldap
+shadow:         compat ldap
+</pre>
+
+
+
+
+<p id="client-reali">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione client &quot;reali&quot;</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la configurazione dei client reali rimandiamo al gi&agrave; citato
+documento di Patern&ograve;. Ricordiamo solo che occorre configurare
+opportunamente le tabelle di routing.
+</p>
+
+
+<p id=interattiva>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Sperimentazione interattiva</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Da questo punto in poi iniziano le attivit&agrave; interattive
+che si possono sperimentare alla conclusione dello script <code>lab</code>.
+</p>
+
+
+<p id="i-login">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Login</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per sperimentare il login ci posizioniamo
+sul nodo <code>client</code> e diamo le nostre credenziali
+(utente: <code>mrossi</code>, password: <code>bianchi</code>):
+</p>
+
+<pre>
+client login: mrossi<span class="blue">
+Password for mrossi@ISTITUTO.IT:</span>bianchi 
+
+root@client$ klist -5<span class="blue">
+Ticket cache: FILE:/tmp/krb5cc_2002_jrceV7
+Default principal: mrossi@ISTITUTO.IT
+
+Valid starting     Expires            Service principal
+09/01/05 18:08:15  09/02/05 04:08:15  host/client.istituto.it@ISTITUTO.IT
+09/01/05 18:08:15  09/02/05 04:08:15  krbtgt/ISTITUTO.IT@ISTITUTO.IT
+09/01/05 18:08:16  09/02/05 04:08:15  afs/istituto.it@ISTITUTO.IT</span>
+</pre>
+
+<p>
+<a href="afs-desktop-login.png" title="immagine PNG">(screenshot)</a>
+possiamo quindi verificate che il modulo <code>pam_krb5</code>
+ha chiamato in automatico <code>kinit</code> ottenendo
+il Ticket Granting Ticket (TGT) e che il modulo 
+<code>pam_openafs_session</code>
+ha chiamato in automatico
+<code>aklog</code> per ottenere
+il token per l'utenza AFS.
+&Egrave; inoltre presente il token per la workstation.
+</p>
+
+<p>
+Ora abbiamo accesso al file system AFS:
+</p>
+
+<pre>
+mrossi@client$ pwd<span class="blue">
+/afs/istituto.it/home/mrossi</span>
+mrossi@client$ df -h /afs<span class="blue">
+Filesystem            Size  Used Avail Use% Mounted on
+AFS                   8.6G     0  8.6G   0% /afs</span>
+</pre>
+
+<p>
+Infatti nel database LDAP abbiamo definito la HOME in AFS e abbiamo
+riportato lo stesso identificatore utente (uidNumber)
+<a href="afs-desktop-gq.png" title="immagine PNG">(screenshot)</a>.
+Per poterlo velocemente verificare viene fornito
+con l'esperienza il file d'impostazione che basta copiare
+nella home. Al lancio di <code>gq</code> ricordarsi che la
+password &egrave; <code>secret</code>:
+</p>
+
+<pre>
+user@realHost$ cp .gq ~
+user@realHost$ gq
+</pre>
+
+<p>
+Possiamo controllare le autorizzazioni presenti (ACL):
+</p>
+
+<pre>
+mrossi@client$ fs la $HOME <span class="blue">
+Access list for /afs/istituto.it/home/mrossi is
+Normal rights:
+  system:anyuser l
+  mrossi rlidwka</span>
+</pre>
+
+<p>
+Visualizziamo i volumi attraversati:
+</p>
+
+<pre>
+mrossi@client$ fs exam /afs<span class="blue">
+File /afs (536870913.1.1) contained in volume 536870913
+Volume status for vid = 536870913 named root.afs.<span class="yellow">readonly</span>
+[...]</span>
+mrossi@client$ fs exam /afs/istituto.it/<span class="blue">
+File /afs/istituto.it/ (536870916.1.1) contained in volume 536870916
+Volume status for vid = 536870916 named root.cell.<span class="yellow">readonly</span>
+[...]</span>
+mrossi@client$ fs exam /afs/istituto.it/home/<span class="blue">
+File /afs/istituto.it/home/ (536870919.1.1) contained in volume 536870919
+Volume status for vid = 536870919 named home.<span class="yellow">readonly</span>
+[...]</span>
+mrossi@client$ fs exam /afs/istituto.it/home/mrossi/<span class="blue">
+File /afs/istituto.it/home/mrossi/ (536870921.1.1) contained in volume 536870921
+Volume status for vid = 536870921 named home.mrossi
+[...]</span>
+</pre>
+
+
+
+
+<p id="i-alfa">
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Amministrazione Server</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Posizioniamoci sul file server <code>alfa</code>.
+Per operare
+come amministratore occorre identificarsi come principal
+<code>afsadm</code> (e quindi ottenere un ticket TGT) e dal
+quale ottenere un token AFS:
+</p>
+
+<pre>
+root@alfa$ kinit afsadm
+root@alfa$ aklog
+</pre>
+
+<p>
+Vediamo cosa
+contiene la directory <code>/vicepa</code>:
+</p>
+
+<pre>
+root@alfa# ls -c /vicepa<span class="blue">
+AFSIDat          V0536870919.vol  V0536870916.vol  V0536870915.vol  Lock
+V0536870921.vol  V0536870918.vol  V0536870913.vol  V0536870912.vol</span>
+
+root@alfa# ls -c /vicepa/AFSIDat/<span class="blue">
+7  4  1  README  +</span>
+
+root@alfa# cat /vicepa/AFSIDat/README<span class="blue">
+These files and directories are a part of the AFS namespace. Modifying them
+in any way will result in loss of AFS data,
+ownership and permissions included.</span>
+</pre>
+
+<p>
+Costruiamo ora una seconda partizione AFS
+(su un backing store <code>/dev/ubd/3</code>
+passato al momento della costruzione della macchina virtuale):
+</p>
+
+<pre>
+root@alfa# /sbin/mkfs.ext3 -q /dev/ubd/3
+root@alfa# bos shutdown alfa.istituto.it -wait
+root@alfa# mkdir /vicepb
+root@alfa# mount -rw /dev/ubd/3 /vicepb
+root@alfa# bos restart alfa.istituto.it -all
+root@alfa# vos partinfo alfa.istituto.it<span class="blue">
+Free space on partition /vicepa: 18534 K blocks out of total 19746
+Free space on partition /vicepb: 18700 K blocks out of total 19746</span>
+</pre>
+
+
+<p>
+Creazione di un volume:
+</p>
+
+<pre>
+root@alfa# vos create alfa.istituto.it /vicepb volume.di.prova<span class="blue">
+Volume 536870924 created on partition /vicepb of alfa.istituto.it</span>
+</pre>
+
+<p>
+Accesso ai volumi:
+</p>
+
+<pre>
+root@alfa# fs mkm /afs/istituto.it/mp volume.di.prova
+root@alfa# fs sa /afs/istituto.it/mp mrossi write
+</pre>
+
+
+<p>
+Creiamo il volume Read-Only:
+</p>
+
+<pre>
+root@alfa# vos addsite alfa /vicepb volume.di.prova<span class="blue">
+Added replication site alfa /vicepb for volume volume.di.prova</span>
+root@alfa# vos rel volume.di.prova<span class="blue">
+Released volume volume.di.prova successfully</span>
+</pre>
+
+<p>
+Il volume &egrave; immediatamente disponibile:
+</p>
+
+<pre>
+root@alfa# fs exam /afs/istituto.it/mp<span class="blue">
+File /afs/istituto.it/mp (536870924.1.1) contained in volume 536870924
+Volume status for vid = 536870924 named volume.di.prova
+[...]</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/09/06 15:38:20 $
+</span>
+</address>
+
+
+</body>
+</html>

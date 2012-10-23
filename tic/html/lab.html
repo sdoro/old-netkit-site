@@ -1,0 +1,550 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: lab.html,v 1.134 2010-05-24 13:32:49 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - lab: Netkit4TIC</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <META http-equiv="Content-Script-Type" content="type">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h3 class="center"><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" src="88x31.png"></a> 
+            <a name=tutor href="mailto:sandro.doro@istruzione.it" title="e-mail tutor">Sandro Doro</a></h3>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h2>Il laboratorio virtuale Netkit4TIC</h2>
+  </td>
+  <!--
+  <td class=navigation>
+    <a href="#left"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  -->
+  <td class=navigation>
+    <a href="index.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-bridge.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+<p>
+NetKit4TIC &egrave; un laboratorio virtuale per la
+sperimentazione di configurazioni di rete
+distribuito come live-DVD derivato da
+<a href="http://www.knoppix.net/" title="link esterno">Knoppix</a>.<br>
+
+Nelle macchine virtuali siamo liberi di far girare il software di
+nostra scelta che
+di volta in volta attiver&agrave; la macchina come bridge, router, firewall,
+sensore/sniffer, Web server, LDAP server, Terminal Server, Kerberos, Web
+Services, Samba, Squid, Mail, DNS, DHCP, cella AFS, HA-cluster, ecc.<br>
+Nei laboratori che utilizzano il live-DVD
+i corsisti sono liberi di fare installazioni e
+riconfigurazioni senza interferire con altre attivit&agrave;
+svolte nello stesso luogo.
+Lo stesso dicasi per il proprio pc di casa il cui
+funzionamento non viene in questo modo compromesso dalle
+esercitazioni svolte.<br>
+L'ultima release del live-DVD &egrave; la 3.0 rilasciata il
+<a href="pdf/Z08.pdf"
+    title="Netkit4TIC presentation">22 Settembre 2008</a>.
+
+&Egrave; ottenuta personalizzando Knoppix&nbsp;5.1.1
+(<a href="http://www.knoppix.net/"
+    title="link esterno">www.knoppix.net</a>).<br>
+Il 24 Maggio 2010 &egrave; stata rilasciata una versione CD/DVD/USB
+Netkit+VisualNetkit only basata su Knoppix 6.0.1
+(<a href="http://wiki.netkit.org/index.php/Download_Official",
+    title="link esterno">wiki.netkit.org</a>).
+</p>
+
+
+<p>
+Sono utilizzati i seguenti "sistemi virtualizzanti":
+</p>
+
+
+<table class="home">
+  <tr align="left">
+  <td class="home">
+    <table class="home">
+      <tr>
+      <td class="home">
+        <img alt="small UML logo" src="uml-small.png"> 
+      </td>
+      </tr>
+    </table>
+  </td>
+  <td class="home">
+
+    <a href="http://www.netkit.org/" title="link esterno">Netkit</a>
+    attraverso 
+    <a href="http://user-mode-linux.sourceforge.net/"
+       title="link esterno">User-Mode Linux</a> (UML) pemette di creare
+    delle macchine virtuali Linux connesse tra loro mediante hub e/o
+    switch virtuali.<br>
+    Le versioni utilizzare sono Netkit "core" 2.6
+    (<a href="http://www.netkit.org/"
+    title="link esterno a: CompuNet Research Group @ Univ. of Rome III">www.netkit.org</a>) e
+    Visual Netkit
+    (<a href="http://code.google.com/p/visual-netkit/"
+    title="link esterno a: CompuNet Research Group @ Univ. of Rome III">http://code.google.com/p/visual-netkit/</a>).
+    L'host kernel &egrave; della versione 2.6.19 
+    con il supporto SKAS3 dalle patches di Paolo Giarrusso
+    (<a href="http://www.user-mode-linux.org/~blaisorblade/patches/skas3-2.6/skas-2.6.11-v8.2/"
+    title="link esterno">http://www.user-mode-linux.org/~blaisorblade/</a>).
+    I guest kernel, oltre a quello di netkit stesso della versione 2.6.22,
+    sono della versione 2.4.34 per Bering uClibc e
+    2.6.26 per Debian Lenny.<br>
+
+    I guest filesystem sono due e rispettivamente
+    quello Debian Lenny della macchina virtuale generica e
+    quello LEAF/Bering-uClibc della macchina virtuale attivata come
+    firewall.
+
+  </td>
+  </tr>
+</table>
+
+
+<table class="home">
+  <tr align="left">
+  <td class="home">
+    <table class="home">
+      <tr>
+      <td class="home">
+        <img alt="QEMU logo" src="qemu-logo.png"> 
+      </td>
+      </tr>
+    </table>
+  </td>
+  <td class="home">
+
+    <a href="http://fabrice.bellard.free.fr/qemu/">QEMU</a>
+    &egrave; principalmente usato per sperimentare la piattaforma
+    Microsoft. Di conseguenza non &egrave; fornita assieme al live-DVD
+    una immagine del sistema M$. La versione di QEMU installata
+    nel sistema host &egrave; la 0.8.2 completa del modulo
+    acceleratore che permette di far funzionare QEMU in
+    "full virtualization mode".
+
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+&Egrave; stato usato e sar&agrave; usato nei seguenti corsi:
+<ul>
+  <li>nei corsi Abacus e Sirio degli Istituti Tecnici ad indirizzo informatica:
+      AA.SS 2004-08 "C.Zuccante" - Mestre-VE, AS 2003-04 "F.Severi" - PD,
+      A.S. 2005/06 "Vittorio Emanuele III" - Palermo, 
+      A.S. 2006/08 "Verona-Trento" - Messina,
+      A.S. 2006/07 "A.Meucci" - Firenze e
+      A.S. 2007/08 "V.E.Marzotto" - Vicenza.</li>
+  <li>nei corsi
+      <a href="index.html"
+         title="Corsi TIC C1 e C2">FORTIC C1 e C2</a>
+      del progetto
+      <a href="http://www.istruzione.it/innovazione/progetti/allegati/percorso-c.pdf"
+         title="link esterno">FORTIC 2</a> (MIUR): AA.SS 2006-07 negli Istituti
+      "F.Severi" di Padova e "C.Zuccante" di Mestre-VE.</li>
+  <li>nel corso
+      <a href="las.html"
+         title="Corso Linux Avanzato @ Zuccante">Linux Avanzato</a>
+      del progetto
+      <a href="http://www.istruzione.it/innovazione/progetti/linux.shtml"
+         title="link esterno">Linux@School</a> (MIUR/IBM): AS 2004-05 Istituto
+      "C.Zuccante" di Mestre-VE</li>
+  <li>nei corsi
+      <a href="index.html"
+         title="Corsi TIC C2">UMTS/TIC C2</a>
+      del progetto
+      <a href="http://www.istruzione.it/innovazione/progetti/allegati/percorso-c.pdf"
+         title="link esterno">UMTS/TIC</a> (MIUR): AS 2003-04 negli Istituti
+      "F.Severi" e
+      "Gramsci" di Padova e nell'Istituto "Pacinotti" di Mestre-VE.</li>
+</ul>
+
+
+<p>
+</p>
+
+
+<p>
+Sezioni:
+<ul>
+  <li><a href="#experiences"
+         title="jump inside">Elenco esercitazioni di laboratorio</a></li>
+  <li><a href="#forum"
+         title="jump inside">Forum/Mailing List</a></li>
+  <li><a href="lab-setting.html"
+         title="link interno">Configurazione del laboratorio virtuale Netkit4TIC (DOWNLOAD)</a></li>
+  <li><a href="#repository"
+         title="jump inside">Repository</a></li>
+</ul>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3><a id="experiences">Elenco esercitazioni di laboratorio</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Le  distribuzioni GNU/Linux utilizzate
+sono evidenziate con diversi colori:
+<span class="yellow">nodo Debian Lenny</span>
+e <span class="red">nodo Bering uClibc</span>.
+Il <span class="green">nodo Windows XP Pro SP2</span>
+viene realizzato dal virtualizzatore QEMU
+(l'immagine ovviamente non &egrave; presente nel live-DVD).<br>
+Dopo il rilascio della versione v3.0 le esperienze virtuali
+che si basano sul vecchio nodo "Sarge" potrebbero non funzionare
+e dovete aspettare che vengano portate sul nodo "Lenny"
+oppure decidere di contribuire facendo voi il lavoro ;-)
+
+<ul>
+  <li>Serial lines (<a href="docs/serial.pdf" title="Netkit4TIC documentation">docs</a>,
+      <a href="serial.tgz" title="Netkit4TIC virtual experience">tarball</a>,
+      <a href="serial-desktop.png" title="Netkit4TIC virtual experience screenshot">screenshot</a>)
+      - Experimentation in attaching two virtual machine together with
+        serial lines.<br>
+      (Virtual goods: <span class="yellow">2 host</span>)</li>
+  <li><a href="uml-bridge.html" title="esperienza Netkit4TIC">Bridge</a>
+      - Semplice esempio di LAN senza cicli e con un bridge.<br>
+      (Materiali virtuali impiegati: 1 bridge, 3 hub e <span class="yellow">5 host</span> per un totale
+      di 8 NIC)</li>
+  <li><a href="uml-bridgeSTP.html" title="esperienza Netkit4TIC">Bridge&amp;STP</a>
+      - Esempio di sperimentazione di bridge e Spanning Tree (802.1d).<br>
+      (Materiali virtuali impiegati: <span class="yellow">5 bridge</span> e 5 hub per un totale
+      di 11 NIC)</li>
+  <li><a href="uml-VLAN.html" title="esperienza Netkit4TIC">VLAN</a>
+      - Esempio di costruzione
+      di VLAN (802.1q) per un laboratorio tipo.<br>
+      (Materiali virtuali impiegati: <span class="yellow">3 host</span> e 1 hub per un totale di
+      3 NIC)</li>
+  <li><a href="uml-bering.html" title="esperienza Netkit4TIC">Firewall</a>
+      - Costruzione e configurazione di una rete privata protetta da
+       firewall LEAF/Bering uClibc e comprensiva di nodo in Internet, di proxy
+      server e filtraggio dei contenuti.
+      Esempio di configurazione transparent proxy.<br>
+      (Materiali virtuali impiegati: <span class="red">1 firewall</span>, 2 hub e <span class="yellow">3 host</span> per
+      un totale di 6 NIC)</li>
+  <li><a href="uml-beringDMZ.html" title="esperienza Netkit4TIC">Firewall con DMZ</a>
+      - Costruzione e configurazione di una rete privata protetta da
+       firewall LEAF/Bering uClibc e comprensiva di rete DMZ.<br>
+      (Materiali virtuali impiegati: <span class="red">1 firewall</span>, 3 hub e <span class="yellow">5 host</span> per
+      un totale di 7 NIC)</li>
+  <li><a href="uml-QoS.html" title="esperienza Netkit4TIC">Traffic shaping</a>
+      - Costruzione e configurazione di una rete privata protetta da
+       firewall LEAF/Bering uClibc con configurazione di QoS in termini
+       di Traffic Shaping.<br>
+      (Materiali virtuali impiegati: <span class="red">1 firewall</span>, 3 hub e <span class="yellow">4 host</span> per
+      un totale di 7 NIC)</li>
+  <li><a href="uml-QBox.html" title="esperienza Netkit4TIC">QBox</a>
+      - Costruzione e configurazione della
+      <a href="http://content.cs.luc.edu/projects/comp412/q-box"
+         title="link esterno">QBox</a>
+       dal progetto per la costruzione di una QoS appliance.<br>
+      (Materiali virtuali impiegati: <span class="red">1 QBox</span>, 2 hub e <span class="yellow">2 host</span> per
+      un totale di 4 NIC)</li>
+  <li><a href="uml-proxyArp.html" title="esperienza Netkit4TIC">Proxy-ARP</a>
+      - Specializzazione di un firewall LEAF/Bering uClibc 
+      attivato in configurazione proxy-arp.<br>
+      (Materiali virtuali impiegati: <span class="red">1 firewall</span>,
+      2 hub e <span class="yellow">3 host</span> per un totale di 5 NIC)</li>
+  <li><a href="uml-RLab.html" title="esperienza Netkit4TIC">borpLAN</a>
+      - Template di sottorete realizzata con routers LEAF/Bering uClibc
+      e amministrata da browser.<br>
+      (Materiali virtuali impiegati: <span class="red">2 firewall</span>,
+      3 hub e <span class="yellow">7 host</span> per
+      un totale di 10 NIC)</li>
+  <li><a href="uml-VPN.html" title="esperienza Netkit4TIC">VPN</a>
+      - Costruzione e configurazione di due VPN (Openswan e N2N)
+      tra due reti private connesse attraverso Internet con
+      firewall LEAF/Bering uClibc.<br>
+      (Materiali virtuali impiegati: <span class="red">2 firewall</span>, <span class="yellow">1 router</span>, <span class="yellow">1 supernode</span>, 5 hub
+      e <span class="yellow">2 host</span> per un totale di 10 NIC)</li>
+  <li>PoPToP (<a href="docs/PoPToP.pdf" title="Netkit4TIC documentation">docs</a>,
+      <a href="PoPToP.tgz" title="Netkit4TIC virtual experience">tarball</a>,
+      <a href="PoPToP-desktop.png" title="Netkit4TIC virtual experience screenshot">screenshot</a>)
+      - Experimentation in setting PoPToP connection between a LEAF/Bering
+        firewall and a Linux OR Windows road warriors.<br>
+      (Virtual goods: <span class="red">1 firewall</span>,
+                      <span class="yellow">2 host</span> and
+                      <span class="green">1 Windows XP</span>)</li>
+  <li><a href="uml-mlinks.html" title="esperienza Netkit4TIC">Load sharing</a>
+      - Costruzione e configurazione di Load sharing over
+      multiple interfaces.<br>
+      (Materiali virtuali impiegati: <span class="red">2 firewall</span>, <span class="yellow">2 host</span> e 4 hub
+      per un totale di 8 NIC)</li>
+  <li><a href="uml-rip.html" title="esperienza Netkit4TIC">RIP</a>
+      - Realizzazione di un laboratorio di routing per lo studio
+        del protocollo distance vector RIP.<br>
+      (Materiali virtuali impiegati: 9 hub, <span class="yellow">5 router</span> e <span class="yellow">4 host</span> per
+      un totale di 21 NIC)</li>
+  <li><a href="uml-ospf.html" title="esperienza Netkit4TIC">OSPF</a>
+      - Realizzazione di un laboratorio di routing per lo studio
+        del protocollo link state OSPF.<br>
+      (Materiali virtuali impiegati: 9 hub, <span class="yellow">5 router</span> e <span class="yellow">4 host</span> per
+  <li><a href="uml-VRRP.html" title="esperienza Netkit4TIC">VRRP</a>
+      - Realizzazione di una rete per lo studio del Virtual
+        Router Redundancy Protocol (VRRP).<br>
+      (Materiali virtuali impiegati: 2 hub, <span class="red">2 router</span> e <span class="yellow">2 host</span> per
+      un totale di 6 NIC)</li>
+  <li><a href="uml-pam.html" title="esperienza Netkit4TIC">PAM</a>
+      - Sperimentazione dei Pluggable Authentication Modules.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+  <li><a href="uml-perms.html" title="esperienza Netkit4TIC">file/directory permissions</a>
+      - Approfondimento sulle permissions applicate alle directory.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+  <li><a href="uml-quotaACL.html" title="esperienza Netkit4TIC">Quota e ACL</a>
+      - Sperimentazione di quota e ACL su filesystem xfs.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+  <li><a href="uml-RAID.html" title="esperienza Netkit4TIC">RAID</a>
+      - Sperimentazione del RAID software su filesystem xfs.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+  <li><a href="uml-csync2.html" title="Netkit4TIC virtual experience">Cluster synchronization with csync2</a>
+      - Experimentation to manage distributed config files.<br>
+      (Virtual goods: <span class="yellow">2 host</span>)</li>
+  <li><a href="uml-HA.html" title="esperienza Netkit4TIC">HA-cluster</a>
+      - Sperimentazione di un cluster in configurazione High Availability (HA)
+      con l'uso di heartbeat, di bonding, di DRBD e di mon.<br>
+      (Materiali virtuali impiegati: 3 hub e <span class="yellow">3 host</span>
+      per un totale di 7 NIC)</li>
+  <li><a href="uml-dns.html" title="esperienza Netkit4TIC">DNS</a>
+      - Esperienza su DNS dal sito www.netkit.org modificata per
+      utilizzare bind9 invece di bind.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">7 host</span> per un totale di 7 NIC)</li>
+  <li><a href="uml-email.html" title="esperienza Netkit4TIC">eMail</a>
+      - Esperienza su DNS/Mail dal sito www.netkit.org modificata per
+      utilizzare Postfix al posto di Sendmail e Mutt al posto di Pine.
+      Opzionalmente si pu&ograve; sperimentare il client
+      Outlook Express su piattaforma Microsoft.<br>
+      (Materiali virtuali impiegati: 1 hub e
+      <span class="yellow">7 host</span> per un totale di 7 NIC.
+      Opzionale: <span class="green">1 nodo XP</span>).</li>
+  <li><a href="uml-LTSP.html" title="esperienza Netkit4TIC">LTSP</a>
+      - Costruzione e configurazione di un  Linux
+      Terminal Server.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>. Materiali reali impiegati:
+      vecchi PC anche 486 con scheda di rete ISA)</li>
+  <li><a href="uml-KTS.html" title="esperienza Netkit4TIC">Knoppix Terminal Server</a>
+      - Costruzione e configurazione di un Knoppix
+      Terminal Server.<br>
+      (Materiali virtuali impiegati: <span class="yellow">2 host</span>. Materiali reali impiegati:
+      2 host di cui uno server)</li>
+  <li><a href="uml-LDAP.html" title="esperienza Netkit4TIC">LDAP</a>
+      - Costruzione e configurazione di una coppia di server 
+      LDAP master/replica
+      per l'autenticazione degli utenti usando OpenLDAP.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">3 host</span> per un totale
+      di 3 NIC).<br>
+      Esempio di utilizzo di LDAP in
+      <a href="http://www.openpec.org/" title="link esterno">OpenPEC</a>.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">1 host</span>
+       per un totale di 1 NIC).</li>
+  <li><a href="uml-Samba.html" title="esperienza Netkit4TIC">Samba</a>
+      - Costruzione e configurazione di un server samba con
+      LDAP backend server e nodo client. Esempio di mount
+      e automount di uno share SMB.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">3 host</span> per un
+      totale di 3 NIC)</li>
+  <li><a href="uml-EntSamba.html" title="esperienza Netkit4TIC">Enterprise Samba</a>
+      - Costruzione e configurazione di un Workgroup distribuito
+      su tre subnet completo di LDAP backend ed esempio di WINS
+      server.<br>
+      (Materiali virtuali impiegati: 3 hub, <span class="yellow">1 router</span> e <span class="yellow">7 host</span> per un
+      totale di 10 NIC)<br>
+      </li>
+  <li><a href="uml-dualSamba.html" title="esperienza Netkit4TIC">Samba in multipla istanza</a>
+      - Costruzione e configurazione di un dominio Samba con homes
+      in un Member Domain. I due nodi, simulando un HA-cluster,
+      possono colassare in un unico nodo con "doppia personalit&agrave;":
+      DC e MD. Le operazioni sono verificabili mediante l'uso di
+      un client XP virtualizzato attraverso QEMU.<br>
+      (Materiali virtuali impiegati: 1 hub, <span class="yellow">2/3 host</span> e <span class="green">1 nodo XP</span> per un
+      totale di 3/4 NIC)<br>
+      </li>
+  <li><a href="uml-krb.html" title="esperienza Netkit4TIC">Kerberos</a>
+      - Costruzione e configurazione di un server Kerberos V5 e un
+      server LDAP per la realizzazione di un Single Sign On (SSO) con
+      un nodo server per ftp, telnet e http kerberizzati e un
+      nodo client per il test dei servizi.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">3 host</span> per un
+      totale di 3 NIC)</li>
+  <li><a href="uml-openafs.html" title="esperienza Netkit4TIC">OpenAFS</a>
+      - Costruzione e configurazione di una cella con AFS file
+      system in un ambiente con server Kerberos V5 e 
+      server LDAP (Single Sign On).<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">3 host</span> per un
+      totale di 3 NIC)</li>
+  <li><a href="uml-NetPractice.html" title="esperienza Netkit4TIC">NetPractice</a>
+      - Alcuni esercizi risolti sulle reti</li>
+  <li><a href="uml-NET.html" title="esperienza Netkit4TIC">NET</a>
+      - Sperimentazione di una rete.<br>
+      (Materiali virtuali impiegati: 5 hub, <span class="red">3 firewall</span> e <span class="yellow">6 host</span> per
+      un totale di 15 NIC) </li>
+  <li><a href="uml-IDS.html" title="esperienza Netkit4TIC">IDS</a>
+      - Costruzione di un sistema di rilevazione delle intrusioni utilizzando
+      Shadow, Snort e ACID.<br>
+      (Materiali virtuali impiegati: 3 hub, <span class="yellow">2 sensori</span> e <span class="yellow">5 host</span> per
+      un totale di 9 NIC)</li>
+  <li><a href="uml-Nino.html" title="esperienza Netkit4TIC">Nino</a>
+      - Configurazione di Nino come strumento SNMP di gestione
+      e manutenzione rete.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">2 host</span> per un totale di 2 NIC)</li>
+  <li><a href="PHP-Nuke.tgz" title="esperienza Netkit4TIC (26KB)">PHP-Nuke</a>
+      - Costruzione e configurazione del portale 
+      <a href="http://www.cmsinfo.org/" title="link esterno">CMS</a>
+      PHP-Nuke corredato di modulo per la biblioteca. Per l'occasione
+      si pu&ograve; provare la configurazione e manutenzione
+      del server MySql attraverso interfaccia Web 
+      phpMyadmin.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+  <li><a href="uml-CVS.html" title="esperienza Netkit4TIC">CVS</a>
+      - Ambiente di registrazione documenti su repositori
+        centralizzato mediante CVS su server virtuale.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+
+  <li><a href="uml-Web.html" title="esperienza Netkit4TIC">Web</a>
+      - Chapters 35-37 examples from 
+	  Douglas Comer book &quot;Computer Networks and Internet&quot;.<br>
+      (Virtual goods: <span class="yellow">1 host</span>)</li>
+
+  <li><a href="uml-php.html" title="esperienza Netkit4TIC">PHP-dev</a>
+      - Ambiente di sviluppo
+      <a href="http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29"
+         title="Wikipedia">LAMP</a>
+       tramite un server virtuale.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+
+  <li><a href="uml-sockets.html" title="esperienza Netkit4TIC">Sockets</a>
+      - Esempi di programmi in
+      linguaggio C e Java che attraverso le API socket realizzano
+      semplici applicazioni client/server.<br>
+      (Materiali virtuali impiegati: 1 hub e <span class="yellow">2 host</span>)</li>
+  <li><a href="uml-PKI.html" title="esperienza Netkit4TIC">PKI</a>
+      - Costruzione di una CA minimale tramite un server virtuale.<br>
+      (Materiali virtuali impiegati: <span class="yellow">1 host</span>)</li>
+
+</ul>
+
+
+
+
+<p>
+Per le esperienze pi&ugrave; complesse &egrave; importante avere
+macchine con installati almeno 512MB di RAM.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="forum">Forum/Mailing List</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+&Egrave; attivo un
+<a href="/phpbb/" title="forum">forum</a>
+in lingua italiana dove si pu&ograve; intervenire su problematiche
+inerenti a Netkit4TIC.
+Per cortesia registratevi con il
+vostro "Nome Cognome" compreso lo spazio separatore.
+</p>
+
+<p>
+Il sito netkit mette a disposizione una
+mailing list
+<a href="http://list.dia.uniroma3.it/mailman/listinfo/netkit.users"
+   title="mailing list">http://list.dia.uniroma3.it/mailman/listinfo/netkit.users</a>
+in lingua inglese dove si possono postare domande riguardanti
+Netkit in generale.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="repository">Repository</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+&Egrave; attivo un
+<a href="/cgi-bin/cvsweb/" title="CVS">repository CVS</a>
+dove sono memorizzati tutti i documenti utilizzati in questo progetto.
+In questo modo &egrave; possibile verificare tutte le modifiche
+che vengono effettuate nel tempo.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/">
+   <img alt="Creative Commons License"
+        src="80x15.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: 2010-05-24 13:32:49 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

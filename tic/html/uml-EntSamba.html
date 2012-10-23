@@ -1,0 +1,460 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-EntSamba.html,v 1.15 2005/12/11 22:28:54 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-samba</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-Samba.html">
+  <link rel="Next" title="Next" href="uml-dualSamba.html">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Amministrazione, gestione e autenticazione in rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Enterprise Samba</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-Samba.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-dualSamba.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+Questo modulo consiste nella
+Configurazione e uso di un Primary Domain Controller (PDC) con workgroup
+in altre due sottoreti dove sono presenti
+Backup Domain Controller (BDC) uno per segmento.
+</p>
+
+
+<p>
+Scarica il file <a href="EntSamba.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente tutto il necessario e scompattalo in una sottodirectory della
+<code>HOME</code> dell'utente. La release Samba di riferimento &egrave;
+la 3.0.x presente nella distribuzione Debian Sarge.
+</p>
+
+<p>
+La documentazione di eccellente qualit&agrave; si pu&ograve; ottenere
+installando il pacchetto <code>samba-doc</code> che mette a disposizione
+<code>Samba-HOWTO-Collection</code>,
+<code>Samba-Guide</code> e 
+<code>Samba-Developers-Guide</code> parzialmente consultabili anche
+all'interno di <code>swat</code>.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="subnet">Configurazione e uso di un PDC con workgroup in sottoreti</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questa esercitazione viene simulata una azienda con dominio Internet
+<code>istituto.it</code> con un workgroup SMB di nome <code>NetkitWG</code>
+distribuito parte su una rete 
+192.168.10.0/24 che chiameremo Area A1 con un 
+<a href="../lab/EntSamba/smb.conf" title="file di configurazione">PDC</a>
+(NetBIOS name <code>istituto-PDC</code>) e un 
+<a href="../lab/EntSamba/smb-c1.conf" title="file di configurazione">client</a>
+(NetBIOS name <code>ACLNT-A1</code>) di test,
+una seconda parte su una rete 192.168.20.0/24
+che chiameremo Area A2 con un 
+<a href="../lab/EntSamba/smb-b1.conf" title="file di configurazione">BDC</a>
+ (NetBIOS name <code>istituto-BDC-A2</code>) e un 
+<a href="../lab/EntSamba/smb-c2.conf" title="file di configurazione">client</a>
+ (NetBIOS name <code>ACLNT-A2</code>) di test e una terza parte
+su una rete  192.168.30.0/24 che chiameremo Area A3
+con un 
+<a href="../lab/EntSamba/smb-b2.conf" title="file di configurazione">BDC</a>
+ (NetBIOS name <code>istituto-BDC-A3</code>) e un
+<a href="../lab/EntSamba/smb-c2.conf" title="file di configurazione">client</a>
+ (NetBIOS name <code>ACLNT-A3</code>) di test.
+Le tre reti sono connesse
+da un router che a sua volta &egrave; connesso con la rete reale (<a href="pdf/EntSamba.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/EntSamba.xml" title="file per Dia">xml</a>).<br>
+Nell'area A1
+&egrave; installato il server <code>ldap.istituto.it</code>
+che offre servizio LDAP come backend per i Domain Controller e il servizio DNS
+con alias <code>ns.istituto.it</code>
+per la risoluzione dei nomi nel dominio <code>istituto.it</code>.
+</p>
+
+
+<p>
+Un PDC &egrave; una macchina in grado di rispodere alle richieste
+di logon dalle macchine in un dominio Windows NT. Infatti quando un
+utente si autentica su una macchina questa contatta il controllore
+del dominio per verificare la correttezza della coppia (utente, password).
+In seguito il controllore di dominio risponde con una serie di informazioni
+quali il path del profilo dell'utente e altro.<br>
+Ogni PDC che controlla un dominio, ad esempio <code>NetkitWG</code>, deve
+registrare il nome NetBIOS <code>NETKITWG#1c</code> nel server WINS. Per
+verificarlo basta digitare il comando: <code>nmblookup -A nome-server</code>
+o in una macchina M$ il comando: <code>nbtstat -a nome-server</code>.
+</p>
+
+<p>
+A livello di specifiche all'interno del file <code>smb.conf</code>:
+</p>
+
+<pre>
+# /etc/samba/smb.conf
+[global]
+  workgroup NetkitWG
+  domain master = yes
+  domain logons = yes
+  encrypt passwords = yes
+  security = user
+[...]
+</pre>
+
+
+<p>
+Un BDC &egrave; una macchina pensata per sopperire ad un eventuale
+guasto del PDC o un suo sovraccarico o addirittura per sostituirlo.
+Anche il BDC registra sul server WINS l'entry NetBIOS <code>NETKITWG#1c</code>
+ma non l'entry <code>NETKITWG#1b</code> caratteristica del PDC.<br>
+In molte situazioni il BDC sopporta tutto il carico dei logon e solo
+alcune funzioni, quali ad esempio il cambio di password, vengono gestite
+dal PDC.
+</p>
+
+<p>
+A livello di specifiche all'interno del file <code>smb.conf</code>:
+</p>
+
+<pre>
+# /etc/samba/smb.conf
+[global]
+  workgroup NetkitWG
+  <span class="red">domain master = no</span>
+  domain logons = yes
+  encrypt passwords = yes
+  security = user
+[...]
+</pre>
+
+<p>
+Al file di realizzare un unico workgroup occorre che in tutti i segmenti
+ci sia lo stesso Security ID (SID) ed essere uguale a quello del PDC.
+Il comando per reperire il SID dal PDC e memorizzarlo
+localmente:
+</p>
+
+<pre>
+root@istituto-BDC-AX# net rpc getsid
+</pre>
+
+<p>
+Una stazione M$ trova il proprio controllore di dominio lanciando
+un'interrogazione NetBIOS per il nome <code>NETKITWG#1c</code> e
+assume che ogni macchina che risponde sia un controllore di dominio
+e quindi possa rispondere alle richieste di logon.<br>
+</p>
+
+<p>
+Se vogliamo rendere indipendenti i segmenti della rete occorre
+che vengano installati almeno un WINS server per segmento (e anche
+un LDAP slave server). &Egrave; quindi necessario che ogni WINS
+server abbia una entry statica sul database WINS (questo si ottiene
+inserendo una entry con TTL a zero nel file
+<code>/var/lib/samba/wins.dat</code>) con gli indirizzi dei
+WINS server negli altri segmenti.
+</p>
+
+<p>
+Per la documentazione riguardante il browsing pu&ograve; essere
+utile consultare i documenti
+<code>/usr/share/doc/samba-doc/htmldocs/howto/NetworkBrowsing.html</code>.
+</p>
+
+<p>
+L'esperienza virtuale viene attivata come al solito dal lancio del
+comando <code>./lab start</code> che oltre alla costruzione
+dei nodi della rete configurer&agrave; i servizi necessari.<br>
+Per quanto riguarda il servizio LDAP si utilizzano quattro account
+specializzati ragruppati nella <code>ou=DSA,dc=istituto,dc=it</code>:
+</p>
+
+<ul>
+  <li><code>cn=admin,ou=DSA,dc=istituto,dc=it</code> per l'amministratore,</li>
+  <li><code>cn=replicator,ou=DSA,dc=istituto,dc=it</code> per il
+      servizio di replica del database LDAP,</li>
+  <li><code>cn=nssuser,ou=DSA,dc=istituto,dc=it</code> per il
+      servizio Name Service Switch,</li>
+  <li><code>cn=samba,ou=DSA,dc=istituto,dc=it</code> per Samba.</li>
+</ul>
+
+<p>
+Per il PDC viene settato il SID
+<code>S-1-5-21-3840722988-1065274203-713729200</code>
+e questo
+viene replicato e memorizzato dalle stazioni sullo stesso segmento di
+rete con il comando:
+</p>
+
+<pre>
+# net rpc getsid netkitwg
+</pre>
+
+<p>
+mentre per le stazioni su segmenti esterni:
+</p>
+
+<pre>
+# net rpc getsid netkitwg -S istituto-PDC
+</pre>
+
+<p>
+Inoltre prima di far partire il servizio samba sono impostate
+nel file <code>/var/lib/samba/wins.dat</code>
+le entry
+statiche NetBIOS per i server WINS di PDC, BDC1 e BDC2.<br>
+In seguito occorre per prima cosa impostare sul
+<code>istituto-PDC</code> la password di Administrator (not24get):
+</p>
+
+<pre>
+root@istituto-PDC# smbldap-passwd Administrator
+</pre>
+
+<p>
+e successivamente uniamo al dominio tutte le macchine:
+</p>
+
+<pre>
+root@istituto-PDC# net rpc join -U Administrator%not24get
+root@ACLNT-A1# net rpc join -U Administrator%not24get
+root@istituto-BDC-A2# net rpc join -U Administrator%not24get -S istituto-PDC
+root@ACLNT-A2# net rpc join -U Administrator%not24get -S istituto-PDC
+root@Bistituto-DC-A3# net rpc join -U Administrator%not24get -S istituto-PDC
+root@ACLNT-A3# net rpc join -U Administrator%not24get -S istituto-PDC
+</pre>
+
+<p>
+Al termine dello script <code>lab</code>
+la situazione dell'albero LDAP visualizzato da <code>gq</code>
+&egrave; la
+<a href="gq-EntSamba.png" title="albero LDAP">seguente</a> ed
+ecco uno
+<a href="EntSamba-desktop.png" title="screen-shot">screenshot</a>
+del desktop.
+</p>
+
+<p>
+Ora costruiamo un gruppo di prova <code>g-prova</code> e un
+utente <code>u-prova</code> del gruppo appena costruito:
+</p>
+
+<pre>
+root@istituto-PDC# smbldap-groupadd -a -r 600 g-prova
+root@istituto-PDC# smbldap-useradd -a -G g-prova -c "Utente di Prova" \
+   -B 1 -m -P -F \\\\istituto-PDC\\profiles\\foo u-prova
+</pre>
+
+
+<p>
+Per trovare l'IP address del master browser per il workgroup
+<code>NetkitWG</code>:
+</p>
+
+<pre>
+root@ACLNT-A1# nmblookup -M netkitwg<span class="blue">
+querying Netkitwg on 192.168.10.255
+192.168.10.1 Netkitwg&lt;1d&gt;</span>
+root@ACLNT-A2# nmblookup -M netkitwg<span class="blue">
+querying Netkitwg on 192.168.20.255
+192.168.20.1 Netkitwg&lt;1d&gt;</span>
+root@ACLNT-A3# nmblookup -M netkitwg<span class="blue">
+querying Netkitwg on 192.168.30.255
+192.168.30.1 Netkitwg&lt;1d&gt;</span>
+</pre>
+
+
+<p>
+Per quanto riguarda il servizio NSS per poter visualizzare
+le password occorre che il servizio faccia il bind come
+utente abilitato nelle ACL di ldap.
+Abbiamo scelto di abilitare questa funzionalit&agrave; solo
+sui server <code>ldap</code> ed <code>istituto-PDC</code>.
+Il file che contiene la password in chiaro &egrave;
+<code>/etc/ldap.secret</code> e
+ovviamente il proprietario &egrave; <code>root</code> e
+i permessi sono 600. Sconsigliamo l'uso di questa configurazione
+su macchine accessibili fisicamente da personale non autorizzato.<br>
+Verifichiamo la configurazione appena descritta in tre macchine
+distinte:
+</p>
+
+
+<pre>
+root@istituto-PDC#  smbldap-passwd toni<span class="blue">
+Changing password for toni
+New password : </span>not24get<span class="blue">
+Retype new password : </span>not24get
+
+root@ldap# getent shadow | grep toni<span class="blue">
+toni:LPldZpPhmwaYE:::::::0</span>
+root@istituto-PDC# getent shadow | grep toni<span class="blue">
+toni:LPldZpPhmwaYE:::::::0</span>
+root@istituto-BDC-A2# getent shadow | grep toni<span class="blue">
+toni:x:::::::0</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Aggancio con la macchina reale</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In aggiunta se
+<a href="../lab/EntSamba/r-smb.conf"
+   title="file di configurazione">configuriamo</a>
+la macchina reale come server Samba che accetta
+e compie announce remote dalla rete virtuale allora le eventuali macchine
+Samba della rete reale possono avere servizio dalle macchine Samba virtuali.
+Per ottenere questo funzionamento procediamo come segue:
+da utente <code>root</code> ci
+posizioniamo sulla directory dove abbiamo
+scompattato il file compresso <code>Samba.tgz</code> e diamo i seguenti comandi:
+</p>
+
+
+<pre>
+root@realHost# cp r-smb.conf /etc/samba/smb.conf
+root@realHost# /etc/init.d/smb start
+</pre>
+
+<p>
+Nel caso di una Knoppix dove non abbiamo la possibilit&agrave; di
+modificare i file della directory <code>/etc</code> diamo invece i comandi:
+</p>
+
+<pre>
+root@realHost# /usr/sbin/nmbd -s r-smb.conf
+root@realHost# /usr/sbin/smbd -s r-smb.conf
+</pre>
+
+
+<p>
+infine aggiungiamo tre regole di routing una per rete:
+</p>
+
+<pre>
+root@realHost# route add -net 192.168.10.0/24 gw 192.168.77.2
+root@realHost# route add -net 192.168.20.0/24 gw 192.168.77.2
+root@realHost# route add -net 192.168.30.0/24 gw 192.168.77.2
+</pre>
+
+<p>
+Ora dalla macchina reale &egrave; possibile ottenere servizio e/o sfogliare
+le risorse del virtuale:
+</p>
+
+<pre>
+user@realHost$ smbclient -L ISTITUTO-PDC -N
+user@realHost$ nmblookup -U 192.168.10.1 -R ISTITUTO-BDC-A2
+</pre>
+
+<p>
+o nel caso usiamo Knoppix:
+</p>
+
+<pre>
+user@realHost$ smbclient -s r-smb.conf -L ISTITUTO-PDC -N
+user@realHost$ nmblookup -s r-smb.conf -U 192.168.10.1 -R ISTITUTO-BDC-A2
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/12/11 22:28:54 $
+</span>
+</address>
+
+
+</body>
+</html>

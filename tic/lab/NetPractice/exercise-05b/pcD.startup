@@ -1,0 +1,5 @@
+# $Id: pcD.startup,v 1.1 2006/10/07 16:44:42 doros Exp $
+# configure IP address
+ifconfig eth0 200.0.7.129 up \
+         netmask 255.255.255.192 broadcast 200.0.7.191 up
+route add default gw 200.0.7.190

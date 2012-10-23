@@ -1,0 +1,185 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: partitionTable.html,v 1.12 2004/09/17 20:27:25 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - Schema delle partizioni</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="module6.html">
+  <link rel="Next" title="Next" href="module8.html">
+</head>
+
+<body>
+<!--
+<h1 class="center">Modulo 7</h1>
+<h2 class="center">Sistemi operativi di rete</h2>
+-->
+
+<h3>Schema delle partizioni</h3>
+
+<p>
+Per i server della rete sperimentale sono stati seguiti i valori
+riassunti nella seguente tabella:
+</p>
+
+
+
+<table width=501 cellspacing="0" cellpadding="1" border="0">
+  <caption>Tabella 1: Dimensione delle partizioni</caption>
+              <tr valign="top">
+                <td><b>Mount point</b></td>
+                <td><b>Size (MByte)</b></td>
+                <td><b>Note</b></td>
+              </tr>
+              <tr valign="top">
+                <td>/boot</td>
+                <td>128</td>
+                <td>Partizione per il boot: contiene il kernel
+                    ed eventualmente i drivers per i dischi SCSI.
+                    Se non avete dischi SCSI e non pensate di provare
+                    una configurazione multi-boot possono bastare 10MByte.</td>
+              </tr>
+              <tr valign="top">
+                <td>swap</td>
+                <td>1024</td>
+                <td>Questo valore &egrave; consigliato uguale ad
+                    almeno il doppio della dimensione della RAM.
+                    &Egrave; consigliabile allocarla all'inizio del
+                    disco in modo che lo swap sia il pi&ugrave;
+                    veloce possibile.</td>
+              </tr>
+              <tr valign="top">
+                <td>/</td>
+                <td>640</td>
+                <td>Questa partizione &egrave; la &quot;madre&quot;
+                    di tutto il filesystem.</td>
+              </tr>
+              <tr valign="top">
+                <td>/usr</td>
+                <td>1024</td>
+                <td>Partizione destinata a contenere i programmi. Nel
+                    caso delle ultimissime distribuzioni la dimensione
+                    potrebbe essere superiore ai 5GByte ma nel caso
+                    medio 1GByte &egrave; sufficiente.</td>
+              </tr>
+              <tr valign="top">
+                <td>/home</td>
+                <td>1024</td>
+                <td>Partizione dedicata agli utenti locali alla macchina.
+                    Nel caso di server potrebbe avere una dimensione molto
+                    bassa (p.e. 100MByte) poich&egrave; in un server non
+                    c'&egrave; utenza locale.</td>
+              </tr>
+              <tr valign="top">
+                <td>/var</td>
+                <td>4096</td>
+                <td>In questa partizione andranno a finire tutti i
+                    file che non appartengono a /var/log o a /var/tmp.<br>
+                    Pi&ugrave; precisamente sarebbe meglio destinare
+                    una partizione per ogni
+                    servizio come Mail (/var/spool/mail/),
+                    Web (/var/www/), News (/var/spool/news/), Printer
+                    (/var/spool/cups/) e cos&igrave; via.
+                </td>
+              </tr>
+              <tr valign="top">
+                <td>/var/log</td>
+                <td>4096</td>
+                <td>In questa partizione vanno a finire tutti i file
+                    di log per cui se pensate di tenere i log di 
+                    tutti i servizi attivati per almeno un anno questo
+                    valore pu&ograve; essere adatto.</td>
+              </tr>
+              <tr valign="top">
+                <td>/var/tmp</td>
+                <td>4096</td>
+                <td>Su questa partizione per i file temporanei
+                    saranno impedite le esecuzioni di programmi
+                    o script.
+                </td>
+              </tr>
+              <tr valign="top">
+                <td>/tmp</td>
+                <td>4096</td>
+                <td>In questa partizione ci vanno a finire tutti i
+                    file temporanei. In questo caso la dimensione
+                    massima di un file aperto con ``<code>vi</code>''
+                    &egrave; di 4GByte (memoria permettendo).</td>
+              </tr>
+</table>
+
+<p>
+Nel caso in cui si voglia prevedere l'installazione completa di una
+distribuzione consiglio di portare il valore della partizione /usr
+ad almeno 6 GByte. Ricordo che nel caso <b>reale</b> di installazione server questo valore
+&egrave; molto pi&ugrave; basso visto che &quot;meno si installa e
+pi&ugrave; sicuro sar&agrave; il server&quot;.
+</p>
+
+<p>
+Per tutte le partizioni di cui non siamo sicuri del loro
+dimensionamento &egrave; meglio costruirle sotto il controllo del Logical
+Volume Manager
+<a href="http://www.sistina.com/lvm/"
+   title="link esterno">(LVM)</a>
+che ci permetter&agrave; in seguito la loro variazione e la loro
+distribuzione anche su device fisici diversi da quelli originari.
+Un tool superiore &egrave; Enterprise Volume Management System 
+<a href="http://www-124.ibm.com/developerworks/opensource/evms/"
+   title="link esterno">(EVMS)</a>
+reso disponibile dalla IBM.
+</p>
+
+<p>
+Per quanto riguarda il ripartizionamento (resize), nel caso di
+filesystem NTFS esiste un tool dal nome NTFSresize,
+nel caso di partizioni FAT si pu&ograve; usare fips. Entrambi sono
+gratuiti e abbastanza stabili, comunque prima di usarli &egrave; sempre
+consigliato di fare il backup!
+</p>
+
+<p>
+Sui sistemi Debian la dimensione
+di <code>/var/cache/apt/archive</code>
+deve essere maggiorata
+poich&egrave; &egrave; usata dal pacchetto <code>apt</code>.
+</p>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/09/17 20:27:25 $
+</span>
+</address>
+
+
+</body>
+
+</html>

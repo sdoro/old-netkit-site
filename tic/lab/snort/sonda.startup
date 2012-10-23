@@ -1,0 +1,15 @@
+# $Id:$
+#/etc/init.d/klogd start
+#/etc/init.d/sysklogd start
+# IP address "backbone"
+ifconfig eth0 192.168.0.100
+route add default gw 192.168.0.1
+# IP address sottorete interna
+ifconfig eth1 192.168.1.254
+#
+dpkg -P snort
+rm -f /etc/snort/db-pending-config
+dpkg -i /hostlab/sonda/deb/*.deb
+rm -f /etc/snort/db-pending-config
+#
+# bof

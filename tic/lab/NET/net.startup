@@ -1,0 +1,11 @@
+# net.startup
+# $Id: net.startup,v 1.1 2006/06/29 14:01:45 doros Exp $
+#
+# configure IP address
+ifconfig eth0 216.57.5.214 up
+# for semplicity
+route add default gw 216.57.5.221
+# starting bind server
+/etc/init.d/bind9 start
+# starting postfix server
+/etc/init.d/postfix start

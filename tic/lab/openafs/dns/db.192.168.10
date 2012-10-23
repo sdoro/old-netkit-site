@@ -1,0 +1,21 @@
+; reverse lookup database 
+; /etc/bind/db.192.168.10
+; $Id: db.192.168.10,v 1.1 2005/09/01 19:49:16 doros Exp $
+;
+$ORIGIN .
+$TTL   38400      ; 10 hours 40 minutes
+10.168.192.in-addr.arpa IN SOA  ROOT-SERVER.    root.ROOT-SERVER. (
+                                2004102801 ; serial
+                                10800      ; refresh (3 hours)
+                                3600       ; retry (1 hour)
+                                604800     ; expire (1 week)
+                                38400      ; minimum (10 hours 40 minutes)
+                                )
+                        NS      ROOT-SERVER.
+$ORIGIN 10.168.192.in-addr.arpa.
+4                       PTR     ns.istituto.it.
+10                      PTR     srv.istituto.it.
+100                     PTR     alfa.istituto.it.
+101                     PTR     beta.istituto.it.
+102                     PTR     gamma.istituto.it.
+200                     PTR     client.istituto.it.

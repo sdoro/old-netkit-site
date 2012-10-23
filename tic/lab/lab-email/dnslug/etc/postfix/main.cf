@@ -1,0 +1,40 @@
+# see /usr/share/postfix/main.cf.dist for a commented, fuller
+# version of this file.
+# $Id: main.cf,v 1.2 2005-01-16 12:30:08 doros Exp $
+
+# Do not change these directory settings - they are critical to Postfix
+# operation.
+command_directory = /usr/sbin
+daemon_directory = /usr/lib/postfix
+program_directory = /usr/lib/postfix
+setgid_group = postdrop
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+biff = no
+
+# Uncomment the next line to generate delayed mail warnings
+#delay_warning_time = 4h
+
+#
+myhostname = mail.lugroma3.org
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+#
+mydestination = localhost, lugroma3.org
+relayhost = 
+#
+# It can be desirable to only see addresses of the form user@company.com
+# rather than addresses with individual internal host names
+masquerade_domains = $mydomain
+#
+mynetworks = 192.168.0.0/24
+mailbox_command = procmail -a "$EXTENSION"
+mailbox_size_limit = 0
+recipient_delimiter = +
+#
+myorigin = lugroma3.org
+
+# bot

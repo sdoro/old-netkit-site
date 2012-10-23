@@ -1,0 +1,20 @@
+;
+; $Id: db.fdns.net,v 1.5 2005/01/19 08:27:24 doros Exp $
+$TTL 60000
+@                IN     SOA     ns.fdns.net.    root.ns.fdns.net. (
+                        2002102801 ; serial
+                        28800 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        15 ; default_ttl
+                        )
+@                IN     NS      ns.fdns.net.
+@                IN     MX      10 smtp.fdns.net.
+ns               IN     A       216.57.5.215
+tic              IN     NS      ns1.tic.fdns.net.
+ns1.tic          IN     A       217.57.5.219
+ns2.tic          IN     A       217.57.5.220
+
+smtp      604800 IN CNAME ns.fdns.net.
+ns1       604800 IN CNAME ns.fdns.net.
+ns2       604800 IN CNAME ns.fdns.net.

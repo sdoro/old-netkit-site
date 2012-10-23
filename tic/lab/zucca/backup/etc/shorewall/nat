@@ -1,0 +1,5 @@
+#EXTERNAL     INTERFACE   INTERNAL       ALL INTERFACES   LOCAL
+# www.tic.fdns.net
+88.36.248.231 eth0        10.0.1.218     No               No
+# Serale
+88.36.248.247 eth0        10.0.1.214     No               No

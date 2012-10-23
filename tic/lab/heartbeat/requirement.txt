@@ -1,0 +1,32 @@
+Host requirement
+----------------
+
+Kernel modules:
+
+-
+
+Debian Packages
+
+xbase-clients
+mozilla-firefox
+
+
+Guest requirement
+-----------------
+
+Kernel modules:
+
+bonding
+drbd
+xfs
+nfs
+lockd
+sunrpc
+
+Debian packages
+
+drbd0.7-utils
+drbdlinks
+heartbeat
+mon
+pconsole

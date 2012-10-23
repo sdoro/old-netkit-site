@@ -1,0 +1,8 @@
+# $Id: README,v 1.2 2009-10-17 11:05:22 doros Exp $
+
+Using Knoppix CD/DVD:
+
+- apply SKAS3 patch
+- make bzImage
+- make modules
+

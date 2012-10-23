@@ -1,0 +1,4 @@
+dd if=/dev/zero of=/tmp/target_file bs=1M count=10
+insmod /lib/modules/iscsi_trgt.o
+insmod /lib/modules/file-io.o
+/etc/init.d/iscsi-target start

@@ -1,0 +1,30 @@
+# srv1.startup
+# $Id: srv1.startup,v 1.2 2007-05-12 19:03:54 doros Exp $
+#
+# no ip_forward
+echo "0" > /proc/sys/net/ipv4/ip_forward
+# Config IP address
+ifconfig eth0 192.168.77.2 up
+ifconfig eth1 217.57.5.219 \
+  netmask 255.255.255.248 broadcast 217.57.5.223 up
+route add default gw 217.57.5.217
+ifconfig eth2 10.10.10.65 \
+  netmask 255.255.255.240 broadcast 10.10.10.79 up
+route add -net 10.10.10.0/26 gw 10.10.10.78
+route add -net 10.10.20.0/27 gw 10.10.10.78
+route add -net 10.10.30.0/26 gw 10.10.10.78
+# adjust permissions
+> /var/log/bind-xfer.log 
+> /var/log/named.log
+chown bind /var/log/bind-xfer.log /var/log/named.log
+# starting bind server
+/etc/init.d/bind9 start
+# starting postfix server
+/etc/init.d/postfix start
+# starting xinetd server
+/etc/init.d/xinetd start
+#
+chmod a+r /etc/squirrelmail/config.php
+# create users
+(sleep 2; echo "not24get"; sleep 2; echo "not24get") | adduser --gecos 'Caio' caio
+(sleep 2; echo "not24get"; sleep 2; echo "not24get") | adduser --gecos 'Tizio' tizio

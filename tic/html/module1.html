@@ -1,0 +1,94 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module1.html,v 1.25 2009-10-03 09:37:26 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 1</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="index.html">
+  <link rel="Next" title="Next" href="module4.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 1</h1>
+<h2 class="center">Infrastrutture informatiche all'interno di un istituto scolastico</h2>
+
+
+<p>
+<ul>
+  <li> <a href="http://www.gnupg.org/" title="link esterno"><b>GnuPG</b></a><br>
+       Installa GnuPG e provalo usando un <code>http</code>
+       <a href="http://keyserver.linux.it/" title="link esterno">keyserver</a> italiano! Questo
+       software &egrave; Open Source (anche se spesso si trovano versioni
+       <i>freeware</i> o <i>evaluate</i>). Nel caso tu voglia cimentarti
+	   nell'uso dell'interfaccia a caratteri ho trovato chiare le
+	   indicazioni di
+	   <a href="http://www.badpenguin.org/gnupg-howto" title="link esterno">badpenguin</a>.</li>
+  <li> <a id=x509 HREF="http://www.openssl.org/" title="link esterno"><b>OpenSSL</b></a><br>
+       Il certificato
+	   <a href="X509.html" title="approfondimento">X.509</a>
+	   usato dal web server a cui sei
+       connesso &egrave; stato generato proprio con OpenSSL e permette
+       quindi la comunicazione cifrata SSLv2 o SSLv3/TLSv1
+       tra client (browser) e server (web server).
+       Con questo software
+       si pu&ograve; generare un certificato digitale X.509 anche per
+       il lato client (browser) in modo da autenticare non solo il lato
+       server, attraverso i certificati gi&agrave; memorizzati nei browser,
+       ma anche il lato client.
+	   Per trovare il riferimento a delle ottime slide che illustrano le varie configurazioni
+	   di cifratura vai a <a href="module17.html#apache-ssl">modulo 17</a>.
+       OpenSSL mette a disposizione gli strumenti
+       informatici per realizzare una (Open Source) <i>Public-Key
+       Infrastructure</i> (OS)<b>PKI</b>.</li>
+  <li> <a id=stunnel HREF="http://stunnel.mirt.net/" title="link esterno"><b>Stunnel</b></a><br>
+       Questo programma viene usato per costruire tunnel cifrati SSL tra
+	   client remoti e server locali/remoti quali ad esempio POP-2, POP-3,
+	   IMAP, NNTP, SMTP e HTTP. Controlla il corretto nuovo numero di 
+	   <a href="module5.html#nporta">porta</a>. Questo programma ci
+	   sar&agrave; utile quando organizzeremo la raccolta di tutti i log delle
+	   macchine della rete di sperimentazione C2 in un unico server di management.
+	   Nel caso in cui tu voglia fare un test di tunneling di una sessione
+	   <a href="http://www.uk.research.att.com/vnc/" title="link esterno">Virtual Network Computing (VNC)</a>
+	   tra un Linux server e un Windows 2000 client pu&ograve; esserti utile questo
+	   <a href="http://stunnel.mirt.net/static/VNC_StunnelHOWTO.html" title="link esterno">HowTo</a>.
+	   </li>
+</ul>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2009-10-03 09:37:26 $
+</span>
+</address>
+
+
+</body>
+
+</html>

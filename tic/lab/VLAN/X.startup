@@ -1,0 +1,14 @@
+# $Id: X.startup,v 1.3 2007-12-15 15:41:28 doros Exp $
+#
+ifconfig eth0 up
+ifconfig eth0 hw ether 00:00:00:00:10:00
+# define and configure VLAN 2
+modprobe 8021q
+vconfig add eth0 2
+ifconfig eth0.2 192.168.50.1 \
+         netmask 255.255.255.248 \
+         broadcast 192.168.50.8 up
+# fix uml_swithc vlan bug
+ifconfig eth0.2 mtu 1496
+#
+# bot

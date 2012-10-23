@@ -1,0 +1,23 @@
+# /etc/network/interfaces -- configuration file for LEAF network
+# $Id: interfaces,v 1.4 2007-02-20 11:03:45 doros Exp $
+#
+# Loopback interface.
+auto lo
+iface lo inet loopback
+# configure external interface
+auto eth0
+iface eth0 inet static
+        address 192.168.0.216
+        netmask 255.255.255.0
+        broadcast 192.168.0.255
+        gateway 192.168.0.254
+        up /etc/up-eth0
+# configure  internal interface
+auto eth1
+iface eth1 inet static
+        address 192.168.1.254
+        netmask 255.255.255.0
+        broadcast 192.168.1.255
+        up /etc/up-eth1
+#
+# bot

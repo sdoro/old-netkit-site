@@ -1,0 +1,5 @@
+# $Id: pc1.startup,v 1.1 2006/10/08 08:31:48 doros Exp $
+# configure IP address
+ifconfig eth0 195.11.14.5 up
+# configure the router r1 as next hop
+route add default gw 195.11.14.1

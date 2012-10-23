@@ -1,0 +1,339 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: diary.html,v 1.5 2006/06/30 07:17:58 doros Exp $ -->
+
+
+<head>
+  <title>Progetto P-MAN - diario</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+
+<h1 class="center">Progetto P-MAN</h1>
+<h2 class="center">(GNU/Linux@Zuccante.it)</h2>
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico"> 2005, 2006
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail tutor/coordinatore del progetto" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+
+
+<p>
+<table class=layout> 
+  <tr>
+  <td class=content>
+  <h3><a id=diario></a>Diario 2005/2006</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+I mesi di Settembre fino a Dicembre sono stati impiegati per testare
+il nuovo hardware con il software Open Source in configurazioni HA-cluster.
+In particolare le due coppie di server sono state testate con le seguenti
+configurazioni:
+</p>
+
+<ul>
+  <li>Configurazione di ogni nodo con RAID 1 software tra i due hard disk
+      in dotazione</li>
+  <li>Configurazione HA-cluster in modalit&agrave; active-active
+      tramite il pacchetto heartbeat</li>
+  <li>Configurazione RAID 1 su rete tramite DRBD per ogni cluster</li>
+  <li>Configurazione monitoraggio servizi cluster tramite il pacchetto mon</li>
+  <li>Configurazione DNS (HA-cluster)</li>
+  <li>Configurazione Squid (HA-cluster)</li>
+  <li>Configurazione NFS (HA-cluster)</li>
+  <li>Configurazione Samba (HA-cluster)</li>
+  <li>Configurazione LDAP (HA-cluster)</li>
+  <li>Configurazione Samba Domain Controller e Domain Member (HA-cluster)</li>
+</ul>
+
+<p>
+Alla data del 16 Dicembre sono installati i servizi sopracitati
+configurati in modalit&agrave; HA-cluster active-active.
+</p>
+
+
+<p>
+Nel mese di Dicembre &egrave; stata allestita la stanza 38 (CIM) per
+contenere tutti gli apparati del progetto e le scrivanie per il
+personale adibito alla manutenzione.
+</p>
+
+<p>
+Nella settimana dal 16 al 22 gennario 2006 sono iniziati i test della nuova
+connettivit&agrave; con 3 delle 4 linee a 2 Mbit (1 in fault).
+&Egrave; stato installato un firewall con area DMZ e abbiamo
+iniziato ad allestire le postazioni assegnate in CIM
+compreso il sistema di switch a quattro vie a noi dedicato.<br>
+Nell'area DMZ abbiamo installato e configurato un i586 come
+server DNS autoritativo per il
+dominio <code>zuccante.fdns.net</code>. In prospettiva questo
+server risulter&agrave; essere il nostro DNS secondario e sar&agrave;
+spostato nella sede staccata.<br>
+</p>
+
+<p>
+Nella settimana dal 22 al 28 gennario 2006 abbiamo installato due
+sistemi desktop PII rispettivamente come repository per le
+configurazioni e come sistema desktop di lavoro.
+Per la connettivit&agrave; siamo rimasti ancora a 3 su 4 linee.
+Nel frattempo abbiamo installato un firewall su box pcengine e
+due router sempre su box pcengine uno per il LASA e uno per OEN1.<br>
+Successivamente abbiamo collegato i laboratori LASA e OEN1 alle
+nuove linee in modo da testarle con traffico reale. Entrambe
+fanno riferimento allo stesso proxy e sono controllate
+dall'applicativo borpLAN.<br>
+Sul finire della settimana abbiamo configurato il monitoraggio
+via SNMP dei tre box pcengine in modo da conoscere in dettaglio
+il traffico presente sulla dorsale e sui laboratori connessi
+alla nuova rete.<br>
+Le immagini delle compact flash sono state memorizzate
+nel repository.<br>
+Siamo ancora in attesa delle nuove schede di rete
+perch&egrave; l'ordine &egrave; stato rigettatto dalla Dell.<br>
+Sabato 28 gennaio A.Memo ha testato dal LASA una applicazione
+per videoconferenza. L'utilizzo della rete da parte dell'applicazione
+non ha superato i 25 KB/sec.
+</p>
+
+<p>
+Nelle settimana dal 30 gennario al 4 febbrario
+e dal 6 al 11 febbraio
+abbiamo sostitutito il firewall della
+sede centrale e quello della sede staccata
+rigenerando le chiavi a 4096 bits.
+Le due sedi sono state riconnesse
+tramite protocollo sicuro
+e cifrato (VPN) come quello che avevamo attivato
+nella precedente fase di sperimentazione.<br>
+Il giorno 6 febbraio il tecnico Telecom ha riparato
+la linea Internet guasta. Nei giorni successivi
+abbiamo interpellato la Telecom per ottenere
+una banda superiore a quella di un'unica linea.<br>
+Il giorno 8 febbrario abbiamo potuto sperimentare
+la connessione Internet fino a 1 MByte/sec.<br>
+Nello stesso giorno una parte dell'armadio
+centrale &egrave; passato sotto il controllo dell'unit&agrave; UPS
+ed &egrave; stato alloggiato il cluster HP e connesso alla
+nuova rete.
+</p>
+
+<p>
+Nella settimana dal 13 al 18 febbrario abbiamo
+riconfigurato il cluster active-active per i
+servizi proxy e DNS. Per ora &egrave;
+operativo solo il servizio DNS (zuccante.fdns.net) e
+il rimando a (gulz.zuccante.fdns.net). Installato
+e inserito nell'armadio centrale anche
+il cluster active-active per l'autentica e lo spazio utente.
+Al termine della
+settimana l'armadio centrale &egrave; stato
+portato sotto alimentazione dell'unit&agrave; UPS.
+Rilevato ancora un errore su una diversa linea ADSL.
+</p>
+
+
+<p>
+Nei giorni a partire dal 20 febbraio fino a fine mese
+sono partire le attivit&agrave; per la messa in opera
+dei due restanti cluster: quello formato dalla coppia
+Dell PowerEdge 850 per la gestione NAS e la coppia "riciclata"
+(low cost) per i servizi ausiliari Internet
+(<a href="dmz-cluster.png" title="immagine PNG">foto</a>).
+Inoltre sono
+stati rimessi in piedi i server del biennio e la
+connettivit&agrave; (VPN) con la sede centrale
+(<a href="biennio.png" title="immagine PNG">foto</a>).
+Abbiamo trovato sorprendente che i Dell PowerEdge
+avessero i due dischi di costruttori diversi e
+quindi ad installazione base conclusa abbiamo
+scambiato i dischi in modo che ogni nodo avesse
+dischi dello stesso costruttore. Tali nodi
+sono stati configurati con un kernel della versione
+2.8.12 in modo da poter pilotare sia i dischi
+SATA che il controller SCSI.
+</p>
+
+
+<p>
+Il giorno 14 Marzo abbiamo terminato il setup "hardware"
+dell'intero sistema compreso di cluster firewall
+(<a href="uBering-vrrp.png" title="immagine PNG">foto</a>)
+nella sede e VPN attiva verso il biennio e la configurazione
+del server http cache al biennio. Il 17 e il 18 marzo
+abbiamo reso operativo il cluster per l'abilitazione
+e la navigazione internet. Per ora i laboratori che utilizzano
+questo servizio in forma definitiva sono il LASA e l'OEN1.
+</p>
+
+<p>
+Il 20 Marzo &egrave; stato reso operativo il servizio di
+proxy e di gestione navigazione. Il vecchio server sul quale ci
+siamo basati fino ad ora &egrave; stato spento.
+</p>
+
+<p>
+Il 29 Marzo si &egrave; concluso la riconfigurazione e test
+del laboratorio OEN1 con la nuova connettivit&agrave;,
+assegnazione IP e controllo postazioni.
+</p>
+
+<p>
+Il 31 Marzo si &egrave; iniziata la conversione effettiva dei primi
+client completamente sotto la nuova struttura di autenticazione.
+Le macchine sono tre postazioni del laboratorio LASA. Rimarranno
+in test per una settimana e dopo seguiranno tutte le altre
+postazioni dei tre laboratori.<br>
+Il 1 Aprile sono stati generati automaticamente 340 nuovi
+account per il nuovo sistema. Gli account saranno utilizzati
+per ora solo nei tre laboratori gi&agrave; inseriti nella
+nuova struttura. A seguito di un breve tempo di test
+seguiranno gli altri laboratori della sede principale e
+della sede staccata.<br>
+&Egrave; stata avvisata la direzione di far partire la procedura
+formale di consegna password e della informativa per l'assunzione
+di responsabilit&agrave; comprensiva delle informazioni
+basilari nel caso si riscontrassero problemi.
+</p>
+
+<p>
+Il 3 aprile &egrave; stato attivato il controllo con la definizione
+dello spazio disco assegnato ai docenti e agli studenti.
+Il 4 aprile &egrave; stato sostituito l'unico WINS centrale
+con due WINS, uno per sede, in modo da risolvere i nomi dei
+nodi Windows indipendentemente.
+</p>
+
+<p>
+Il 7 e il 10 Aprile &egrave; stata approntata un'area di prova
+al biennio composta da un Bering e due esemplari di pc. I
+due pc sono macchine Windows XP che sono state unite al
+dominio centrale con esito positivo.<br>
+Nei giorni 11, 12 e 13 sono stati configurati e testati
+i servizi di autenticazione, di autorizzazione e di
+controllo della navigazione.
+</p>
+
+<p>
+Nei giorni 18 e 19 Aprile abbiamo installato il modulo
+di espansione j4821B per lo switch HP Procurve 5304xl e anche se
+il modulo pu&ograve; essere installato a sistema in funzione
+e quindi l'operazione potrebbe necessitare di pochi minuti
+noi abbiamo dovuto upgradare la flash interna. La nuova
+versione era di tipo incompatibile con la vecchia e quindi
+abbiamo dovuto prima installare una versione intermedia di firmware E_07_X
+e poi quella finale E_10_X.
+</p>
+
+<p>
+Il 20-21 e 26-28 Aprile abbiamo iniziato a caricare
+l'utenza sul sistema di autenticazione. Per prima cosa sono
+stati controllati e regolarizzati i 288 account relativi agli
+studenti di elettronica. In seguito sono stati immessi i 456
+account di informatica (comprensivi del serale). L'operazione
+&egrave; divisa in 6 step: 1. Identificazione e risoluzione omonimi;
+2. creazione account; 3. creazione classi; 4. assegnazione
+degli studenti alle classi; 5. generazione password; 6. Assegnazione
+quota disco.<br>
+A completamento il numero degli studenti del triennio risulta 754.
+</p>
+
+<p>
+Il 12 maggio &grave; stata consegnata la lista degli
+utenti accreditati sul sistema: 754 studenti del triennio,
+149 docenti e 58 ATA per un totale di 961 utenti.
+</p>
+
+<p>
+Nella settimana dal 22 al 27 maggio sono stati messi
+a punto e consegnati i router per la connettivit&agrave;
+dei laboratori LAS e LAMS. In seguito &egrave; stata
+verificata la procedura per il calcolo della
+complessit&agrave; della password.
+</p>
+
+<p>
+Il giorno 6 giugno abbiamo avuto un incontro con la presidenza
+e il responsabile tecnologico e responsabile tecnico per
+incoraggiare la partenza dell'allacciamento di alcuni dei
+restanti laboratori. Il giorno 8 sono stati finalmente messi in
+distribuzione le lettere con il regolamento d'istituto e le
+credenziali per la navigazione ai docenti e agli ATA.
+Il giorno 9 ore 12:30 in sala audiovisi si &egrave; tenuto
+un incontro a cui sono stati convocati tutti i responsabili
+dei laboratori e i relativi tecnici per informare delle
+procedure di allacciamento.
+</p>
+
+<p>
+Nelle settimane dal 12 al 24 sono stati messi a punto
+i collegamenti con i laboratori LEN3, LEN4 e LEN5. In
+particolare il giorno 19 e 20 sono stati ricollegati
+gli switch dei piani dell'istituto.
+</p>
+
+
+<p>
+Nella settimana dal 26 al 30 sono stati messi a posto i
+settaggi relativi ai profile dei client Microsoft.
+</p>
+
+
+
+<p>
+<table class=layout> 
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE CULTURE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/06/30 07:17:58 $
+</span>
+</address>
+
+
+</body>
+
+</html>

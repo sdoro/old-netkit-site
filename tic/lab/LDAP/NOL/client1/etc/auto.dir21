@@ -1,0 +1,2 @@
+dir211 -fstype=nfs nfs1.istituto.it:/dir211
+dir212 -fstype=nfs nfs3.istituto.it:/dir212

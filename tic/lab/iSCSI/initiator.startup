@@ -1,0 +1,22 @@
+# target.startup
+# configure IP
+ifconfig lo 127.0.0.1
+ifconfig eth0 192.168.1.2
+# load module
+modprobe sd_mod
+modprobe sg
+modprobe scsi_transport_iscsi
+modprobe iscsi_tcp
+# start initiator
+sync
+sleep 3
+/etc/init.d/open-iscsi start
+sleep 2
+#
+iscsiadm -m discovery --type sendtargets --portal 192.168.1.1:3260
+iscsiadm -m node \
+         --targetname iqn.2001-04.it.istituto:storage.vdisk.netkit.01 -L all 
+#
+iscsiadm -m discovery --type sendtargets --portal 192.168.1.3:3260
+iscsiadm -m node \
+         --targetname iqn.2001-04.it.istituto:storage.vdisk.netkit.02 -L all 

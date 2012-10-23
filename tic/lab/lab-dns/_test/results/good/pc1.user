@@ -1,0 +1,33 @@
+;; QUESTION SECTION:
+;pc1.lugroma3.org.		IN	A
+--
+;; ANSWER SECTION:
+pc1.lugroma3.org.	60000	IN	A	192.168.0.111
+--
+;; AUTHORITY SECTION:
+lugroma3.org.		60000	IN	NS	dnslug.lugroma3.org.
+--
+;; ADDITIONAL SECTION:
+dnslug.lugroma3.org.	60000	IN	A	192.168.0.11
+;; QUESTION SECTION:
+;pc1.lugroma3.org.		IN	A
+--
+;; ANSWER SECTION:
+pc1.lugroma3.org.	60000	IN	A	192.168.0.111
+--
+;; AUTHORITY SECTION:
+lugroma3.org.		60000	IN	NS	dnslug.lugroma3.org.
+--
+;; ADDITIONAL SECTION:
+dnslug.lugroma3.org.	60000	IN	A	192.168.0.11
+;; QUESTION SECTION:
+;pc1.lugroma3.org.		IN	A
+--
+;; ANSWER SECTION:
+pc1.lugroma3.org.	60000	IN	A	192.168.0.111
+--
+;; AUTHORITY SECTION:
+lugroma3.org.		60000	IN	NS	dnslug.lugroma3.org.
+--
+;; ADDITIONAL SECTION:
+dnslug.lugroma3.org.	60000	IN	A	192.168.0.11

@@ -1,0 +1,14 @@
+# /etc/iproute2/rt_tables
+# $Id: rt_tables,v 1.1 2005/10/31 11:56:29 doros Exp $
+#
+# reserved values
+#
+255	local
+254	main
+253	default
+0	unspec
+#
+# local
+#
+1	inr.ruhep
+202	www.out

@@ -1,0 +1,10 @@
+Hacking: The Art of Exploitation
+
+Author: Jon Erickson
+Publisher: No Starch
+ISBN: 1-59327-007-0 
+
+http://nostarch.com/download/hacking_ch3.pdf
+http://nostarch.com/extras/hacking/index.html
+
+http://www.tinker.tv/download/hacking2_sample.pdf

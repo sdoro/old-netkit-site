@@ -1,0 +1,17 @@
+# /etc/xinetd.d/csync2
+# $Id: csync2,v 1.2 2008-01-04 16:16:11 doros Exp $
+#
+# default: on
+# description: csync2
+service csync2
+{
+  flags       = REUSE
+  socket_type = stream
+  wait        = no
+  user        = root
+  group       = root
+  server      = /usr/sbin/csync2
+  server_args = -i
+  disable     = no
+  # only_from = 192.168.100.1 192.168.100.2 192.168.100.3 192.168.100.4
+}

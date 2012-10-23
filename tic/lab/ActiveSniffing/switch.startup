@@ -1,0 +1,14 @@
+# $Id: switch.startup,v 1.1 2008-01-03 16:33:53 doros Exp $
+# configure MAC address
+ifconfig eth0 up
+ifconfig eth0 hw ether 00:00:00:00:00:01
+ifconfig eth1 up
+ifconfig eth1 hw ether 00:00:00:00:00:02
+ifconfig eth2 up
+ifconfig eth2 hw ether 00:00:00:00:00:03
+# configure bridge
+brctl addbr br0
+brctl addif br0 eth0 
+brctl addif br0 eth1
+brctl addif br0 eth2
+ifconfig br0 up

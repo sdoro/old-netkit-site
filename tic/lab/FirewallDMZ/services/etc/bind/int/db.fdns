@@ -1,0 +1,49 @@
+; $Id: db.fdns,v 1.1 2004/11/01 13:03:50 doros Exp $
+;
+; ##############################################################
+; Start of Authority (Inverse Address Arpa) for fdns.net
+; ##############################################################
+@ 604800 IN SOA fdns.net. root.fdns.net. (
+        2003061901 ; serial
+        10800 ; refresh (3 hour)
+        3600 ; retry (1 hour)
+        604800 ; expire (7 days)
+        86400 ) ; minimum (1 day)
+
+; ##############################################################
+; Specify Name Servers for all Reverse Lookups (IN-ADDR.ARPA)
+; ##############################################################
+@  604800       IN NS  ns1.fdns.net.
+@  604800       IN NS  ns2.fdns.net.
+@  604800       IN MX  10 mail.fdns.net.
+
+; define localhost
+;localhost 604800 IN A 127.0.0.1
+
+; Define the hosts in this zone
+
+ns1       604800 IN A 192.168.1.102
+          604800 IN MX 5 ns1.fdns.net.
+ns2       604800 IN CNAME ns1.fdns.net.
+dns       604800 IN CNAME ns1.fdns.net.
+dns1      604800 IN CNAME ns1.fdns.net.
+srv1      604800 IN CNAME ns1.fdns.net.
+mail      604800 IN CNAME ns1.fdns.net.
+mail1     604800 IN CNAME ns1.fdns.net.
+www       604800 IN CNAME ns1.fdns.net.
+ldap      604800 IN CNAME ns1.fdns.net.
+ldap1     604800 IN CNAME ns1.fdns.net.
+pop       604800 IN CNAME ns1.fdns.net.
+smtp      604800 IN CNAME ns1.fdns.net.
+imap      604800 IN CNAME ns1.fdns.net.
+
+
+; ###############################################################
+; Current Aliases for tic.fdns.net (CNAME)
+; ###############################################################
+fdns.net.   604800 IN A 192.168.1.102
+                604800 IN MX 0 mail.fdns.net.
+
+
+;
+; bot

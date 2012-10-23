@@ -1,0 +1,198 @@
+tcp and (not src net 172.21)
+    and
+    (
+    (not src port 20)
+    and
+    (not src port 80)
+    and
+    (tcp[13] & 0x12 = 2)
+    and
+    (
+    (tcp[2:2] < 20)
+    or
+    (tcp[0:2] < 20)
+    or
+    (dst port 22)
+    or
+    ((dst port 21) and
+       not (
+            dst host 172.21.49.16
+            or
+            dst host 172.21.49.17
+           )
+    )
+    or
+    ((dst port 23) and
+       not (
+            dst host 172.21.91.20
+            or
+            dst host 172.21.49.18
+           )
+    )
+    or
+    (dst port 43)
+    or
+    ((dst port 53) and
+        not (
+             dst host 172.21.254.22
+             or
+             dst host 172.21.245.23
+             or
+             dst host 172.21.254.24
+             or
+             dst host 172.22.185.25
+             or
+             dst host 172.22.185.26
+            )
+    )
+    or
+    (dst port 70)
+    or
+    (dst port 79)
+    or
+    (port 87)
+    or
+    (port 95)
+    or
+    (dst port 109 or dst port 110)
+    or
+    (dst port 111)
+    or
+    ((dst port 119) and (not dst host 172.21.245.27)
+                    and (not dst host 172.21.245.28)
+                    and (not dst host 172.21.155.29))
+    or
+    (dst port 135)
+    or
+    (dst port 136)
+    or
+    (dst port 137)
+    or
+    (dst port 138)
+    or
+    (dst port 139)
+    or
+    (dst port 143)
+    or
+    (dst port 144)
+    or
+    (dst port 179)
+    or
+    (dst port 421)
+    or
+    (dst port 512)
+    or
+    (dst port 513)
+    or
+    (dst port 514)
+    or
+    (dst port 515)
+    or
+    (dst port 540)
+    or
+    (dst port 666)
+    or
+    (dst port 749)
+    or
+    (dst port 750)
+    or
+    (dst port 751)
+    or
+    (dst port 1080)
+    or
+    (dst port 1999)
+    or
+    (dst port 2000)
+    or
+    (dst port 2049)
+    or
+    (dst port 2766)
+    or
+    (dst port 3128)
+    or
+    (dst port 5232)
+    or
+    ((tcp[2:2] >= 6000) and (tcp[2:2] < 7000))
+    or
+    (port 6665 or port 6666 or port 6667)
+    or
+    (dst port 7626)
+    or
+    (port 20432)
+    or
+    (port 31337)
+    or
+    (port 12345)
+    or
+    (port 12346)
+    or
+    not (
+         (tcp[2:2] < 20) or
+         dst port 21 or
+         dst port 23 or
+         dst port 22 or
+         dst port 25 or
+         dst port 37 or
+         dst port 43 or
+         dst port 53 or
+	 dst port 70 or
+	 dst port 79 or
+	 dst port 87 or
+	 dst port 95 or
+	 dst port 109 or
+	 dst port 110 or
+	 dst port 111 or
+	 dst port 113 or
+	 dst port 119 or
+	 dst port 135 or
+	 dst port 136 or
+	 dst port 137 or
+	 dst port 138 or
+	 dst port 139 or
+	 dst port 143 or
+	 dst port 144 or
+	 dst port 443 or
+	 dst port 512 or
+	 dst port 513 or
+	 dst port 514 or
+	 dst port 515 or
+	 dst port 540 or
+	 dst port 563 or
+	 dst port 666 or
+	 dst port 749 or
+	 dst port 750 or
+	 dst port 751 or
+	 dst port 1080 or
+	 dst port 1352 or
+	 dst port 1452 or
+	 dst port 1494 or
+	 dst port 1521 or
+	 dst port 1526 or
+	 dst port 2000 or
+	 dst port 2766 or
+	 dst port 5232 or
+	 ((tcp[2:2] >= 6000) and (tcp[2:2] < 7000)) or
+	 dst port 6667 or
+	 dst port 31337 or
+	 dst port 80 or
+	 dst port 8000 or
+	 dst port 8080
+    )
+    or
+    (tcp[13] & 0x3f = 0)
+    or
+    (tcp[13] & 0x11 = 1)
+    or
+    (tcp[13] & 0x03 = 3)
+    or
+    (tcp[13] & 0x05 = 5)
+    or
+    (tcp[13] & 0x06 = 6)
+    or
+    (tcp[13] & 0x18 = 8)
+    or
+    (tcp[13] & 0x30 = 0x20)
+    or
+    (tcp[13] & 0xc0 != 0)
+    )
+    )

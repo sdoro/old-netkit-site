@@ -1,0 +1,718 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-pam.html,v 1.8 2005/05/15 09:57:27 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-pam</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-VRRP.html">
+  <link rel="Next" title="Next" href="uml-perms.html">
+</head>
+
+<body>
+
+<p> 
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su PAM</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-VRRP.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-perms.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+L'ambiente virtuale mette a disposizione un intera macchina
+dove sono gi&agrave; installati una gran parte dei moduli pam
+configurabili con i diritti di amministratore.
+Inoltre, data la connettivit&agrave; con la
+macchina reale, si possono testare le configurazioni da una
+shell della macchina reale
+e, aggiungendo delle regole di routing, anche dalle
+macchine della rete reale.
+</p>
+
+<p>
+Il file con l'esperienza
+<a href="pam.tgz"
+   title="esperienza Netkit4TIC">PAM</a> deve essere
+decompresso su una sottodirectory della <code>HOME</code>. In
+seguito, dopo aver seguito le istruzioni presenti nel file
+<code>README</code> occorre lanciare lo script:
+</p>
+
+
+<pre>
+user@realHost$ ./lab start
+</pre>
+
+<p>
+che ci costruisce un host virtuale con IP address 192.168.77.2 e
+con il servizio ssh attivato. Inoltre sono lanciati due
+comandi <code>tail</code> su file di log rispettivamente
+<code>/var/log/messages</code> e <code>/var/log/auth.log</code>
+dove il sistema di logging registra gli eventi pi&ugrave;
+importanti.<br>
+I moduli attualmente installati e quindi configurabili sono:
+</p>
+
+<pre>
+root@vHost# ls -c /lib/security/
+pam_access.so    pam_lastlog.so    pam_permit.so       pam_tmpdir.so
+pam_cracklib.so  pam_ldap.so       pam_rhosts_auth.so  pam_unix.so
+pam_debug.so     pam_limits.so     pam_rootok.so       pam_unix_acct.so
+pam_deny.so      pam_listfile.so   pam_securetty.so    pam_unix_auth.so
+pam_env.so       pam_mail.so       pam_shells.so       pam_unix_passwd.so
+pam_filter.so    pam_mkhomedir.so  pam_smb_auth.so     pam_unix_session.so
+pam_ftp.so       pam_motd.so       pam_smbpass.so      pam_userdb.so
+pam_group.so     pam_mysql.so      pam_stress.so       pam_warn.so
+pam_issue.so     pam_nologin.so    pam_tally.so        pam_wheel.so
+pam_krb5.so      pam_opie.so       pam_time.so         pam_winbind.so
+</pre>
+
+<p>
+A partire da questa situazione possiamo provare alcuni esempi:
+</p>
+
+<ul>
+ <li><a href="#DISPLAY">configurazione del DISPLAY</a></li>
+ <li><a href="#pam_env">modulo pam_env</a></li>
+ <li><a href="#pam_listfile">modulo pam_listfile</a></li>
+ <li><a href="#pam_motd">modulo pam_motd</a></li>
+ <li><a href="#pam_lastlog">modulo pam_lastlog</a></li>
+ <li><a href="#pam_wheel">modulo pam_wheel</a></li>
+ <li><a href="#pam_opie">modulo pam_opie (One Time Password)</a></li>
+ <li><a href="#custom">sviluppo di un modulo custom</a></li>
+</ul>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=DISPLAY></a>Configurazione del DISPLAY X</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questo modulo utilizzeremo la capacit&agrave; delle applicazioni
+che utilizzano X di essere visualizzate su qualsiasi server X remoto
+che ne autorizzi l'uso. A questo scopo il server X remoto deve per
+prima cosa essere configurato per accettare connessioni remote (alcuni
+le disabilitano per questioni legate alla sicurezza) e in seconda
+deve essere settato per accettare connessioni da un particolare nodo.<br>
+Noi assumeremo che la prima condizione sia soddisfatta mentre per la
+seconda utilizzermo il comando <code>xhost</code>. Assumendo che
+la macchina virtuale abbia indirizzo 192.168.77.2 il comando sul
+nodo sui cui gira il server X che vuole abilitare le visualizzazioni
+della vm sul suo desktop &egrave;:
+</p>
+
+<pre>
+user@realHost$ xhost +192.168.77.2
+</pre>
+
+<p>
+Ora dobbiamo configurare le applicazioni del nodo virtuale per la
+visualizzazione nel display remoto (che assumiamo essere 192.168.77.1):
+</p>
+
+<pre>
+vHost# export DISPLAY=192.168.77.1:0.0
+</pre>
+
+<p>
+e il gioco &egrave; fatto. Possiamo verificarlo con il lancio di
+un <code>xterm</code>. Le due finestre di logging che si aprono
+al momento dello startup dello script usano questo meccanismo.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam_env></a>Modulo pam_env: set/unset environment variables</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Vogliamo cogliere la configurazione descritta nel precedente paragrafo
+per mostrare il funzionamento del
+modulo <code>pam_env</code>. Supponiamo appunto di voler valorizzare
+alcune variabili d'ambiente al login/ssh di un utente. Questo &egrave;
+possibile configurando i relativi file di login e ssh
+presenti nella directory <code>/etc/pam.d</code>:
+</p>
+
+<pre>
+# /etc/pam.d/login
+auth       required   pam_env.so
+[...]
+</pre>
+<pre>
+# /etc/pam.d/ssh
+auth       required   pam_env.so
+[...]
+</pre>
+
+<p>
+Il modulo &egrave di tipo <code>auth</code> e prevede che la valorizzazione
+delle variabili dell'ambiente sia fatta nel file <code>/etc/environment</code>
+o nel file <code>/etc/security/pam_env.conf</code>.
+Abbiamo deciso per il secondo:
+</p>
+
+<pre>
+# /etc/security/pam_env.conf
+REMOTEHOST      DEFAULT=192.168.77.1 OVERRIDE=@{PAM_RHOST}
+DISPLAY         DEFAULT=${REMOTEHOST}:0.0 OVERRIDE=${DISPLAY}
+</pre>
+
+<p>
+In questo modo al prossimo login:
+</p>
+
+<pre>
+user@realHost$ ssh root@192.168.77.2<span class="blue">
+Password: </span>root<span class="blue">
+root@vHost# </span>echo $REMOTEHOST " - " $DISPLAY<span class="blue">
+192.168.77.1  -  192.168.77.1:0.0</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam_listfile></a>Modulo list-file</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per sperimentare questo modulo (di tipo <code>auth</code>) ci poniamo
+il seguente obiettivo:
+vogliamo abilitare al login di ssh solo agli utenti
+il cui nome &egrave; presente nel file <code>/etc/sshusers-allowed</code>.
+</p>
+
+<pre>
+# /etc/sshusers-allowed
+guest
+nane
+toni
+</pre>
+
+
+<p>
+poi configuriamo pam:
+</p>
+
+<pre>
+# /etc/pam.d/ssh
+[...]
+auth   required   pam_listfile.so item=user sense=allow \
+                                  file=/etc/sshusers-allowed onerr=fail
+[...]
+</pre>
+
+<p>
+e quando proviamo a collegarci:
+</p>
+
+
+<pre>
+user@realHost$ ssh root@192.168.77.2
+</pre>
+
+<p>
+otterremo risposta negativa. Se proviamo ad usare l'utente
+<code>guest</code> (con password <code>not24get</code>) otteniamo
+invece l'accesso.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam_motd></a>Modulo motd: output the motd file</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questo modulo (di tipo <code>session</code>) &egrave; trascurato
+dall'implementazione di <code>ssh</code> in quanto ssh 
+controlla tale funzionalit&agrave; attraverso il file di configurazione
+<code>/etc/ssh/sshd_config</code>:
+</p>
+
+<pre>
+# /etc/ssh/sshd_config
+[...]
+PrintMotd no
+</pre>
+
+<p>
+Per il servizio di login invece possiamo provare a sperimentarlo:
+</p>
+
+<pre>
+# /etc/pam.d/login
+session    optional   pam_motd.so
+</pre>
+
+<p>
+e quindi al login:
+</p>
+
+<pre>
+vHost login: root<span  class="blue">
+Password: </span>root<span  class="blue">
+Welcome to Netkit4TIC!</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam_lastlog></a>Modulo last login</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questo modulo (di tipo <code>session</code> anche se
+&egrave; dichiarato di tipo <code>auth</code>!) &egrave; trascurato
+dall'implementazione di <code>ssh</code> in quanto ssh 
+controlla tale funzionalit&agrave; attraverso il file di configurazione
+<code>/etc/ssh/sshd_config</code>:
+</p>
+
+<pre>
+# /etc/ssh/sshd_config
+[...]
+PrintLastLog no
+</pre>
+
+<p>
+Per il servizio di login invece possiamo provare a sperimentarlo:
+</p>
+
+<pre>
+# /etc/pam.d/login
+session    optional   pam_lastlog.so
+</pre>
+
+<p>
+e quindi al login:
+</p>
+
+<pre>
+vHost login: root<span  class="blue">
+Password: </span>root<span  class="blue">
+Last login: Wed Feb  9 20:42:08 2005 on ttys/0</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam_wheel></a>Modulo wheel</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questo modulo (di tipo <code>auth</code>) coinvolge l'utilizzo
+del comando <code>su</code> e del gruppo <code>wheel</code>.
+Nel caso quest'ultimo non sia presente sul file <code>/etc/group</code>
+occorre aggiungerlo:
+</p>
+
+<pre>
+root@vHost# groupadd wheel
+</pre>
+
+<p>
+Il comando <code>su</code> serve per diventare provvisoriamente un
+altro utente sempre che se ne conosca la password. Il comando &egrave;
+utilizzabile solo da <code>root</code> quando non abbia il bit
+SUID impostato. In caso contrario tutti lo possono usare:
+</p>
+
+<pre>
+user@host$ ls -l `which su`<span  class="blue">
+-rwsr-xr-x  1 root root 23416 Nov 26 07:30 /bin/su</span>
+</pre>
+
+<p>
+Supponiamo ora che vogliamo restringere l'insieme degli utenti
+abilitati ad eseguire il comando <code>su</code>. Diamo i comandi:
+</p>
+
+<pre>
+root@vhost# chown root:wheel /bin/su
+root@vhost# chmod u=rwxs,g=rx,o= /bin/su
+root@vhost# ls -l /bin/su<span class="blue">
+-rwsr-x---  1 root wheel 23416 Nov 26 07:30 /bin/su</span>
+root@vhost# gpasswd -a guest wheel
+root@vhost# id guest<span class="blue">
+uid=1000(guest) gid=1000(guest) groups=1000(guest),1003(wheel)</span>
+</pre>
+
+<p>
+A questo punto abbiamo cambiato il funzionamento di <code>su</code> in modo
+da permettere ai soli utenti del gruppo <code>wheel</code>
+di diventare root. Ma se noi vogliamo che tutti gli utenti possano
+usare <code>su</code> ma non per diventare <code>root</code>?<br>
+Allora ecco entrare nel gioco il modulo che stiamo analizzando:
+</p>
+
+<pre>
+root@vhost# chown root:wheel /bin/su
+root@vhost# chmod u=rwxs,g=rx,o=rx /bin/su
+root@vhost# ls -l /bin/su<span class="blue">
+-rwsr-xr-x  1 root wheel 23416 Nov 26 07:30 /bin/su</span>
+root@vHost# adduser toni
+</pre>
+
+<p>
+a questo punto configuriamo il modulo pam_wheel:
+</p>
+
+<pre>
+# /etc/pam.d/su
+[...]
+auth  required pam_wheel.so
+</pre>
+
+<p>
+e ora lo mettiamo alla prova:
+</p>
+
+<pre>
+vHost login:toni
+Password: x
+toni@vHost$ id<span class="blue">
+uid=1004(toni) gid=1004(toni) groups=1004(toni)</span>
+toni@vHost$ su -<span class="blue">
+Password: </span>root<span class="blue">
+su: Permission denied
+Sorry.</span>
+toni@vHost$ su guest<span class="blue">
+Password:</span> not24get
+guest@vHost$ id<span class="blue">
+uid=1000(guest) gid=1000(guest) groups=1000(guest),1003(wheel)</span>
+guest@vHost$ su -<span class="blue">
+Password:</span> root<span class="blue">
+root@vHost# </span>id<span class="blue">
+uid=0(root) gid=0(root) groups=0(root)</span>
+</pre>
+
+<p>
+In pratica l'utente <code>guest</code> oltre a poter usare <code>su</code>
+(come del resto anche l'utente <code>toni</code>) pu&ograve; diventare
+<code>root</code> perch&egrave; appartiene al gruppo <code>wheel</code>.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam_opie></a>Configurazione pam_opie (One Time Password)</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questo modulo serve per implementare l'autenticazione utente in modo
+da utilizzare password sempre diverse ad ogni login. Dopo averla
+utilizzata infatti la password viene scartata e non sar&agrave; pi&ugrave;
+utilizzata.
+I pacchetti necessari sono
+<code>libpam-opie</code> che contiene il modulo PAM,
+<code>opie-server</code> che serve per creare e gestire il
+      key file <code>/etc/opiekeys</code> e
+<code>opie-client</code> che contiene i programmi per la generazione
+di one-time password.<br>
+Per attivare la funzionalit&agrave; occorre fare la modifica:
+</p>
+
+<pre>
+# /etc/pam.d/common-auth
+auth    required      pam_opie.so
+</pre>
+
+<p>
+In seguito occorre abilitare (o disabilitare) il
+sistema per usare OPIE al login.
+Abilitamo lo user <code>guest</code>:
+</p>
+
+<pre>
+root@vHost# opiepasswd guest<span class="blue">
+Adding guest:
+You need the response from an OTP generator.
+New secret pass phrase:
+        otp-md5 499 vH4281
+        Response:</span>SANK MESH GILD TOP ALL HOT<span class="blue">
+
+ID guest OTP key is 499 vH4281
+SANK MESH GILD TOP ALL HOT</span>
+</pre>
+
+<p>
+dove <code>SANK MESH GILD TOP ALL HOT</code> sono stati
+ottenuti, in una seconda shell, con il comando (OTP generator):
+</p>
+
+<pre>
+user@realHost$ opiekey -5 499 vH4281<span  class="blue">
+Using the MD5 algorithm to compute response.
+Reminder: Don't use opiekey from telnet or dial-in sessions.
+Enter secret pass phrase: </span>1234567890<span class="blue">
+SANK MESH GILD TOP ALL HOT</span>
+</pre>
+
+<p>
+Per conoscere la prossima password usabile e per controllare
+che non raggiunga il valore 0 (in caso occorre usare nuovamente
+<code>opiepasswd</code>):
+</p>
+
+<pre>
+root@vHost# opieinfo guest<span  class="blue">
+498 vH4281</span>
+</pre>
+
+
+<p>
+Ora &egrave; il momento di sperimentare il login OTP da ssh:
+</p>
+
+<pre>
+user@realHost$ ssh guest@192.168.77.2<span  class="blue">
+otp-md5 498 vH4281 ext, Response:</span>BEY SELL NUT ROSE HER HAVE<span  class="blue">
+guest@vHost$ </span>
+</pre>
+
+<p>
+dove <code>BEY SELL NUT ROSE HER HAVE</code> &egrave; stato calcolato,
+in una seconda shell, con il comando (OTP generator):
+</p>
+
+<pre>
+user@realHost$ opiekey -5 497 vH0746<span  class="blue">
+Using the MD5 algorithm to compute response.
+Reminder: Don't use opiekey from telnet or dial-in sessions.
+Sorry, but you don't seem to be on the console or a secure terminal.
+Warning: Continuing could disclose your secret pass phrase to an attacker!
+Enter secret pass phrase:</span>1234567890<span  class="blue">
+BEY SELL NUT ROSE HER HAVE</span>
+</pre>
+
+<p>
+Infine per disabilitare OPIE per lo user <code>guest</code>:
+</p>
+
+
+<pre>
+root@Vhost# opiepasswd -d guest<span  class="blue">
+Updating guest:
+Disable guest's OTP access? (yes or no)</span>yes<span  class="blue">
+ID guest is disabled.</span>
+</pre>
+
+<p>
+Ecco uno
+<a href="pam-desktop.png" title="screen-shot">screenshot</a>
+del desktop.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=custom></a>Sviluppo di un modulo in linguaggio C</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In un esempio della documentazione di PAM si parla di un genitore
+che vuole aumentare la conoscenza delle "tabelline" dei suoi figli
+utilizzando uno stratagemma: personalizza il login del pc di
+casa che invece di chiedere la password domanda un valore da
+calcolare e solo in caso positivo si rende operativo.<br>
+In seguito proveremo a realizzare questa funzionalit&agrave; attraverso la
+costruzione di un modulo PAM scritto in linguaggio C.
+</p>
+
+<p>
+La costruzione di un modulo prevede la disponibilit&agrave; del compilatore
+<code>gcc</code> e delle librerie di sviluppo di pam ossia del
+pacchetto <code>libpam0g-dev</code>. Supposto che il modulo si
+chiami <code>pam_calc.so</code> i comandi per compilare, linkare e
+spostare nella directory di competenza sono:
+</p>
+
+<pre>
+root@vHost# gcc -fPIC -c pam_calc.c 
+root@vHost# ld -x --shared -o pam_calc.so pam_calc.o
+root@vHost# cp pam_calc.so /lib/security
+</pre>
+
+<p>
+Una prima bozza di implementazione di
+questo modulo (di tipo <code>auth</code>) si trova nel file
+<a href="../lab/pam/pam_calc.c" title="sorgente C">pam_calc.c</a>. Dalla
+tipologia del modulo &egrave; obbligatorio implementare le
+funzioni <code>pam_sm_authenticate</code> e <code>pam_sm_setcred</code>.
+In seguito occorre anche implementare la particolare "conversazione
+matematica" attraverso la funzione <code>conversation</code>.<br>
+Per provarlo con <code>ssh</code> abbiamo ritoccato il file
+<code>/etc/pam.d/ssh</code>:
+<p>
+
+<pre>
+# /etc/pam.d/ssh
+auth       sufficient   pam_calc.so
+[...]
+</pre>
+
+<p>
+Ecco una tipica sessione in cui al secondo tentativo mostriamo
+il funzionamento "a stack" attivato dalla specifica "sufficient"
+nel file <code>/etc/pam.d/ssh</code>:
+</p>
+
+
+<pre>
+user@realHost$ ssh root@192.168.77.2<span  class="blue">
+Ciao root, quanto fa 2 per 8 ?</span>  16<span  class="blue">
+root@vHost#</span> exit<span  class="blue">
+logout
+Connection to 192.168.77.2 closed.
+user@realHost$</span> ssh root@192.168.77.2<span  class="blue">
+Ciao root, quanto fa 6 per 9 ?</span> 0<span  class="blue">
+Password:</span> root<span  class="blue">
+root@vHost#</span> 
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+<tr>
+<td class=content>
+</td>
+<td class=navigation>
+<a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+</td>
+</tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+<img alt="Creative Commons License"
+    src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+<img alt="FREE THE MOUSE"
+    src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+<img style='border:0;width:88px;height:31px'
+    src="valid-html401.png"
+    alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+email_middle = "doro@istruzio";
+email_start = "mailto:sandro.";
+email_end = "ne.it";
+return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/05/15 09:57:27 $
+</span>
+</address>
+
+
+</body>
+
+</html>

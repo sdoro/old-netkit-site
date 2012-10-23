@@ -1,0 +1,10 @@
+# /etc/shorewall/zones
+# $Id: zones,v 1.2 2006/06/30 05:38:08 doros Exp $
+#
+###############################################################
+#ZONE    DISPLAY        COMMENTS
+fw       firewall
+net      ipv4
+loc      ipv4
+dmz      ipv4
+#LAST LINE -- ADD YOUR ENTRIES ABOVE THIS LINE -- DO NOT REMOVE

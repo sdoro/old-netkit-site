@@ -1,0 +1,9 @@
+# $Id: gate.startup,v 1.2 2009-10-04 14:15:34 doros Exp $
+
+#
+# configure IP address
+ifconfig eth0 192.168.50.254 up
+ifconfig eth1 192.168.77.2 up
+route add default gw 192.168.77.1
+#
+# bot

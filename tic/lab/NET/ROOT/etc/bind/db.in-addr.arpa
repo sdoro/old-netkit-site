@@ -1,0 +1,16 @@
+; reverse lookup database
+; $Id: db.in-addr.arpa,v 1.1 2004/08/04 22:31:15 doros Exp $
+$TTL    1
+@               IN      SOA     in-addr.arpa.    root.in-addr.arpa. (
+                        2002102801 ; serial
+                        28 ; refresh
+                        14 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@                          IN      NS      ROOT-SERVER.
+
+5.57.216                IN NS ns.net.
+5.57.217                IN NS ns.fdns.net.
+
+; bot

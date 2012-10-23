@@ -1,0 +1,447 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-VRRP.html,v 1.7 2007-02-03 12:49:31 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - VRRP </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 8 - Reti di reti: VRRP</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Virtual Router Redundancy Protocol (VRRP)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-ospf.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-pam.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p> 
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Scarica il <a href="VRRP.tgz" title="esperienza Netkit4TIC">tarball</a> (100KB) 
+contenente la configurazione e lo script <code>lab</code> per la
+costruzione dell'esperienza.
+</p>
+
+<p>
+La realizzazione di reti ad alta affidabilit&agrave; si attua
+adottando percorsi ridondati e duplicazioni di apparati di reti ma
+questo pu&ograve; non essere sufficiente soprattutto per quanto
+riguarda i nodi finali. Infatti in questi nodi 
+viene configurato staticamente un defalt gateway che
+nel caso si guasti isola di fatto la stazione. Questioni di
+sicurezza, semplicit&agrave; di configurazione e consumo di risorse
+sconsigliano l'utilizzo di protocolli di routing
+dinamici in queste stazioni.
+Da alcuni anni sono state proposte delle soluzioni
+che si chiamano HSRP e il suo derivato VRRP. Per una trattazione
+completa si rimanda al libro
+&quot;Switched LAN&quot; di Baldi e Nicoletti, Mc-Graw-Hill Italia
+Associates capitolo 7 pagina 216 e oltre.
+</p>
+
+<p>
+L'implementazione di VRRP che utilizziamo &egrave; quella
+realizzata dal pacchetto
+<a href="http://www.keepalived.org/" title="">keepalived</a>
+disponibile sia in Debian che in LEAF/Bering uClibc. In particolare
+l'esperienza &egrave; basata su quest'ultima distribuzione.
+</p>
+
+<p>
+Per la documentazione di questa implementazione ci sono due ottimi
+riferimenti:
+<ul>
+  <li>Keepalived User Guide, di Alexandre Cassen</li>
+  <li>Virtual Router Redundancy Protocol on VM Guest LANS, di
+      Vic Cross, RedBooks IBM</li>
+</ul>
+
+<p>
+Per l'utilizzo del pacchetto <code>kpalived.lrp</code> occorre
+specificare nel file di configurazione <code>leaf.cfg</code>,
+oltre a <code>kpalived</code> stesso, i pacchetti di cui ha bisogno:
+<code>libpopt.lrp libssl.lrp libcrpto.lrp</code>.
+</p>
+
+
+<p>
+Nella mappa
+(<a href="pdf/VRRP.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/VRRP.xml" title="file per Dia">xml</a>)
+della rete dell'esercizio viene simulata una LAN (192.168.42.0/24)
+connessa ad una WAN (192.168.43.0/24) tramite una coppia di router
+in cui &egrave; configurato il VRRP. Abbiamo voluto provare
+una configurazione di &quot;load sharing&quot; per utilizzare
+contemporaneamente entrambe i router. Infatti in mancanza di
+guasti il traffico entrante passa per il router <code>rA</code>
+e il traffico uscente per il router <code>rB</code>.
+</p>
+
+<p>
+La configurazione di VRRP costruisce rispettivamente
+l'IP virtuale 192.168.42.1 per la rete LAN
+e l'IP virtuale 192.168.43.1 per la rete WAN. Il primo risulta
+il default gateway per la LAN rappresentata dal nodo <code>int</code>.
+Il secondo rappresenta il nodo della WAN utilizzabile
+ dal nodo <code>ext</code>
+per l'inoltro dei pacchetti sulla LAN
+(detto anche next-hop).
+</p>
+
+<p>
+Per la distribuzione del carico (Load sharing) abbiamo pensato
+che il nodo <code>rA</code> sia di transito per il flusso
+entrante nella LAN e che il nodo <code>rB</code> sia di
+transito per il flusso uscente dalla LAN.
+</p>
+
+<p>
+La configurazione per il nodo <code>rA</code> &egrave; la seguente:
+</p>
+
+<pre>
+! /etc/keepalived/keepalived.conf
+
+vrrp_instance VI_1             ! Defines a new instance of VRRP
+{
+    state MASTER               ! This VRRP instance will attempt to start in master state
+    interface eth0             ! This VRRP instance operates on the eth0 interface
+    virtual_router_id 1        ! The VRID this VRRP instances belongs to.
+    priority 250               ! The priority ot this VRRP router in this virtual router
+    advert_int 2               ! VRRP advertisements will occur ever 2 seconds
+    authentication {           ! Defines the type of authentications
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {        ! The list of VIP that are managed by this VRID
+        192.168.43.1/24        !
+    }
+    notify_master "/etc/keepalived/email-master.sh VI_1 master"
+    notify_backup "/etc/keepalived/email-backup.sh VI_1 backup"
+    notify_fault "/etc/keepalived/email-fault.sh VI_1 fault"
+    smtp_alert                 ! Send email notif during state transition
+}
+
+vrrp_instance VI_2
+{
+    state BACKUP               ! This VRRP instance will attempt to start in backup state
+    interface eth1
+    virtual_router_id 2
+    priority 10
+    advert_int 2
+    smtp_alert
+    authentication {
+        auth_type PASS
+        auth_pass 5678
+    }
+    virtual_ipaddress {
+        192.168.42.1/24
+    }
+    notify_master "/etc/keepalived/email-master.sh VI_2 master"
+    notify_backup "/etc/keepalived/email-backup.sh VI_2 backup"
+    notify_fault "/etc/keepalived/email-fault.sh VI_2 fault"
+    smtp_alert  
+}
+
+</pre>
+
+<p>
+La configurazione per il nodo <code>rB</code> &grave; simile
+tranne che per lo stato di VI_1 che passa da MASTER a BACKUP
+e per lo stato di VI_2 che passa da BACKUP a MASTER.<br>
+Dopo aver settato correttamente l'ambiente Netkit 
+lancia lo script che genera la rete interamente configurata:
+</p>
+
+<pre>
+realhost$ lstart
+</pre>
+
+<p>
+<a href="vrrp-desktop.png" title="immagine PNG">(screenshot)</a>
+
+
+<p>
+Le attivit&agrave; eseguite dal programma vengono registrate nel file
+<code>/var/log/messages</code> (nell'esempio dal router <code>rA</code>):
+</p>
+
+<pre>
+Keepalived_vrrp: Using MII-BMSR NIC polling thread...
+Keepalived_vrrp: Registering Kernel netlink reflector
+Keepalived_vrrp: Registering Kernel netlink command channel
+Keepalived_vrrp: Registering gratutious ARP shared channel
+Keepalived_healthcheckers: Watchdog: Starting listener on /tmp/.healthcheckers wdog socket
+Keepalived_vrrp: Configuration is using : 76341 Bytes
+Keepalived_vrrp: Watchdog: Starting listener on /tmp/.vrrp wdog socket
+Keepalived_vrrp: VRRP_Instance(VI_2) Entering BACKUP STATE
+Keepalived_vrrp: VRRP_Instance(VI_1) Transition to MASTER STATE
+Keepalived_vrrp: VRRP_Instance(VI_1) Entering MASTER STATE
+</pre>
+
+<p>
+Nel caso di un fault del router <code>rB</code> simulato da:
+</p>
+
+<pre>
+realHost$ lcrash rB
+</pre>
+
+<p>
+nel file (di rA) compariranno anche le seguenti tracce:
+</p>
+
+<pre>
+Keepalived_vrrp: VRRP_Instance(VI_2) Transition to MASTER STATE
+Keepalived_vrrp: VRRP_Instance(VI_2) Entering MASTER STATE
+</pre>
+
+<p>
+e al ripristino del router <code>rB</code> simulato da:
+</p>
+
+<pre>
+realHost$ lstart rB
+</pre>
+
+<p>
+nel file (sempre di rA) compariranno anche le seguenti tracce:
+</p>
+
+<pre>
+Keepalived_vrrp: VRRP_Instance(VI_2) Received higher prio advert
+Keepalived_vrrp: VRRP_Instance(VI_2) Entering BACKUP STATE
+</pre>
+
+<p>
+Per controllare quali IP sono assegnati alle interfacce eth0
+ed eth1 utilizziamo i comandi:
+</p>
+
+<pre>
+rA# ip addr show eth0; ip addr show eth1<span class="blue">
+4: eth0: &lt;BROADCAST,MULTICAST,ALLMULTI,UP&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether fe:fd:c0:a8:2b:08 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.43.8/24 brd 192.168.43.255 scope global eth0
+    <span class="red">inet 192.168.43.1/24 scope global secondary eth0</span>
+    inet6 fe80::fcfd:c0ff:fea8:2b08/64 scope link 
+5: eth1: &lt;BROADCAST,MULTICAST,ALLMULTI,UP&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether fe:fd:c0:a8:2a:08 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.42.8/24 brd 192.168.42.255 scope global eth1
+    inet6 fe80::fcfd:c0ff:fea8:2a08/64 scope link</span>
+</pre>
+
+<p>
+dove &egrave; evidenziato in colore la riga dell'IP virtuale
+per l'interfaccia nella WAN. Nell'altro router <code>rB</code>
+i valori sono:
+</p>
+
+
+<pre>
+rB# ip addr show eth0; ip addr show eth1<span class="blue">
+4: eth0: &lt;BROADCAST,MULTICAST,ALLMULTI,UP&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether fe:fd:c0:a8:2b:09 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.43.9/24 brd 192.168.43.255 scope global eth0
+    inet6 fe80::fcfd:c0ff:fea8:2b09/64 scope link 
+5: eth1: &lt;BROADCAST,MULTICAST,ALLMULTI,UP&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether fe:fd:c0:a8:2a:09 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.42.9/24 brd 192.168.42.255 scope global eth1
+    <span class="red">inet 192.168.42.1/24 scope global secondary eth1</span>
+    inet6 fe80::fcfd:c0ff:fea8:2a09/64 scope link</span>
+</pre>
+
+
+<p>
+Nel caso di guasto del router <code>rB</code> l'output diventa:
+</p>
+
+
+<pre>
+rA# ip addr show eth0; ip addr show eth1<span class="blue">
+4: eth0: &lt;BROADCAST,MULTICAST,ALLMULTI,UP&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether fe:fd:c0:a8:2b:08 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.43.8/24 brd 192.168.43.255 scope global eth0
+    <span class="red">inet 192.168.43.1/24 scope global secondary eth0</span>
+    inet6 fe80::fcfd:c0ff:fea8:2b08/64 scope link 
+5: eth1: &lt;BROADCAST,MULTICAST,ALLMULTI,UP&gt; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether fe:fd:c0:a8:2a:08 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.42.8/24 brd 192.168.42.255 scope global eth1
+    <span class="red">inet 192.168.42.1/24 scope global secondary eth1</span>
+    inet6 fe80::fcfd:c0ff:fea8:2a08/64 scope link</span>
+</pre>
+
+<p>
+&Egrave; stato catturato il traffico sia sul segmento
+<a href="../capture/vrrp-ext.acp"
+   title="file per Ethereal">(File ACP)</a> WAN che nel segmento
+<a href="../capture/vrrp-int.acp"
+   title="file per Ethereal">(File ACP)</a> LAN.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="sg"></a>Configurazione "Sync Group"</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per evitare casi di "dead route" il pacchetto keepalive permette
+la configurazione "sync grouping". Infatti nel caso
+precedente quando ad esempio non si guasta l'intero router <code>rA</code>
+ma solo l'interfaccia <code>eth1</code> il traffico entrante
+dall'interfaccia eth0 non riesce a raggiungere la LAN.<br>
+Per garantire il funzionamento per questi casi dobbiamo abbandonare
+la configurazione "load sharing" e quindi eleggere il nodo <code>rA</code>
+come MASTER per tutte le sue interfacce e il nodo <code>rB</code>
+come BACKUP per tutte le sue interfacce.<br>
+Inoltre occorre aggiungere nel file di configurazione:
+</p>
+
+<pre>
+! /etc/keepalived/keepalived.conf
+[...]
+vrrp_sync_group SG {         ! VRRP sync group declaration
+    group {                  ! group of instance to sync together
+        VI_1
+        VI_2
+    }
+    notify_master "/etc/keepalived/email-master.sh SG master"
+    notify_backup "/etc/keepalived/email-backup.sh SG backup"
+    notify_fault "/etc/keepalived/email-fault.sh SG fault"
+    smtp_alert               ! send email notif during state transit
+}
+[...]
+</pre>
+
+<p>
+Per attivare questa modalit&agrave; di configurazione occorre
+fare le seguenti modifiche:
+</p>
+
+
+<pre>
+rA# /etc/init.d/keepalived stop
+rB# /etc/init.d/keepalived stop
+rA# cp /etc/keepalived/keepalived.conf.no-SPoF /etc/keepalived/keepalived.conf
+rB# cp /etc/keepalived/keepalived.conf.no-SPoF /etc/keepalived/keepalived.conf
+rA# /etc/init.d/keepalived start
+rB# /etc/init.d/keepalived start
+</pre>
+
+<p>
+Simuliamo il caso di guasto:
+</p>
+
+<pre>
+rA# ip link set dev eth1 down
+</pre>
+
+<p>
+Osserviamo il contenuto del file <code>/var/log/messages</code> del nodo <code>rB</code>:
+</p>
+
+<pre>
+Keepalived_vrrp: VRRP_Instance(VI_2) Transition to MASTER STATE
+Keepalived_vrrp: VRRP_Group(SG) Syncing instances to MASTER state
+Keepalived_vrrp: VRRP_Instance(VI_1) Transition to MASTER STATE
+Keepalived_vrrp: VRRP_Instance(VI_1) Entering MASTER STATE
+Keepalived_vrrp: VRRP_Instance(VI_2) Entering MASTER STATE
+</pre>
+
+
+<p>
+e quello del nodo <code>rA</code>:
+</p>
+
+<pre>
+[...]
+Keepalived_vrrp: Kernel is reporting: interface eth1 DOWN
+Keepalived_vrrp: VRRP_Instance(VI_2) Entering FAULT STATE
+Keepalived_vrrp: VRRP_Instance(VI_2) Now in FAULT state
+Keepalived_vrrp: VRRP_Group(SG) Syncing instances to FAULT state
+Keepalived_vrrp: VRRP_Instance(VI_1) Entering FAULT STATE
+Keepalived_vrrp: VRRP_Instance(VI_1) Now in FAULT state
+</pre>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-03 12:49:31 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

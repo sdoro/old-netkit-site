@@ -1,0 +1,30 @@
+# $Id: sensor02.startup,v 1.1 2007-04-30 21:46:19 doros Exp $
+
+# cleanup old e-mail
+rm -f /var/spool/mqueue-client/*
+mkdir -p /LOG
+chown shadow /LOG
+# start sysklog daemon
+/etc/init.d/sysklogd restart
+# no config IP for the network
+ifconfig eth0 up
+# config IP for IDS network
+ifconfig eth1 10.10.20.2 \
+         netmask 255.255.255.224 broadcast 10.10.20.31 up
+route add default gw 10.10.20.30
+# start cron daemon
+/etc/init.d/cron start
+# SHADOW
+# start sensor
+/usr/local/SHADOW/sensor/sensor_init.sh start
+# configure and start ssh daemon
+rm -f /etc/ssh/sshd_not_to_be_run
+chown shadow /home/SHADOW/.ssh /home/SHADOW/.ssh/authorized_keys2
+chmod go= /home/SHADOW/.ssh
+/etc/init.d/ssh start
+#
+# start snort daemon
+/etc/init.d/snort start
+
+#
+# EOF

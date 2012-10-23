@@ -1,0 +1,268 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module13.html,v 1.19 2007-02-12 12:37:11 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 13</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 13</h1>
+<h2 class="center">Realizzazioni di pagine Web</h2>
+
+
+
+<h3>World Wide Web Pages and Browsing</h3>
+
+<p>
+Il best seller come libro di introduzione all'argomento &egrave;
+sicuramente &quot;Computer Network and Internet&quot; di
+<a href="http://www.cs.purdue.edu/people/comer"
+   title="link esterno">Douglas Comer</a>
+della Prentice Hall (quarta edizione). Questo libro ha il pregio di
+essere molto sintetico e molto chiaro tanto che quando lo si legge
+pu&ograve; sembrare di sentire delle banalit&agrave;. Spero che
+qualcuno di voi abbia la possibilit&agrave; di leggerlo.
+</p>
+
+<p>
+In internet sono pubblicate delle 
+<a href="http://www.netbook.cs.purdue.edu/othrpags/comersld/CLASS-NOTES.pdf"
+   title="link esterno">slide</a> che riassumono in modo
+molto sintetico il contenuto dei capitoli e quindi le possiamo usare
+come guida. Iniziamo dalla parte XVI associata a
+&quot;Web technologies&quot;. Ho messo anche a disposizione
+l'esperienza virtuale
+<a href="uml-Web.html" title="esperienza Netkit4TIC">Web</a>
+per la sperimentazione dei semplici
+esempi illustrati nel libro.
+</p>
+
+
+
+<h3>XML</h3>
+<p>
+Come documenti guida saranno usati i corsi di laurea di informatica
+in Tecnologie Web  
+<a href="http://www.cs.unibo.it/~fabio/corsi/ltw01/" 
+   title="link esterno">dell'Universit&agrave; di Bologna</a>
+e quello di
+<a href="http://mvl.dimi.uniud.it/labtw/01/" 
+   title="link esterno">dell'Universit&agrave; di Udine</a>
+dove possiamo trovare anche degli
+<a href="http://mvl.dimi.uniud.it/labtw/01/eserciziXML.txt"
+   title="link esterno">esercizi</a>
+con le relative
+<a href="http://mvl.dimi.uniud.it/labtw/01/soluzioniXML.txt"
+   title="link esterno">soluzioni</a>.<br>
+
+Una lettura interessante &egrave;
+   <a href="http://www.xmlpertutti.com/CorsoXML.pdf"
+      title="link esterno">il linguaggio XML</a> che riguarda un
+progetto XML per la documentazione giuridica del CNR di Firenze
+per conto del Ministero della Giustizia. Per chi vuole approfondire
+nel sito
+<a href="http://www.normeinrete.it/"
+   title="link esterno">NormeInRete (NIR)</a> ho trovato una utile
+<a href="http://www.normeinrete.it/doc/introDTDNIR.html"
+   title="link esterno">introduzione ai DTD di NIR</a> e
+<a href="http://www.normeinrete.it/doc/note.html"
+   title="link esterno">Note al DTD dei documenti NIR</a>.
+</p>
+
+
+<h3>Un esempio: Gentoo Linux</h3>
+
+<p>Come applicazione per questo modulo ho preso in considerazione la
+documentazione di una distribuzione linux che si chiama
+<a href="http://www.gentoo.org/" title="link esterno">Gentoo Linux</a>.
+In questa distribuzione
+ci sono dei documenti chiari e precisi, anche in lingua italiana, che
+illustrano installazioni e configurazione dei vari software.
+In particolare hanno curato la tipologia della documentazione mista a
+spezzoni di codice o file di configurazione.
+Questo &egrave; anche lo stile che sarebbe
+necessario alla documentazione delle pagine che stai leggendo e quindi
+visto che l'effetto complessivo mi piace, ho deciso di provarlo
+assieme ai corsisti. &Egrave; interessante la lettura di una serie
+di quattro 
+<a href="http://www.gentoo.org/proj/en/site.xml?style=printable" 
+   title="link esterno">articoli</a> in cui Daniel Robbins spiega il percorso
+che lo ha portato a realizzare il portale con XML/XLTS.
+</p>
+
+<p>La prima cosa utile da leggere &egrave; sicuramente la
+<a href="http://www.gentoo.org/doc/it/xml-guide.xml?style=printable"
+   title="link esterno">Gentoo Linux XML Guide</a>. Ricorda che
+   per tutti i documenti di questa distribuzione esiste
+   la possibilit&agrave; di inserire in coda all'URL specificato
+   nel browser la stringa <code>?style=printable</code> che permette
+   di avere la stampa depurata dalla barra informativa laterale.
+</p>
+
+<p>
+L'obiettivo degli ideatori di questo strumento &egrave; stato quello
+di definire una sintassi semplice ma espressiva in modo che fosse
+semplice da imparare ma sufficiente per esprimere la tipica documentazione
+associata ad una distribuzione GNU/Linux. Inoltre &egrave; stata
+considerata importante la possibilit&agrave; a partire dai file XML
+di generare documenti in altri formati quali DocBook, SGML e ovviamente
+HTML.
+</p>
+
+<p>
+La conversione di un file XML in HTML viene fatto da:
+</p>
+
+<ul>
+  <li>un cosidetto &quot;XSLT processing tools&quot;, che nel
+      nostro caso &egrave; <code>xsltproc (apt-get install xsltproc)</code>.
+      &Egrave; un
+      tool a riga di comando per applicare fogli di stile XSLT
+      a documenti XML. &Egrave; parte della libreria
+      <a href="http://xmlsoft.org/" title="link esterno">libxml2</a>
+      sviluppata per il progetto
+	  <a href="http://www.gnome.org/" title="link esterno">GNOME</a>.</li>
+  <li>il file di stile XSLT di nome <code>guide.xsl</code> che
+      nel nostro caso sar&agrave; <code>guide-print.xsl</code>
+      poich&egrave; siamo pi&ugrave; orientati alla modalit&agrave; stampa.</li>
+</ul>
+
+<p>
+Tutti i sorgenti XML che generano il sito web di Gentoo Linux sono
+contenuti in un unico file ricercabile come
+<a href="http://www.gentoo.org/dyn/doc-snapshots/docs-latest-en.tar.bz2" 
+   title="file tar-ato e gzip-ato">English documentation</a> e 
+visto che ci interessa la documentazione in italiano cerchiamo
+<a href="http://www.gentoo.org/dyn/doc-snapshots/docs-latest-it.tar.bz2"
+   title="file tar-ato e gzip-ato">Italian documentation</a>.<br>
+   Se si desidera accedere al repository CVS che contiene questi
+   file basta puntare su
+   <a href="http://viewcvs.gentoo.org/"
+      title="link esterno">Online CVS Repository</a>.
+</p>
+
+<p>
+Sia $DOC_ROOT la variabile che contiene il nome della directory
+di lavoro dove ci sono i file XML da trasformare.
+In questa directory estraiamo il file <code>xml-guide-latest.tar.gz</code>:
+</p>
+
+<pre>
+$ export DOC_ROOT=~/g
+$ cd ${DOC_ROOT}
+$ wget http://www.gentoo.org/dyn/doc-snapshots/docs-latest-en.tar.bz2
+$ tar jxf docs-latest-en.tar.bz2
+$ export LANG=it
+$ mkdir ${LANG}
+$ cd ${LANG}
+$ wget http://www.gentoo.org/dyn/doc-snapshots/docs-latest-${LANG}.tar.bz2
+$ tar jxf docs-latest-${LANG}.tar.bz2
+</pre>
+
+<pre>
+$ mkdir test
+$ cd test
+$ mkdir css images
+$ wget -P css/ http://www.gentoo.org/css/main.css
+$ wget -P images/ http://www.gentoo.org/images/gbot-s.gif \
+                  http://www.gentoo.org/images/gridtest.gif \
+                  http://www.gentoo.org/images/gtop-s.jpg \
+                  http://www.gentoo.org/images/line.gif \
+                  http://www.gentoo.org/images/netraverse-gentoo.gif
+
+$ cd ..
+$ wget http://dev.gentoo.org/~swift/gentoo/downloads/guide.xsl
+$ wget http://bfs.itlab.musc.edu/pubcvs/viewcvs.cgi/~checkout~/sluice/ \
+         xsl/guide-print.xsl?rev=1.1.1.1&amp;content-type=text/plain
+$ mv guide-print.xsl?rev=1.1.1.1 guide-print.xsl
+</pre>
+
+<p>
+Modifichiamo il file <code>/etc/xml/catalog</code> aggiungendo
+all'interno dell'elemento <code>catalog</code> la seguente riga:
+</p>
+
+<pre>
+<rewriteURI uriStartString="/dtd" rewritePrefix="DOC_ROOT/g/dtd/"/>
+</pre>
+
+
+<p>
+Occorrono delle piccole aggiustature per adeguarci allo standard
+usato in Gentoo.
+Nel file in output va poi aggiustato il path da dove si carica
+il file main.css che abbiamo spostato nella directory corrente.
+Inoltre nel file guide.dtd occorre impostare gli accenti italiani
+aggiungendo in coda al file <code>guide.dtd</code> l'include
+dei file
+<a href="ISOlat1.dtd" title="">ISOlat1.dtd</a> e
+<a href="ISOlat2.dtd" title="">ISOlat2.dtd</a> contenenti
+le entit&agrave; ISO Latin:
+</p>
+
+<pre>
+$ wget http://www.tic.fdns.net/tic/html/ISOlat1.dtd \
+       http://www.tic.fdns.net/tic/html/ISOlat2.dtd
+$ echo "
+    &lt;!ENTITY % ISOlat1 SYSTEM "./ISOlat1.dtd"&gt; %ISOlat1;
+    &lt;!ENTITY % ISOlat2 SYSTEM "./ISOlat2.dtd"&gt; %ISOlat2;" &gt;&gt; \
+    dtd/guide.dtd
+</pre>
+
+
+<p>
+Il comando per trasformare, in stile stampa, un documento quale
+<a href="Knoppix.xml" title="sorgente XML">Knoppix.xml</a>
+(scaricalo e poi aprilo con un editor a tua scelta) &egrave;:
+</p>
+
+<pre>
+$ xsltproc guide-print.xsl test/Knoppix.xml &gt; test/Kno.html
+</pre>
+
+<p>
+Prova a vedere il risultato
+<a href="Kno.html" title="risultato di XSLTPROC">Kno.html</a>
+e confrontalo con il &quot;solito&quot;
+<a href="Knoppix.html" title="">Knoppix.html</a>.
+</p>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-12 12:37:11 $
+</span>
+</address>
+
+
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+#ip route add 88.36.248.230 brd 88.36.248.255 dev eth0
+#ip route add 88.36.248.228 brd 88.36.248.255 dev eth0
+ip addr add 88.36.248.228 brd 88.36.248.255 dev eth0
+ip addr add 88.36.248.228/27 dev eth0
+ip addr add 88.36.248.228/27 dev eth0 label eth0:0
+
+#
+ip route del 88.36.248.224/27  dev eth0
+ip route add 88.36.248.224/27  dev eth0 via  88.36.248.228
+#
+
+
+#######################################
+# ridefiniamo il default gateway a 88.36.248.228
+ip route del 0.0.0.0/0 dev eth0
+ip route add 0.0.0.0/0 via 88.36.248.228
+
+
+##################################
+# add 
+ip addr add 66.60.172.202/24 brd 66.60.172.255 dev eth0 label eth0:0
+
+
+or
+
+
+##################################
+iface eth0 inet static
+        address 24.81.144.90
+        masklen 24
+        broadcast 24.81.144.255
+        gateway 24.81.144.1
+        #
+        # secondary IP is defined here
+        #
+        up ip addr add 24.81.144.91/24 dev eth0
+
+
+
+##################################
+per visualizzare:
+ip addr show eth0 label eth0:0
+
+
+##################################
+file:///usr/share/doc/shorewall-doc/html/Shorewall_and_Aliased_Interfaces.html
+

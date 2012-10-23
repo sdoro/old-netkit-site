@@ -1,0 +1,28 @@
+;; $Id: netkit4tic.ds,v 1.1 2008-01-03 16:33:38 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "telnet")
+  (begin
+      (geometry "484x173+6+6")
+    )
+  )
+
+(if (contains (application_name) "ftp")
+  (begin
+      (geometry "484x173+6+216")
+    )
+  )
+
+(if (contains (application_name) "ssh")
+  (begin
+      (geometry "484x173+528+216")
+    )
+  )
+
+(if (contains (application_name) "apache")
+  (begin
+      (geometry "484x251+518+466")
+    )
+  )
+
+)

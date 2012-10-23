@@ -1,0 +1,5 @@
+pty "pptp 206.1.1.253 --nolaunchpppd"
+name nk4tic
+require-mppe-128
+mtu 1400
+file /etc/ppp/options.pptp

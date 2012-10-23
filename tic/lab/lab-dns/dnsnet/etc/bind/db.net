@@ -1,0 +1,14 @@
+;; $Id: db.net,v 1.2 2006/11/18 17:45:08 doros Exp $
+$TTL    60000
+@               IN      SOA     dnsnet.net.    root.dnsnet.net. (
+                        2006031201 ; serial
+                        28800 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        0 ; negative cache ttl
+                        )
+@               IN      NS      dnsnet.net.
+dnsnet          IN      A       192.168.0.2
+
+nanoinside      IN      NS      dnsnano.nanoinside.net.
+dnsnano.nanoinside IN   A       192.168.0.22

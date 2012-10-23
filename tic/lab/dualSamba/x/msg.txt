@@ -1,0 +1,186 @@
+upgrade Debian Samba e nuova LDAP entry
+
+Ciao a tutti,
+
+  sono in procinto di fare l'upgrade della coppia di samba server
+della scuola da Debian Sarge a Etch (3.0.24-6etch4).
+  La loro configurazione e' un HA cluster active-active con
+samba come PDC su un nodo e samba DM sull'altro nodo. L'intento
+e' quello di avere l'autenticazione sul PDC e le homes sul DM.
+Al momento di un eventuale guasto il nodo superstite esegue una doppia
+istanza ma con ruoli diversi (PDC e DM).
+  In un vecchio documento che riguarda la virtualizzazione con
+UML veniva spiegato piu' in dettaglio:
+
+  http://www.tic.fdns.net/tic/html/uml-dualSamba.html
+
+Il motivo per cui scrivo e' che nella versione per Etch tutto funziona
+abbastanza bene tranne che per la presenza di una (NEW) entry nell'albero
+LDAP che mi turba.
+
+Con il popolamento dell'albero LDAP da parte dei samba-tools viene
+giustamente costruita una entry con i seguenti valori:
+
+dn: cn=Domain Users,ou=Groups,dc=istituto,dc=it
+objectClass: top
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 513
+cn: Domain Users
+description: Netbios Domain Users
+sambaSID: S-1-5-21-3840722988-1065274203-713729200-513     <--+
+sambaGroupType: 2                                             |
+displayName: Domain Users                                     |
+                                                              |
+e quindi niente di nuovo sotto al sole ...                    |
+Ma al momento del comando (sull'istanza DM):                  |
+                                                              |
+# wbinfo --set-auth-user NETKIT\root%not24get                 |
+                                                              |
+viene costruita questa (NEW) entry:                           |
+                                                              |
+                                                              |
+dn: sambaSID=S-1-5-32-545,ou=Groups,dc=istituto,dc=it         |
+objectClass: sambaSidEntry                                    |
+objectClass: sambaGroupMapping                                |
+sambaSID: S-1-5-32-545                                        |
+sambaGroupType: 4                                             |
+displayName: Users                                            |
+gidNumber: 11000                                              |
+sambaSIDList: S-1-5-21-3840722988-1065274203-713729200-513 <--+
+
+
+
+E' tutto regolare ? Sembrerebbe che l'istanza sul DM
+abbia bisogno di una mappatura (gidNumber 11000) dei
+'Domain Users' del PDC. E' da dire che l'istanza sul DM non
+ha backend su LDAP.
+
+1000 graxie!
+
+Saluti,
+  Sandro Doro
+
+
+Allego in coda i due file smb.conf
+
+- start smb.conf PDC -------------------------------------------
+[global]
+
+   workgroup = Netkit
+   netbios name = PDC
+   server string = PDCServerString
+
+   domain logons = Yes
+   os level = 65
+   preferred master = Yes
+   domain master = Yes
+
+   bind interfaces only = yes
+   interfaces = 192.168.50.253, 127.0.0.1
+
+   security = user
+   encrypt passwords = Yes
+   obey pam restrictions = No
+   ldap passwd sync = Yes
+   log level = 3
+   syslog = 0
+   log file = /var/log/samba/log.%m
+   max log size = 100000
+   smb ports = 139 445
+   time server = Yes
+   socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+   mangling method = hash2
+   Dos charset = 850
+   Unix charset = ISO8859-1
+
+   logon script = scripts\logon.bat
+   logon drive = H:
+   logon path = 
+   logon home = 
+
+   wins support = Yes
+   name resolve order = wins hosts bcast
+   passdb backend = ldapsam:ldap://192.168.50.221/
+
+   ldap admin dn = cn=samba,ou=DSA,dc=istituto,dc=it
+   ldap suffix = dc=istituto,dc=it
+   ldap group suffix = ou=Groups
+   ldap user suffix = ou=Users
+   ldap machine suffix = ou=Computers
+   add user script = /usr/sbin/smbldap-useradd -m "%u"
+   ldap delete dn = Yes
+   add machine script = /usr/sbin/smbldap-useradd -w "%u"
+   add group script = /usr/sbin/smbldap-groupadd -p "%g"
+   add user to group script = /usr/sbin/smbldap-groupmod -m "%u" "%g"
+   delete user from group script = /usr/sbin/smbldap-groupmod -x "%u" "%g"
+   set primary group script = /usr/sbin/smbldap-usermod -g "%g" "%u"
+    
+   ldap idmap suffix = ou=Idmap
+   idmap backend = ldap:ldap://192.168.50.221/
+   idmap uid = 11000-20000
+   idmap gid = 11000-20000
+
+   enable privileges = Yes
+   nt acl support = No
+   guest account = nobody
+   load printers = No
+   disable spoolss = Yes
+
+- end   smb.conf PDC -------------------------------------------
+
+
+
+- start smb.conf DM  -------------------------------------------
+[global]
+
+   workgroup = Netkit
+   netbios name = DM
+   server string = DMServerString
+
+   preferred master = False
+   domain master = False
+
+   interfaces = 192.168.50.220
+   bind interfaces only = yes
+
+   security = domain
+   encrypt passwords = Yes
+   obey pam restrictions = No
+   log level = 4
+   syslog = 0
+   log file = /var/log/sambaHome/log.%m
+   max log size = 100000
+   socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+   mangling method = hash2
+   Dos charset = 850
+   Unix charset = ISO8859-1
+
+   domain logons = No
+   os level = 64
+   preferred master = No
+   domain master = No
+   local master = Yes
+
+   pid directory = /var/run/sambaHome/
+   wins support = No
+   wins server = 192.168.50.253
+   name resolve order = wins hosts bcast
+   ldap suffix = dc=istituto,dc=it
+   ldap group suffix = ou=Groups
+   ldap user suffix = ou=Users
+   ldap machine suffix = ou=Computers
+
+   ldap admin dn = cn=samba,ou=DSA,dc=istituto,dc=it
+   idmap uid = 11000-20000
+   idmap gid = 11000-20000
+   winbind enum groups = yes
+   winbind enum users = yes
+   winbind trusted domains only = Yes
+
+   load printers = No
+   disable spoolss = Yes
+
+- end   smb.conf DM  -------------------------------------------
+
+

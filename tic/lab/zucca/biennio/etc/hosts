@@ -1,0 +1,9 @@
+#
+# /etc/hosts
+# $Id:$
+
+127.0.0.1	localhost fw-biennio
+
+# Do not forget to declare the internal address(es) of a ssh client
+# # in this file if you want to connect quickly to your firewall machine!
+10.168.200.254  fw-biennio

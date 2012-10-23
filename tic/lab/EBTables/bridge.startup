@@ -1,0 +1,50 @@
+# $Id: bridge.startup,v 1.1 2008-01-03 16:26:51 doros Exp $
+#
+ifconfig eth0 up
+ifconfig eth0 hw ether 00:00:00:01:00:00
+ifconfig eth1 up
+ifconfig eth1 hw ether 00:00:00:01:00:01
+# load 802.1q module
+modprobe 8021q
+# set VLANs names
+vconfig set_name_type DEV_PLUS_VID_NO_PAD
+#vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+# make vlan 3
+vconfig add eth0 3
+ifconfig eth0.3 up
+# make vlan 3
+vconfig add eth1 3
+ifconfig eth1.3 up
+# make a bridge
+brctl addbr brVLAN3
+brctl addif brVLAN3 eth0.3
+brctl addif brVLAN3 eth1.3
+ifconfig brVLAN3 up
+# make a bridge
+brctl addbr brNoVLAN
+brctl addif brNoVLAN eth0
+brctl addif brNoVLAN eth1
+ifconfig brNoVLAN up
+# install missing ebtables package
+dpkg -i /root/ebtables*deb
+#
+# The next two rules say to broute all vlan-3 tagged traffic. In this
+# specific case this means that the vlan code will receive the tagged
+# frames on eth0 (or eth1) and from then on the frames entered on
+# eth0.3. Then the packet is queued again and later the bridge code
+# gets a hold of it because brVLAN3 has port eth0.3
+#
+ebtables -t broute -A BROUTING -i eth0 -p 802_1q --vlan-id 3 -j DROP
+ebtables -t broute -A BROUTING -i eth1 -p 802_1q --vlan-id 3 -j DROP
+#
+# The next rules is just to show some counters.
+#
+ebtables -t broute -A BROUTING -i eth0.3 -p ipv4 -j CONTINUE
+ebtables -t broute -A BROUTING -i eth1.3 -p ipv4 -j CONTINUE
+#
+# logging
+echo "ebtables -t  broute -A BROUTING --log-ip --log-arp"
+# displayng counters
+echo "ebtables -t broute -L BROUTING --Lc"
+#
+# bot

@@ -1,0 +1,4 @@
+# /etc/exports
+# $Id: exports,v 1.1 2003/12/31 07:28:18 doros Exp $
+
+/opt/ltsp/i386  192.168.77.0/255.255.255.0(ro,no_root_squash)

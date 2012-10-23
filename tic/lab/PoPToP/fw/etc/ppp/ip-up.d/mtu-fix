@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: mtu-fix,v 1.1 2007-02-03 17:21:07 doros Exp $
+
+# fix PoPToP error like: "osize too small!"
+ip link set $PPP_IFACE mtu 1404
+
+#
+# EOF

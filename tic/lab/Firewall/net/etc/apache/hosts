@@ -1,0 +1,9 @@
+#
+# /etc/hosts
+# $Id: hosts,v 1.2 2004/06/21 21:13:02 doros Exp $
+$
+127.0.0.1	localhost fw
+
+217.57.5.218  net
+10.10.10.65   loc01
+10.10.10.77   proxy

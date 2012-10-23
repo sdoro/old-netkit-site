@@ -1,0 +1,9 @@
+! /etc/zebra/zebra.conf
+! $Id: Cisco1600-zebra,v 1.1 2004/04/02 21:26:52 doros Exp $
+!
+hostname Cisco1600
+password zebra
+enable password zebra
+!
+log file /var/log/zebra/zebra.log
+!

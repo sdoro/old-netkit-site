@@ -1,0 +1,107 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module8.html,v 1.30 2006/11/19 09:31:31 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 8</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 8</h1>
+<h2 class="center">Reti di reti</h2>
+
+
+
+<p>
+Il libro <b>Internetworking</b>, Baldi M. e Nicoletti P., Mc-Graw-Hill Italia
+&egrave; completamente dedicato a questo argomento:
+&quot;<i>Il funzionamento delle reti di grandi dimensioni
+&egrave; basato sull'internetworking, cio&egrave; il funzionamento combinato
+(inter-working) di reti (net) distinte. I calcolatori collegati a tali reti distinte
+sono in grado di comunicare grazie alla presenza di apparati per
+internetworking</i>&quot;.
+</p>
+
+<p>
+Le varie tipologie di routing affrontate sono:
+</p>
+
+<ul>
+	<li>Routing statico. La
+	<a href="routingTable.html" title="approfondimento">tabella di progetto</a> 
+	per l'esperienza sul RIPv2 di Netkit (vedi punto successivo).</li>
+	
+	<li>Routing dinamico: distance vector implementato da
+	RIPv1/2. Le slide del sito internet
+    <a href="http://www.netscire.it/" title="link esterno">www.netscire.it</a>
+    di
+	<a href="http://www.netscire.it/CourseMaterial/IP-ROUT-2005_I_C.pdf"
+       title="link esterno: www.netscire.it">Inter<b>net</b>working.</a>
+	Le 
+	<a href="http://www.netkit.org/netkit-labs/basic-topics/rip/netkit-rip.pdf"
+       title="link esterno">slide</a> e
+	<a href="http://www.netkit.org/netkit-labs/basic-topics/rip/netkit-lab_rip.tar.gz"
+       title="link esterno">l'esperienza </a>
+	di Netkit nel laboratorio virtuale. Le 
+	<a href="zebraRoutingTable.html" title="approfondimento">tabelle</a> di zebra.</li>
+	
+	<li>Routing dinamico: link state
+       <a href="uml-ospf.html" title="esperienza Netkit4TIC">OSPF</a>.</li>
+</ul>
+
+
+<p>
+In questo modulo trova giusta
+collocazione la dimostrazione di una
+<a href="VPN.html" title="approfondimento">VPN</a>
+tra le reti private che i vari corsisti hanno realizzato come
+<a href="homework-01.html" title="lavoro estate 2003">homework-01</a> in modo da implementare
+una MAN sperimentale: <a href="homework-02.html" title="lavoro autunno 2003">homework-02</a>.
+</p>
+
+<p>
+Attraverso
+<a href="lab.html" 
+   title="il laboratorio virtuale">Netkit4TIC</a> abbiamo realizzato
+gli esercizi proposti come
+<a href="uml-VPN.html" title="esperienza Netkit4TIC">VPN</a> virtuale tra
+reti virtuali.
+</p>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/11/19 09:31:31 $
+</span>
+</address>
+
+
+</body>
+
+</html>

@@ -1,0 +1,545 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-QoS.html,v 1.15 2007-02-20 15:35:09 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-QoS</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Quality of Service: Traffic Shaping</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-beringDMZ.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-QBox.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+Riportiamo la mappa
+(<a href="pdf/uml-QoS.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/uml-QoS.xml" title="file per Dia">xml</a>)
+della rete dell'esperienza che risulta da una semplificazione
+di quella proposta nell'esperienza del firewall con area DMZ.<br>
+Il nodo <code>rrd</code> &egrave; quello che raccoglie le
+statistiche. Il nodo <code>fw</code> &egrave; il firewall
+dove configuriamo le nostre politiche di traffico. Per finire
+usiamo un nodo interno ed un nodo esterno per generare
+del traffico tra loro e verificare la correttezza delle
+configurazioni.
+</p>
+
+<p>
+Per Traffic Shaping si indicano svariate tecniche per assegnare
+priorit&agrave; diverse al traffico dati di una rete. Penso che
+tutti gli utenti Internet abbiano potuto sperimentare, in un alcuni
+momenti, una eccessiva latenza della rete specialmente evidenziata
+quando in parallelo ad una sessione interattiva si sta effettuando
+un download. Questa latenza &egrave; dovuta al fatto che le due
+tipologie di traffico del nostro esempio hanno uguale priorit&agrave;.
+</p>
+
+
+<p>
+L'elenco dei pacchetti da installare sul firewall LEAF/Bering uClibc &egrave;:
+<code>qos-htb.lrp</code> e <code>tc.lrp</code>. Il kernel del
+firewall nel caso si carichi dinamicamente i moduli ha bisogno
+dei moduli <code>netfilter</code> di tipo <code>cls_*</code>
+e <code>sch_*</code>. Nel caso di kernel monolitico, come
+quello a disposizione nel laboratorio virtuale, occorre
+costruirlo con gli switch <code>CONFIG_NET_SCH_*</code> e
+<code>CONFIG_NET_CLS_*</code> uguali a Y (non spaventatevi!
+&egrave; gi&agrave; fatto).
+</p>
+
+
+<p>
+Il file con l'esperienza
+<a href="QoS.tgz"
+   title="esperienza Netkit4TIC">QoS</a>
+deve essere decompresso su una sottodirectory della HOME.
+In seguito, dopo aver seguito le istruzioni presenti nel file README
+occorre lanciare lo script:
+</p>
+
+<pre>
+realHost$ lstart
+</pre>
+
+<p>
+che ci costruisce tutta le rete
+<a href="QoS-desktop.png" title="screenshot">(screenshot)</a>
+. L'esperienza si divide nei seguenti
+punti:
+</p>
+
+<ul>
+  <li> Autoconfigurazione
+  <ul>
+  <li><a href="#conf">Configurazione della fasce di traffico</a></li>
+  <li><a href="#rrd">Configurazione per la raccolta e la visualizzazione
+                     delle statistiche del traffico</a></li>
+  </ul>
+  </li>
+
+  <li> Sperimentazione
+  <ul> 
+  <li><a href="#check">Verifica dei valori impostati</a></li>
+  <li><a href="#ceil">Rilassamento del vincolo</a></li>
+  </ul>
+  </li>
+</ul>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="conf">Configurazione della fasce di traffico</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per prima cosa ricordiamo che il traffico in arrivo, nel momento
+in cui &egrave; arrivato sull'interfaccia, ha gi&agrave; occupato
+una parte della banda trasmissiva e quindi non &egrave; possibile
+operare un suo ulteriore accodamento.
+</p>
+
+<p>
+Il kernel di Linux offre una ampia scelta di funzioni per il controllo
+del traffico e qu&igrave; non vogliamo farne una panoramica. Comunque
+tutte le strategie si basano su tre concetti fondamentali:
+</p>
+
+<ul>
+  <li>Disciplina di accodamento: effettua lo scheduling dei pacchetti ed
+      &egrave; associata alla scheda di rete</li>
+  <li>Classi: servono per definire le varie tipologie di traffico</li>
+  <li>Filtri: servono per smistare il traffico nelle varie classi</li>
+</ul>
+
+<p>
+Per il nostro test vogliano definire quattro tipologie di traffico e
+abbiamo supposto di avere una linea con 30Kbps (per non sovraccaricare
+il nostro laboratorio virtuale) suddivisa secondo il seguente diagramma:
+</p>
+
+<pre>
+eth0 (30 Kbps)--+--- ( 2 Kbps) coda con bassa latenza (interattivo)
+                |
+                +--- (14 Kbps) coda massimo throughput
+                |
+                +--- ( 9 Kbps) coda per traffico web
+                |
+                +--- ( 5 Kbps) default
+</pre>
+
+<p>
+Nel nodo firewall questo viene configurato nel file
+<code>/sbin/htb.sysconfig</code> con una opportuna sintassi. Le
+classi appena descritte possono rimanere confinate nel loro limite
+massimo oppure, in mancanza di altro traffico, espandersi fino alla
+capienza della classe padre eventualmente in modo proporzionale
+rispetto ai contendenti. Nel nostro esempio, per controllare la
+configurazione dopo lo startup possiamo dare il comando
+di visualizzazione della configurazione delle classi.
+</p>
+
+<p>
+Se si cambiano alcuni valori occorre ricordarsi di
+dare il comando di avviso cambio configurazione:
+</p>
+
+<pre>
+fw# /etc/init.d/htb.init recreate; \
+    /etc/init.d/htb.init reload
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="rrd">Configurazione per la visualizzazione delle
+               statistiche del traffico</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la visualizzazione delle statistiche del traffico abbiamo usato
+una combinazione di protocolli quali <code>SNMP</code>, <code>SSH</code>,
+<code>HTTP</code> e un tool di rappresentazione grafica di nome
+<code>RRDs</code> in ambiente <code>PHP</code>.
+</p>
+
+<p>
+In seguito ci riferiremo al nodo <code>fw</code> come il nodo che
+vogliamo monitorare e con <code>rrd</code> come il nodo che ha la
+responsabilit&agrave; di raccogliere, memorizzare e visualizzare
+i dati.
+</p>
+
+<p>
+Il nodo <code>rrd</code> ha il compito di interrogare il nodo <code>fw</code>
+a intervalli regolari di tempo via SNMP e via SSH. I dati raccolti
+verranno memorizzati in un database RRD. Occorre quindi configurare
+un agent SNMP e un accesso SSH sul nodo <code>fw</code>:
+</p>
+
+<ul>
+  <li>SNMP: attraverso il pacchetti <code>snmpd.lrp</code>, <code>libsnmp.lrp</code>
+      <code>libm.lrp</code> &egrave; possibile installare sul nodo un
+      agent SNMP. Il file di configurazione utilizzato &egrave;
+      <a href="../lab/QoS/fw/etc/snmp/snmpd.conf"
+         title="file per SNMP">/etc/snmp/snmpd.conf</a>.</li>
+  <li>SSH: attraverso il pacchetto <code>ssh.lrp</code> configuriamo
+      il nodo in modo tale che sia possibile accettare ed eseguire
+      comandi shell provenienti dal nodo <code>rrd</code>. Allo scopo
+      copiamo la chiave pubblica dell'utente root del nodo <code>rrd</code>
+      sul file <code>/root/.ssh/authorized_keys2</code> del nodo
+      <code>fw</code>.</li>
+</ul>
+
+<p>
+In seguito occorre definire il database RRD, gli script che raccolgono
+i dati e le pagine php che li visualizzano. Sul nodo <code>rrd</code>
+devono essere installati i pacchetti
+<code>libnet-snmp-perl</code>, <code>rrdtool</code>,
+<code>php4-rrdtool</code> e <code>librrds-perl</code>.
+</p>
+
+<ul>
+  <li>RRD database: definiremo due database per ogni interfaccia.
+      Il primo per
+      memorizzare il traffico complessivo sulle interfacce ethX
+      (<a href="../lab/QoS/rrd/var/lib/rrdcollect/eth0.rrd"
+          title="file rrd">eth0</a>,
+       <a href="../lab/QoS/rrd/var/lib/rrdcollect/eth1.rrd"
+          title="file rrd">eth1</a>,
+       <a href="../lab/QoS/rrd/var/lib/rrdcollect/eth2.rrd"
+          title="file rrd">eth2</a>).
+      Il secondo per
+      memorizzare il traffico relatico alla classe di traffico CL
+      sull'interfaccia eth0
+      (<a href="../lab/QoS/rrd/var/lib/rrdcollect/eth0-10.rrd"
+          title="file rrd">eth0-10</a>,
+       <a href="../lab/QoS/rrd/var/lib/rrdcollect/eth0-20.rrd"
+          title="file rrd">eth0-20</a>,
+       <a href="../lab/QoS/rrd/var/lib/rrdcollect/eth0-30.rrd"
+          title="file rrd">eth0-30</a>,
+       <a href="../lab/QoS/rrd/var/lib/rrdcollect/eth0-40.rrd"
+          title="file rrd">eth0-40</a>).</li>
+  <li>scripts: si useranno due script rispettivamente per
+      collezionare via SNMP il traffico complessivo sull'interfaccia
+      e uno per collezionare via SSH il traffico per tipologia
+      di classe.</li>
+  <li>PHP: si usa l'interfaccia PHP per visualizzare i grafici
+      statistici.</li>
+</ul>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="check">Verifica dei valori impostati</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per prima cosa verifichiamo le quattro fasce di banda che abbiamo
+costruito. Allo scopo usiamo <code>iperf</code> che useremo
+tra i nodi dove vogliamo misurare la banda passante.
+La parte server &egrave; in ascolto su una
+determinata porta e la parte client si connette e manda
+una certa quantit&agrave; di KB o manda traffico per un certo numero
+di secondi. Metteremo quindi in esecuzione dalla parte
+esterna il server sulle porte 22 (scp), 20 (ftp), 80 (http) e
+101 (altro):
+</p>
+
+<pre>
+fw# cp /sbin/htb.sysconfig-no-ceil /sbin/htb.sysconfig; \
+    /etc/init.d/htb.init recreate; \
+    /etc/init.d/htb.init reload
+
+fw# tc class show dev eth0<span class="blue">
+class htb 1:10 parent 1:2 leaf 10: prio 3 rate 16Kbit ceil 16Kbit [...]
+class htb 1:2 root rate 240Kbit ceil 240Kbit burst 2047b [...]
+class htb 1:20 parent 1:2 leaf 20: prio 5 rate 112Kbit ceil 112Kbit [...]
+class htb 1:30 parent 1:2 leaf 30: prio 4 rate 72Kbit ceil 72Kbit [...]
+class htb 1:40 parent 1:2 leaf 40: prio 6 rate 40Kbit ceil 40Kbit [...]</span>
+</pre>
+
+<pre>
+aclntExt# (iperf -s -p 22 -w 8K -f K &amp;); \
+          (iperf -s -p 20 -w 8K -f K &amp;); \
+          (iperf -s -p 80 -w 8K -f K &amp;); \
+          (iperf -s -p 101 -w 8K -f K &amp;)
+</pre>
+
+<p>
+Ora attiviamo la parte client per un traffico di 5 minuti
+per tipologia e con altri 5 minuti di "silenzio" tra una
+tipologia e l'altra:
+</p>
+
+<pre>
+aclntInt# export IPERF=" -t 300"; \
+          at -f /usr/local/sbin/scp `date --date="+2 min" "+%H:%M"` ; \
+          at -f /usr/local/sbin/ftp `date --date="+12 min" "+%H:%M"` ; \
+          at -f /usr/local/sbin/http `date --date="+22 min" "+%H:%M"` ; \
+          at -f /usr/local/sbin/other `date --date="+32 min" "+%H:%M"`
+
+aclntInt# atq
+</pre>
+
+<p>
+dove i files di comandi sono rispettivamente:
+</p>
+
+<pre>
+# /usr/local/sbin/scp
+iperf -c 80.204.240.254 -w 8K -f K $IPERF -p 22 &gt; /dev/null
+
+# /usr/local/sbin/ftp
+iperf -c 80.204.240.254 -w 8K -f K $IPERF -p 20 &gt; /dev/null
+
+# /usr/local/sbin/http
+iperf -c 80.204.240.254 -w 8K -f K $IPERF -p 80 &gt; /dev/null
+
+# /usr/local/sbin/other
+iperf -c 80.204.240.254 -w 8K -f K $IPERF -p 101 &gt; /dev/null
+</pre>
+
+<p>
+Al termine del trasferimento, circa dopo 30 minuti, dal lato
+server potremo vedere sommarizzato il risultato:
+</p>
+
+<pre>
+Interval       Transfer     Bandwidth
+0.0-308.9 sec   472 KBytes  1.53 KBytes/sec
+0.0-301.7 sec  3568 KBytes  11.8 KBytes/sec
+0.0-301.9 sec  2232 KBytes  7.39 KBytes/sec
+0.0-301.9 sec  1272 KBytes  4.21 KBytes/sec
+</pre>
+
+<p>
+Per consultare i grafici con le statistiche del traffico in ingresso e uscita
+per l'interfacca eth0 basta usare un browser:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://192.168.77.2/ac.php
+</pre>
+
+<p>
+Il grafico del traffico di rete &egrave;:
+</p>
+<p>
+<img src="QoS-eth0-no-ceil.gif" alt="immagine rrd">
+</p>
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="ceil">Confinamento della banda con borrowing</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Ora configuriamo con CEIL uguale a RATE
+</p>
+
+<pre>
+fw# cp /sbin/htb.sysconfig-with-ceil /sbin/htb.sysconfig; \
+    /etc/init.d/htb.init recreate; \
+    /etc/init.d/htb.init reload
+
+fw# tc class show dev eth0<span class="blue">
+class htb 1:10 parent 1:2 leaf 10: prio 3 rate 16Kbit ceil 240Kbit [...]
+class htb 1:2 root rate 240Kbit ceil 240Kbit burst 2047b [...]
+class htb 1:20 parent 1:2 leaf 20: prio 5 rate 112Kbit ceil 240Kbit [...]
+class htb 1:30 parent 1:2 leaf 30: prio 4 rate 72Kbit ceil 240Kbit [...]
+class htb 1:40 parent 1:2 leaf 40: prio 6 rate 40Kbit ceil 240Kbit [...]</span>
+</pre>
+
+<p>
+
+<p>
+e trasferiamo la stessa quantit&agrave; di Kbyte:
+</p>
+
+<pre>
+aclntInt# export IPERF=" -n 472K"; \
+          at -f /usr/local/sbin/scp `date --date="+2 min" "+%H:%M"` ; \
+          export IPERF=" -n 3568K"; \
+          at -f /usr/local/sbin/ftp `date --date="+12 min" "+%H:%M"` ; \
+          export IPERF=" -n 2232K"; \
+          at -f /usr/local/sbin/http `date --date="+22 min" "+%H:%M"` ; \
+          export IPERF=" -n 1272K"; \
+          at -f /usr/local/sbin/other `date --date="+32 min" "+%H:%M"`
+</pre>
+
+<p>
+Al termine del trasferimento, circa dopo 30 minuti, dal lato
+server potremo vedere sommarizzato il risultato:
+</p>
+
+<pre>
+Interval       Transfer     Bandwidth
+0.0-19.1 sec    472 KBytes  24.8 KBytes/sec
+0.0-139.5 sec  3568 KBytes  25.6 KBytes/sec
+0.0-85.7 sec   2232 KBytes  26.0 KBytes/sec
+0.0-48.9 sec   1272 KBytes  26.0 KBytes/sec
+</pre>
+
+<p>
+Il grafico del traffico di rete &egrave;:
+</p>
+<p>
+<img src="QoS-eth0-with-ceil.gif" alt="immagine rrd">
+</p>
+
+
+<p>
+Ora facciamo una prova con un trasferimento di 20 Mbytes per
+entrambe le quattro fasce di traffico. Vengono iniziate
+ogni 5 minuti:
+</p>
+
+<pre>
+aclntInt# export IPERF=" -n 20M"; \
+  at -f /usr/local/sbin/scp `date --date="+5 min" "+%H:%M"` ; \
+  at -f /usr/local/sbin/ftp `date --date="+10 min" "+%H:%M"` ; \
+  at -f /usr/local/sbin/http `date --date="+15 min" "+%H:%M"` ; \
+  at -f /usr/local/sbin/other `date --date="+20 min" "+%H:%M"`
+</pre>
+
+<p>
+I tempi di trasferimenti sono risultati i seguenti:
+</p>
+
+<pre>
+Interval        Transfer      Bandwidth
+0.0-1760.9 sec  20480 KBytes  11.6 KBytes/sec
+0.0-2466.8 sec  20480 KBytes  8.30 KBytes/sec
+0.0-2184.6 sec  20480 KBytes  9.37 KBytes/sec
+0.0-2350.8 sec  20480 KBytes  8.71 KBytes/sec
+</pre>
+
+<p>
+Il grafico &egrave; autoesplicativo (ricordo che la classe 1:10
+ha priorit&agrave; 3, la classe 1:20 ha priorit&agrave; 5,
+la classe 1:30 ha priorit&agrave; 4 e la classe 1:40 ha
+priorit&agrave; 6) si pu&ograve; consultare da browser:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://192.168.77.2/ac.php
+</pre>
+
+
+
+<p>
+<img src="QoS-eth0-multi-01-with-ceil.gif" alt="immagine rrd">
+<img src="QoS-eth0-multi-02-with-ceil.gif" alt="immagine rrd">
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-20 15:35:09 $
+</span>
+</address>
+
+
+</body>
+</html>

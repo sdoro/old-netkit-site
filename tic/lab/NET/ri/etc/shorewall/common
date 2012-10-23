@@ -1,0 +1,10 @@
+# /etc/shorewall/common
+# $Id: common,v 1.1 2003/09/15 13:11:49 doros Exp $
+
+. /etc/shorewall/common.def
+#
+# The following rule is non-standard and compensates for tardy
+# DNS replies
+#
+run_iptables -A common -p udp --sport 53 -mstate --state NEW -j DROP
+

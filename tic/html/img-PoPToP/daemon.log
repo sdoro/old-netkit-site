@@ -1,0 +1,474 @@
+Apr 30 21:17:41 localhost init: Entering runlevel: 2
+Apr 30 21:17:41 localhost inetd[518]: Online and ready (1 sockets)
+Apr 30 21:17:41 localhost pptpd[524]: CTRL: BCrelay incoming interface is eth1
+Apr 30 21:17:41 localhost pptpd[525]: CTRL (BCrelay Launcher): Launching BCrelay with pid 0
+Apr 30 21:17:41 localhost pptpd[525]: MGR: BCrelay incoming interface is eth1
+Apr 30 21:17:41 localhost pptpd[525]: MGR: BCrelay outgoing interface is regexp ppp[0-9].*
+Apr 30 21:17:41 localhost bcrelay[525]: Running as child 
+Apr 30 21:17:41 localhost pptpd[524]: MGR: Manager process started
+Apr 30 21:17:41 localhost pptpd[524]: MGR: Maximum of 9 connections available
+Apr 30 21:31:01 localhost pptpd[2026]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:31:01 localhost pptpd[2026]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:31:01 localhost pppd[2027]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:31:01 localhost pppd[2027]: pptpd-logwtmp: $Version$
+Apr 30 21:31:01 localhost pppd[2027]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:31:01 localhost pppd[2027]: using channel 1
+Apr 30 21:31:01 localhost pppd[2027]: Using interface ppp0
+Apr 30 21:31:01 localhost pppd[2027]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:31:01 localhost pppd[2027]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x750adf0d> <pcomp> <accomp>]
+Apr 30 21:31:01 localhost pptpd[2026]: GRE: Bad checksum from pppd.
+Apr 30 21:31:01 localhost pppd[2027]: rcvd [LCP ConfReq id=0x0 <mru 1400> <magic 0x9ed60f3> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:31:01 localhost pppd[2027]: sent [LCP ConfRej id=0x0 <callback CBCP>]
+Apr 30 21:31:01 localhost pppd[2027]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x9ed60f3> <pcomp> <accomp>]
+Apr 30 21:31:01 localhost pppd[2027]: sent [LCP ConfAck id=0x1 <mru 1400> <magic 0x9ed60f3> <pcomp> <accomp>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x750adf0d> <pcomp> <accomp>]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x750adf0d> <pcomp> <accomp>]
+Apr 30 21:31:04 localhost pptpd[2026]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x750adf0d> <pcomp> <accomp>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [LCP EchoReq id=0x0 magic=0x750adf0d]
+Apr 30 21:31:04 localhost pppd[2027]: sent [CHAP Challenge id=0xc8 <94264a1a6346b3ca46db1ea9ec806a42>, name = "nk4tic"]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [LCP code=0xc id=0x2 09 ed 60 f3 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:31:04 localhost pppd[2027]: sent [LCP CodeRej id=0x3 0c 02 00 12 09 ed 60 f3 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [LCP code=0xc id=0x3 09 ed 60 f3 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:31:04 localhost pppd[2027]: sent [LCP CodeRej id=0x4 0c 03 00 1b 09 ed 60 f3 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [LCP EchoRep id=0x0 magic=0x9ed60f3]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [CHAP Response id=0xc8 <b21805cd65a8abfa52840147982bfa1b00000000000000004b01b6d7b87c022acee7e0c53013bb46001060f875a2390600>, name = "nk4tic"]
+Apr 30 21:31:04 localhost pppd[2027]: Warning - secret file /etc/ppp/chap-secrets has world and/or group access
+Apr 30 21:31:04 localhost pppd[2027]: sent [CHAP Success id=0xc8 "S=8B4F17B17C502AC6B9BD3EDC9994CE9057142310 M=Access granted"]
+Apr 30 21:31:04 localhost pppd[2027]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [CCP ConfReq id=0x4 <mppe +H +M +S +L -D +C>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [CCP ConfRej id=0x4 <mppe +H +M +S +L -D +C>]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [IPCP ConfReq id=0x5 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [IPCP ConfRej id=0x5 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [CCP ConfReq id=0x2]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:31:04 localhost pppd[2027]: sent [IPCP ConfReq id=0x2 <addr 192.168.1.254>]
+Apr 30 21:31:04 localhost pppd[2027]: rcvd [LCP TermReq id=0x6 09 ed 60 f3 00 3c cd 74 00 00 02 e6]
+Apr 30 21:31:04 localhost pppd[2027]: LCP terminated by peer (^IM-m`M-s^@<M-Mt^@^@^BM-f)
+Apr 30 21:31:04 localhost pppd[2027]: sent [LCP TermAck id=0x6]
+Apr 30 21:31:04 localhost pptpd[2026]: CTRL: Reaping child PPP[2027]
+Apr 30 21:31:04 localhost pppd[2027]: Modem hangup
+Apr 30 21:31:04 localhost pppd[2027]: Connection terminated.
+Apr 30 21:31:04 localhost pppd[2027]: Connect time 0.1 minutes.
+Apr 30 21:31:04 localhost pppd[2027]: Sent 92 bytes, received 78 bytes.
+Apr 30 21:31:04 localhost pppd[2027]: Connect time 0.1 minutes.
+Apr 30 21:31:04 localhost pppd[2027]: Sent 92 bytes, received 78 bytes.
+Apr 30 21:31:04 localhost pppd[2027]: Exit.
+Apr 30 21:31:04 localhost pptpd[2026]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:35:25 localhost pptpd[2029]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:35:25 localhost pptpd[2029]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:35:25 localhost pppd[2030]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:35:25 localhost pppd[2030]: pptpd-logwtmp: $Version$
+Apr 30 21:35:25 localhost pppd[2030]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:35:25 localhost pppd[2030]: using channel 2
+Apr 30 21:35:25 localhost pppd[2030]: Using interface ppp0
+Apr 30 21:35:25 localhost pppd[2030]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:35:25 localhost pppd[2030]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x68e78535> <pcomp> <accomp>]
+Apr 30 21:35:25 localhost pptpd[2029]: GRE: Bad checksum from pppd.
+Apr 30 21:35:25 localhost pppd[2030]: rcvd [LCP ConfReq id=0x0 <mru 1400> <magic 0x289944e4> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:35:25 localhost pppd[2030]: sent [LCP ConfRej id=0x0 <callback CBCP>]
+Apr 30 21:35:25 localhost pppd[2030]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x289944e4> <pcomp> <accomp>]
+Apr 30 21:35:25 localhost pppd[2030]: sent [LCP ConfAck id=0x1 <mru 1400> <magic 0x289944e4> <pcomp> <accomp>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x68e78535> <pcomp> <accomp>]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x68e78535> <pcomp> <accomp>]
+Apr 30 21:35:28 localhost pptpd[2029]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x68e78535> <pcomp> <accomp>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [LCP EchoReq id=0x0 magic=0x68e78535]
+Apr 30 21:35:28 localhost pppd[2030]: sent [CHAP Challenge id=0xb8 <a78684af7ee0097342002b255aeb597d>, name = "nk4tic"]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [LCP code=0xc id=0x2 28 99 44 e4 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:35:28 localhost pppd[2030]: sent [LCP CodeRej id=0x3 0c 02 00 12 28 99 44 e4 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [LCP code=0xc id=0x3 28 99 44 e4 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:35:28 localhost pppd[2030]: sent [LCP CodeRej id=0x4 0c 03 00 1b 28 99 44 e4 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [LCP EchoRep id=0x0 magic=0x289944e4]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [CHAP Response id=0xb8 <3995083e00fccf3cf344da0b8e97d2d20000000000000000325f56110252f54cd34928eb901e96b7f1fa9d13784ac5b200>, name = "nk4tic"]
+Apr 30 21:35:28 localhost pppd[2030]: Warning - secret file /etc/ppp/chap-secrets has world and/or group access
+Apr 30 21:35:28 localhost pppd[2030]: sent [CHAP Success id=0xb8 "S=0BB28196F6B5AB9DAE99814871061C56CC8F04A4 M=Access granted"]
+Apr 30 21:35:28 localhost pppd[2030]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [CCP ConfReq id=0x4 <mppe +H +M +S +L -D +C>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [CCP ConfRej id=0x4 <mppe +H +M +S +L -D +C>]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [IPCP ConfReq id=0x5 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [IPCP ConfRej id=0x5 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:35:28 localhost pppd[2030]: sent [CCP ConfReq id=0x2]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [LCP TermReq id=0x6 "(\37777777631D\37777777744\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:35:28 localhost pppd[2030]: LCP terminated by peer ((M-^YDM-d^@<M-Mt^@^@^BM-f)
+Apr 30 21:35:28 localhost pppd[2030]: sent [LCP TermAck id=0x6]
+Apr 30 21:35:28 localhost pppd[2030]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:35:28 localhost pppd[2030]: Discarded non-LCP packet when LCP not open
+Apr 30 21:35:28 localhost pptpd[2029]: CTRL: Reaping child PPP[2030]
+Apr 30 21:35:28 localhost pppd[2030]: Modem hangup
+Apr 30 21:35:28 localhost pppd[2030]: Connection terminated.
+Apr 30 21:35:28 localhost pppd[2030]: Connect time 0.1 minutes.
+Apr 30 21:35:28 localhost pppd[2030]: Sent 82 bytes, received 78 bytes.
+Apr 30 21:35:28 localhost pppd[2030]: Connect time 0.1 minutes.
+Apr 30 21:35:28 localhost pppd[2030]: Sent 82 bytes, received 78 bytes.
+Apr 30 21:35:28 localhost pppd[2030]: Exit.
+Apr 30 21:35:28 localhost pptpd[2029]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:36:30 localhost pptpd[2033]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:36:30 localhost pptpd[2033]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:36:30 localhost pppd[2034]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:36:30 localhost pppd[2034]: pptpd-logwtmp: $Version$
+Apr 30 21:36:30 localhost pppd[2034]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:36:30 localhost pptpd[2033]: GRE: Bad checksum from pppd.
+Apr 30 21:36:30 localhost pppd[2034]: using channel 3
+Apr 30 21:36:30 localhost pppd[2034]: Using interface ppp0
+Apr 30 21:36:30 localhost pppd[2034]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:36:30 localhost pppd[2034]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0xaaa4134a> <pcomp> <accomp>]
+Apr 30 21:36:30 localhost pppd[2034]: rcvd [LCP ConfNak id=0x0 <magic 0xd31395f>]
+Apr 30 21:36:30 localhost pppd[2034]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:36:30 localhost pppd[2034]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0xaaa4134a> <pcomp> <accomp>]
+Apr 30 21:36:30 localhost pppd[2034]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0xaaa4134a> <pcomp> <accomp>]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x5c9b2c84> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [LCP ConfRej id=0x1 <callback CBCP>]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [LCP ConfReq id=0x2 <mru 1400> <magic 0x5c9b2c84> <pcomp> <accomp>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [LCP ConfAck id=0x2 <mru 1400> <magic 0x5c9b2c84> <pcomp> <accomp>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [LCP EchoReq id=0x0 magic=0xaaa4134a]
+Apr 30 21:36:32 localhost pppd[2034]: sent [CHAP Challenge id=0x4e <076b09a2768133bfd8bca132ecb2c4ba>, name = "nk4tic"]
+Apr 30 21:36:32 localhost pptpd[2033]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [LCP code=0xc id=0x3 5c 9b 2c 84 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:36:32 localhost pppd[2034]: sent [LCP CodeRej id=0x3 0c 03 00 12 5c 9b 2c 84 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [LCP code=0xc id=0x4 5c 9b 2c 84 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:36:32 localhost pppd[2034]: sent [LCP CodeRej id=0x4 0c 04 00 1b 5c 9b 2c 84 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [LCP EchoRep id=0x0 magic=0x5c9b2c84]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [CHAP Response id=0x4e <78ebea78fdc8f05f331ef01bb02e986f0000000000000000021ca86e7ac248bb94540fe5c8126cc43894c48490fd2b9500>, name = "nk4tic"]
+Apr 30 21:36:32 localhost pppd[2034]: Warning - secret file /etc/ppp/chap-secrets has world and/or group access
+Apr 30 21:36:32 localhost pppd[2034]: sent [CHAP Success id=0x4e "S=6424340C464F2ADD083E0A21DBA01391DEB3869F M=Access granted"]
+Apr 30 21:36:32 localhost pppd[2034]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [CCP ConfReq id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [CCP ConfRej id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [IPCP ConfReq id=0x6 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [IPCP ConfRej id=0x6 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:36:32 localhost pppd[2034]: sent [CCP ConfReq id=0x2]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [LCP TermReq id=0x7 "\\\37777777633,\37777777604\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:36:32 localhost pppd[2034]: LCP terminated by peer (\M-^[,M-^D^@<M-Mt^@^@^BM-f)
+Apr 30 21:36:32 localhost pppd[2034]: sent [LCP TermAck id=0x7]
+Apr 30 21:36:32 localhost pppd[2034]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:36:32 localhost pppd[2034]: Discarded non-LCP packet when LCP not open
+Apr 30 21:36:33 localhost pptpd[2033]: CTRL: Reaping child PPP[2034]
+Apr 30 21:36:33 localhost pppd[2034]: Modem hangup
+Apr 30 21:36:33 localhost pppd[2034]: Connection terminated.
+Apr 30 21:36:33 localhost pppd[2034]: Connect time 0.1 minutes.
+Apr 30 21:36:33 localhost pppd[2034]: Sent 82 bytes, received 78 bytes.
+Apr 30 21:36:33 localhost pppd[2034]: Connect time 0.1 minutes.
+Apr 30 21:36:33 localhost pppd[2034]: Sent 82 bytes, received 78 bytes.
+Apr 30 21:36:33 localhost pppd[2034]: Exit.
+Apr 30 21:36:33 localhost pptpd[2033]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:37:33 localhost pptpd[2036]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:37:33 localhost pptpd[2036]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:37:34 localhost pppd[2037]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:37:34 localhost pppd[2037]: pptpd-logwtmp: $Version$
+Apr 30 21:37:34 localhost pppd[2037]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:37:34 localhost pptpd[2036]: GRE: Bad checksum from pppd.
+Apr 30 21:37:34 localhost pppd[2037]: using channel 4
+Apr 30 21:37:34 localhost pppd[2037]: Using interface ppp0
+Apr 30 21:37:34 localhost pppd[2037]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:37:34 localhost pppd[2037]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x2831527a> <pcomp> <accomp>]
+Apr 30 21:37:34 localhost pppd[2037]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:37:34 localhost pppd[2037]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x2831527a> <pcomp> <accomp>]
+Apr 30 21:37:34 localhost pppd[2037]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x2831527a> <pcomp> <accomp>]
+Apr 30 21:37:35 localhost pptpd[524]: CTRL: Closing child BCrelay with pid 525
+Apr 30 21:37:35 localhost pptpd[2044]: CTRL: BCrelay incoming interface is eth1
+Apr 30 21:37:35 localhost pptpd[2045]: CTRL (BCrelay Launcher): Launching BCrelay with pid 0
+Apr 30 21:37:35 localhost pptpd[2045]: MGR: BCrelay incoming interface is eth1
+Apr 30 21:37:35 localhost pptpd[2045]: MGR: BCrelay outgoing interface is regexp ppp[0-9].*
+Apr 30 21:37:35 localhost bcrelay[2045]: Running as child 
+Apr 30 21:37:35 localhost pptpd[2044]: MGR: Manager process started
+Apr 30 21:37:35 localhost pptpd[2044]: MGR: Maximum of 9 connections available
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [LCP ConfReq id=0x2 <mru 1400> <magic 0x46193f30> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:37:36 localhost pppd[2037]: sent [LCP ConfRej id=0x2 <callback CBCP>]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [LCP ConfReq id=0x3 <mru 1400> <magic 0x46193f30> <pcomp> <accomp>]
+Apr 30 21:37:36 localhost pppd[2037]: sent [LCP ConfAck id=0x3 <mru 1400> <magic 0x46193f30> <pcomp> <accomp>]
+Apr 30 21:37:36 localhost pppd[2037]: sent [LCP EchoReq id=0x0 magic=0x2831527a]
+Apr 30 21:37:36 localhost pppd[2037]: sent [CHAP Challenge id=0x8a <7c3cf6310ef80ea06e65be2dc0c661b1>, name = "nk4tic"]
+Apr 30 21:37:36 localhost pptpd[2036]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [LCP code=0xc id=0x4 46 19 3f 30 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:37:36 localhost pppd[2037]: sent [LCP CodeRej id=0x3 0c 04 00 12 46 19 3f 30 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [LCP code=0xc id=0x5 46 19 3f 30 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:37:36 localhost pppd[2037]: sent [LCP CodeRej id=0x4 0c 05 00 1b 46 19 3f 30 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [LCP EchoRep id=0x0 magic=0x46193f30]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [CHAP Response id=0x8a <b2889fcec1d3c8ee3a1340f321ab010100000000000000000609aeace282e18c801e2572324261f2c1cdf4b819fc9fa200>, name = "nk4tic"]
+Apr 30 21:37:36 localhost pppd[2037]: sent [CHAP Success id=0x8a "S=3204683A21EDB41B98EE79BBDF8BC2A7C4F446A3 M=Access granted"]
+Apr 30 21:37:36 localhost pppd[2037]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:37:36 localhost pppd[2037]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [CCP ConfReq id=0x6 <mppe +H +M +S +L -D +C>]
+Apr 30 21:37:36 localhost pppd[2037]: sent [CCP ConfRej id=0x6 <mppe +H +M +S +L -D +C>]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [IPCP ConfReq id=0x7 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:37:36 localhost pppd[2037]: sent [IPCP ConfRej id=0x7 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [LCP TermReq id=0x8 "F\031?0\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:37:36 localhost pppd[2037]: LCP terminated by peer (F^Y?0^@<M-Mt^@^@^BM-f)
+Apr 30 21:37:36 localhost pppd[2037]: sent [LCP TermAck id=0x8]
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:37:36 localhost pppd[2037]: Discarded non-LCP packet when LCP not open
+Apr 30 21:37:36 localhost pppd[2037]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:37:36 localhost pppd[2037]: Discarded non-LCP packet when LCP not open
+Apr 30 21:37:36 localhost pptpd[2036]: CTRL: Reaping child PPP[2037]
+Apr 30 21:37:36 localhost pppd[2037]: Modem hangup
+Apr 30 21:37:36 localhost pppd[2037]: Connection terminated.
+Apr 30 21:37:36 localhost pppd[2037]: Connect time 0.1 minutes.
+Apr 30 21:37:36 localhost pppd[2037]: Sent 78 bytes, received 78 bytes.
+Apr 30 21:37:36 localhost pppd[2037]: Connect time 0.1 minutes.
+Apr 30 21:37:36 localhost pppd[2037]: Sent 78 bytes, received 78 bytes.
+Apr 30 21:37:36 localhost pppd[2037]: Exit.
+Apr 30 21:37:36 localhost pptpd[2036]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:38:06 localhost pptpd[2049]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:38:06 localhost pptpd[2049]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:38:07 localhost pppd[2050]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:38:07 localhost pppd[2050]: pptpd-logwtmp: $Version$
+Apr 30 21:38:07 localhost pppd[2050]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:38:07 localhost pptpd[2049]: GRE: Bad checksum from pppd.
+Apr 30 21:38:07 localhost pppd[2050]: using channel 5
+Apr 30 21:38:07 localhost pppd[2050]: Using interface ppp0
+Apr 30 21:38:07 localhost pppd[2050]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:38:07 localhost pppd[2050]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x89fef42f> <pcomp> <accomp>]
+Apr 30 21:38:07 localhost pppd[2050]: rcvd [LCP ConfNak id=0x0 <magic 0x46ae5464>]
+Apr 30 21:38:07 localhost pppd[2050]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:38:07 localhost pppd[2050]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x89fef42f> <pcomp> <accomp>]
+Apr 30 21:38:07 localhost pppd[2050]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x89fef42f> <pcomp> <accomp>]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x2cf74a5d> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [LCP ConfRej id=0x1 <callback CBCP>]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [LCP ConfReq id=0x2 <mru 1400> <magic 0x2cf74a5d> <pcomp> <accomp>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [LCP ConfAck id=0x2 <mru 1400> <magic 0x2cf74a5d> <pcomp> <accomp>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [LCP EchoReq id=0x0 magic=0x89fef42f]
+Apr 30 21:38:09 localhost pppd[2050]: sent [CHAP Challenge id=0xf7 <8ac4b22e53012b65687782f8a777f877>, name = "nk4tic"]
+Apr 30 21:38:09 localhost pptpd[2049]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [LCP code=0xc id=0x3 2c f7 4a 5d 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:38:09 localhost pppd[2050]: sent [LCP CodeRej id=0x3 0c 03 00 12 2c f7 4a 5d 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [LCP code=0xc id=0x4 2c f7 4a 5d 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:38:09 localhost pppd[2050]: sent [LCP CodeRej id=0x4 0c 04 00 1b 2c f7 4a 5d 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [LCP EchoRep id=0x0 magic=0x2cf74a5d]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [CHAP Response id=0xf7 <68883a39c6468cdfbf651796dd1b62e10000000000000000f688c23c5750497e70c9a908b705c0b3d64d84ed4ad1f25400>, name = "nk4tic"]
+Apr 30 21:38:09 localhost pppd[2050]: sent [CHAP Success id=0xf7 "S=B67151C7009FCF5ED5702C4A1BE3490124A6C69F M=Access granted"]
+Apr 30 21:38:09 localhost pppd[2050]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [CCP ConfReq id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [CCP ConfRej id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [IPCP ConfReq id=0x6 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [IPCP ConfRej id=0x6 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [CCP ConfReq id=0x2]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:38:09 localhost pppd[2050]: sent [IPCP ConfReq id=0x2 <addr 192.168.1.254>]
+Apr 30 21:38:09 localhost pppd[2050]: rcvd [LCP TermReq id=0x7 ",\37777777767J]\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:38:09 localhost pppd[2050]: LCP terminated by peer (,M-wJ]^@<M-Mt^@^@^BM-f)
+Apr 30 21:38:09 localhost pppd[2050]: sent [LCP TermAck id=0x7]
+Apr 30 21:38:09 localhost pptpd[2049]: CTRL: Reaping child PPP[2050]
+Apr 30 21:38:09 localhost pppd[2050]: Modem hangup
+Apr 30 21:38:09 localhost pppd[2050]: Connection terminated.
+Apr 30 21:38:09 localhost pppd[2050]: Connect time 0.1 minutes.
+Apr 30 21:38:09 localhost pppd[2050]: Sent 92 bytes, received 78 bytes.
+Apr 30 21:38:09 localhost pppd[2050]: Connect time 0.1 minutes.
+Apr 30 21:38:09 localhost pppd[2050]: Sent 92 bytes, received 78 bytes.
+Apr 30 21:38:09 localhost pppd[2050]: Exit.
+Apr 30 21:38:09 localhost pptpd[2049]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:40:57 localhost pptpd[2051]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:40:57 localhost pptpd[2051]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:40:57 localhost pppd[2052]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:40:57 localhost pppd[2052]: pptpd-logwtmp: $Version$
+Apr 30 21:40:57 localhost pppd[2052]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:40:57 localhost pppd[2052]: using channel 6
+Apr 30 21:40:57 localhost pppd[2052]: Using interface ppp0
+Apr 30 21:40:57 localhost pppd[2052]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:40:57 localhost pppd[2052]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x3098c6b7> <pcomp> <accomp>]
+Apr 30 21:40:57 localhost pptpd[2051]: GRE: Bad checksum from pppd.
+Apr 30 21:40:57 localhost pppd[2052]: rcvd [LCP ConfReq id=0x0 <mru 1400> <magic 0x26753af1> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:40:57 localhost pppd[2052]: sent [LCP ConfRej id=0x0 <callback CBCP>]
+Apr 30 21:40:57 localhost pppd[2052]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x26753af1> <pcomp> <accomp>]
+Apr 30 21:40:57 localhost pppd[2052]: sent [LCP ConfAck id=0x1 <mru 1400> <magic 0x26753af1> <pcomp> <accomp>]
+Apr 30 21:41:00 localhost pppd[2052]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0x3098c6b7> <pcomp> <accomp>]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:41:00 localhost pppd[2052]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x3098c6b7> <pcomp> <accomp>]
+Apr 30 21:41:00 localhost pptpd[2051]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0x3098c6b7> <pcomp> <accomp>]
+Apr 30 21:41:00 localhost pppd[2052]: sent [LCP EchoReq id=0x0 magic=0x3098c6b7]
+Apr 30 21:41:00 localhost pppd[2052]: sent [CHAP Challenge id=0x1f <74f53fe5f859144578ca2ea8eef9deaf>, name = "nk4tic"]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [LCP code=0xc id=0x2 26 75 3a f1 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:41:00 localhost pppd[2052]: sent [LCP CodeRej id=0x3 0c 02 00 12 26 75 3a f1 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [LCP code=0xc id=0x3 26 75 3a f1 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:41:00 localhost pppd[2052]: sent [LCP CodeRej id=0x4 0c 03 00 1b 26 75 3a f1 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [LCP EchoRep id=0x0 magic=0x26753af1]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [CHAP Response id=0x1f <73938e5d6fbe923ddab728b4eac68c8a000000000000000023d1c00bb22f26362cab21643a90145f39aff0cf6fa0d4db00>, name = "nk4tic"]
+Apr 30 21:41:00 localhost pppd[2052]: sent [CHAP Success id=0x1f "S=8986F9EB9354AF761F7F75D69CFCF1DEF1F67B12 M=Access granted"]
+Apr 30 21:41:00 localhost pppd[2052]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:41:00 localhost pppd[2052]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [CCP ConfReq id=0x4 <mppe +H +M +S +L -D +C>]
+Apr 30 21:41:00 localhost pppd[2052]: sent [CCP ConfRej id=0x4 <mppe +H +M +S +L -D +C>]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [IPCP ConfReq id=0x5 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:41:00 localhost pppd[2052]: sent [IPCP ConfRej id=0x5 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [LCP TermReq id=0x6 "&u:\37777777761\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:41:00 localhost pppd[2052]: LCP terminated by peer (&u:M-q^@<M-Mt^@^@^BM-f)
+Apr 30 21:41:00 localhost pppd[2052]: sent [LCP TermAck id=0x6]
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:41:00 localhost pppd[2052]: Discarded non-LCP packet when LCP not open
+Apr 30 21:41:00 localhost pppd[2052]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:41:00 localhost pppd[2052]: Discarded non-LCP packet when LCP not open
+Apr 30 21:41:00 localhost pptpd[2051]: CTRL: Reaping child PPP[2052]
+Apr 30 21:41:00 localhost pppd[2052]: Modem hangup
+Apr 30 21:41:00 localhost pppd[2052]: Connection terminated.
+Apr 30 21:41:00 localhost pppd[2052]: Connect time 0.1 minutes.
+Apr 30 21:41:00 localhost pppd[2052]: Sent 78 bytes, received 78 bytes.
+Apr 30 21:41:00 localhost pppd[2052]: Connect time 0.1 minutes.
+Apr 30 21:41:00 localhost pppd[2052]: Sent 78 bytes, received 78 bytes.
+Apr 30 21:41:00 localhost pppd[2052]: Exit.
+Apr 30 21:41:00 localhost pptpd[2051]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:42:01 localhost pptpd[2053]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:42:01 localhost pptpd[2053]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:42:02 localhost pppd[2054]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:42:02 localhost pppd[2054]: pptpd-logwtmp: $Version$
+Apr 30 21:42:02 localhost pppd[2054]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:42:02 localhost pptpd[2053]: GRE: Bad checksum from pppd.
+Apr 30 21:42:02 localhost pppd[2054]: using channel 7
+Apr 30 21:42:02 localhost pppd[2054]: Using interface ppp0
+Apr 30 21:42:02 localhost pppd[2054]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:42:02 localhost pppd[2054]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0xc63a9ab> <pcomp> <accomp>]
+Apr 30 21:42:02 localhost pppd[2054]: rcvd [LCP ConfNak id=0x0 <magic 0x6e9b35ee>]
+Apr 30 21:42:02 localhost pppd[2054]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:42:02 localhost pppd[2054]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0xc63a9ab> <pcomp> <accomp>]
+Apr 30 21:42:02 localhost pppd[2054]: rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <auth chap MS-v2> <magic 0xc63a9ab> <pcomp> <accomp>]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x5b7b4171> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:42:04 localhost pppd[2054]: sent [LCP ConfRej id=0x1 <callback CBCP>]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [LCP ConfReq id=0x2 <mru 1400> <magic 0x5b7b4171> <pcomp> <accomp>]
+Apr 30 21:42:04 localhost pppd[2054]: sent [LCP ConfAck id=0x2 <mru 1400> <magic 0x5b7b4171> <pcomp> <accomp>]
+Apr 30 21:42:04 localhost pptpd[2053]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:42:04 localhost pppd[2054]: sent [LCP EchoReq id=0x0 magic=0xc63a9ab]
+Apr 30 21:42:04 localhost pppd[2054]: sent [CHAP Challenge id=0xcd <32b38f5d3eabc6c39cfc1e8c1d60999b>, name = "nk4tic"]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [LCP code=0xc id=0x3 5b 7b 41 71 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:42:04 localhost pppd[2054]: sent [LCP CodeRej id=0x3 0c 03 00 12 5b 7b 41 71 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [LCP code=0xc id=0x4 5b 7b 41 71 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:42:04 localhost pppd[2054]: sent [LCP CodeRej id=0x4 0c 04 00 1b 5b 7b 41 71 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [LCP EchoRep id=0x0 magic=0x5b7b4171]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [CHAP Response id=0xcd <9f7aabf613a35ac9fb903f470b2b53f10000000000000000898f620dd6f335089eb355bf5e19bb5c1dd34a097fee124c00>, name = "nk4tic"]
+Apr 30 21:42:04 localhost pppd[2054]: sent [CHAP Success id=0xcd "S=F2591B3F110B3EB4079F5C96BAE082827A08B9CC M=Access granted"]
+Apr 30 21:42:04 localhost pppd[2054]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:42:04 localhost pppd[2054]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [CCP ConfReq id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:42:04 localhost pppd[2054]: sent [CCP ConfRej id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [IPCP ConfReq id=0x6 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:42:04 localhost pppd[2054]: sent [IPCP ConfRej id=0x6 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [LCP TermReq id=0x7 "[{Aq\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:42:04 localhost pppd[2054]: LCP terminated by peer ([{Aq^@<M-Mt^@^@^BM-f)
+Apr 30 21:42:04 localhost pppd[2054]: sent [LCP TermAck id=0x7]
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [CCP ConfRej id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:42:04 localhost pppd[2054]: Discarded non-LCP packet when LCP not open
+Apr 30 21:42:04 localhost pppd[2054]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:42:04 localhost pppd[2054]: Discarded non-LCP packet when LCP not open
+Apr 30 21:42:04 localhost pptpd[2053]: CTRL: Reaping child PPP[2054]
+Apr 30 21:42:04 localhost pppd[2054]: Modem hangup
+Apr 30 21:42:04 localhost pppd[2054]: Connection terminated.
+Apr 30 21:42:04 localhost pppd[2054]: Connect time 0.1 minutes.
+Apr 30 21:42:04 localhost pppd[2054]: Sent 78 bytes, received 78 bytes.
+Apr 30 21:42:04 localhost pppd[2054]: Connect time 0.1 minutes.
+Apr 30 21:42:04 localhost pppd[2054]: Sent 78 bytes, received 78 bytes.
+Apr 30 21:42:04 localhost pppd[2054]: Exit.
+Apr 30 21:42:04 localhost pptpd[2053]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:43:05 localhost pptpd[2062]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:43:05 localhost pptpd[2062]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:43:05 localhost pppd[2063]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:43:05 localhost pppd[2063]: pptpd-logwtmp: $Version$
+Apr 30 21:43:05 localhost pptpd[2062]: GRE: Bad checksum from pppd.
+Apr 30 21:43:05 localhost pppd[2063]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:43:05 localhost pppd[2063]: using channel 8
+Apr 30 21:43:05 localhost pppd[2063]: Using interface ppp0
+Apr 30 21:43:05 localhost pppd[2063]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:43:05 localhost pppd[2063]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth eap> <magic 0xecdd84f5> <pcomp> <accomp>]
+Apr 30 21:43:05 localhost pppd[2063]: rcvd [LCP ConfNak id=0x1 <magic 0x3c236009>]
+Apr 30 21:43:05 localhost pppd[2063]: sent [LCP ConfReq id=0x2 <asyncmap 0x0> <auth eap> <magic 0x2f97d679> <pcomp> <accomp>]
+Apr 30 21:43:05 localhost pppd[2063]: rcvd [LCP ConfNak id=0x1 <auth chap MS-v2>]
+Apr 30 21:43:05 localhost pppd[2063]: rcvd [LCP ConfNak id=0x2 <auth chap MS>]
+Apr 30 21:43:05 localhost pppd[2063]: sent [LCP ConfReq id=0x3 <asyncmap 0x0> <auth chap MS> <magic 0x2f97d679> <pcomp> <accomp>]
+Apr 30 21:43:05 localhost pppd[2063]: rcvd [LCP ConfAck id=0x3 <asyncmap 0x0> <auth chap MS> <magic 0x2f97d679> <pcomp> <accomp>]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [LCP ConfReq id=0x2 <mru 1400> <magic 0x44106103> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:43:07 localhost pppd[2063]: sent [LCP ConfRej id=0x2 <callback CBCP>]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [LCP ConfReq id=0x3 <mru 1400> <magic 0x44106103> <pcomp> <accomp>]
+Apr 30 21:43:07 localhost pppd[2063]: sent [LCP ConfAck id=0x3 <mru 1400> <magic 0x44106103> <pcomp> <accomp>]
+Apr 30 21:43:07 localhost pptpd[2062]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:43:07 localhost pppd[2063]: sent [LCP EchoReq id=0x0 magic=0x2f97d679]
+Apr 30 21:43:07 localhost pppd[2063]: sent [CHAP Challenge id=0x4c <e8c66280710c0793>, name = "nk4tic"]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [LCP code=0xc id=0x4 44 10 61 03 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:43:07 localhost pppd[2063]: sent [LCP CodeRej id=0x4 0c 04 00 12 44 10 61 03 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [LCP code=0xc id=0x5 44 10 61 03 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:43:07 localhost pppd[2063]: sent [LCP CodeRej id=0x5 0c 05 00 1b 44 10 61 03 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [LCP EchoRep id=0x0 magic=0x44106103]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [CHAP Response id=0x4c <00000000000000000000000000000000000000000000000043ac07b390563dbbc3380600bcc2aa1ecacc30b8cc17e1be01>, name = "nk4tic"]
+Apr 30 21:43:07 localhost pppd[2063]: sent [CHAP Success id=0x4c "Access granted"]
+Apr 30 21:43:07 localhost pppd[2063]: sent [CCP ConfReq id=0x1 <deflate 15> <deflate(old#) 15>]
+Apr 30 21:43:07 localhost pppd[2063]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [CCP ConfReq id=0x6 <mppe +H +M +S +L +D +C>]
+Apr 30 21:43:07 localhost pppd[2063]: sent [CCP ConfRej id=0x6 <mppe +H +M +S +L +D +C>]
+Apr 30 21:43:07 localhost pppd[2063]: rcvd [LCP TermReq id=0x8 "D\020a\003\000<\37777777715t\000\000\002\37777777746"]
+Apr 30 21:43:07 localhost pppd[2063]: LCP terminated by peer (D^Pa^C^@<M-Mt^@^@^BM-f)
+Apr 30 21:43:07 localhost pppd[2063]: sent [LCP TermAck id=0x8]
+Apr 30 21:43:07 localhost pptpd[2062]: CTRL: Reaping child PPP[2063]
+Apr 30 21:43:07 localhost pppd[2063]: Modem hangup
+Apr 30 21:43:07 localhost pppd[2063]: Connection terminated.
+Apr 30 21:43:07 localhost pppd[2063]: Connect time 0.1 minutes.
+Apr 30 21:43:07 localhost pppd[2063]: Sent 50 bytes, received 78 bytes.
+Apr 30 21:43:07 localhost pppd[2063]: Connect time 0.1 minutes.
+Apr 30 21:43:07 localhost pppd[2063]: Sent 50 bytes, received 78 bytes.
+Apr 30 21:43:07 localhost pppd[2063]: Exit.
+Apr 30 21:43:07 localhost pptpd[2062]: CTRL: Client 206.124.145.253 control connection finished
+Apr 30 21:43:26 localhost pptpd[2044]: CTRL: Closing child BCrelay with pid 2045
+Apr 30 21:43:26 localhost pptpd[2072]: CTRL: BCrelay incoming interface is eth1
+Apr 30 21:43:26 localhost pptpd[2073]: CTRL (BCrelay Launcher): Launching BCrelay with pid 0
+Apr 30 21:43:26 localhost pptpd[2073]: MGR: BCrelay incoming interface is eth1
+Apr 30 21:43:26 localhost pptpd[2073]: MGR: BCrelay outgoing interface is regexp ppp[0-9].*
+Apr 30 21:43:26 localhost bcrelay[2073]: Running as child 
+Apr 30 21:43:26 localhost pptpd[2072]: MGR: Manager process started
+Apr 30 21:43:26 localhost pptpd[2072]: MGR: Maximum of 9 connections available
+Apr 30 21:43:37 localhost pptpd[2075]: CTRL: Client 206.124.145.253 control connection started
+Apr 30 21:43:37 localhost pptpd[2075]: CTRL: Starting call (launching pppd, opening GRE)
+Apr 30 21:43:37 localhost pppd[2076]: Plugin /usr/lib/pptpd/pptpd-logwtmp.so loaded.
+Apr 30 21:43:37 localhost pppd[2076]: pptpd-logwtmp: $Version$
+Apr 30 21:43:37 localhost pppd[2076]: pppd 2.4.2 started by root, uid 0
+Apr 30 21:43:37 localhost pptpd[2075]: GRE: Bad checksum from pppd.
+Apr 30 21:43:37 localhost pppd[2076]: using channel 9
+Apr 30 21:43:37 localhost pppd[2076]: Using interface ppp0
+Apr 30 21:43:37 localhost pppd[2076]: Connect: ppp0 <--> /dev/ttyp0
+Apr 30 21:43:37 localhost pppd[2076]: sent [LCP ConfReq id=0x1 <asyncmap 0x0> <auth chap MS-v2> <magic 0x7a8cbf03> <pcomp> <accomp>]
+Apr 30 21:43:37 localhost pppd[2076]: rcvd [LCP ConfNak id=0x0 <magic 0x380e07d9>]
+Apr 30 21:43:37 localhost pppd[2076]: rcvd [LCP ConfAck id=0x1 <asyncmap 0x0> <auth chap MS-v2> <magic 0x7a8cbf03> <pcomp> <accomp>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [LCP ConfReq id=0x1 <mru 1400> <magic 0x1e0a6a7a> <pcomp> <accomp> <callback CBCP>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [LCP ConfRej id=0x1 <callback CBCP>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [LCP ConfReq id=0x2 <mru 1400> <magic 0x1e0a6a7a> <pcomp> <accomp>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [LCP ConfAck id=0x2 <mru 1400> <magic 0x1e0a6a7a> <pcomp> <accomp>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [LCP EchoReq id=0x0 magic=0x7a8cbf03]
+Apr 30 21:43:39 localhost pppd[2076]: sent [CHAP Challenge id=0x9b <ddd8b2d02f1c3b8e6c1580a91e9290e0>, name = "nk4tic"]
+Apr 30 21:43:39 localhost pptpd[2075]: CTRL: Ignored a SET LINK INFO packet with real ACCMs!
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [LCP code=0xc id=0x3 1e 0a 6a 7a 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:43:39 localhost pppd[2076]: sent [LCP CodeRej id=0x2 0c 03 00 12 1e 0a 6a 7a 4d 53 52 41 53 56 35 2e 31 30]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [LCP code=0xc id=0x4 1e 0a 6a 7a 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:43:39 localhost pppd[2076]: sent [LCP CodeRej id=0x3 0c 04 00 1b 1e 0a 6a 7a 4d 53 52 41 53 2d 30 2d 51 45 4d 55 2d 58 50 50 53 50 32]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [LCP EchoRep id=0x0 magic=0x1e0a6a7a]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [CHAP Response id=0x9b <f8f3c77e7c82debb2cbecaa02db2482600000000000000001d96fec29acbd041ecb1cecc1c9444590f3ae49b375ed94c00>, name = "nk4tic"]
+Apr 30 21:43:39 localhost pppd[2076]: sent [CHAP Success id=0x9b "S=F1C284F9CAFEF7A34C1700A2A2A49015A1BDD42E M=Access granted"]
+Apr 30 21:43:39 localhost pppd[2076]: sent [CCP ConfReq id=0x1 <mppe +H -M +S -L -D -C>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [CCP ConfReq id=0x5 <mppe +H +M +S +L -D +C>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [CCP ConfNak id=0x5 <mppe +H -M +S -L -D -C>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [IPCP ConfReq id=0x6 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [IPCP TermAck id=0x6]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [CCP ConfAck id=0x1 <mppe +H -M +S -L -D -C>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [CCP ConfReq id=0x7 <mppe +H -M +S -L -D -C>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [CCP ConfAck id=0x7 <mppe +H -M +S -L -D -C>]
+Apr 30 21:43:39 localhost pppd[2076]: MPPE 128-bit stateless compression enabled
+Apr 30 21:43:39 localhost pppd[2076]: sent [IPCP ConfReq id=0x1 <compress VJ 0f 01> <addr 192.168.1.254> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [IPCP ConfRej id=0x1 <compress VJ 0f 01> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+Apr 30 21:43:39 localhost pppd[2076]: sent [IPCP ConfReq id=0x2 <addr 192.168.1.254>]
+Apr 30 21:43:39 localhost pppd[2076]: rcvd [IPCP ConfAck id=0x2 <addr 192.168.1.254>]
+Apr 30 21:43:42 localhost pppd[2076]: rcvd [IPCP ConfReq id=0x8 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:43:42 localhost pppd[2076]: sent [IPCP ConfRej id=0x8 <ms-dns1 0.0.0.0> <ms-wins 0.0.0.0> <ms-dns3 0.0.0.0> <ms-wins 0.0.0.0>]
+Apr 30 21:43:42 localhost pppd[2076]: rcvd [IPCP ConfReq id=0x9 <addr 0.0.0.0>]
+Apr 30 21:43:42 localhost pppd[2076]: sent [IPCP ConfNak id=0x9 <addr 192.168.1.100>]
+Apr 30 21:43:42 localhost pppd[2076]: rcvd [IPCP ConfReq id=0xa <addr 192.168.1.100>]
+Apr 30 21:43:42 localhost pppd[2076]: sent [IPCP ConfAck id=0xa <addr 192.168.1.100>]
+Apr 30 21:43:42 localhost pppd[2076]: found interface eth1 for proxy arp
+Apr 30 21:43:42 localhost pppd[2076]: local  IP address 192.168.1.254
+Apr 30 21:43:42 localhost pppd[2076]: remote IP address 192.168.1.100
+Apr 30 21:43:42 localhost pppd[2076]: pptpd-logwtmp.so ip-up ppp0 nk4tic 206.124.145.253
+Apr 30 21:43:42 localhost pppd[2076]: Script /etc/ppp/ip-up started (pid 2077)
+Apr 30 21:43:43 localhost pppd[2076]: Script /etc/ppp/ip-up finished (pid 2077), status = 0x1

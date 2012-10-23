@@ -1,0 +1,95 @@
+31 Gennaio 2006
+Prova Laboratorio 5SA
+
+Si abbia un database con le due tabelle Impiegati e Dipartimenti.
+La tabella Impiegati ha i seguenti campi:
+  NImp decimale lungo 4
+  Nome alfanumerico lungo 20
+  Mansione alfanumerico lungo 10
+  Data_A data,
+  Stipendio decimale lungo 7 di cui 2 decimali
+  Premio_P decimale lungo 7 di cui 2 decimali
+  NDip decimale lungo 2
+
+La tabella Dipartimenti ha i seguenti campi:
+  NDip decimale lungo 2
+  Nome_Dip alfanumerico lungo 20
+  Ufficio alfanumerico lungo 10
+  Divisione alfanumerico lungo 2
+  Dirigente decimale lungo 4
+
+
+1) Si costruiscano le relative CREATE TABLE
+
+Inserimento
+-----------
+2) Si inserisca le opportune tuple in modo tale che:
+
+select * from Dipartimenti;
++------+-------------------+---------+-----------+-----------+
+| NDip | Nome_Dip          | Ufficio | Divisione | Dirigente |
++------+-------------------+---------+-----------+-----------+
+|   10 | Edilizia Civile   | 1100    | D1        |      7977 |
+|   20 | Ricerche          | 2100    | D3        |      7566 |
+|   30 | Edilizia Stradale | 5100    | D2        |      7698 |
++------+-------------------+---------+-----------+-----------+
+
+select * from Impiegati;   
++------+---------+-----------+------------+-----------+----------+------+
+| NImp | Nome    | Mansione  | Data_A     | Stipendio | Premio_P | NDip |
++------+---------+-----------+------------+-----------+----------+------+
+| 7566 | Rosi    | dirigente | 1981-04-02 |   2975.00 |     NULL |   20 |
+| 7698 | Blacchi | dirigente | 1981-05-01 |   2850.00 |     NULL |   30 |
+| 7782 | Neri    | ingegnere | 1981-06-01 |   2450.00 |   200.00 |   10 |
+| 7977 | Verdi   | dirigente | 1980-12-10 |   3000.00 |     NULL |   10 |
+| 7839 | Dare    | ingegnere | 1981-11-17 |   2600.00 |   300.00 |   10 |
+| 8150 | Turni   | tecnico   | 1982-12-03 |   1500.00 |     NULL |   30 |
+| 8170 | Andrei  | tecnico   | 1983-01-23 |    800.00 |     NULL |   30 |
+| 8182 | Bianchi | tecnico   | 1983-02-11 |    800.00 |     NULL |   30 |
++------+---------+-----------+------------+-----------+----------+------+
+
+
+3)
+Si vuole trovare per ogni impiegato il nome, lo stipendio,
+la mansione, e il nome del dipartimento in cui l'impiegato
+lavora. Inoltre si vuole ordinare le tuple in ordine
+crescente in base al nome del dipartimento, ed in ordine
+decrescente in base allo stipendio
+
+
+Funzioni di gruppo
+------------------
+
+4)
+Si vuole raggruppare gli impiegati in base al numero di
+dipartimento e si vuole determinare il massimo stipendio
+di ogni gruppo.
+
+5)
+Supponiamo di voler ragruppare gli impiegati sulla base del dipartimento
+e della mansione; per ogni gruppo si vuole determinare il nome del
+dipartimento, la somma degli stipendi, quanti impiegati appartengono
+ad ogni gruppo, e la media degli stipendi.
+
+
+Subquery
+--------
+
+6)
+Si vuole elencare tutti gli impiegati che hanno uno stipendio
+superiore alla media degli stipendi di tutti gli impiegati.
+
+
+7)
+Si vuole elencare gli impiegati con la stessa mansione e stipendio
+di Martini.
+
+
+Subquery correlate
+------------------
+
+8)
+Si vogliono determinare gli impiegati che guadagnano piu' dello
+stipendio medio del proprio dipartimento.
+
+

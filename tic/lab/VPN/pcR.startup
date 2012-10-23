@@ -1,0 +1,13 @@
+# $Id: pcR.startup,v 1.2 2008-11-18 14:55:06 doros Exp $
+ifconfig eth1 192.168.77.2
+ifconfig eth0 10.10.20.4 netmask 255.255.255.0 broadcast 10.10.20.255 up
+route add default gw 10.10.20.3
+#
+mkdir /dev/net
+mknod /dev/net/tun c 10 200
+#
+dpkg -i /hostlab/n2n_1.2-1_i386.deb
+#
+edge -d edge0 -m 00:00:00:00:00:02  -a 192.168.1.2 -c netkit -k netkitkey -l 212.1.3.1:7654 -f
+#
+# bot

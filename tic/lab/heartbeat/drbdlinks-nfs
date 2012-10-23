@@ -1,0 +1,234 @@
+#!/usr/bin/env python
+#
+# /etc/ha.d/resource.d/drbdlinks-nfs
+# $Id: drbdlinks-nfs,v 1.1 2005/11/01 20:17:59 doros Exp $
+
+#  Manage a set of links into a DRBD shared directory
+#
+#  Written by: Sean Reifschneider <jafo@tummy.com>
+#  Copyright (c) 2004, tummy.com, ltd.  All Rights Reserved
+
+configFile = '/etc/drbdlinks-nfs.conf'
+
+import os, string, re, sys
+
+#  import optik parser
+try:
+	import optparse
+except ImportError:
+	import optik
+	optparse = optik
+
+
+#######################
+def testConfig(config):  #{{{1
+	allUp = 1
+	for linkLocal, linkDest in config.linkList:
+		suffixName = linkLocal + options.suffix
+		#  check to see if the link is in place  {{{3
+		if not os.path.exists(suffixName):
+			allUp = 0
+			if options.verbose >= 1:
+				print 'testConfig: Original file not present: "%s"' % suffixName
+			continue
+
+	if options.verbose >= 1:
+		print 'testConfig: Returning %s' % allUp
+	return(allUp)
+
+
+###############################
+def loadConfigFile(configFile):  #{{{1
+	class configClass:  #{{{2
+		def __init__(self):  #{{{3
+			self.mountpoint = None
+			self.linkList = []
+			self.useSELinux = 0
+			self.selinuxenabledPath = None
+
+			#  Locate where the selinuxenabled binary is
+			for path in (
+					'/usr/sbin/selinuxenabled',
+					'/sbin/selinuxenabled', ):
+				if os.path.exists(path):
+					self.selinuxenabledPath = path
+					break
+
+			#  auto-detect if SELinux is on
+			if self.selinuxenabledPath:
+				ret = os.system(self.selinuxenabledPath)
+				if ret == 0:
+					self.useSELinux = 1
+
+		def cmd_mountpoint(self, arg):  #{{{3
+			self.mountpoint = arg
+
+		def cmd_link(self, src, dest = None):  #{{{3
+			self.linkList.append(( src, dest ))
+
+		def cmd_selinux(self, enabled = 1):  #{{{3
+			self.useSELinux = enabled
+
+	#  set up config environment  #{{{2
+	config = configClass()
+	namespace = {
+			'mountpoint' : config.cmd_mountpoint,
+			'link' : config.cmd_link,
+			'selinux' : config.cmd_selinux,
+			}
+
+	#  load the file  #{{{2
+	try:
+		execfile(configFile, {}, namespace)
+	except Exception, e:
+		print 'Error in configuration.  See below for details:'
+		raise
+	
+	#  process the data we got
+	if config.mountpoint:
+		config.mountpoint = string.rstrip(config.mountpoint, '/')
+	for i in xrange(len(config.linkList)):
+		if config.linkList[i][1]:
+			arg2 = string.rstrip(config.linkList[i][1], '/')
+		else:
+			if not config.mountpoint:
+				sys.stderr.write('Used link() when no mountpoint() was set in '
+						'config.\n')
+				sys.exit(3)
+			arg2 = string.lstrip(config.linkList[i][0], '/')
+			arg2 = os.path.join(config.mountpoint, arg2)
+		config.linkList[i] = ( string.rstrip(config.linkList[i][0], '/'), arg2 )
+
+	#  return the data  {{{2
+	return(config)
+
+
+#  parse arguments  {{{1
+parser = optparse.OptionParser()
+parser.add_option('-c', '--config-file', dest = 'configFile', type = 'string',
+		default = configFile,
+		help = 'Location of the configuration file.')
+parser.add_option('-s', '--suffix', dest = 'suffix', type = 'string',
+		default = '.drbdlinks',
+		help = 'Name to append to the local file-system name when the link '
+				'is in place.')
+parser.add_option('-v', '--verbose', default = 0,
+		dest = 'verbose', action = 'count',
+		help = 'Increase verbosity level by 1 for every "-v".')
+parser.set_usage('%prog (start|stop|auto|status|monitor)')
+options, args = parser.parse_args()
+configFile = options.configFile
+
+#  figure out what the mode to run in  {{{1
+if len(args) == 1:
+	if args[0] not in ( 'start', 'stop', 'auto', 'monitor', 'status' ):
+		parser.error('Unknown mode "%s", expecting one of '
+				'(start|stop|auto|status|monitor)' % args[0])
+	mode = args[0]
+else:
+	parser.error('Expected exactly one argument to specify the mode.')
+if options.verbose >= 2: print 'Initial mode: "%s"' % mode
+
+#  load config file  {{{1
+try:
+	config = loadConfigFile(configFile)
+except IOError, e:
+	if e.errno == 2:
+		print 'ERROR: Unable to open config file "%s":' % configFile
+		print '  ', str(e)
+		sys.exit(1)
+	raise
+if not config.mountpoint:
+	sys.stderr.write('No mountpoint found in config file.  Aborting.\n')
+	sys.exit(1)
+if not os.path.exists(config.mountpoint):
+	sys.stderr.write('Mountpoint "%s" does not exist.  Aborting.\n'
+			% config.mountpoint)
+	sys.exit(2)
+
+#  if mode is auto, figure out what mode to use  {{{1
+if mode == 'auto':
+	if (os.stat(config.mountpoint).st_dev !=
+			os.stat(os.path.join(config.mountpoint, '..')).st_dev):
+		if options.verbose >= 1:
+			print 'Detected mounted file-system on "%s"' % config.mountpoint
+		mode = 'start'
+	else:
+		mode = 'stop'
+if options.verbose >= 1: print 'Mode: "%s"' % mode
+
+#  set up links  {{{1
+if mode == 'start':
+	for linkLocal, linkDest in config.linkList:
+		suffixName = linkLocal + options.suffix
+		#  check to see if the link is in place  {{{3
+		if os.path.exists(suffixName):
+			if options.verbose >= 1:
+				print 'Skipping, appears to already be linked: "%s"' % linkLocal
+			continue
+
+		#  make the link  {{{3
+		try:
+			if options.verbose >= 2:
+				print 'Renaming "%s" to "%s"' % ( linkLocal, suffixName )
+			os.rename(linkLocal, suffixName)
+		except ( OSError, IOError ), e:
+			sys.stderr.write('Error renaming "%s" to "%s": %s\n'
+					% ( suffixName, linkLocal, str(e) ))
+		try:
+			if options.verbose >= 2:
+				print 'Linking "%s" to "%s"' % ( linkDest, linkLocal )
+			os.symlink(linkDest, linkLocal)
+		except ( OSError, IOError ), e:
+			sys.stderr.write('Error linking "%s" to "%s": %s'
+					% ( linkDest, linkLocal, str(e) ))
+
+		#  set up in SELinux
+		if config.useSELinux:
+			fp = os.popen('ls -d --scontext "%s"' % suffixName, 'r')
+			line = fp.readline()
+			fp.close()
+			if line:
+				line = string.split(line, ' ')[0]
+				seUser, seRole, seType = string.split(line, ':')
+				os.system('chcon -h -u "%s" -r "%s" -t "%s" "%s"'
+						% ( seUser, seRole, seType, linkLocal ))
+
+#  remove links  {{{1
+elif mode == 'stop':
+	for linkLocal, linkDest in config.linkList:
+		suffixName = linkLocal + options.suffix
+		#  check to see if the link is in place  {{{3
+		if not os.path.exists(suffixName):
+			if options.verbose >= 1:
+				print 'Skipping, appears to already be shut down: "%s"' % linkLocal
+			continue
+
+		#  break the link  {{{3
+		try:
+			if options.verbose >= 2:
+				print 'Removing "%s"' % ( linkLocal, )
+			os.remove(linkLocal)
+		except ( OSError, IOError ), e:
+			sys.stderr.write('Error removing "%s": %s\n' % ( linkLocal, str(e) ))
+		try:
+			if options.verbose >= 2:
+				print 'Renaming "%s" to "%s"' % ( suffixName, linkLocal )
+			os.rename(suffixName, linkLocal)
+		except ( OSError, IOError ), e:
+			sys.stderr.write('Error renaming "%s" to "%s": %s\n'
+					% ( suffixName, linkLocal, str(e) ))
+
+#  monitor mode  {{{1
+elif mode == 'monitor':
+	if testConfig(config):
+		print 'OK'
+	else:
+		print 'down'
+
+#  status mode  {{{1
+elif mode == 'status':
+	if testConfig(config):
+		print 'running'
+	else:
+		print 'stopped'

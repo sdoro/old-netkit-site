@@ -1,0 +1,2 @@
+* pdbedit -L -w | cut -d: -f1
+* net groupmap list | cut -d\( -f1

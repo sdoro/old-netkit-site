@@ -1,0 +1,16 @@
+# $Id:$
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#
+ifconfig eth0 hw ether 00:00:00:00:00:01
+ifconfig eth0 0.0.0.0 up
+ifconfig eth0 add 2001:5c0:1101:f701::3/64
+#
+dpkg -i /hostlab/radvd_1.1-3_i386.deb
+# radvd will start if IPv6 forwarding is enabled:
+echo "1" > /proc/sys/net/ipv6/conf/all/forwarding
+#
+/etc/init.d/radvd start
+#
+# bot

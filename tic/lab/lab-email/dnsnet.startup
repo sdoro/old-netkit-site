@@ -1,0 +1,5 @@
+# $Id: dnsnet.startup,v 1.1 2007-01-19 08:46:23 doros Exp $
+/sbin/ifconfig eth0 192.168.0.2 up
+/etc/init.d/bind9 start
+#
+# EOF

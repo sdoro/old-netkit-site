@@ -1,0 +1,20 @@
+# /etc/shorewall/init
+# $Id: init,v 1.1 2005/10/31 11:56:13 doros Exp $
+
+#
+# Add commands below that you want to be executed at the beginning of
+# a "shorewall start" or "shorewall restart" command.
+#
+# For additional information, see
+#   http://shorewall.net/shorewall_extension_scripts.htm
+#
+
+if [ -z "`ip rule list | grep www.out`" ] ; then
+        ip rule add fwmark 0xCA table www.out # Note 0xCA = 202
+        ip route add default via 10.10.10.77 dev eth1 table www.out
+        ip route flush cache
+        echo 0 > /proc/sys/net/ipv4/conf/eth1/send_redirects
+fi
+
+#
+# bot

@@ -1,0 +1,3 @@
+# $Id: auto.smb,v 1.1 2005/01/30 12:51:27 doros Exp $
+
+smb    -fstype=smbfs,rw,guest    ://SRV/public

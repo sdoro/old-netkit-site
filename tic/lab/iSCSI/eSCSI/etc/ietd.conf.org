@@ -1,0 +1,43 @@
+# Example iscsi target configuration
+#
+# Everything until the first target definition belongs
+# to the global configuration.
+# Right now this is only the user configuration used
+# during discovery sessions:
+
+User joe secret
+
+# Targets definitions start with "Target" and the target name.
+# The target name must be a globally unique name, the iSCSI
+# standard defines the "iSCSI Qualified Name" as follows:
+#
+# iqn.yyyy-mm.<reversed domain name>[:identifier]
+#
+# "yyyy-mm" is the date at which the domain is valid and the identifier
+# is freely selectable. For further details please check the iSCSI spec.
+
+Target iqn.2001-04.com.example:storage.disk2.sys1.xyz
+	# Users, who can access this target
+	# (no users means anyone can access the target)
+	User joe secret
+	# Logical unit definition definition
+	# Block devices, regular files, LVM, and RAID can be offered 
+	# to the initiators as a block device.
+	Lun 0 /tmp/file.img fileio
+	# Alias name for this target
+	Alias Test
+	# various iSCSI parameters
+	# (not all are used right now, see also iSCSI spec for details)
+	#MaxConnections		1
+	#InitialR2T		yes
+	#ImmediateData		no
+	#MaxRecvDataSegmentLength 8192
+	#MaxBurstLength		262144
+	#FirstBurstLength	65536
+	#DefaultTime2Wait	2
+	#DefaultTime2Retain	20
+	#MaxOutstandingR2T	8
+	#DataPDUInOrder		yes
+	#DataSequenceInOrder	yes
+	#ErrorRecoveryLevel	0
+	#Wthreads		8

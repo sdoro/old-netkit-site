@@ -1,0 +1,60 @@
+# /etc/ppp/options.pptpd
+# $Id: options.pptpd,v 1.2 2007-02-03 17:21:51 doros Exp $
+
+# Name of the local system for authentication purposes 
+# (must match the second field in /etc/ppp/chap-secrets entries)
+name nk4tic
+
+auth
+
+# rejected protocols
+refuse-pap
+refuse-chap
+refuse-mschap
+
+# Require the peer to authenticate itself using MS-CHAPv2 [Microsoft
+# Challenge Handshake Authentication Protocol, Version 2] authentication.
+require-mschap-v2
+
+# Require MPPE 128-bit encryption
+# (note that MPPE requires the use of MSCHAP-V2 during authentication)
+require-mppe-128
+
+# Link Control Protocol (LCP) options
+#asyncmap 00000000
+
+# Add an entry to this system's ARP [Address Resolution Protocol]
+# table with the IP address of the peer and the Ethernet address of this
+# system.  This will have the effect of making the peer appear to other
+# systems to be on the local ethernet.
+# (you do not need this if your PPTP server is responsible for routing
+# packets to the clients -- James Cameron)
+proxyarp
+
+# Debian: do not replace the default route
+nodefaultroute
+
+# Logging
+
+# Enable connection debugging facilities.
+# (see your syslog configuration for where pppd sends to)
+debug
+
+# Print out all the option values which have been set.
+# (often requested by mailing list to verify options)
+dump
+
+# Miscellaneous
+
+# Create a UUCP-style lock file for the pseudo-tty to ensure exclusive
+# access.
+lock
+
+# Disable BSD-Compress compression
+nobsdcomp
+
+# Disable BSD-Compress compression
+nodeflate
+
+#
+# bot

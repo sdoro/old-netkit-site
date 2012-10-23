@@ -1,0 +1,18 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.5 2007-02-20 15:19:13 doros Exp $
+#
+#ACTION         SOURCE    DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+DNS/ACCEPT      fw        net
+DNS/ACCEPT      dmz       net
+SSH/ACCEPT      loc       fw
+SSH/ACCEPT      loc       dmz
+Ping/ACCEPT     loc       fw
+Ping/ACCEPT     net       fw
+Ping/ACCEPT     dmz       fw
+Ping/ACCEPT     loc       dmz
+Ping/ACCEPT     dmz       loc
+Ping/ACCEPT     net       dmz  # Only with Proxy ARP and
+Ping/ACCEPT     net       loc  # static NAT
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

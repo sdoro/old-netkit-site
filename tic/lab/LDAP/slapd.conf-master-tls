@@ -1,0 +1,71 @@
+# /etc/ldap/slapd.conf
+# $Id: slapd.conf-master-tls,v 1.7 2006/05/13 06:08:01 doros Exp $
+
+# This is the main ldapd configuration file. See slapd.conf(5) for more
+# info on the configuration options.
+
+# Schema and objectClass definitions
+include         /etc/ldap/schema/core.schema
+include         /etc/ldap/schema/cosine.schema
+include         /etc/ldap/schema/nis.schema
+include         /etc/ldap/schema/inetorgperson.schema
+
+# Schema check allows for forcing entries to
+# match schemas for their objectClasses's
+schemacheck     on
+
+# Where the pid file is put. The init.d script
+# will not stop the server if you change this.
+pidfile         /var/run/slapd.pid
+
+# List of arguments that were passed to the server
+argsfile        /var/run/slapd.args
+
+# Where to store the replica logs
+replogfile	/var/lib/ldap/replog
+
+# Read slapd.conf(5) for possible values
+loglevel        256
+
+# Where the dynamically loaded modules are stored
+modulepath  /usr/lib/ldap
+moduleload  back_bdb
+
+#######################################################################
+# Specific Backend Directives for bdb:
+# Backend specific directives apply to this backend until another
+# 'backend' directive occurs
+backend     bdb
+checkpoint 512 30
+
+# The backend type, ldbm, is the default standard
+database        bdb
+
+# The base of your directory
+suffix          "dc=istituto,dc=it"
+
+# Where the database file are physically stored
+directory       "/var/lib/ldap"
+
+# include index
+include /etc/ldap/slapd.index
+
+# Save the time that the entry gets modified
+lastmod on
+
+# Set up replication for entire database to 192.168.50.2. Please note that this
+# does not use a secure connection!
+replica host=rserver:389 tls=yes bindmethod=simple binddn="cn=replicator,ou=DSA,dc=istituto,dc=it" credentials=Zserver
+
+# include ACLs
+include /etc/ldap/slapd.access
+
+# For SSL/TLS authentication
+TLSCertificateFile      /etc/ldap/ldapcert.pem
+TLSCertificateKeyFile   /etc/ldap/ldapkey.pem
+TLSCipherSuite          HIGH
+TLSCACertificateFile    /etc/ldap/cacert.pem
+#TLSVerifyClient         1
+
+#
+# bot

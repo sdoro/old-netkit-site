@@ -1,0 +1,27 @@
+$Id: README,v 1.4 2007-01-31 22:55:10 doros Exp $
+
+In this experience the host br has network connectivity (tun module)
+with the real host. Before start the Netkit script you must create a
+tap device as normal user:
+
+realHost$ ifname=`sudo tunctl -b -u knoppix`
+
+and then set IP address (as root):
+
+realHost$ sudo ifconfig $ifname 192.168.77.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+# To build and prepare 2nd partition Compact Flash (5MiB)
+# (statistics go into non volatile memory into CF separate partition)
+export CF=CFX
+dd if=/dev/zero of=$CF bs=1M count=5
+mkfs.ext2 -F $CF
+tune2fs -i 0 $CF
+mkdir /tmp/ntop
+mount -o loop $CF /tmp/ntop
+tar zxf ntop-db.tzg -C /tmp/ntop
+umount /tmp/ntop
+

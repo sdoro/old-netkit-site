@@ -1,0 +1,5 @@
+/etc/qbox/*
+/etc/init.d/qbox
+/sbin/qbox.shape.sh
+var/lib/lrpkg/qbox.*
+

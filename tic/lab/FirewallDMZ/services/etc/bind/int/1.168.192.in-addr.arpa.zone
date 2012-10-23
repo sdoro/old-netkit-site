@@ -1,0 +1,22 @@
+; $Id: 1.168.192.in-addr.arpa.zone,v 1.2 2005/05/30 05:39:49 doros Exp $
+;
+; ##############################################################
+; Start of Authority (Inverse Address Arpa) for 192.168.0.0/29
+; ##############################################################
+@ 604800 IN SOA dns.tic.fdns.net. dns.tic.fdns.net. (
+        2003052101 ; serial
+        10800 ; refresh (3 hour)
+        3600 ; retry (1 hour)
+        604800 ; expire (7 days)
+        86400 ) ; minimum (1 day)
+
+; ##############################################################
+; Specify Name Servers for all Reverse Lookups (IN-ADDR.ARPA)
+; ##############################################################
+@   604800      IN NS  dns.tic.fdns.net.
+@   604800      IN NS  dns2.tic.fdns.net.
+
+; ##############################################################
+; Inverse Address Arpa Records (PTR's)
+; ##############################################################
+222   86400   IN PTR  dns.tic.fdns.net.

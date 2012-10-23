@@ -1,0 +1,11 @@
+# $Id:$
+ifconfig eth0 10.0.0.50
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#
+#dpkg -i /hostlab/deb/fprobe_1.1-7_i386.deb
+gzip -d /root/nprobe-static-i386-linux.gz
+chmod a+x /root/nprobe-static-i386-linux
+/root/nprobe-static-i386-linux -n 10.0.0.1:2055 -ieth0 &
+#

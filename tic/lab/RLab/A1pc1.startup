@@ -1,0 +1,4 @@
+# configure IP address
+ifconfig eth0 192.168.1.1
+route add -net 192.168.79.0/24 gw 192.168.1.254
+route add default gw 192.168.1.254

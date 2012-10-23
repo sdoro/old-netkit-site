@@ -1,0 +1,13 @@
+; $Id: db.255,v 1.1 2003/08/30 18:53:31 doros Exp $
+;
+; BIND reverse data file for broadcast zone
+;
+$TTL	604800
+@	IN	SOA	localhost. root.localhost. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	localhost.

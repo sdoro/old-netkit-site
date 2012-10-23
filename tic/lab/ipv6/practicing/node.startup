@@ -1,0 +1,14 @@
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#echo "0" > /proc/sys/net/ipv4/ip_forward
+#echo "1" > /proc/sys/net/ipv6/conf/eth0/forwarding
+ifconfig eth0 hw ether 00:00:00:00:00:03
+ifconfig eth0 0.0.0.0 up
+#ifconfig eth0 add 2001:5c0:1101:f701::4/64
+#
+#echo "1" > /proc/sys/net/ipv6/conf/all/forwarding
+#
+#route -A inet6 add ::/0 gw 2001:5c0:1101:f700::1 dev eth0
+
+

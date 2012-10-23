@@ -1,0 +1,124 @@
+# /etc/shorewall/rules
+# $Id:$
+
+##############################################################################
+#ACTION		SOURCE		DEST		PROTO	DEST	SOURCE	ORIGINAL
+#							PORT	PORT(S)	DEST
+#
+#	Accept DNS connections from the firewall to the Internet
+#
+ACCEPT		fw		net		tcp	53
+ACCEPT		fw		net		udp	53
+#
+#       Accept NTP connections from the firewall to the Internet
+#
+ACCEPT          fw              net             udp     123
+#
+#       Accept SMTP connections from the firewall to the Internet
+#
+ACCEPT          fw              net             tcp     25
+#       Accept SMTP connections from the loc to the DMZ
+#
+ACCEPT          loc             dmz             tcp     25
+#       Accept SMTP connections from the DMZ to the net
+#
+ACCEPT          dmz             net             tcp     25
+#
+#	Accept VRRP 
+#
+ACCEPT		fw:88.51.209.10      net:224.0.0.18   vrrp
+ACCEPT		fw:10.0.1.190        dmz:224.0.0.18   vrrp
+ACCEPT		fw:192.168.100.190   loc:224.0.0.18   vrrp
+#
+ACCEPT		fw:88.51.209.10      net:224.0.0.22   igmp
+ACCEPT		fw:10.0.1.190        dmz:224.0.0.22   igmp
+ACCEPT		fw:192.168.100.190   loc:224.0.0.22   igmp
+#
+ACCEPT		net:224.0.0.18       fw:88.51.209.10  vrrp
+ACCEPT		dmz:224.0.0.18       fw:10.0.1.190    vrrp
+ACCEPT		loc:224.0.0.18       fw:192.168.100.190 vrrp
+#
+ACCEPT		net:224.0.0.22       fw:88.51.209.10  igmp
+ACCEPT		dmz:224.0.0.22       fw:10.0.1.190    igmp
+ACCEPT		loc:224.0.0.22       fw:192.168.100.190 igmp
+#
+#
+#
+#	Accept SSH connections from the local network to the firewall and DMZ
+#
+ACCEPT		loc		fw		tcp	22
+ACCEPT		loc		dmz		tcp	22
+#
+#	DMZ DNS access to the Internet
+#
+ACCEPT		dmz		net		tcp	53
+ACCEPT		dmz		net		udp	53
+#
+#	Make ping work bi-directionally between the dmz, net, Firewall and local zone 
+#	(assumes that the loc-> net policy is ACCEPT).
+#
+#ACCEPT		net		fw		icmp	8
+ACCEPT		loc		fw		icmp	8
+#ACCEPT		dmz		fw		icmp	8
+ACCEPT		loc		dmz		icmp	8
+ACCEPT		dmz		loc		icmp	8
+ACCEPT		dmz		net		icmp	8
+ACCEPT		fw		loc		icmp	8
+ACCEPT		fw		dmz		icmp	8
+
+
+ACCEPT          loc             dmz             tcp     143
+ACCEPT          loc             dmz             tcp     220
+ACCEPT          loc             dmz             tcp     993
+
+###############################################################################
+# MODIFICHE 
+###############################################################################
+
+###############################################################################
+# CANCELLAZIONI 
+###############################################################################
+
+#ACCEPT		net		dmz		icmp	8	# Only with Proxy ARP and
+#ACCEPT		net		loc		icmp	8 	# static NAT
+
+
+###############################################################################
+# AGGIUNTE 
+###############################################################################
+# ACCETTA HTTP, SMTP, NTP
+ACCEPT		dmz		net		tcp	80
+ACCEPT		dmz		net		tcp	25
+ACCEPT		dmz		net		udp	123
+# ACCETTA LDAP, LDAPS da loc a dmz
+ACCEPT		loc		dmz:10.0.1.214	tcp	389
+ACCEPT		loc		dmz:10.0.1.214	udp	389
+ACCEPT		loc		dmz:10.0.1.214	tcp	636
+ACCEPT		loc		dmz:10.0.1.214	udp	636
+# ACCETTA HTTP, HTTPS e DNS dal loc a dmz
+ACCEPT		loc		dmz		tcp	80
+ACCEPT		loc		dmz		tcp	443
+ACCEPT		loc		dmz		udp	53
+# ACCETTA SNMP dal loc a fw
+ACCEPT		loc		fw		tcp	161
+ACCEPT		loc		fw		udp	161
+ACCEPT		loc		fw		tcp	162
+ACCEPT		loc		fw		udp	162
+# ACCETTA HTTP, HTTPS, SSH e DNS da net a dmz
+ACCEPT		net		dmz		udp	53
+ACCEPT		net		dmz		tcp	53
+ACCEPT		net		dmz		tcp	80
+ACCEPT		net		dmz		tcp	443
+ACCEPT		net		dmz		tcp	25
+#ACCEPT		net		dmz		tcp	22
+# NATTING verso DMZ
+#DNAT		net		dmz:10.0.1.221	tcp	ssh,http,https
+#DNAT		net		dmz:10.0.1.222	udp	domain
+#
+DNAT		net		dmz:10.0.1.222	udp	domain - 88.51.209.12
+DNAT		net		dmz:10.0.1.222	tcp	domain - 88.51.209.12
+DNAT		net		dmz:10.0.1.220	tcp	smtp - 88.51.209.12
+DNAT		net		dmz:10.0.1.222	tcp	https - 88.51.209.12
+#
+#DNAT		net		dmz:10.0.1.218	tcp	http - 88.51.209.13
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

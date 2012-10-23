@@ -1,0 +1,4 @@
+
+cd linux-2.6.28.4/
+cat /home/knoppix/Desktop/2.6.28-skas3.patch | patch -p1
+

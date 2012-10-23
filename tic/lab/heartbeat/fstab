@@ -1,0 +1,8 @@
+# /etc/fstab
+# $Id: fstab,v 1.1 2005/08/15 19:11:53 doros Exp $
+
+/dev/ubd/0       /            ext3     defaults        1 1
+proc             /proc        proc     defaults
+devpts           /dev/pts     devpts   mode=0622       0 0
+/dev/drbd/0      /var/www     xfs      noatime,noauto  0 0
+/dev/drbd/1      /nfs         xfs      noatime,noauto  0 0

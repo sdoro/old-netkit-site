@@ -1,0 +1,1985 @@
+version: 1
+
+#
+# LDAPv3
+# base <o=postacert> with scope sub
+# filter: objectclass=*
+# requesting: ALL
+#
+
+# postacert
+dn: o=postacert
+objectClass: top
+objectClass: organization
+objectClass: LDIFLocationURLObject
+o: postacert
+description: Base root per l'indice dei gestori di posta certificata
+LDIFLocationURL: https://igpec.ctrupa.it/igpec.ldif
+
+# E.D.S. Pubblica Amministrazione S.p.A., postacert
+dn: providerName=E.D.S. Pubblica Amministrazione S.p.A.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: E.D.S. Pubblica Amministrazione S.p.A.
+providerCertificateSubject: O=VeriSign Inc.,OU=VeriSign Trust Network,OU=www.v
+ erisign.com/repository/RPA Incorp. by Ref.LIAB.LTD(c)98,OU=Persona Not Valida
+ ted,OU=Digital ID Class 1 - Microsoft Full Service,CN=RUPA - Servizi di Posta
+  Certificata,emailAddress=posta-certificata@postacert.rupa.it
+providerCertificate;binary:: MIIEljCCA/+gAwIBAgIQAu+JFAkNiziZsFikoIgyQjANBgkqh
+ kiG9w0BAQQFADCBzDEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIF
+ RydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5
+ jb3JwLiBCeSBSZWYuLExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0Eg
+ SW5kaXZpZHVhbCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZDAeFw0wMzAzMTMwMDAwM
+ DBaFw0wNDAzMTIyMzU5NTlaMIIBOjEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFl
+ ZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9
+ yeS9SUEEgSW5jb3JwLiBieSBSZWYuLExJQUIuTFREKGMpOTgxHjAcBgNVBAsTFVBlcnNvbmEgTm90
+ IFZhbGlkYXRlZDE0MDIGA1UECxMrRGlnaXRhbCBJRCBDbGFzcyAxIC0gTWljcm9zb2Z0IEZ1bGwgU
+ 2VydmljZTEsMCoGA1UEAxQjUlVQQSAtIFNlcnZpemkgZGkgUG9zdGEgQ2VydGlmaWNhdGExMjAwBg
+ kqhkiG9w0BCQEWI3Bvc3RhLWNlcnRpZmljYXRhQHBvc3RhY2VydC5ydXBhLml0MIGfMA0GCSqGSIb
+ 3DQEBAQUAA4GNADCBiQKBgQDv0TKh831FuMVB1+1/0J5rXvTZ6E9ECDLZCxHygwfNSADrZ05rhFjl
+ oTF6xuNcFwx4T/1MirOKVPCIEySxO5esJ/ijwuy6Wkl1nIdd06PDE0X3aVDxedi7lpouudjhNvnoV
+ MB400w0Po+VBrVo9MXaQwnoi7ETbqPzPyysGiCChQIDAQABo4IBBjCCAQIwCQYDVR0TBAIwADCBrA
+ YDVR0gBIGkMIGhMIGeBgtghkgBhvhFAQcBATCBjjAoBggrBgEFBQcCARYcaHR0cHM6Ly93d3cudmV
+ yaXNpZ24uY29tL0NQUzBiBggrBgEFBQcCAjBWMBUWDlZlcmlTaWduLCBJbmMuMAMCAQEaPVZlcmlT
+ aWduJ3MgQ1BTIGluY29ycC4gYnkgcmVmZXJlbmNlIGxpYWIuIGx0ZC4gKGMpOTcgVmVyaVNpZ24wE
+ QYJYIZIAYb4QgEBBAQDAgeAMDMGA1UdHwQsMCowKKAmoCSGImh0dHA6Ly9jcmwudmVyaXNpZ24uY2
+ 9tL2NsYXNzMS5jcmwwDQYJKoZIhvcNAQEEBQADgYEArDQDPGtoW78wWA2vi0omhu368e5s6ISqFtP
+ j84NasvoceEmNdZpti9KCwulLTA9wDJucFskb/9jIVRQGX+vehCwdkEWIliVdxZc9na4nuMjweiXs
+ Tf3Q8gOagD3MXHmLEOI1eWg2Hv+j+FUJgINtfYhBm+YDJ6BSsJIg9T9Ziuk=
+providerCertificate;binary:: MIIErDCCBBWgAwIBAgIQQFktuPcpH2x3m6nB7IJgszANBgkqh
+ kiG9w0BAQQFADCBzDEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIF
+ RydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5
+ jb3JwLiBCeSBSZWYuLExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0Eg
+ SW5kaXZpZHVhbCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZDAeFw0wNDAzMDUwMDAwM
+ DBaFw0wNTAzMTIyMzU5NTlaMIIBOjEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFl
+ ZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9
+ yeS9SUEEgSW5jb3JwLiBieSBSZWYuLExJQUIuTFREKGMpOTgxHjAcBgNVBAsTFVBlcnNvbmEgTm90
+ IFZhbGlkYXRlZDE0MDIGA1UECxMrRGlnaXRhbCBJRCBDbGFzcyAxIC0gTWljcm9zb2Z0IEZ1bGwgU
+ 2VydmljZTEsMCoGA1UEAxQjUlVQQSAtIFNlcnZpemkgZGkgUG9zdGEgQ2VydGlmaWNhdGExMjAwBg
+ kqhkiG9w0BCQEWI3Bvc3RhLWNlcnRpZmljYXRhQHBvc3RhY2VydC5ydXBhLml0MIGfMA0GCSqGSIb
+ 3DQEBAQUAA4GNADCBiQKBgQDMQmxjOOTe2pK2bHnFOqX7QSuiZ952SyNfDc57MC9pBpRH5PgR6B7R
+ CoTahgWaEv5cIjDfAHOEUNGJ+e4DiJS7wfKS5V6Yml+LbuSjFPLBOs0O4/K+Kzzc7uJuSqUD14Q0U
+ A8irow3KVa0loQcbgm7nhOQHP+OAr7EBinUWmB98QIDAQABo4IBHDCCARgwCQYDVR0TBAIwADCBrA
+ YDVR0gBIGkMIGhMIGeBgtghkgBhvhFAQcBATCBjjAoBggrBgEFBQcCARYcaHR0cHM6Ly93d3cudmV
+ yaXNpZ24uY29tL0NQUzBiBggrBgEFBQcCAjBWMBUWDlZlcmlTaWduLCBJbmMuMAMCAQEaPVZlcmlT
+ aWduJ3MgQ1BTIGluY29ycC4gYnkgcmVmZXJlbmNlIGxpYWIuIGx0ZC4gKGMpOTcgVmVyaVNpZ24wE
+ QYJYIZIAYb4QgEBBAQDAgeAMBQGCmCGSAGG+EUBBgcEBhYETm9uZTAzBgNVHR8ELDAqMCigJqAkhi
+ JodHRwOi8vY3JsLnZlcmlzaWduLmNvbS9jbGFzczEuY3JsMA0GCSqGSIb3DQEBBAUAA4GBAJK3EtW
+ XeBjKy4ktdyjlEKDFcj3dXMUHhI1wmho7TMJYL/feUHz0RZTKoRJdzYvJx2TkSuMfIcizUEfj1+lk
+ CSy/UphslkhbTqH2w+/V38HuIj33GpYyyrZ6RwtUqia9I8ew1jVf8ybAl38vaPVp0draJYAogPmFu
+ YeKLYxJSEK7
+mailReceipt: presa-in-carico@postacert.rupa.it
+managedDomains: preconsiglio.gov.it
+managedDomains: portaleue.gov.it
+managedDomains: cert.ctrupa.it
+managedDomains: mef.rupa.it
+managedDomains: minef.rupa.it
+managedDomains: pcert.agenziaentrate.it
+managedDomains: pcert.enpals.it
+managedDomains: protocollo.gov.it
+managedDomains: testcert-mp.rupa.it
+managedDomains: consiglioue-cert.rupa.it
+managedDomains: postacert.rupa.it
+managedDomains: testcert.rupa.it
+managedDomains: provacert.rupa.it
+managedDomains: cert.cnipa.it
+managedDomains: sspapc.it
+managedDomains: cert.garanteprivacy.it
+managedDomains: cert.esteri.it
+managedDomains: cert.cri.it
+managedDomains: pec.infrastrutturetrasporti.it
+managedDomains: postacert.sanita.it
+managedDomains: govcert.it
+managedDomains: cert.enit.it
+managedDomains: mailbox.governo.it
+managedDomains: mailcert.avvocaturastato.it
+managedDomains: ga-cert.it
+managedDomains: postacert.difesa.it
+managedDomains: postacert.welfare.gov.it
+managedDomains: asi.postacert.it
+description: Servizi di posta certificata per la R.U.P.A.
+LDIFLocationURL: https://igpec.ctrupa.it/edspa.ldif
+
+# Infocamere SCpA, postacert
+dn: providerName=Infocamere SCpA, o=postacert
+mailReceipt: ricevute@cert.legalmail.it
+LDIFLocationURL: http://www.legalmail.it/legalmail.ldif
+objectClass: top
+objectClass: provider
+providerCertificateSubject: O=Infocamere SCpA, L=PADOVA, C=IT, CN=Servizio Pos
+ ta Certificata, SN=02313821007, emailAddress=posta-certificata@cert.legalmail.it
+providerName: Infocamere SCpA
+description: Servizi di posta certificata
+providerCertificate;binary:: MIIFajCCBFKgAwIBAgIDAXlOMA0GCSqGSIb3DQEBBQUAMIGIM
+ QswCQYDVQQGEwJJVDEYMBYGA1UEChMPSW5mb0NhbWVyZSBTQ3BBMTAwLgYDVQQLEydFbnRlIENlcn
+ RpZmljYXRvcmUgZGVsIFNpc3RlbWEgQ2FtZXJhbGUxLTArBgNVBAMTJEluZm9DYW1lcmUgU2Vydml
+ 6aSBkaSBDZXJ0aWZpY2F6aW9uZTAeFw0wMjEwMjMwOTMwNDNaFw0wMzEwMjMyMzU5MDBaMIGeMRgw
+ FgYDVQQKEw9JbmZvQ2FtZXJlIFNDcEExDzANBgNVBAcTBlBhZG92YTELMAkGA1UEBhMCSVQxGjAYB
+ gNVBAMTEVBvc3RhIENlcnRpZmljYXRhMRQwEgYDVQQFEwswMjMxMzgyMTAwNzEyMDAGCSqGSIb3DQ
+ EJARYjcG9zdGEtY2VydGlmaWNhdGFAY2VydC5sZWdhbG1haWwuaXQwgZ8wDQYJKoZIhvcNAQEBBQA
+ DgY0AMIGJAoGBAMDz4+8yyXkIUZVS2FPWr7wjr9eyB9Vql6+9i7EtxGicf9Z7GErW2NLO+HdgriJR
+ oh3ZtO3fCH4lWO17RQxeQodEyW5qlblWxO/NR1Bo0guea4qqKyUmLQXKZZZLRKVnPogrupCSShM6G
+ JCk1nYzxcAGOcT/dxRsj3MovJlqSOaZAgMBAAGjggJHMIICQzAfBgNVHSMEGDAWgBSEe+9iLt505R
+ EfdTn7vC8bnLYyVTAJBgNVHRMEAjAAMAsGA1UdDwQEAwIFoDAuBgNVHREEJzAlgSNwb3N0YS1jZXJ
+ 0aWZpY2F0YUBjZXJ0LmxlZ2FsbWFpbC5pdDCB4wYDVR0SBIHbMIHYgSRzZXJ2aXppLmNlcnRpZmlj
+ YXppb25lQGluZm9jYW1lcmUuaXSGga9sZGFwOi8vbGRhcC5pbmZvY2FtZXJlLml0L2NuJTNESW5mb
+ 0NhbWVyZSUyMFNlcnZpemklMjBkaSUyMENlcnRpZmljYXppb25lJTJDb3UlM0RFbnRlJTIwQ2VydG
+ lmaWNhdG9yZSUyMGRlbCUyMFNpc3RlbWElMjBDYW1lcmFsZSUyQ28lM0RJbmZvQ2FtZXJlJTIwU0N
+ wQSUyQ2MlM0RJVD9jYWNlcnRpZmljYXRlMIHSBgNVHR8EgcowgccwgcSggcGggb6GgbtsZGFwOi8v
+ bGRhcC5pbmZvY2FtZXJlLml0L2NuJTNESW5mb0NhbWVyZSUyMFNlcnZpemklMjBkaSUyMENlcnRpZ
+ mljYXppb25lJTJDb3UlM0RFbnRlJTIwQ2VydGlmaWNhdG9yZSUyMGRlbCUyMFNpc3RlbWElMjBDYW
+ 1lcmFsZSUyQ28lM0RJbmZvQ2FtZXJlJTIwU0NwQSUyQ2MlM0RJVD9jZXJ0aWZpY2F0ZXJldm9jYXR
+ pb25saXN0MB0GA1UdDgQWBBTBMS6yHkNJs6dKsGS181B+Cy7P2zANBgkqhkiG9w0BAQUFAAOCAQEA
+ uZ9ewqrkINTbmUWjw27l5UxKsKHeufUD0zM/PTwyP1xXUwDyZaeKb/CBnh5z3uUyTQhfy+YyPc48+
+ b3Og5mqQEZjBzC1k2HPTZlJsTUyANhrfq2C7nu5Fk8MIjZrxEwiLMYyJVJb99ZQuafYsitk9NWAxA
+ La+IsmDQKo5/3stOS7kv/6XXXIDlpkkikXxWBNmcXzzeH4KTgq3RlfT9fks5AC3oDhewnEAnonf8Y
+ Zof0W0i6ZEseg9Nh9ZXlZGH6Z4gDvDb6ui/HQDVvMW4waSZuBZz4E9FvfI6Lxz8Orrg4Xq9pS4Eho
+ v+t8PF8VkFhE195UWCM2mKA6eDeRYhVRgw==
+providerCertificate;binary:: MIIHDzCCBfegAwIBAgIDBCr6MA0GCSqGSIb3DQEBBQUAMIGIM
+ QswCQYDVQQGEwJJVDEYMBYGA1UEChMPSW5mb0NhbWVyZSBTQ3BBMTAwLgYDVQQLEydFbnRlIENlcn
+ RpZmljYXRvcmUgZGVsIFNpc3RlbWEgQ2FtZXJhbGUxLTArBgNVBAMTJEluZm9DYW1lcmUgU2Vydml
+ 6aSBkaSBDZXJ0aWZpY2F6aW9uZTAeFw0wMzEwMjAxNTE1MzlaFw0wNTEwMjAxNTE1MzZaMIGrMQsw
+ CQYDVQQGEwJJVDEYMBYGA1UEChMPSW5mb0NhbWVyZSBTQ3BBMRowGAYDVQQDExFQb3N0YSBDZXJ0a
+ WZpY2F0YTEyMDAGCSqGSIb3DQEJARYjcG9zdGEtY2VydGlmaWNhdGFAY2VydC5sZWdhbG1haWwuaX
+ QxCzAJBgNVBAgTAlBEMQ8wDQYDVQQHEwZQYWRvdmExFDASBgNVBAUTCzAyMzEzODIxMDA3MIGfMA0
+ GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDRm+qqZs5QXU8Fs5AZG9e5Yz2mQJ/ZsZutVVgWzzlIjlox
+ CZkAIDz/Vu3EYsHofJiXiV10e+lRXte17WslJDxZCcUi10Vy+hx733qt+IfapWxEooWJtA1rWaFSX
+ uAGvJWNaS1R3aOwQpuOHcK5oXgJEuvl4nBs/yywOXZRMJOpDQIDAQABo4ID3zCCA9swHwYDVR0jBB
+ gwFoAUhHvvYi7edOURH3U5+7wvG5y2MlUwCQYDVR0TBAIwADALBgNVHQ8EBAMCBaAwgc0GA1UdEQS
+ BxTCBwoEjcG9zdGEtY2VydGlmaWNhdGFAY2VydC5sZWdhbG1haWwuaXSGgZpsZGFwOi8vbGRhcC5p
+ bmZvY2FtZXJlLml0L2NuJTNEUG9zdGElMjBDZXJ0aWZpY2F0YSUyQ291JTNERW50ZSUyMENlcnRpZ
+ mljYXRvcmUlMjBkZWwlMjBTaXN0ZW1hJTIwQ2FtZXJhbGUlMkNvJTNESW5mb0NhbWVyZSUyMFNDcE
+ ElMkNjJTNESVQ/dXNlcmNlcnRpZmljYXRlMD8GCWCGSAGG+EIBDQQyFjBJbmZvQ2FtZXJlIFNDcEE
+ gU1NMIGFuZCBTTUlNRSBDbGllbnQgQ2VydGlmaWNhdGUwgeMGA1UdEgSB2zCB2IEkc2Vydml6aS5j
+ ZXJ0aWZpY2F6aW9uZUBpbmZvY2FtZXJlLml0hoGvbGRhcDovL2xkYXAuaW5mb2NhbWVyZS5pdC9jb
+ iUzREluZm9DYW1lcmUlMjBTZXJ2aXppJTIwZGklMjBDZXJ0aWZpY2F6aW9uZSUyQ291JTNERW50ZS
+ UyMENlcnRpZmljYXRvcmUlMjBkZWwlMjBTaXN0ZW1hJTIwQ2FtZXJhbGUlMkNvJTNESW5mb0NhbWV
+ yZSUyMFNDcEElMkNjJTNESVQ/Y2FjZXJ0aWZpY2F0ZTCB0gYDVR0fBIHKMIHHMIHEoIHBoIG+hoG7
+ bGRhcDovL2xkYXAuaW5mb2NhbWVyZS5pdC9jbiUzREluZm9DYW1lcmUlMjBTZXJ2aXppJTIwZGklM
+ jBDZXJ0aWZpY2F6aW9uZSUyQ291JTNERW50ZSUyMENlcnRpZmljYXRvcmUlMjBkZWwlMjBTaXN0ZW
+ 1hJTIwQ2FtZXJhbGUlMkNvJTNESW5mb0NhbWVyZSUyMFNDcEElMkNjJTNESVQ/Y2VydGlmaWNhdGV
+ yZXZvY2F0aW9ubGlzdDCBlQYDVR0gBIGNMIGKMIGHBgYrTA4BAQMwfTA7BggrBgEFBQcCARYvaHR0
+ cDovL3d3dy5jYXJkLmluZm9jYW1lcmUuaXQvY2VydC9jcHMvbW9jYS5odG0wPgYIKwYBBQUHAgIwM
+ howSW5mb0NhbWVyZSBTQ3BBIFNTTCBhbmQgU01JTUUgQ2xpZW50IENlcnRpZmljYXRlMB0GA1UdJQ
+ QWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjAdBgNVHQ4EFgQULqHtP4g0RcJUsEEdHrj7B9hjaPowDQY
+ JKoZIhvcNAQEFBQADggEBAJo1EJVIiVw6o5Ps9UuzNNIdvlJI3gsFrNJdA/zPYCwMQZyM8Z524MVO
+ 0NZJ3EeV2rmMGBtHFJgb8yUhAEZ0qqRCnzTWjAG+4Eo8JyKWaenLIvMvyWPzn/lrgkPNxYNaTv+uM
+ jnhvA3gPqYvjecRHPzQ/iTdeoPZddD3rtjc0f7W3LfEiJc3fXxz+r4zq1fYEPSTw15GHbjns5e9ZE
+ UNw184lzhEZQrh8VeTiGsy1EZp0ndufcZGSWKMlrXYMVmSwQk9x2hyTOFjim0fUMp2N41abfRqcT5
+ SVNFILwR3TAqeu2F769ugjPSVlx6t7ctdBKnxDUumm58uAghs9lsyKnQ=
+managedDomains: cert.legalmail.it
+managedDomains: sintranet.legalmail.it
+managedDomains: cert.ip-veneto.net
+managedDomains: cert.amministrazionefuturo.com
+managedDomains: prova1cert.legalmail.it
+managedDomains: prova2cert.legalmail.it
+managedDomains: cert.smatteo.pv.it
+managedDomains: mi.cert.camcom.it
+managedDomains: cn.cert.camcom.it
+managedDomains: pz.cert.camcom.it
+managedDomains: rm.cert.camcom.it
+managedDomains: ca.cert.camcom.it
+managedDomains: me.cert.camcom.it
+managedDomains: sa.cert.camcom.it
+managedDomains: ta.cert.camcom.it
+managedDomains: cassa.presidenza.cert.legalmail.it
+managedDomains: cassa.vpresidenza.cert.legalmail.it
+managedDomains: cassa.cert.legalmail.it
+managedDomains: cassa.direzione.cert.legalmail.it
+managedDomains: cassa.iscrizioni.cert.legalmail.it
+managedDomains: cassa.prestazioni.cert.legalmail.it
+managedDomains: cassa.vigilanza.cert.legalmail.it
+managedDomains: domiciliolegale.it
+managedDomains: cert.ciedvime.it
+managedDomains: cert.imagoitalia.com
+managedDomains: le.cert.camcom.it
+managedDomains: cert.cavatorta.it
+managedDomains: cert.ordineavvocatisr.it
+managedDomains: cert.avepa.it
+managedDomains: cert.provincia.pc.it
+managedDomains: roccaromana.legalmail.it
+managedDomains: caiazzo.legalmail.it
+managedDomains: gricignanodaversa.legalmail.it
+managedDomains: casagiove.legalmail.it
+managedDomains: caserta.legalmail.it
+managedDomains: maddaloni.legalmail.it
+managedDomains: marcianise.legalmail.it
+managedDomains: smarcoevangelista.legalmail.it
+managedDomains: smariacapuavetere.legalmail.it
+managedDomains: va.legalmail.camcom.it
+managedDomains: to.legalmail.camcom.it
+managedDomains: vc.legalmail.camcom.it
+managedDomains: bi.legalmail.camcom.it
+managedDomains: cz.legalmail.camcom.it
+managedDomains: cert.asl.ivrea.to.it
+managedDomains: cert.comune.corsico.mi.it
+managedDomains: cert.ulss22.ven.it
+managedDomains: cert.comune.pieve-a-nievole.pt.it
+managedDomains: cert.comune.galatina.le.it
+managedDomains: cert.comune.treviso.it
+managedDomains: cert.piacentinoassociati.it
+managedDomains: cert.comune.settimo-torinese.to.it
+managedDomains: pec.comune.imperia.it
+managedDomains: cert.asmtel.it
+managedDomains: cert.altovicentino.net
+managedDomains: cert.ao.pr.it
+managedDomains: cert.comune.barletta.ba.it
+managedDomains: cert.carcano-partners.com
+managedDomains: cert.saga.it
+managedDomains: cert.poliscomuneamico.net
+managedDomains: cert.cmave.it
+managedDomains: cert.provincia.udine.it
+managedDomains: bs.legalmail.camcom.it
+managedDomains: lc.legalmail.camcom.it
+managedDomains: ve.legalmail.camcom.it
+managedDomains: ag.legalmail.camcom.it
+managedDomains: al.legalmail.camcom.it
+managedDomains: an.legalmail.camcom.it
+managedDomains: ao.legalmail.camcom.it
+managedDomains: ap.legalmail.camcom.it
+managedDomains: aq.legalmail.camcom.it
+managedDomains: ar.legalmail.camcom.it
+managedDomains: at.legalmail.camcom.it
+managedDomains: av.legalmail.camcom.it
+managedDomains: ba.legalmail.camcom.it
+managedDomains: bg.legalmail.camcom.it
+managedDomains: bl.legalmail.camcom.it
+managedDomains: bn.legalmail.camcom.it
+managedDomains: bo.legalmail.camcom.it
+managedDomains: br.legalmail.camcom.it
+managedDomains: bz.legalmail.camcom.it
+managedDomains: cb.legalmail.camcom.it
+managedDomains: ce.legalmail.camcom.it
+managedDomains: ch.legalmail.camcom.it
+managedDomains: cl.legalmail.camcom.it
+managedDomains: co.legalmail.camcom.it
+managedDomains: cr.legalmail.camcom.it
+managedDomains: cs.legalmail.camcom.it
+managedDomains: ct.legalmail.camcom.it
+managedDomains: en.legalmail.camcom.it
+managedDomains: fe.legalmail.camcom.it
+managedDomains: fg.legalmail.camcom.it
+managedDomains: fi.legalmail.camcom.it
+managedDomains: fo.legalmail.camcom.it
+managedDomains: fr.legalmail.camcom.it
+managedDomains: ge.legalmail.camcom.it
+managedDomains: go.legalmail.camcom.it
+managedDomains: gr.legalmail.camcom.it
+managedDomains: im.legalmail.camcom.it
+managedDomains: is.legalmail.camcom.it
+managedDomains: kr.legalmail.camcom.it
+managedDomains: li.legalmail.camcom.it
+managedDomains: lo.legalmail.camcom.it
+managedDomains: lt.legalmail.camcom.it
+managedDomains: lu.legalmail.camcom.it
+managedDomains: mc.legalmail.camcom.it
+managedDomains: mn.legalmail.camcom.it
+managedDomains: mo.legalmail.camcom.it
+managedDomains: ms.legalmail.camcom.it
+managedDomains: mt.legalmail.camcom.it
+managedDomains: na.legalmail.camcom.it
+managedDomains: no.legalmail.camcom.it
+managedDomains: nu.legalmail.camcom.it
+managedDomains: or.legalmail.camcom.it
+managedDomains: pa.legalmail.camcom.it
+managedDomains: pc.legalmail.camcom.it
+managedDomains: pd.legalmail.camcom.it
+managedDomains: pe.legalmail.camcom.it
+managedDomains: pg.legalmail.camcom.it
+managedDomains: pi.legalmail.camcom.it
+managedDomains: pn.legalmail.camcom.it
+managedDomains: po.legalmail.camcom.it
+managedDomains: pr.legalmail.camcom.it
+managedDomains: ps.legalmail.camcom.it
+managedDomains: pt.legalmail.camcom.it
+managedDomains: pv.legalmail.camcom.it
+managedDomains: ra.legalmail.camcom.it
+managedDomains: rc.legalmail.camcom.it
+managedDomains: re.legalmail.camcom.it
+managedDomains: rg.legalmail.camcom.it
+managedDomains: ri.legalmail.camcom.it
+managedDomains: rn.legalmail.camcom.it
+managedDomains: ro.legalmail.camcom.it
+managedDomains: si.legalmail.camcom.it
+managedDomains: so.legalmail.camcom.it
+managedDomains: sp.legalmail.camcom.it
+managedDomains: sr.legalmail.camcom.it
+managedDomains: ss.legalmail.camcom.it
+managedDomains: sv.legalmail.camcom.it
+managedDomains: te.legalmail.camcom.it
+managedDomains: tn.legalmail.camcom.it
+managedDomains: tp.legalmail.camcom.it
+managedDomains: tr.legalmail.camcom.it
+managedDomains: ts.legalmail.camcom.it
+managedDomains: tv.legalmail.camcom.it
+managedDomains: ud.legalmail.camcom.it
+managedDomains: vb.legalmail.camcom.it
+managedDomains: vi.legalmail.camcom.it
+managedDomains: vr.legalmail.camcom.it
+managedDomains: vt.legalmail.camcom.it
+managedDomains: vv.legalmail.camcom.it
+managedDomains: cert.elaus2002.net
+managedDomains: cert.comune.voghera.pv.it
+managedDomains: postacert.umbria.it
+managedDomains: cert.provincia.le.it
+managedDomains: cert.comune.paterno.ct.it
+managedDomains: cert-unile.it
+managedDomains: regione.abruzzo.legalmail.it
+managedDomains: cert.comune.cavamanara.pv.it
+managedDomains: cert.cnai.it
+managedDomains: cert.provincia.verbania.it
+managedDomains: cert.provincia.asti.it
+managedDomains: postacert.comune.livorno.it
+managedDomains: cert.comune.domodossola.vb.it
+managedDomains: selegrafica.legalmail.it
+managedDomains: pec.unisa.it
+managedDomains: provincia.cr.it
+managedDomains: cert.studiok.it
+managedDomains: cert.cna.it
+managedDomains: secmail.it
+managedDomains: cert.provincia.rc.it
+managedDomains: cert.provincia.genova.it
+managedDomains: pec.comune.rudiano.bs.it
+managedDomains: cert.regione.veneto.it
+managedDomains: mi.legalmail.camcom.it
+managedDomains: cn.legalmail.camcom.it
+managedDomains: pz.legalmail.camcom.it
+managedDomains: rm.legalmail.camcom.it
+managedDomains: ca.legalmail.camcom.it
+managedDomains: me.legalmail.camcom.it
+managedDomains: sa.legalmail.camcom.it
+managedDomains: ta.legalmail.camcom.it
+managedDomains: cert.unimol.it
+managedDomains: certiposta.consiglioveneto.it
+managedDomains: certicomm.it
+managedDomains: cert.caafcisl.it
+managedDomains: pattodiapason.it
+managedDomains: systemforcard.it
+managedDomains: legalmail.it
+managedDomains: cert.trenitalia.it
+managedDomains: cert.montichiari.it
+
+# EDS P.A. - Ministero della Giustizia, postacert
+dn: providerName=EDS P.A. - Ministero della Giustizia,o=postacert
+objectClass: top
+objectClass: provider
+providerName: EDS P.A. - Ministero della Giustizia
+providerCertificateSubject: O=VeriSign Inc.,OU=VeriSign Trust Network,OU=www.v
+ erisign.com/repository/RPA Incorp. by Ref.LIAB.LTD(c)98,OU=Persona Not Valida
+ ted,OU=Digital ID Class 1 - Microsoft,CN=EDS EDS,emailAddress=posta-certificata@giustizi
+ acert.it
+providerCertificate;binary:: MIIEojCCBAugAwIBAgIQAfET0wiwWAIrn6C01YT01DANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDIyMDAwMDAwMFoXDTA1MDIxOTIzN
+ Tk1OVowggF1MRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMSwwKg
+ YDVQQDEyNFRFMgUHViYmxpY2EgQW1taW5pc3RyYXppb25lIFMucC5BLjExMC8GCSqGSIb3DQEJARY
+ icG9zdGEtY2VydGlmaWNhdGFAZ2l1c3RpemlhY2VydC5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAw
+ gYkCgYEAlthZghiKAYWtjk/y3EwqJNIlcK/xQMVPVP8NcRNZQZzpzbkC75Clklo+/hDJL5WSnGsU4
+ MXlbi40hfKaYhB+7VnqWP0ZbDanoSjQLL9LtAgBk8c/qyReg+wpjJX7TgYGs6IPrzDqcnWdkUNZ0x
+ AgwbER//jOAMKWuDMnlL9dgpUCAwEAAaOB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhMF8wXaBboFm
+ GV2h0dHA6Ly9vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb25zdW1lclNl
+ cnZpY2VDZW50ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwL
+ DAqBggrBgEFBQcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQ
+ QEAwIHgDARBgpghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvcNAQEEBQADgYEA2RalRe9In0EJgVhpHxf
+ fpTjsbRcWacGJZ2DNMS0a8m/+uCDn81RAjSDrIpy3tpOo/16VejXPndScMEQ4a/y01dRwG2tx5rMx
+ /vWdhpl5Kho9g7VKTpm+dmksr9jSF4DPZlgVYiw0n2bflF86z2LAsq0bjDw6BdTirNCYql0cCLI=
+mailReceipt: presa-in-carico@giustiziacert.it
+managedDomains: giustiziacert.it
+description: Servizi di posta certificata per il Ministero della Giustizia
+LDIFLocationURL: https://postacert.giustiziacert.it/giustiziacert.ldif
+
+# I.T. Telecom S.p.A., postacert
+dn: providerName=I.T. Telecom S.p.A.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: I.T. Telecom S.p.A.
+mailReceipt: posta-certificata@telecompec.it
+providerCertificate;binary:: MIIDazCCAlOgAwIBAgICIGQwDQYJKoZIhvcNAQEFBQAwZDELM
+ AkGA1UEBhMCSVQxHDAaBgNVBAoTE0kuVC4gVGVsZWNvbSBTLnAuQS4xFjAUBgNVBAsTDVBLSSBTb2
+ x1dGlvbnMxHzAdBgNVBAMTFkkuVC4gVGVsZWNvbSBHbG9iYWwgQ0EwHhcNMDQwMTEzMTEzNjM2Whc
+ NMDUwMTEyMTEzNjM2WjBrMQswCQYDVQQGEwJJVDEcMBoGA1UEChMTSS5ULiBUZWxlY29tIFMucC5B
+ LjEiMCAGA1UECxMZU2Vydml6aSBkaSBDZXJ0aWZpY2F6aW9uZTEaMBgGA1UEAxMRUG9zdGEgQ2Vyd
+ GlmaWNhdGEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAL+TXiiMMV62AFWeBsVw77v1ywR0WL
+ lIKoGkVkBypFpGZ5iSFAkn3kEeF4SXEofVyT8ub3ighgtbsaXV+9J/bfwnC2LVqIp5AEAYSsb7Tl6
+ 46f/Hq/6dcFKBOBiyyS0RD8kUu5x6xXZwx7pAmS5RzRk4hE0rHnp9QYex4hDf8LfhAgMBAAGjgaMw
+ gaAwCQYDVR0TBAIwADAqBgNVHREEIzAhgR9wb3N0YS1jZXJ0aWZpY2F0YUB0ZWxlY29tcGVjLml0M
+ AsGA1UdDwQEAwIFoDBaBgNVHSMEUzBRoUmkRzBFMQswCQYDVQQGEwJVUzEYMBYGA1UEChMPR1RFIE
+ NvcnBvcmF0aW9uMRwwGgYDVQQDExNHVEUgQ3liZXJUcnVzdCBSb290ggQEAALJMA0GCSqGSIb3DQE
+ BBQUAA4IBAQAnGDUGwBY+i3N+t2obuLxX6XQbRaDXwUHfwTeb43Y4iw9hXurjig0Knc+aMH9qka8q
+ oCBYa6rWNVNF/NK1IyVQKcixoUAaXLYU5xpaix0xQ22e/yDCRK1PuNB0Si7yEYT0g1jg6wlTpLh3X
+ pcUoOTzZW6757eRNyb8Yx0kWkvh4SA5iez2qpEOuiLOO8Db607vX4DBxWl3fYyNtOL5thZ8yls9Zz
+ IrY+7y3FIgkyjqi/Gj/c27KozmaKx23zkkInn+zT3jTy0E0T48DdX6BT2iFAlnHBmImM0rNfJ5q51
+ 7t8Yc+3f+1wMPXCxLT5aZGhordSQiLl13Zu03ej2VZiZw
+providerCertificateSubject: OU=Servizi di Certificazione, O=I.T. Telecom S.p.A
+ ., C=IT
+LDIFLocationURL: https://www.telecompec.it/ldifs/telecompec.it.ldif
+managedDomains: test.telecompec.it
+managedDomains: certgov.fvg.it
+managedDomains: telecompec.it
+managedDomains: certsanita.fvg.it
+managedDomains: gsacqua.it
+managedDomains: comune.misterbianco.ct.it
+managedDomains: emergenze.provpg.it
+managedDomains: comunedipaese.tv.it
+managedDomains: pec.comune.cordenons.pn.it
+managedDomains: comunediafragola.it
+managedDomains: ccc-acam-certificata.it
+managedDomains: certified-sassrl.com
+managedDomains: postacertificata.teaminformatica.it
+managedDomains: pec.comune.savigliano.cn.it
+managedDomains: postacert.provincia.pescara.it
+managedDomains: igefi.it
+managedDomains: certregione.fvg.it
+managedDomains: comunedinumanapostasicura.it
+
+# AGSM Telecomunicazioni srl, postacert
+dn: providerName=AGSM Telecomunicazioni srl,o=postacert
+objectClass: top
+objectClass: provider
+description: Servizi di posta certificata di AGSM Telecomunicazioni srl
+providerCertificateSubject: c=IT,l=VERONA,st=Verona,o=AGSM Telecomunicazioni S
+ rl,ou=AGSM Telecomunicazioni PEC,cn=PosteMail Certificata PA,emailAddress=posta-cert
+ ificata@cmail.autenticazione.it
+providerCertificate;binary:: MIIEuzCCBCSgAwIBAgIQPjsbDUZLVpXB+B9MSWMH+TANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTAzMTIyMjAwMDAwMFoXDTA0MTIyMTIzN
+ Tk1OVowggGOMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMT4wPA
+ YDVQQDEzVBR1NNIFRlbGVjb211bmljYXppb25pIHNybCBBR1NNIFRlbGVjb211bmljYXppb25pIHN
+ ybDE4MDYGCSqGSIb3DQEJARYpcG9zdGEtY2VydGlmaWNhdGFAY21haWwuYXV0ZW50aWNhemlvbmUu
+ aXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMzM34rioQfmJbhvOApA0TdWeyrcoO6m2mc0G
+ 4paQZMZqbrXezTQmUbQPrj2mgiBrdmcHJnSfRcOPD47d1T5+aHJ4SjNn84of/F2yzUvQrYcrhQaZQ
+ 4kzV45B78K8a6imJQ7D4k8QN+ZhhfN25DN9gbka5PjRca7ji8CaiLtJ7XjAgMBAAGjgeUwgeIwCQY
+ DVR0TBAIwADBoBgNVHR8EYTBfMF2gW6BZhldodHRwOi8vb25zaXRlY3JsLnRydXN0aXRhbGlhLml0
+ L1RydXN0SXRhbGlhU3BBQ29uc3VtZXJTZXJ2aWNlQ2VudGVyQ2xhc3MxL0xhdGVzdENSTC5jcmwwR
+ QYDVR0gBD4wPDA6BgpghkgBhvhFAQccMCwwKgYIKwYBBQUHAgEWHmh0dHBzOi8vd3d3LnRydXN0aX
+ RhbGlhLml0L3JwYTARBglghkgBhvhCAQEEBAMCB4AwEQYKYIZIAYb4RQEGCQQDAQH/MA0GCSqGSIb
+ 3DQEBBAUAA4GBAJnJydkdL5R7+KJVyFxnpIKNdOSCjDOZ5AOKWG0ONs7pMI1iaulK2CF91JeNbxty
+ /QsgznxuMqR/7r+cP/YLvEui3lpL7uR7V4N6RNhW0FheovdPBEXSQDmzqpiCNNNiebLcez0aiXWiE
+ 3Q4/3XUD9Laz0PFPHQJTMU8VRZS9xn0
+providerName: AGSM Telecomunicazioni Srl
+mailReceipt: posta-certificata@cmail.autenticazione.it
+managedDomains: cmail.autenticazione.it
+LDIFLocationURL: https://webmail.cmail.autenticazione.it/pec/agsm.ldif
+
+# Postecom S.p.A., postacert
+dn: providerName=Postecom S.p.A.,o=postacert
+objectClass: top
+objectClass: provider
+description: Servizi di posta certificata per la P.A.
+providerCertificateSubject: C=IT,O=Postecom S.p.A.,L=RA2,OU=Centro Servizi,CN=
+ PosteMail Certificata PA,emailAddress=posta-certificata@postemailcertificata.it,Descript
+ ion=PosteMail Certificata PA
+providerCertificate;binary:: MIIEpTCCA42gAwIBAgIEQEyXTTANBgkqhkiG9w0BAQUFADBXM
+ QswCQYDVQQGEwJJVDEYMBYGA1UEChMPUG9zdGVjb20gcy5wLmEuMRcwFQYDVQQLEw5DQSBlIFNpY3
+ VyZXp6YTEVMBMGA1UEAxMMUG9zdGVjb20gQ0ExMB4XDTA0MDMwODE1NTQ1M1oXDTA2MDMwODE1NTQ
+ 1M1owgc4xCzAJBgNVBAYTAklUMRgwFgYDVQQKEw9Qb3N0ZWNvbSBTLnAuQS4xDDAKBgNVBAcTA1JB
+ MjEXMBUGA1UECxMOQ2VudHJvIFNlcnZpemkxITAfBgNVBAMTGFBvc3RlTWFpbCBDZXJ0aWZpY2F0Y
+ SBQQTE4MDYGCSqGSIb3DQEJARYpcG9zdGEtY2VydGlmaWNhdGFAcG9zdGVtYWlsY2VydGlmaWNhdG
+ EuaXQxITAfBgNVBA0TGFBvc3RlTWFpbCBDZXJ0aWZpY2F0YSBQQTCBnzANBgkqhkiG9w0BAQEFAAO
+ BjQAwgYkCgYEA4ctZOHPGbAAexYXE7bUNem/BS1ZF6ADVK2RSGV/zg5fp/lKtBUoaXaIoUiQyNjfJ
+ QzBCtI2EWcBEJ/B205RUMXPlAx7/o26COxPrrf+xe02mx4ooboZYPcdbsZxV/pHEzNuPmtg3z3OQQ
+ 5+b4keyiYKEia6AIV8eJ4ZYTAPeOEsCAwEAAaOCAYMwggF/MA4GA1UdDwEB/wQEAwIEsDAdBgNVHS
+ UEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwOwYDVR0fBDQwMjAwoC6gLIYqaHR0cDovL3Bvc3RlY2V
+ ydC5wb3N0ZS5pdC9wb3N0ZWNvbWNhMS9jcmwzMDQGA1UdEQQtMCuBKXBvc3RhLWNlcnRpZmljYXRh
+ QHBvc3RlbWFpbGNlcnRpZmljYXRhLml0MIGmBgNVHSAEgZ4wgZswZwYHK0wLAQEKAjBcMDUGCCsGA
+ QUFBwICMCkaJ0NlcnRpZmljYXRpIGVsZXR0cm9uaWNpIG5vbiBxdWFsaWZpY2F0aTAjBggrBgEFBQ
+ cCARYXaHR0cDovL3d3dy5wb3N0ZWNlcnQuaXQwMAYHK0wLAQIBATAlMCMGCCsGAQUFBwIBFhdodHR
+ wOi8vd3d3LnBvc3RlY2VydC5pdDATBgNVHSMEDDAKgAhJLvpHXWEIzDAdBgNVHQ4EFgQUEiqUWNd+
+ 6ofuF7FMYyWNGxoGIl0wDQYJKoZIhvcNAQEFBQADggEBABcE/+rDdKG6U18wQV2ORrL0Zn2w5bJtT
+ IgwhP6Kf/KMN1zgvOmOwL9GAr60Vy9SfCmZnTjfmdVLqjPTJCQiP0VGgkm7HWYXfGN2h2B/tPlb7O
+ UMJ7/z8kbFoLOlFpQmYurfxOzwxKq9A9r8J+kCePoIK54PsICQ4hOzA7VkChjHerleyUJC/0I8iy4
+ oJvhc8E29lfX5vpNo4oNVyufVuzGMqfBpEDppi4j6enoc/wOvuRXTnMFOjS9u1HqCW16OS/WaplhY
+ au84Zm41pkRerj5DQkQich6ZIxxWXmRCLlOWWe5Ik+6QWvt8ltf1Nvg0Ut3p5+Zc+iRlGDE3KUk8+
+ 8M=
+providerName: Postecom S.p.A.
+mailReceipt: posta-certificata@postemailcertificata.it
+managedDomains: ateneo.uniroma3.it
+managedDomains: cert-sbt.it
+managedDomains: cert.ruparpiemonte.it
+managedDomains: cert.sistemapiemonte.it
+managedDomains: certcamera.it
+managedDomains: certificata.comune.cremona.it
+managedDomains: comm-cert.postecom.it
+managedDomains: pec.buonchef.it
+managedDomains: pec.comune.jolandadisavoia.fe.it
+managedDomains: pec.comune.sassari.it
+managedDomains: pec.comunedirometta.it
+managedDomains: pec.travelshop.it
+managedDomains: pec.units.it
+managedDomains: postemailcertificata.it
+LDIFLocationURL: https://ldif.postemailcertificata.it/ldif.txt
+
+# Intesa Trusted Mail, postacert
+dn: providerName=Intesa Trusted Mail,o=postacert
+objectClass: top
+objectClass: provider
+providerCertificateSubject: c=it,o=In.Te.S.A. S.p.A.,cn=In.Te.S.A. - Gestore P
+ osta Certificata,emailAddress=posta-certificata@trustedmail.intesa.it
+providerCertificate;binary:: MIIC/jCCAeYCBEHP9DIwDQYJKoZIhvcNAQEFBQAwcTELMAkGA
+ 1UEBhMCaXQxDzANBgNVBAoTBklOVEVTQTEPMA0GA1UECxMGSU5URVNBMR0wGwYDVQQDExRJTlRFU0
+ EgQ29tbWVyY2lhbCBDQTEhMB8GCgmSJomT8ixkAQMUEWNhYWRtaW5AaW50ZXNhLml0MB4XDTA0MTI
+ yNzExMzgyNloXDTA2MTIyNzExMzgyNlowgZkxCzAJBgNVBAYTAklUMRowGAYDVQQKExFJbi5UZS5T
+ LkEuIFMucC5BLjE2MDQGA1UEAxMtSW4uVGUuUy5BLiBTLnAuQS4gLSBHZXN0b3JlIFBvc3RhIENlc
+ nRpZmljYXRhMTYwNAYJKoZIhvcNAQkBFidwb3N0YS1jZXJ0aWZpY2F0YUB0cnVzdGVkbWFpbC5pbn
+ Rlc2EuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMjeO7yswT68GEt/sDPKoyAYyl0/jvC
+ HDhpsLFVS/L7Zui8sX+5ymvlh7qvqijYYsx6YJ26uMaZ68l10oFfdwz0Ih04/UINLkDl19G9CtKPH
+ JjkSnAMPOhg4aPjKFbxZ1afNVFB4PBhixOSUDmslgBTSkGVFhJBiZKLilgL0TtZdAgMBAAEwDQYJK
+ oZIhvcNAQEFBQADggEBAFiuXK8z3wgHXYAC1XU111OI7bO37tX7fRjHnVY8XN3rCr8D1yhFHl6WCD
+ ftVOIqPlkkpthtpDw27Fk31NLs+0XO6sPtIgAT1bhlfZd5n1DzAWjfFOi5LPTUjpuKen55pmGAiWR
+ 30DRdMjoIh3MvcIl4Kma9IxAmY255sEg5rCoyZV76too3D/NF4mtNbG2F66Hn6uRkcoI0UZ5HJ59r
+ Y0nhcJ8y3o574mG8cenn2hGPUlzsaJTonYaLtTyLbw2hLc4ym+S+o3Yf/0Cf1F016t3NEFbpnXJTo
+ 7w8yA3S9nULFzorpOXCO4DnVeER+kiuUtaZ8vusx5uZCWjupHGzA1o=
+providerName: Intesa Trusted Mail
+mailReceipt: posta-certificata@trustedmail.intesa.it
+managedDomains: trustedmail.intesa.it
+LDIFLocationURL: http://e-trustcom.intesa.it/LDIF/pec.ldif
+
+# SKYMAX-DG s.c.r.l., postacert
+dn: providerName=SKYMAX-DG s.c.r.l.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: SKYMAX-DG s.c.r.l.
+providerCertificateSubject: C=IT,O=SKYMAX-DG s.c.r.l.,OU=Certified mail,CN=pos
+ tacert@rr.skymax-dg.com,SN=3
+providerCertificate;binary:: MIIHODCCBSCgAwIBAgIBAzANBgkqhkiG9w0BAQUFADCBkTELM
+ AkGA1UEBhMCSVQxNDAyBgNVBAoTK1MuUC5FLlNpc3RlbWkgZSBQcm9nZXR0aSBFbGV0dHJvbmljaS
+ BzLmEucy4xIDAeBgNVBAsTF0NlcnRpZmljYXRpb24gQXV0aG9yaXR5MQ8wDQYDVQQDEwZTUEUgQ0E
+ xGTAXBgkqhkiG9w0BCQEWCmNhQHNwZS5uZXQwHhcNMDQwMzA4MDkzOTAyWhcNMDUwMzA4MDkzOTAy
+ WjB0MQswCQYDVQQGEwJJVDEbMBkGA1UEChMSU0tZTUFYLURHIHMuYy5yLmwuMRcwFQYDVQQLEw5DZ
+ XJ0aWZpZWQgbWFpbDEjMCEGA1UEAxQacG9zdGFjZXJ0QHJyLnNreW1heC1kZy5jb20xCjAIBgNVBA
+ UTATMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDDOmLVSpfQ1ZzW/reAmAQPDCx/w/b
+ EbGEIdrte156ec10eDwtbF7Fy3cxl8Kw3EQ5mrLrMM8EUaDman+CcU+GzeDOAbdYn55x9qm7yliTG
+ OfUci1MaHErCSe1vwHEs1S445yXSmn8a6+NiQn1aZ+NXJ96HM6V7Espoj+Dvx0ZEgfnHDztBhDWct
+ GHZ8ZjilkqPynEPudTH7Rl5lb8S9mssQ3ZhuEgkaY7QjU5whZPP/opatE0psE0W/QgEhidXoZTErB
+ 0teVrZyUP0A/veR/VgYXvGlRV7/T1deEy6+nvuGylOd88+wJo1XzefMLjfUgIYaCnfJirEgJlbeDF
+ fnxHvAgMBAAGjggK1MIICsTAJBgNVHRMEAjAAMBEGCWCGSAGG+EIBAQQEAwIFoDALBgNVHQ8EBAMC
+ BeAwKQYDVR0lBCIwIAYIKwYBBQUHAwIGCCsGAQUFBwMEBgorBgEEAYI3FAICMCkGCWCGSAGG+EIBD
+ QQcFhpVc2VyIENlcnRpZmljYXRlIG9mIFMuUC5FLjAdBgNVHQ4EFgQU9H3+w9qpuarHZK2fjXAGvI
+ IbbBwwgb4GA1UdIwSBtjCBs4AUIFHzmgq1NtgxcZIP1CuCL+Dw28mhgZekgZQwgZExCzAJBgNVBAY
+ TAklUMTQwMgYDVQQKEytTLlAuRS5TaXN0ZW1pIGUgUHJvZ2V0dGkgRWxldHRyb25pY2kgcy5hLnMu
+ MSAwHgYDVQQLExdDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTEPMA0GA1UEAxMGU1BFIENBMRkwFwYJK
+ oZIhvcNAQkBFgpjYUBzcGUubmV0ggEAMCUGA1UdEQQeMByBGnBvc3RhY2VydEByci5za3ltYXgtZG
+ cuY29tMBUGA1UdEgQOMAyBCmNhQHNwZS5uZXQwMgYJYIZIAYb4QgEEBCUWI2h0dHA6Ly9yYS5zcGU
+ ubmV0L3B1Yi9jcmwvY2FjcmwuY3JsMDIGCWCGSAGG+EIBAwQlFiNodHRwOi8vcmEuc3BlLm5ldC9w
+ dWIvY3JsL2NhY3JsLmNybDCBpwYDVR0fBIGfMIGcMCmgJ6AlhiNodHRwOi8vcmEuc3BlLm5ldC9wd
+ WIvY3JsL2NhY3JsLmNybDBvoG2ga4ZpbGRhcDovL3JhLnNwZS5uZXQvY249U1BFIENBLE9VPUNlcn
+ RpZmljYXRpb24gQXV0aG9yaXR5LE89Uy5QLkUuU2lzdGVtaSBlIFByb2dldHRpIEVsZXR0cm9uaWN
+ pIHMuYS5zLixjPUlUMA0GCSqGSIb3DQEBBQUAA4ICAQA+/w88TLNsBKNtuMfO96rpiADEcmiYpmsc
+ XpP04ro54Z59QTsP73npmQ0rYx3qHtZJl/tQWpLNQKRFnrw8z/Fji/4/cNdmmUZRv8IKdCBzf7YGh
+ Q6foGCjksQ0/XVhTidRwLSnzVNP21BhFPNe1Sn/1HbkgxR1Q1IyOOthmclfAqtVQt3sUm3oEGYq6R
+ TVkCaunao0VVGyzOktFoMyMn4OuWea5vA4CnoY8AXif/NAXsldyJ1AZXVVREvC5Wcg/gUseCWJgSL
+ GbTIMRyIAJOQqQ66sEOsVHl9Eer7kWfZZ60h4/yiur4oF7eOCc9Bb3gVvetkNhNi8JzlSv4B//fNq
+ FD4vU3uVQ9ywvOcjTC6M+LrURGXZfreSv95zxqG1Hj3k6Y++ubYGMvpzRksHsMalQBAtAF5WocigF
+ PbRL3YUuSlRxbpzyPo8tIxq4RfB+R7CMMx9AVZtsLMoP75tv9BCgTaR6Ic/f3BzRB1aXI2FttUG6H
+ IgGjYx5rYNlLvKCgBj9Xjv7zCkrtwfZxJ4UWJ5whpLRNVV9acmMoLiw4T6U59ouqNBzTt6yn/1Ff3
+ 6+Ht7fKEAgiaCdH0wZcvvVi6wXdSs40pfs39XaiS8NSE6LdcbZ9ibJimM5Q49BeNY+CPosvmDfQB9
+ 91KD6RaKBS5EYr1+50F7YCZxiNDR3JTH0Q==
+mailReceipt: ricevute@rr.skymax-dg.com
+LDIFLocationURL: http://mail1.rr.skymax-dg.com/ldif.txt
+managedDomains: rr.skymax-dg.com
+managedDomains: rr.comune.trenzano.bs.it
+managedDomains: comuneborgovalsugana.it
+managedDomains: rr.smartpost.it
+description: Servizi di posta certificata
+
+# Gestore Posta certificata ecertmail.it, postacert
+dn: providerName=Gestore Posta certificata ecertmail.it , o=postacert
+LDIFLocationURL: http://www.ecertmail.it/ldif/pcert-ecertmail.it.ldif
+providerName: Gestore Posta certificata ecertmail.it
+objectClass: top
+objectClass: provider
+managedDomains: ecertmail.it
+managedDomains: blindoposta.it
+managedDomains: cer.sofid.biz
+managedDomains: saras.ecertmail.it
+managedDomains: cert.raccomandata.net
+managedDomains: municert.it
+providerCertificate;binary:: MIIDYjCCAsugAwIBAgICDi0wDQYJKoZIhvcNAQEEBQAwgeExC
+ zAJBgNVBAYTAklUMQswCQYDVQQIEwJDQTERMA8GA1UEBxMIQ2FnbGlhcmkxGDAWBgNVBAoTD1Nhcm
+ FzbGFiIFMuci5sLjEcMBoGA1UECxMTSW50ZXJuYWwgT3BlcmF0aW9uczEaMBgGA1UECxMRZUNlcnR
+ NYWlsIFNlcnZlcnMxLzAtBgNVBAMTJkdlc3RvcmUgUG9zdGEgY2VydGlmaWNhdGEgZWNlcnRtYWls
+ Lml0MS0wKwYJKoZIhvcNAQkBFh5wb3N0YS1jZXJ0aWZpY2F0YUBlY2VydG1haWwuaXQwHhcNMDQwM
+ zExMTY0MDQ3WhcNMDUwMzExMTY0MDQ3WjCB4TELMAkGA1UEBhMCSVQxCzAJBgNVBAgTAkNBMREwDw
+ YDVQQHEwhDYWdsaWFyaTEYMBYGA1UEChMPU2FyYXNsYWIgUy5yLmwuMRwwGgYDVQQLExNJbnRlcm5
+ hbCBPcGVyYXRpb25zMRowGAYDVQQLExFlQ2VydE1haWwgU2VydmVyczEvMC0GA1UEAxMmR2VzdG9y
+ ZSBQb3N0YSBjZXJ0aWZpY2F0YSBlY2VydG1haWwuaXQxLTArBgkqhkiG9w0BCQEWHnBvc3RhLWNlc
+ nRpZmljYXRhQGVjZXJ0bWFpbC5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAqsXm8PBICJ
+ bSUDLsElzpeqxtPeWbW3l+HHmzgP+M7Ww5Aj+4Hg9uohTrqSNCYua+RiLKUnCqVql4ejeLOUWRsTh
+ egGimdg2O6AltpRZjubpJT/1rYx3LHuanWGmSZj77Ju9GAeZfW/2T6Cml4Dx1XFDyVPmwu6K1g5bo
+ dF/eCYMCAwEAAaMnMCUwDgYDVR0PAQH/BAQDAgbAMBMGA1UdJQQMMAoGCCsGAQUFBwMEMA0GCSqGS
+ Ib3DQEBBAUAA4GBAER7vY6WEvkp8ymlxwgk/1ioqzgLBMlFVpQXeAZq4fyEwzIfNVgqhtsBtlsPUI
+ pQpyspQSPT0RXtxDckUndl8fAYdcBsQ/zR665M+1S3PQGJgu1bbPJEDaHSoTnSGvJdCcKvVTsG+5p
+ dott/RE72xeBbAKAOS+4Z/wp5JyeJmmw4
+providerCertificateSubject: CN=Gestore Posta certificata ecertmail.it, OU=Internal Operations, OU=eCertMail Servers, O=Saraslab S.r.l., L=Cagliari, ST=CA,C=IT, emailAddress=posta-certificata@ecertmail.it
+mailReceipt: gestione-ricevute@ecertmail.it
+
+# Actalis S.p.A., postacert
+dn: providerName=Actalis S.p.A., o=postacert
+objectClass: top
+objectClass: provider
+mailReceipt: posta-certificata@actaliscertymail.it
+LDIFLocationURL: https://portal.actalis.it/Info/repository/actaliscertymail.ldif
+providerCertificateSubject: O=Actalis S.p.A., L=Milano, C=IT, CN=Servizio di Posta Certificata, emailAddress=posta-certificata@actaliscertymail.it
+providerName: Actalis S.p.A.
+description: Servizio di Posta Certificata
+managedDomains: actaliscertymail.it
+managedDomains: pec.regione.liguria.it
+managedDomains: cert.provincia.savona.it
+managedDomains: certmail-cnf.it
+managedDomains: cert.provincia.bo.it
+managedDomains: pec.comune.bologna.it
+managedDomains: pec.provincia.catanzaro.it
+managedDomains: cert.provincia.palermo.it
+managedDomains: cert.provincia.pn.it
+managedDomains: cert.provincia.siena.it
+managedDomains: cert.provincia.re.it
+managedDomains: cert.provincia.modena.it
+managedDomains: cert.ato.mo.it
+managedDomains: cert.comune.campogalliano.mo.it
+managedDomains: cert.comune.carpi.mo.it
+managedDomains: cert.comune.castelfranco-emilia.mo.it
+managedDomains: cert.fiorano.it
+managedDomains: cert.comune.formigine.mo.it
+managedDomains: cert.comune.maranello.mo.it
+managedDomains: cert.unioneareanord.mo.it
+managedDomains: cert.comune.sanprospero.mo.it
+managedDomains: cert.comune.sanpossidonio.mo.it
+managedDomains: cert.comune.finale-emilia.mo.it
+managedDomains: cert.comunesanfelice.net
+managedDomains: cert.comune.medolla.mo.it
+managedDomains: cert.comune.mirandola.mo.it
+managedDomains: cert.comune.cavezzo.mo.it
+managedDomains: cert.comune.camposanto.mo.it
+managedDomains: cert.comune.concordia.mo.it
+managedDomains: cert.comune.modena.mo.it
+managedDomains: cert.comune.nonantola.mo.it
+managedDomains: cert.comune.novi.mo.it
+managedDomains: cert.comune.pavullo-nel-frignano.mo.it
+managedDomains: cert.comune.palinago.mo.it
+managedDomains: cert.comune.sassuolo.mo.it
+managedDomains: cert.comune.soliera.mo.it
+managedDomains: cert.comune.zocca.mo.it
+managedDomains: cert.comune.montese.mo.it
+managedDomains: cert.comune.guglia.mo.it
+managedDomains: cert.montana-est.mo.it
+managedDomains: cert.comune.manaro-sul-panaro.mo.it
+managedDomains: cert.cmfrignano.mo.it
+managedDomains: cert.comune.fiumalbo.mo.it
+managedDomains: cert.comune.fanano.mo.it
+managedDomains: cert.comune.lamamocogno.mo.it
+managedDomains: cert.comune.montecreto.mo.it
+managedDomains: cert.comune.pievepelago.mo.it
+managedDomains: cert.comune.riolunato.mo.it
+managedDomains: cert.comune.serramazzoni.mo.it
+managedDomains: cert.comune.sestola.mo.it
+managedDomains: cert.comune.ravarino.mo.it
+managedDomains: cert.unionedelsorbara.mo.it
+managedDomains: cert.comune.bastiglia.mo.it
+managedDomains: cert.comune.bomporto.mo.it
+managedDomains: cert.coiss.mo.it
+managedDomains: cert.unione.terredicastelli.mo.it
+managedDomains: cert.comune.cento.fe.it
+managedDomains: cert.provincia.fe.it
+managedDomains: cert.comune.fe.it
+managedDomains: cert.comune.santagostino.fe.it
+managedDomains: cert.comune.tresigallo.fe.it
+managedDomains: cert.comune.voghiera.fe.it
+managedDomains: cert.comune.ostellato.fe.it
+managedDomains: cert.provincia.ancona.it
+managedDomains: postacert.toscana.it
+managedDomains: certunipv.it
+managedDomains: cert.provincia.fc.it
+providerCertificate;binary:: MIIGuDCCBaCgAwIBAgIDAYsbMA0GCSqGSIb3DQEBBQUAMIGFM
+ QswCQYDVQQGEwJJVDEXMBUGA1UEChMOQWN0YWxpcyBTLnAuQS4xMTAvBgNVBAsTKFF1YWxpZmllZC
+ BDZXJ0aWZpY2F0aW9uIFNlcnZpY2UgUHJvdmlkZXIxKjAoBgNVBAMTIUFjdGFsaXMgUXVhbGlmaWV
+ kIENlcnRpZmljYXRlcyBDQTAeFw0wNDAzMDUxMzA2NDZaFw0wNTAzMDUxMzA1MjlaMIHCMQswCQYD
+ VQQGEwJJVDEPMA0GA1UECBMGSXRhbGlhMQ8wDQYDVQQHEwZNaWxhbm8xFzAVBgNVBAoTDkFjdGFsa
+ XMgUy5wLkEuMSYwJAYDVQQLEx1TZXJ2aXppbyBkaSBwb3N0YSBjZXJ0aWZpY2F0YTEaMBgGA1UEAx
+ MRUG9zdGEtQ2VydGlmaWNhdGExNDAyBgkqhkiG9w0BCQEWJXBvc3RhLWNlcnRpZmljYXRhQGFjdGF
+ saXNjZXJ0eW1haWwuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMxD/RJUsicumXhGMlNC
+ 6r70HSmxdquObHcmw5db2yoHw4Dn5jryvZ6o/WWymfFiWsKIL4jF/MgHrZd5ZdrgLJIAVJTHfTaa5
+ zyh54hLE6Dy4oc3+YujSBAI0LXPXplTfkK2QscCjqzcra/SsJN2z/Zd1uytZO9G6K30vbobtMXnAg
+ MBAAGjggN0MIIDcDCB/QYDVR0gBIH1MIHyMIHvBgYrgR8BAQEwgeQwgZoGCCsGAQUFBwICMIGNGoG
+ KTCd1c28gZGVpIGNlcnRpZmljYXRpIGVtZXNzaSBkYSBBY3RhbGlzIFMucC5BLiAoUkVBIG4uMSA2
+ Njk0MTEsIFRyaWIuIE1pbGFubykgZScgc29nZ2V0dG8gYWxsZSBjb25kaXppb25pIHByZWNpc2F0Z
+ SBuZWwgTWFudWFsZSBPcGVyYXRpdm8uMEUGCCsGAQUFBwIBFjlodHRwczovL3BvcnRhbC5hY3RhbG
+ lzLml0L1JlcG9zaXRvcnkvUG9saWN5L1F1YWxpZmllZC9DUFMwMAYDVR0RBCkwJ4ElcG9zdGEtY2V
+ ydGlmaWNhdGFAYWN0YWxpc2NlcnR5bWFpbC5pdDBCBggrBgEFBQcBAQQ2MDQwMgYIKwYBBQUHMAGG
+ Jmh0dHBzOi8vb25saW5ldmFsaWRhdGlvbi5hY3RhbGlzLml0L1FDMBgGCCsGAQUFBwEDBAwwCjAIB
+ gYEAI5GAQEwDgYDVR0PAQH/BAQDAgZAMIHGBgNVHRIEgb4wgbuBD2luZm9AYWN0YWxpcy5pdIaBp2
+ xkYXA6Ly9sZGFwLmFjdGFsaXMuaXQvY24lM0RBY3RhbGlzJTIwUXVhbGlmaWVkJTIwQ2VydGlmaWN
+ hdGVzJTIwQ0ElMkNvdSUzRFF1YWxpZmllZCUyMENlcnRpZmljYXRpb24lMjBTZXJ2aWNlJTIwUHJv
+ dmlkZXIlMkNvJTNEQWN0YWxpcyUyMFMucC5BLiUyQ2MlM0RJVD9jQUNlcnRpZmljYXRlMB8GA1UdI
+ wQYMBaAFC8O2Q9sKVT3EdZ2WtjoyEUKVGL+MIHEBgNVHR8EgbwwgbkwgbaggbOggbCGga1sZGFwOi
+ 8vbGRhcC5hY3RhbGlzLml0L2NuJTNkQWN0YWxpcyUyMFF1YWxpZmllZCUyMENlcnRpZmljYXRlcyU
+ yMENBLG91JTNkUXVhbGlmaWVkJTIwQ2VydGlmaWNhdGlvbiUyMFNlcnZpY2UlMjBQcm92aWRlcixv
+ JTNkQWN0YWxpcyUyMFMucC5BLixjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDAdBgNVH
+ Q4EFgQUmSiAbkXjx6tNCfPOzUMKmN4ahwcwDQYJKoZIhvcNAQEFBQADggEBAKyW9xHqC/XA/f0lPf
+ fg1LgajTaISUcLS/hxrfJ20tHd2tTE3uMgBq+qX2o89UCWbCZ4FmMyjPCwu6Z+p2wXYRlWw3HNfpj
+ gRm67cKTzf7RV65uH+W6jp7Sg8y9rE4Ph+FrHyfpIXYso8SfRSLGwpO36azIbnnWuieYqk1GAXIZ7
+ m1cmXbXgX9xeYdHGa/19NJQDsmkan2tjVc/dlA3HT6vUUxjeyOkfUov2jzyXGNWIAgFllYJKKBVl+
+ 5xq4F/ocVsx+34C7vClZudpJAahPqg40uhfBJf2HymWCrKNZ9jlpADI34/UZVGv8oiYldZkJQdTkj
+ /gUd/mbuTuiacZ0WemailAddress=
+
+# Regione Campania, postacert
+dn: providerName=Regione Campania, o=postacert
+objectClass: top
+objectClass: provider
+providerName: Regione Campania
+mailReceipt: prese-in-carico@certmail.regione.campania.it
+LDIFLocationURL: http://www.regione.campania.it/posta-certificata/RegioneCampa
+ nia.ldif
+managedDomains: certmail.regione.campania.it
+description: Regione Campania Servizio Demo di Posta Certificata
+providerCertificateSubject: C=IT, ST=NA, L=Napoli, O=Regione Campania, OU=Area
+  G. C. Ricerca Scientifica - Settore C.R.E.D., CN=Servizio Posta Certificata 
+ Regione Campania,emailAddress=postmaster@regione.campania.it
+providerCertificate;binary:: MIIDajCCAlICAQswDQYJKoZIhvcNAQEFBQAwgYExCzAJBgNVB
+ AYTAklUMRcwFQYDVQQKEw5BY3RhbGlzIFMucC5BLjEnMCUGA1UECxMeQ2VydGlmaWNhdGlvbiBTZX
+ J2aWNlIFByb3ZpZGVyMTAwLgYDVQQDEyctIEFjdGFsaXMgUy5wLkEuIC0gQy5TLlAuIC0gU2l0aSB
+ TaWN1cmkwHhcNMDQwMzA5MDkyNTU1WhcNMDYwMzA5MDkyNTU1WjCB9zELMAkGA1UEBhMCSVQxCzAJ
+ BgNVBAgTAk5BMQ8wDQYDVQQHEwZOYXBvbGkxGTAXBgNVBAoTEFJlZ2lvbmUgQ2FtcGFuaWExOjA4B
+ gNVBAsTMUFyZWEgRy4gQy4gUmljZXJjYSBTY2llbnRpZmljYSAtIFNldHRvcmUgQy5SLkUuRC4xND
+ AyBgNVBAMTK1NlcnZpemlvIFBvc3RhIENlcnRpZmljYXRhIFJlZ2lvbmUgQ2FtcGFuaWExPTA7Bgk
+ qhkiG9w0BCQEWLnBvc3RhLWNlcnRpZmljYXRhQGNlcnRtYWlsLnJlZ2lvbmUuY2FtcGFuaWEuaXQw
+ gZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAL02V9FMW1ruyTujk39r+CJg0Xw6F+Ti4ktJlzVJE
+ 09SJXowU4nyD7E7Krg3pSS0niVjmBHlGfTvyNIbaZW7HgpCylEFWSoBI+nTYFfJ8wU1w893wJyKyW
+ zrVUF7Q9vvEgFK3EBdLIH+aqhVNRwK9cr2OQXQrRGC/eSU8ISPxKvdAgMBAAEwDQYJKoZIhvcNAQE
+ FBQADggEBAAVs+OuDi4Oxr5vREi6AvwAOYXvAc7sULmHSno1mPu3emgPCENkbMP2US0dvwxPHm3g3
+ 2iOfi5VHa3FVUvLTIZ4/G4hUO3PQXHoKdnITb0CbeUjo8KoiJqkOivwvaHFlUxg2NxfkpAfZegrM4
+ fZRS0yE114bTNdA700bqxIrQvDNmfymnoX9DA845HgbeFTDhqC7eZhftBICRC2OYjJBgxN5uBCEQx
+ eUnMLlspEufXf3Prv+3GRPbtmR7ndgi+PrpEBBZ59OhZY0aLMjv2Mw9rO0+nHLi+/AfGS+3allneW
+ +zR2F9gO6V+xL9mMkFJQuBwVXDMry3ZSvD3LWfn5JGiM=
+
+# Regione Lazio, postacert
+dn: providerName=Regione Lazio, o=postacert
+objectClass: top
+objectClass: provider
+providerName: Regione Lazio
+mailReceipt: posta-certificata@pcert.regione.lazio.it
+LDIFLocationURL: https://pcert.regione.lazio.it/pcert.ldif
+managedDomains: pc.regione.lazio.it
+managedDomains: pcert.regione.lazio.it
+managedDomains: sanita.regione.lazio.it
+description: Posta Certificata Regione Lazio
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Authenticated by
+  Trust Italia S.p.A., OU=Member\, VeriSign Trust Network, OU=Persona Not Vali
+ dated, OU=Digital ID Class 1, CN=Daniele-1 Caliciotti,emailAddress=posta-cert
+ ificata@pcert.regione.lazio.it
+providerCertificate;binary:: MIIEVjCCA7+gAwIBAgIQUb0u0Uu/NYAXR7+hW4ev8DANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDQxNDAwMDAwMFoXDTA1MDQxNDIzN
+ Tk1OVowggFtMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMR4wHA
+ YDVQQDExVNYXJnaGVyaXRhIFRyYW1vbnRhbmExNzA1BgkqhkiG9w0BCQEWKHBvc3RhLWNlcnRpZml
+ jYXRhQHBjZXJ0LnJlZ2lvbmUubGF6aW8uaXQwXDANBgkqhkiG9w0BAQEFAANLADBIAkEAoIo4KBzV
+ w8eT6u5RdTtHfyPTSyLl9MrEArHeNeeiQ/io7QDvUXe5NMzYTcolQ/Yl5AUzOXI06psHDt9gr/2iT
+ wIDAQABo4HlMIHiMAkGA1UdEwQCMAAwaAYDVR0fBGEwXzBdoFugWYZXaHR0cDovL29uc2l0ZWNybC
+ 50cnVzdGl0YWxpYS5pdC9UcnVzdEl0YWxpYVNwQUNvbnN1bWVyU2VydmljZUNlbnRlckNsYXNzMS9
+ MYXRlc3RDUkwuY3JsMEUGA1UdIAQ+MDwwOgYKYIZIAYb4RQEHHDAsMCoGCCsGAQUFBwIBFh5odHRw
+ czovL3d3dy50cnVzdGl0YWxpYS5pdC9ycGEwEQYJYIZIAYb4QgEBBAQDAgeAMBEGCmCGSAGG+EUBB
+ gkEAwEB/zANBgkqhkiG9w0BAQQFAAOBgQDCR00TmCc7Pyk9EKkL55Qef96A4qdzHzTlmxZd+9gNkg
+ lFY0XuokEmYzoQfzsMZ7ljUUghm9anS8hEytlTBwnPVnBpkRyvShSB+13rp+GQI9IvUNsfiyq2d9b
+ VnQiaQjN+505ixFLm1SxJhaPGuLQ2WshuDOLXqrNEk5HyvktAOQ==
+providerCertificate;binary:: MIIEmTCCBAKgAwIBAgIQRPCuLjltOW4QK5Uie0/lszANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTAyMjAwMDAwMFoXDTA1MTAyMjIzN
+ Tk1OVowggFsMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMR0wGw
+ YDVQQDExREYW5pZWxlLTEgQ2FsaWNpb3R0aTE3MDUGCSqGSIb3DQEJARYocG9zdGEtY2VydGlmaWN
+ hdGFAcGNlcnQucmVnaW9uZS5sYXppby5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAzkHA
+ IJJBI37FMTkbHBKhpQapYDJsYVjet11XhcxCAKLE23j/J+4eDbxNuFAgsp7ZvUtZeKC6kSrhUEW0w
+ 9SmUAC7G4Ag5m4+hgcGZZ1+VnKt6hRnH0oz3E8CrB1NhnsCcKYk01x9bWADOCVhRZxe0dyuX2KaHg
+ uz0xF+FE8Cyg8CAwEAAaOB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhMF8wXaBboFmGV2h0dHA6Ly9
+ vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb25zdW1lclNlcnZpY2VDZW50
+ ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwLDAqBggrBgEFB
+ QcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQQEAwIHgDARBg
+ pghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvcNAQEEBQADgYEAhXltLGyU8ze/uTUHnO+GLG+o7e79GTm
+ zbIjFFzkFf1DRwasYJ0qC/prkF+E8vCJIDWpy3Fho6UBRITzSF6qW5HSsdxcf0+yQG1xPg4avRieO
+ ggxhMtDmSnuDQP4iM4dwgHpb3PpGSdChwjSxlRpV2Okfwmfxte/+1Db1kgc9BP0=
+providerCertificate;binary:: MIIEmTCCBAKgAwIBAgIQKRoT/Q15rGYebbB9aAu5CzANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTAyMjAwMDAwMFoXDTA1MTAyMjIzN
+ Tk1OVowggFsMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMR0wGw
+ YDVQQDExREYW5pZWxlLTIgQ2FsaWNpb3R0aTE3MDUGCSqGSIb3DQEJARYocG9zdGEtY2VydGlmaWN
+ hdGFAcGNlcnQucmVnaW9uZS5sYXppby5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAxjx/
+ 35bh/e6sSlaCOv2ubhXPE8qqDqCfow2YSJYD0evHIPWSPoQBoNPWV2K3EUKf4ERt2ciQPuICzXoZX
+ QgQy+qxpGX9OYEqRDGOiBgZE8Gr6slnj1Hd5uqX2VBv5fyi59JE4NDlKOecNeyo552T1FgTx67xmM
+ y9QZIndxePRXcCAwEAAaOB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhMF8wXaBboFmGV2h0dHA6Ly9
+ vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb25zdW1lclNlcnZpY2VDZW50
+ ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwLDAqBggrBgEFB
+ QcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQQEAwIHgDARBg
+ pghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvcNAQEEBQADgYEAoGVWIf0S12H0WM4DgHG0qnre6dpUiLT
+ 18EZDDtN03I0bDBZ2zGe8/C+Anxp+IduNG2TbgAuYr21B40LcZbuWVa4cuAqJdugkikOiny4bkbW9
+ jhGS/KOx6CUbD69+6Jzi+HJJ9prSIS4YLNEl9pJPXfowbraFbCvPxW+aKcdSGZk=
+
+# ICTeam S.p.A., postacert
+dn: providerName=ICTeam S.p.A.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: ICTeam S.p.A.
+providerCertificateSubject: C=IT, ST=Bergamo, L=Grassobbio, O=ICTeam S.p.A., O
+ U=Servizio PEC ICTeam, CN=Posta Certificata,emailAddress=posta-certificata@le
+ xmail.it
+providerCertificate;binary:: MIIFlTCCBH2gAwIBAgIDB8gBMA0GCSqGSIb3DQEBBQUAMHwxC
+ zAJBgNVBAYTAklUMRcwFQYDVQQKEw5BY3RhbGlzIFMucC5BLjEnMCUGA1UECxMeQ2VydGlmaWNhdG
+ lvbiBTZXJ2aWNlIFByb3ZpZGVyMSswKQYDVQQDEyJBY3RhbGlzIGUtQnVzaW5lc3MgQ2VydGlmaWN
+ hdGVzIENBMB4XDTA0MDUxMTA4MDE0OVoXDTA1MDUxMTA4MDE0NlowgYwxCzAJBgNVBAYTAklUMRYw
+ FAYDVQQKEw1JQ1RlYW0gcy5wLmEuMRwwGgYDVQQLExNTZXJ2aXppbyBQRUMgSUNUZWFtMRowGAYDV
+ QQDExFQb3N0YSBDZXJ0aWZpY2F0YTErMCkGCSqGSIb3DQEJARYccG9zdGEtY2VydGlmaWNhdGFAbG
+ V4bWFpbC5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAvniOBuGJoawqD7J4yw6SEP4wq8k
+ +c9igVadvMYN5VWQqTqXJD7dIs1M81W3bzWGaALvqWf/eIvBoS1pRix283Y3fRPyuav9y9QaZSH5W
+ VEILiloJ3pOF9v/qxfra4MmVlLnUwoE4CxjqmhsoWl95MOu5EP19x8huoU07l0po6ncCAwEAAaOCA
+ pEwggKNMFoGA1UdIARTMFEwTwYGK4EfAQMBMEUwQwYIKwYBBQUHAgEWN2h0dHBzOi8vcG9ydGFsLm
+ FjdGFsaXMuaXQvUmVwb3NpdG9yeS9Qb2xpY3kvR2VuZXJpYy9DUFMwJwYDVR0RBCAwHoEccG9zdGE
+ tY2VydGlmaWNhdGFAbGV4bWFpbC5pdDBCBggrBgEFBQcBAQQ2MDQwMgYIKwYBBQUHMAGGJmh0dHBz
+ Oi8vb25saW5ldmFsaWRhdGlvbi5hY3RhbGlzLml0L0VCMA4GA1UdDwEB/wQEAwIGwDCBtQYDVR0SB
+ IGtMIGqgQ9pbmZvQGFjdGFsaXMuaXSGgZZsZGFwOi8vbGRhcC5hY3RhbGlzLml0L2NuJTNkQWN0YW
+ xpcyUyMGUtQnVzaW5lc3MlMjBDZXJ0aWZpY2F0ZXMlMjBDQSxvdSUzZENlcnRpZmljYXRpb24lMjB
+ TZXJ2aWNlJTIwUHJvdmlkZXIsbyUzZEFjdGFsaXMlMjBTLnAuQS4sYyUzZElUP2NBQ2VydGlmaWNh
+ dGUwHwYDVR0jBBgwFoAUFIBAiFS5+ADueGsOKLljIIHqzPEwgbkGA1UdHwSBsTCBrjCBq6CBqKCBp
+ YaBomxkYXA6Ly9sZGFwLmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwZS1CdXNpbmVzcyUyMENlcn
+ RpZmljYXRlcyUyMENBLG91JTNkQ2VydGlmaWNhdGlvbiUyMFNlcnZpY2UlMjBQcm92aWRlcixvJTN
+ kQWN0YWxpcyUyMFMucC5BLixjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDAdBgNVHQ4E
+ FgQU28lLnZG9DzmRb+Pd6xIgHAx0tIcwDQYJKoZIhvcNAQEFBQADggEBAKKz45XM3zfOm5zVl6BF3
+ tKeiB60T1IdrPam9n9jrzaMsaFDvS7EhCZ7Vk+uHHIMxGxdYDrdKG0sdDXRhRmh/RMvhRFjFIqQro
+ +/mTyqVaR2q0SF1QggmctSs4FOSTkQobbOh3SX8EmY7h5PMsHxAkYbOvHLPySn+XwUP/xP+ROeje5
+ 0l5WPXsB9dYkydspMzqnuX1HfFO6CJUgNczFivrwdPaWvNBg+VR8rgMKpuYRi6cjhYGElDPYSvuqt
+ EaJq1NNJVHUC+mkVhAGr+xt2ntnifItQlhPPUvU+jR5P4stGlwyuHe+AN5xuB2I42KNeipWbz4s8q
+ +uvQIT3nTkmNjo=
+mailReceipt: presa-in-carico@lexmail.it
+managedDomains: lexmail.it
+managedDomains: notarilmail.it
+description: Servizi di posta certificata per ICTeam S.p.A.
+LDIFLocationURL: https://portal.lexmail.it/ldap/icteam.ldif
+
+# Lombardia Informatica S.p.A., postacert
+dn: providerName=Lombardia Informatica S.p.A., o=postacert
+objectClass: top
+objectClass: provider
+providerName: Lombardia Informatica S.p.A.
+mailReceipt: ricevute@postacert.regione.lombardia.it
+LDIFLocationURL: http://www.regione.lombardia.it/postacert/postacertLI.ldif
+managedDomains: postacert.regione.lombardia.it
+description: Servizi di posta certificata per PA
+providerCertificateSubject: C=IT,O=PECRegioneLombardia,emailAddress=posta-certificata
+ @postacert.regione.lombardia.it
+providerCertificate;binary:: MIIEUDCCAzigAwIBAgIEP+BA1jANBgkqhkiG9w0BAQUFADBxM
+ QswCQYDVQQGEwJpdDEPMA0GA1UEChMGSU5URVNBMQ8wDQYDVQQLEwZJTlRFU0ExHTAbBgNVBAMTFE
+ lOVEVTQSBDb21tZXJjaWFsIENBMSEwHwYKCZImiZPyLGQBAxQRY2FhZG1pbkBpbnRlc2EuaXQwHhc
+ NMDMxMjE3MTE0MTEwWhcNMDQxMjE2MTE0MTEwWjCBijELMAkGA1UEBhMCSVQxGjAYBgNVBAoTEVJl
+ Z2lvbmUgTG9tYmFyZGlhMR4wHAYDVQQDExVQRUMgUmVnaW9uZSBMb21iYXJkaWExPzA9BgkqhkiG9
+ w0BCQEWMHBvc3RhLWNlcnRpZmljYXRhQHBvc3RhY2VydC5yZWdpb25lLmxvbWJhcmRpYS5pdDCBnz
+ ANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEArC5X3qhfNK/cA8cGT0hCQg0RwORAAr7IYLYQI/VrvmX
+ fC22VbdXthhqxv6ogPIu+2M0mgtGa1y5w1FSwbPkl8o1mHkFyixL6krokJJu97fUFzo3C7wbQIucJ
+ Ey+Z4pFDZJTDPIAPj/uw9sq33FzFjXnnjbKHIJyCxmvgyudaYAUCAwEAAaOCAVgwggFUMA4GA1UdD
+ wEB/wQEAwIGwDA4BgNVHR8EMTAvMC2gK6AphidodHRwOi8vZS10cnVzdGNvbS5pbnRlc2EuaXQvY3
+ JsL2V0Yy5jcmwwVAYDVR0gBE0wSzBJBgcrTBUCAQENMD4wPAYIKwYBBQUHAgEWMGh0dHA6Ly9lLXR
+ ydXN0Y29tLmludGVzYS5pdC9jcHMvY3BzX2xvdHVzcGVjLnBkZjCBngYDVR0jBIGWMIGTgBRWzgWq
+ +rPr4rnxPsvc9M1UAjRXmqF1pHMwcTELMAkGA1UEBhMCaXQxDzANBgNVBAoTBklOVEVTQTEPMA0GA
+ 1UECxMGSU5URVNBMR0wGwYDVQQDExRJTlRFU0EgQ29tbWVyY2lhbCBDQTEhMB8GCgmSJomT8ixkAQ
+ MUEWNhYWRtaW5AaW50ZXNhLml0ggQ4119WMBEGA1UdDgQKBAhAX6iC33qLlzANBgkqhkiG9w0BAQU
+ FAAOCAQEAGt10G6UHDm4Wdm3dPdIXD6BArWd9cHVecsT5H7g8667ZJqS/oEaPNhETzAgnAYz6JVkG
+ r1J1in5hHYRzoISnfUB8BxGgh3bJMz3nI82JN3TDzuLq3WKe48moTMats2YX0/igYakCEWCI6jZ0k
+ WSvT9slImfCPeN2++9U+5+LRowM2z5rgv7NpIC7dOMZP2VodJHptmVk5GwijCNdQ+OBOMppCTJS/e
+ HgADBOpoAkt0FWk0b1fB6cJ5hE7mg3PlN7qJNdAyemr1r7ZpUzic19r4QxrzCrw2W0Jdcd5t389n+
+ 9yY4qJYBE16af9Por2OPnT5lV5Y2BWtAR+aaJRGzm2w==
+
+# Servizio di posta elettronica certificata Asmecert, postacert
+dn: providerName=Servizio di posta elettronica certificata Asmecert, o=postace
+ rt
+LDIFLocationURL: http://certssl.asmecert.it/ldif/pcert-asmecert.it.ldif
+providerName: Servizio di posta elettronica certificata Asmecert
+objectClass: top
+objectClass: provider
+managedDomains: asmecert.it
+providerCertificate;binary:: MIIDMTCCAhkCARMwDQYJKoZIhvcNAQEFBQAwgYExCzAJBgNVB
+ AYTAklUMRcwFQYDVQQKEw5BY3RhbGlzIFMucC5BLjEnMCUGA1UECxMeQ2VydGlmaWNhdGlvbiBTZX
+ J2aWNlIFByb3ZpZGVyMTAwLgYDVQQDEyctIEFjdGFsaXMgUy5wLkEuIC0gQy5TLlAuIC0gU2l0aSB
+ TaWN1cmkwHhcNMDQwNjIxMDczMTM4WhcNMDYwNjIxMDczMTM4WjCBvjELMAkGA1UEBhMCSVQxCzAJ
+ BgNVBAgTAk5BMQ8wDQYDVQQHEwZOYXBvbGkxHTAbBgNVBAoTFEFiYWNvIFRlbGVtYXRpY2EgU3JsM
+ RAwDgYDVQQLEwdTZXJ2aXppMTIwMAYDVQQDEylzZXJ2aXppbyBkaSBwb3N0YSBlbGV0dHJvbmljYS
+ BjZXJ0aWZpY2F0YTEsMCoGCSqGSIb3DQEJARYdcG9zdGEtY2VydGlmaWNhdGFAYXNtZWNlcnQuaXQ
+ wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALSkrSj65cQ5lpQR05lHpW6i8256QxR0saSUqpk8
+ garMC3v1TD3AS8NmpQBnro/nYFFcQKVfbFhpKmYbbOLcQL+S6xf2IAm6rDruz3ifLh8yTYMn0GNO3
+ U23StTzxR9fJG86V9qNdHyTijmLb6u1wTf/oRviyo7uUxAqbd4DIRP9AgMBAAEwDQYJKoZIhvcNAQ
+ EFBQADggEBAAOt94DhQE8UHS4bhiuR5EFthJhUrh7m9QeeoLZbMvOho7Rjncmh72/6n1+0BP8iYU/
+ IM39G4BpFzW0Ur64kpv1gNiBo7FYYI4RhwaJWI66PiHHHa37uKll4mDTfvvms7RgGxj2/6YAj/3Jp
+ PnnndfIxqqBiZEaF9+QCaToeN0iR+NkPGe65yCIaQqKp9ltEjzOVNhdNA0rwb1CNdyuTVIRoeg/9f
+ DnefFaoODxA42WHWI+uCop47YUKihcPnUtApuHtgBSh2PzubeMjSrDzFW2R+UG3bn4j+TfyHS6LVT
+ gGSf0JjWe6rPy75WOoHfho6Ee8oWPJfKmgU8nhcQDmo80=
+providerCertificateSubject: CN=servizio di posta elettronica certificata, OU=S
+ ervizi, O=Abaco Telematica Srl, L=Napoli, ST=NA, C=IT, emailAddress=posta-cer
+ tificata@asmecert.it
+mailReceipt: ricevute@asmecert.it
+
+# PEC It.Net, postacert
+dn: providerName=PEC It.Net,o=postacert
+objectClass: top
+objectClass: provider
+description: It.net Servizio di Posta Certificata
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Authenticated by
+  Trust Italia S.p.A., OU=Member\, VeriSign Trust Network, OU=Persona Not Vali
+ dated, OU=Digital ID Class 1, CN=ITnet S.r.l. Posta Elettronica Certiticata,emailAddress=posta-certificata@pec.it.net
+providerCertificate;binary:: MIIEozCCBAygAwIBAgIQFdoafXBdrwsMWIHwDsMOyTANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDUyNDAwMDAwMFoXDTA1MDUyNDIzN
+ Tk1OVowggF2MRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMTMwMQ
+ YDVQQDEypJVG5ldCBTLnIubC4gUG9zdGEgRWxldHRyb25pY2EgQ2VydGl0aWNhdGExKzApBgkqhki
+ G9w0BCQEWHHBvc3RhLWNlcnRpZmljYXRhQHBlYy5pdC5uZXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0A
+ MIGJAoGBAOgJ3gISD4/VJBWaOcWlR3C5fnfbTRocBTS7BUUrMUwVCX2klq4LS6tJFecQEH6JLc+41
+ WF91SlRv2IPGajf7KTS2zjLapj5zM6B7Q2MdAwINft6PNqIvOIFPX5VOI1JLtanhQta8nlzcGIwiX
+ jZHdWWrNFfoPd8b3VESofhTK+7AgMBAAGjgeUwgeIwCQYDVR0TBAIwADBoBgNVHR8EYTBfMF2gW6B
+ ZhldodHRwOi8vb25zaXRlY3JsLnRydXN0aXRhbGlhLml0L1RydXN0SXRhbGlhU3BBQ29uc3VtZXJT
+ ZXJ2aWNlQ2VudGVyQ2xhc3MxL0xhdGVzdENSTC5jcmwwRQYDVR0gBD4wPDA6BgpghkgBhvhFAQccM
+ CwwKgYIKwYBBQUHAgEWHmh0dHBzOi8vd3d3LnRydXN0aXRhbGlhLml0L3JwYTARBglghkgBhvhCAQ
+ EEBAMCB4AwEQYKYIZIAYb4RQEGCQQDAQH/MA0GCSqGSIb3DQEBBAUAA4GBAOqqTBuxsA13jCcEQqI
+ 37ZqOiH2pSPJqgSj9nyeF8uSWaxzia9l83KQfYfJCvD3iNkGKU4/X4QsRSaGcLzBQqUiSRmPfP7UW
+ XKnjubrkZ15ae7Bf7CcgfjqydWAx4vfa9A4Kp7LdeZeohnbQ13ka0l9yCCtSdVeaSVaIDwGFCTKM
+providerName: PEC It.Net
+mailReceipt: posta-certificata@pec.it.net
+managedDomains: cert.uilscuola.it
+managedDomains: e-cert.it
+managedDomains: gbspec.it
+managedDomains: mailcert.it
+managedDomains: pec.it.net
+managedDomains: pectest-prod.cp
+managedDomains: pecwbstest1.it.net
+managedDomains: pecwbstest12.it.net
+managedDomains: pecwbstest13.it.net
+managedDomains: pecwbstest2.it.net
+managedDomains: postcert.comune.pontelambro.co.it
+managedDomains: postcert.notaioanastasi.it
+managedDomains: testnewpars.elena.test
+LDIFLocationURL: https://mail.pec.it.net/localdomains.ldif
+
+# BPR S.r.l., postacert
+dn: providerName=BPR S.r.l.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: BPR S.r.l.
+providerCertificateSubject:: RT1wb3N0YS1jZXJ0aWZpY2F0YUBicHJjZXJ0Lml0LCBDTj1Sb
+ 2JlcnRvIFJlY29yZGFyZSwgT1U9RGlnaXRhbCA=
+providerCertificate;binary:: MIIEijCCA/OgAwIBAgIQCr53T19aKwwrPOqNudLSjTANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDYxNTAwMDAwMFoXDTA1MDYxNTIzN
+ Tk1OVowggFdMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMRowGA
+ YDVQQDExFSb2JlcnRvIFJlY29yZGFyZTErMCkGCSqGSIb3DQEJARYccG9zdGEtY2VydGlmaWNhdGF
+ AYnByY2VydC5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAv1dIMfWpNBlN3eBq3XYj7ehp
+ hvwyT2SeA8mVPCngYGzYagiG6yirU2IH+fsoJGLeWHhsvWbaHiMXe/HzfkTXTXLb+eDeSAZxKruT6
+ tkn/MpCtuN85VjX3rrbZqnoUl05fILDXm4KPhUCXqBZd1ISZ7eVDja7eSsi8SA7jfhNhzcCAwEAAa
+ OB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhMF8wXaBboFmGV2h0dHA6Ly9vbnNpdGVjcmwudHJ1c3R
+ pdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb25zdW1lclNlcnZpY2VDZW50ZXJDbGFzczEvTGF0ZXN0
+ Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwLDAqBggrBgEFBQcCARYeaHR0cHM6Ly93d
+ 3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQQEAwIHgDARBgpghkgBhvhFAQYJBAMBAf
+ 8wDQYJKoZIhvcNAQEEBQADgYEAHRnqsIPXEFz78XrI5tduVZDc/60cO0V9G7X/87BtezUqv21LfHu
+ 8ifVXoq/TKvRr8XMlvtq06L7f/JvQ/YeCCmng7zb6YmF4vX+dw4KoqJJHoMjYnokaIys0/yM8y7IS
+ QaMGFpEfhinoQDZjIflY0zF+2h0llBVg46w8uQ5L8Sk=
+mailReceipt: presa-in-carico@bprcert.it
+managedDomains: bprcert.it
+description: BPR - Servizi di posta certificata
+LDIFLocationURL: https://pec.bprcert.it/ldif/bprdomains.ldif
+
+# Pec Regione Autonoma della Sardegna, postacert
+dn: providerName=Pec Regione Autonoma della Sardegna,o=postacert
+LDIFLocationURL: http://www.regionesardegna.it/postacertificata/regione.sardeg
+ na-postacert.ldif
+providerName: Pec Regione Autonoma della Sardegna
+objectClass: top
+objectClass: provider
+managedDomains: posta.certificata.regione.sardegna.it
+managedDomains: postacertificata.ato.sardegna.it
+providerCertificate;binary:: MIIDuTCCAyKgAwIBAgIBADANBgkqhkiG9w0BAQQFADCCAQwxC
+ zAJBgNVBAYTAklUMQswCQYDVQQIEwJDQTERMA8GA1UEBxMIQ2FnbGlhcmkxKDAmBgNVBAoTH1JlZ2
+ lvbmUgQXV0b25vbWEgZGVsbGEgU2FyZGVnbmExEzARBgNVBAsTClIuQS5TLiBDRUQxJjAkBgNVBAs
+ THUNlcnRpZmljYXRpb24gZm9yIFBFQyBzZXJ2aWNlMS4wLAYDVQQDEyVwb3N0YS5jZXJ0aWZpY2F0
+ YS5yZWdpb25lLnNhcmRlZ25hLml0MUYwRAYJKoZIhvcNAQkBFjdwb3N0YS1jZXJ0aWZpY2F0YUBwb
+ 3N0YS5jZXJ0aWZpY2F0YS5yZWdpb25lLnNhcmRlZ25hLml0MB4XDTA0MDkyODA3NDk0NVoXDTA1MD
+ kyODA3NDk0NVowggEMMQswCQYDVQQGEwJJVDELMAkGA1UECBMCQ0ExETAPBgNVBAcTCENhZ2xpYXJ
+ pMSgwJgYDVQQKEx9SZWdpb25lIEF1dG9ub21hIGRlbGxhIFNhcmRlZ25hMRMwEQYDVQQLEwpSLkEu
+ Uy4gQ0VEMSYwJAYDVQQLEx1DZXJ0aWZpY2F0aW9uIGZvciBQRUMgc2VydmljZTEuMCwGA1UEAxMlc
+ G9zdGEuY2VydGlmaWNhdGEucmVnaW9uZS5zYXJkZWduYS5pdDFGMEQGCSqGSIb3DQEJARY3cG9zdG
+ EtY2VydGlmaWNhdGFAcG9zdGEuY2VydGlmaWNhdGEucmVnaW9uZS5zYXJkZWduYS5pdDCBnzANBgk
+ qhkiG9w0BAQEFAAOBjQAwgYkCgYEAwW9Y5gGYJApeRN6L53Yt0QXUPy/jdAQQguQVfxncDUnAvLyx
+ MoxwDaxK/lB85lVcRl/6YFmhRLvkCZycE5JXUL2Y0c0V55/pli+az1s+q6ABJiL8sRNePxQP9hJ+G
+ 710w5e+IV+z2tRMYIGw7HQYLzJO+ysLF/McTX37QAW4hh0CAwEAAaMnMCUwDgYDVR0PAQH/BAQDAg
+ bAMBMGA1UdJQQMMAoGCCsGAQUFBwMEMA0GCSqGSIb3DQEBBAUAA4GBAAQIuCFrOp3PxUomoVJVgIS
+ Mcd3Sk3CKUbvpVMk55iWgb4KcIBUGXl/sbUsYoWaLu+8RAgUa0dnB+48Nu9mIQpMMo0+DUFyw+Ivo
+ EY0vUaMGFrfCWMFwmCNqSywwuU/uhR1zPqU9JMagATcu/Uha5Ire/k/mN21N7TyeZkepLIBz
+providerCertificate;binary:: MIIDsTCCAxqgAwIBAgIBADANBgkqhkiG9w0BAQQFADCCAQgxC
+ zAJBgNVBAYTAklUMQswCQYDVQQIEwJDQTERMA8GA1UEBxMIQ2FnbGlhcmkxKDAmBgNVBAoTH1JlZ2
+ lvbmUgQXV0b25vbWEgZGVsbGEgU2FyZGVnbmExEzARBgNVBAsTClIuQS5TLiBDRUQxIjAgBgNVBAs
+ TGUNlcnRpZmljYXRpb24gZm9yIFNTTC1UTFMxLjAsBgNVBAMTJXBvc3RhLmNlcnRpZmljYXRhLnJl
+ Z2lvbmUuc2FyZGVnbmEuaXQxRjBEBgkqhkiG9w0BCQEWN3Bvc3RhLWNlcnRpZmljYXRhQHBvc3RhL
+ mNlcnRpZmljYXRhLnJlZ2lvbmUuc2FyZGVnbmEuaXQwHhcNMDQwNDE1MDg0NDU4WhcNMDUwNDE1MD
+ g0NDU4WjCCAQgxCzAJBgNVBAYTAklUMQswCQYDVQQIEwJDQTERMA8GA1UEBxMIQ2FnbGlhcmkxKDA
+ mBgNVBAoTH1JlZ2lvbmUgQXV0b25vbWEgZGVsbGEgU2FyZGVnbmExEzARBgNVBAsTClIuQS5TLiBD
+ RUQxIjAgBgNVBAsTGUNlcnRpZmljYXRpb24gZm9yIFNTTC1UTFMxLjAsBgNVBAMTJXBvc3RhLmNlc
+ nRpZmljYXRhLnJlZ2lvbmUuc2FyZGVnbmEuaXQxRjBEBgkqhkiG9w0BCQEWN3Bvc3RhLWNlcnRpZm
+ ljYXRhQHBvc3RhLmNlcnRpZmljYXRhLnJlZ2lvbmUuc2FyZGVnbmEuaXQwgZ8wDQYJKoZIhvcNAQE
+ BBQADgY0AMIGJAoGBAM39/ARLqBsKFaHRQMgUL1YngLtM/zsJCqNwgcoqTFTq2HcCJufmMfeV7Bye
+ PkKYSGprIG9HQmDt+8VXDvwv/4lBjI9v4bphyQWOYAhrNcNgcgpdZDqy5iONxpEzOJMJ/JYYmy3dI
+ 3R9sRcd9VQ6wo1DiyNVR/OWYHCPF75fPEErAgMBAAGjJzAlMA4GA1UdDwEB/wQEAwIGwDATBgNVHS
+ UEDDAKBggrBgEFBQcDBDANBgkqhkiG9w0BAQQFAAOBgQAWNmzZXs0oc1QF9+sIrmnYgUTePQluTx2
+ YKQ9Ftxt1MZ9L0GRNxCJX4TbLLP226RObY0zV1E6OKIC7jX6vo56FjTOoIGTbEIRsqSd2KDeMIBF/
+ ytDvI2P1hYco6kmoisVAIWk/XsvVskgbd+usUd0mUCiWy+ZpjNIq7DJvWWULHQ==
+providerCertificateSubject: C=IT, ST=CA, L=Cagliari, O=Regione Autonoma della 
+ Sardegna,OU=R.A.S. CED, OU=Certification for PEC service, CN=posta.certificat
+ a.regione.sardegna.it, emailAddress=posta-certificata@posta.certificata.regione.sard
+ egna.it
+mailReceipt: gestione-ricevute@posta.certificata.regione.sardegna.it
+
+# I.T. Telecom S.p.A. - Ministero dell'Interno, postacert
+dn: providerName=I.T. Telecom S.p.A. - Ministero dell'Interno,o=postacert
+objectClass: top
+objectClass: provider
+providerCertificateSubject: CN=Ministero dell' Interno, C=IT
+mailReceipt: posta-certificata@cert.interno.it
+providerCertificate;binary:: MIIDMTCCAhmgAwIBAgICJuEwDQYJKoZIhvcNAQEFBQAwZDELM
+ AkGA1UEBhMCSVQxHDAaBgNVBAoTE0kuVC4gVGVsZWNvbSBTLnAuQS4xFjAUBgNVBAsTDVBLSSBTb2
+ x1dGlvbnMxHzAdBgNVBAMTFkkuVC4gVGVsZWNvbSBHbG9iYWwgQ0EwHhcNMDQwNjE4MTEwMDQwWhc
+ NMDUwNjE4MTIwMDEwWjAvMQswCQYDVQQGEwJJVDEgMB4GA1UEAxMXTWluaXN0ZXJvIGRlbGwnIElu
+ dGVybm8wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAN1oLChyiP6t3FjtnXPS/tgJL/kVvJrxd
+ 5z2Sss5xZivxC1MOkXmTUuyrRxAgSHp9u7S6eIo8rnr+erkNxfHd1H5V0qLHcvwsJcLMfVRMCoV6X
+ SmLJPyFqfohoDAm7fhaa5TFVZIOc9TBDzIjJUxKmGkx29+K51FBFOUE+L/Gbn5AgMBAAGjgaUwgaI
+ wCQYDVR0TBAIwADAsBgNVHREEJTAjgSFwb3N0YS1jZXJ0aWZpY2F0YUBjZXJ0LmludGVybm8uaXQw
+ CwYDVR0PBAQDAgWgMFoGA1UdIwRTMFGhSaRHMEUxCzAJBgNVBAYTAlVTMRgwFgYDVQQKEw9HVEUgQ
+ 29ycG9yYXRpb24xHDAaBgNVBAMTE0dURSBDeWJlclRydXN0IFJvb3SCBAQAAskwDQYJKoZIhvcNAQ
+ EFBQADggEBAAuck6+sm0NbJsNzcDJRuaSnECOuhlI5FIjCUFcpc9egT8lMLNpFh8I0JOzmCIFEsCX
+ SPWMfKEyV9Jr3zM9qIqkjDeXZOolry3A8B6t7+79jwCamSr0TTELhzM/mKnGS/8/lPgw6ZfnArRul
+ wbXr4pGVTvqx+p2C7C6TKcIJcEvdvWDlpJwRi+xGQYUA6kdfHG/hGpKvLG7IylEAhZo+xbknKQKre
+ DrCkyYyRqI9L7i/tZ0th/vftvaY7godCwRoUhAk6eWFH5BsWZuuilen5Byb4YYath67qdcTmNXml7
+ gg18flnCnWaXx34seCzItqhljWFT5ZEzXQ6W4RyoIXy04=
+managedDomains: cert.interno.it
+providerName: I.T. Telecom S.p.A. - Ministero dell'Interno
+LDIFLocationURL: https://www.telecompec.it/ldifs/cert.interno.it.ldif
+
+# BNS postassicurata.it, postacert
+dn: providerName=BNS postassicurata.it,o=postacert
+objectClass: top
+objectClass: provider
+providerName: BNS postassicurata.it
+LDIFLocationURL: https://www.blixernetservices.it/pec/postacert.ldif
+providerCertificate;binary:: MIIEnDCCBAWgAwIBAgIQXf3CqDnAts7yNG8/PwYqBDANBgkqh
+ kiG9w0BAQQFADCBzDEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIF
+ RydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5
+ jb3JwLiBCeSBSZWYuLExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0Eg
+ SW5kaXZpZHVhbCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZDAeFw0wNDA4MzAwMDAwM
+ DBaFw0wNTA4MzAyMzU5NTlaMIIBQDEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFl
+ ZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9
+ yeS9SUEEgSW5jb3JwLiBieSBSZWYuLExJQUIuTFREKGMpOTgxHjAcBgNVBAsTFVBlcnNvbmEgTm90
+ IFZhbGlkYXRlZDE0MDIGA1UECxMrRGlnaXRhbCBJRCBDbGFzcyAxIC0gTWljcm9zb2Z0IEZ1bGwgU
+ 2VydmljZTEyMDAGA1UEAxQpQmxpeGVyIE5ldCBTZXJ2aWNlcyBQRUMgcG9zdGFzc2ljdXJhdGEuaX
+ QxMjAwBgkqhkiG9w0BCQEWI3Bvc3RhLWNlcnRpZmljYXRhQHBvc3Rhc3NpY3VyYXRhLml0MIGfMA0
+ GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2m2keZMHcxC0r0jOmLc5N9U3D0HNQMeL4M5K5BPiaymQ2
+ VoA0p/BpGiWMRLzO6GMmkXyZgrISlw52xL8VZ0FaN0jH6bsHGbVK4nC9NP/XXCCgPlThVnbQnyFKQ
+ Mi0WsxXlHvc9UEkREz3kISmb6937UPQHJ71Bd4g1bMFscgdEwIDAQABo4IBBjCCAQIwCQYDVR0TBA
+ IwADCBrAYDVR0gBIGkMIGhMIGeBgtghkgBhvhFAQcBATCBjjAoBggrBgEFBQcCARYcaHR0cHM6Ly9
+ 3d3cudmVyaXNpZ24uY29tL0NQUzBiBggrBgEFBQcCAjBWMBUWDlZlcmlTaWduLCBJbmMuMAMCAQEa
+ PVZlcmlTaWduJ3MgQ1BTIGluY29ycC4gYnkgcmVmZXJlbmNlIGxpYWIuIGx0ZC4gKGMpOTcgVmVya
+ VNpZ24wEQYJYIZIAYb4QgEBBAQDAgeAMDMGA1UdHwQsMCowKKAmoCSGImh0dHA6Ly9jcmwudmVyaX
+ NpZ24uY29tL2NsYXNzMS5jcmwwDQYJKoZIhvcNAQEEBQADgYEAjoDX1P11lLyAh9DJ9KCMOhMT96T
+ WKVeWcXU5tByYTTQ7W0z5wfc8kJ+AYnhBoc6GLfBDyQCAjrRMzOBKaDVcqTduicnpqKaj5wayUDoS
+ cmoiBThn0nMY+8fEL4EHJkPePKfaLasyXRkbk9NGwBXHlu1vyGEAFAU8F66YHq/4vvQ=
+providerCertificateSubject: o=Verisign\, Inc.\,,email=posta-certificata@postas
+ sicurata.it,ou=www.verisign.com/repository/RPA Incorp. by Ref.\,LIAB.LTD(c)98
+ ,ou=Persona Not Validated,ou=Digital ID Class 1 - Microsoft Full Service,cn=B
+ lixer Net Services PEC postassicurata.it
+mailReceipt: presa-in-carico@postassicurata.it
+description: Posta Elettronica Certificata
+managedDomains: postassicurata.it
+managedDomains: pecertificata.it
+managedDomains: ponterosso.it
+managedDomains: postacertificata.elitel.biz
+
+# Webzone Srl, postacert
+dn: providerName=Webzone Srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Webzone Srl
+providerCertificateSubject: c=IT,ST=Pescara,L=Pescara,O=Webzone Srl,CN=pec.web
+ zone.it,emailAddress=posta-certificata@pec.webzone.it
+providerCertificate;binary:: MIICkzCCAfwCAQAwDQYJKoZIhvcNAQEEBQAwgZExCzAJBgNVB
+ AYTAklUMRAwDgYDVQQIEwdQZXNjYXJhMRAwDgYDVQQHEwdQZXNjYXJhMRQwEgYDVQQKEwtXZWJ6b2
+ 5lIFNybDEXMBUGA1UEAxMOcGVjLndlYnpvbmUuaXQxLzAtBgkqhkiG9w0BCQEWIHBvc3RhLWNlcnR
+ pZmljYXRhQHBlYy53ZWJ6b25lLml0MB4XDTA0MDcxNjE3NTU0OVoXDTA3MDQxMTE3NTU0OVowgZEx
+ CzAJBgNVBAYTAklUMRAwDgYDVQQIEwdQZXNjYXJhMRAwDgYDVQQHEwdQZXNjYXJhMRQwEgYDVQQKE
+ wtXZWJ6b25lIFNybDEXMBUGA1UEAxMOcGVjLndlYnpvbmUuaXQxLzAtBgkqhkiG9w0BCQEWIHBvc3
+ RhLWNlcnRpZmljYXRhQHBlYy53ZWJ6b25lLml0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC
+ 8F1imyC7n9xktnIgCZvDl9MdwGYMe4ZqS+Z/CqD6fw41e/h7xXly1PbkXI+UyXrhjOWB7JcgRAOJ0
+ +q0sWwkY8GqGElne8IxyqqqsbfFDcBvZ0ycI/BQA3oq1ooDkxS1J7KikBreZ3gwsUhsLz42syTVcX
+ cII1EB1fse1zBcMdQIDAQABMA0GCSqGSIb3DQEBBAUAA4GBAAimIj5h2fZnEJ5ngwk5ODjP8onDlP
+ LZa8hteaPJnpjEtjb9yz5iUmnJheS53fxG8kKr5d1U1wKXsjMIYmgqvlUBIsdpLwCf5ytfrsH7BoZ
+ OA+gf/EWI1mgQUqYkOhDMMNN28hiapbOg9zui/knsMNc9x03ZEDrQ+ZORt/LmCBVT
+mailReceipt: posta-certificata@pec.webzone.it
+managedDomains: pec.webzone.it
+LDIFLocationURL: https://pec.webzone.it/webzone.ldif
+
+# Gruppo Internet s.r.l., postacert
+dn: providerName=Gruppo Internet s.r.l., o=postacert
+mailReceipt: posta-certificata@postacert.org
+managedDomains: postacert.org
+providerCertificate;binary:: MIICqTCCAhICAQAwDQYJKoZIhvcNAQEEBQAwgZwxCzAJBgNVB
+ AYTAklUMQ4wDAYDVQQIEwVJdGFseTEQMA4GA1UEBxMHVG9ydG9uYTEfMB0GA1UEChMWR3J1cHBvIE
+ ludGVybmV0IFMuUi5MLjEaMBgGA1UECxMRUG9zdGEgQ2VydGlmaWNhdGExLjAsBgkqhkiG9w0BCQE
+ WH3Bvc3RhLWNlcnRpZmljYXRhQHBvc3RhY2VydC5vcmcwHhcNMDQwNjI5MTMzOTQwWhcNMTUwOTE2
+ MTMzOTQwWjCBnDELMAkGA1UEBhMCSVQxDjAMBgNVBAgTBUl0YWx5MRAwDgYDVQQHEwdUb3J0b25hM
+ R8wHQYDVQQKExZHcnVwcG8gSW50ZXJuZXQgUy5SLkwuMRowGAYDVQQLExFQb3N0YSBDZXJ0aWZpY2
+ F0YTEuMCwGCSqGSIb3DQEJARYfcG9zdGEtY2VydGlmaWNhdGFAcG9zdGFjZXJ0Lm9yZzCBnzANBgk
+ qhkiG9w0BAQEFAAOBjQAwgYkCgYEA4FLHHXkpzuyi5a+5n1HalcYUMm6p6vhRBgjznyM6iY7FQ/cr
+ Sd+IB0livRoV4jlxhhTw78UCN/LMGWolQog2xLdRHxkFibpjQAWVltD6b2/Tkyvkzu9USsVN1nhRz
+ 0CpFE7q8tlKAVzSRP0NK2yAsfep7SpndsyebM2McZeWFvUCAwEAATANBgkqhkiG9w0BAQQFAAOBgQ
+ DLMzi9/rLT9GtoIKCALooxlbvp0NLIN3y1qzrqqCFrLnmyDqRixyX9XQ9Xy9V+IqXMzawCgVQAKiM
+ w0NoD4PhknET/GGIT6u132ojawzLrdXWIlgXcYKrMMBbUisEV40b5zxcDq4PcfbXUyD+Tudt4/Rwy
+ UhV3QKzs0Zq5SPxa4g==
+LDIFLocationURL: https://secure.gruppointernet.it/pec/gi.ldif
+objectClass: top
+objectClass: provider
+providerCertificateSubject: O=Gruppo Internet S.R.L.,OU=Posta Certificata,C=IT
+ ,ST=Italy,L=Tortona,emailAddress=posta-certificata@postacert.org
+providerName: Gruppo Internet s.r.l.
+
+# Ksolutions S.p.A., postacert
+dn: providerName=Ksolutions S.p.A., o=postacert
+mailReceipt: posta-certificata@openpec.it
+managedDomains: openpec.it
+providerCertificate;binary:: MIIEizCCA/SgAwIBAgIQJTsQjPjT2gidhNUTO1x0FDANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDgwNTAwMDAwMFoXDTA1MDgwNTIzN
+ Tk1OVowggFeMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMRswGQ
+ YDVQQDExJ1dGVudGUgY2VydGlmaWNhdG8xKzApBgkqhkiG9w0BCQEWHHBvc3RhLWNlcnRpZmljYXR
+ hQG9wZW5wZWMuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAODawGQNmIsz9/GJjBsnYOj/
+ /ojLjdCPsbrn4Ed8IHpjDlUzw1vjRJ6fsNo2vJrL0q1ohtM/Iud5rdvBxcHnzYNoDRG8sYD0opVtV
+ RmyZd7MSbnTCS3zbLiIqUiS979TyBupJJ1fWcflD6eEje9p3BXvA9jlb3MOlmpiYvtRBZE9AgMBAA
+ GjgeUwgeIwCQYDVR0TBAIwADBoBgNVHR8EYTBfMF2gW6BZhldodHRwOi8vb25zaXRlY3JsLnRydXN
+ 0aXRhbGlhLml0L1RydXN0SXRhbGlhU3BBQ29uc3VtZXJTZXJ2aWNlQ2VudGVyQ2xhc3MxL0xhdGVz
+ dENSTC5jcmwwRQYDVR0gBD4wPDA6BgpghkgBhvhFAQccMCwwKgYIKwYBBQUHAgEWHmh0dHBzOi8vd
+ 3d3LnRydXN0aXRhbGlhLml0L3JwYTARBglghkgBhvhCAQEEBAMCB4AwEQYKYIZIAYb4RQEGCQQDAQ
+ H/MA0GCSqGSIb3DQEBBAUAA4GBAAUawfhanW50R4/D00B2TXjKKL73JlORQdsvdajkedlU8r/yeLF
+ PHg9TVb/NsCyAA+DGd/EQpOiob6Wsfnybds1I9iTqYFfJjOHjdc4hkxzFECQy1jwpOei/fdMKPUOI
+ g9yeoWNhNZ3fwZ/iczN0Z8Sy02r4fy5dAziVdHAWvuow
+LDIFLocationURL: https://postacert.openpec.it/ldif/openpec.it.ldif
+description: Servizi di posta certificata di Ksolutions S.p.A.
+objectClass: top
+objectClass: provider
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Authenticated by
+  Trust Italia S.p.A., OU=Member VeriSign Trust Network, OU=Persona Not Valida
+ ted, OU=Digital ID Class 1, CN=utente certificato,emailAddress=posta-certific
+ ata@openpec.it
+providerName: Ksolutions S.p.A.
+
+# INTEnet Srl, postacert
+dn: providerName=INTEnet Srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: INTEnet Srl
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Authenticated by
+  Trust Italia S.p.A., OU=Member VeriSign Trust Network, OU=Persona Not Valida
+ ted, OU=Digital ID Class 1, CN=Alberto Zuin,emailAddress=posta-certificata@pe
+ c.intenet.net
+providerCertificate;binary:: MIIFDjCCBHegAwIBAgIQfHfYU0R7RqK4XzbgrvpQJTANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDkwNjAwMDAwMFoXDTA1MDkwNjIzN
+ Tk1OVowggFdMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMRUwEw
+ YDVQQDEwxBbGJlcnRvIFp1aW4xMDAuBgkqhkiG9w0BCQEWIXBvc3RhLWNlcnRpZmljYXRhQHBlYy5
+ pbnRlbmV0Lm5ldDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMK7NQnNJdFZmgdjJdqC
+ wxtXZK42KUq0k6IvDDjnnzacuF1AVMpUoxym43dvs/PK96U7wHJyUo16wNvW+8zWBjvhJPlpQ3cZx
+ 7KSh574UqSH9LYg++7IO5Q1+PgkYwHMmjSWrPmq3LDZ3bWtxi7Ful0euaAwleeONS25AlWLfN16rI
+ xCb3U00C5C6r5wVxZWfcVbglUMGFBKoIQFnqerujH38kr2Q2PpxWsFPOne9+bXQPBgjIgo9nBBCcz
+ ix7+J8ClqSHQh4k8R8whrdbaAYE6iai+GmKZx+jHkoE7JCslTNpCV90mCLtrES4KXn4B0wLBIsxd8
+ 8V2M7JAyJIVyWnkCAwEAAaOB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhMF8wXaBboFmGV2h0dHA6L
+ y9vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb25zdW1lclNlcnZpY2VDZW
+ 50ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwLDAqBggrBgE
+ FBQcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQQEAwIHgDAR
+ BgpghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvcNAQEEBQADgYEAKuQW62oreZivKdFTBUkEQPzh37ata
+ 09WUJRYErVSxcW+8+FLhWh0oB3s6F4/b7xtGNe+C4e92DbODOnawDPBOFD2gE89x2PqsmTX1C0Un/
+ 4t9quv+DSh7I4oL7F1kvPUhr3XiZzPuI9RdsB22eKo9dRKthwy25XXdtLwwyj76AU=
+mailReceipt: posta-certificata@pec.intenet.net
+managedDomains: pec.intenet.net
+managedDomains: alzuin.it
+managedDomains: pec.assoprovider.net
+managedDomains: mailcert.biz
+managedDomains: pec.mailto.it
+managedDomains: pec.cerromaggiore.org
+LDIFLocationURL: https://pec.intenet.net/intenet.ldif
+
+# Real T S.r.l., postacert
+dn: providerName=Real T S.r.l.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Real T S.r.l.
+providerCertificateSubject: C=IT,ST=Italia,L=Verona,O=Real T S.r.l.,OU=Posta C
+ ertificata,CN=pec.realt.it,emailAddress=posta-certificata@pec.realt.it
+providerCertificate;binary:: MIIDIjCCAougAwIBAgIDPqH3MA0GCSqGSIb3DQEBBAUAMFMxC
+ zAJBgNVBAYTAlpBMSUwIwYDVQQKExxUaGF3dGUgQ29uc3VsdGluZyAoUHR5KSBMdGQuMR0wGwYDVQ
+ QDExRUaGF3dGUgU1NMIERvbWFpbiBDQTAeFw0wNDA5MjMwOTI3NTRaFw0wNTA5MjMwOTI3NTRaMIG
+ qMRUwEwYDVQQDEwxwZWMucmVhbHQuaXQxGTAXBgNVBAsTEERvbWFpbiBWYWxpZGF0ZWQxOzA5BgNV
+ BAsTMkdvIHRvIGh0dHBzOi8vd3d3LnRoYXd0ZS5jb20vcmVwb3NpdG9yeS9pbmRleC5odG1sMSIwI
+ AYDVQQLExlUaGF3dGUgU1NMMTIzIGNlcnRpZmljYXRlMRUwEwYDVQQKEwxwZWMucmVhbHQuaXQwgZ
+ 8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAOMGF4txxcog7wyqYXRaKQQj1VhlR5BzGxoE2lRJ1d7
+ z/rwCnCRuQ2p235RS/OuvhyU/raJBnTQ1e+fZyArwZxLfTA/2cCRUgrDbvitHXtJIWIlNHUw+oZI6
+ d2OuKrWMTG0IXsoY6aUODUPfUa6eCbjezV7P8Fcz+lzwEGnvM5N1AgMBAAGjgaswgagwHQYDVR0lB
+ BYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMHkGCCsGAQUFBwEBBG0wazAiBggrBgEFBQcwAYYWaHR0cD
+ ovL29jc3AudGhhd3RlLmNvbTBFBggrBgEFBQcwAoY5aHR0cDovL3d3dy50aGF3dGUuY29tL3JlcG9
+ zaXRvcnkvVGhhd3RlX1NTTF9Eb21haW5fQ0EuY3J0MAwGA1UdEwEB/wQCMAAwDQYJKoZIhvcNAQEE
+ BQADgYEATNN44vduvlhxPOH5Ey0vkl+oSNwj7kLPhAjXsFzq6Q0qwAsnTJRRjmUfit+bBvMzIC7Id
+ jMW3OOHHfdKyYXoyi8DfS4zrFuzw6O27cZbjI2aV/Xw0JHcb+uSb1t+OakZCINi3TpmupqhqSRxn1
+ t7njXh7wV7A6BjveKfChupfKU=
+mailReceipt: posta-certificata@pec.realt.it
+managedDomains: pec.realt.it
+managedDomains: cert.realt.it
+managedDomains: secure.realt.it
+managedDomains: tomazzoli.it
+LDIFLocationURL: https://pec.realt.it/provider.ldif
+
+# CT RUPAR PUGLIA, postacert
+dn: providerName=CT RUPAR PUGLIA,o=postacert
+objectClass: top
+objectClass: provider
+providerName: CT RUPAR PUGLIA
+providerCertificateSubject: cn=Posta Certificata,emailAddress=posta-certificat
+ a@pec.rupar.puglia.it,ou=Centro Tecnico RUPAR Puglia,o=Regione Puglia,l=Bari,
+ st=BA,c=it
+providerCertificate;binary:: MIIHIDCCBgigAwIBAgIDBi/BMA0GCSqGSIb3DQEBBQUAMIGIM
+ QswCQYDVQQGEwJJVDEYMBYGA1UEChMPSW5mb0NhbWVyZSBTQ3BBMTAwLgYDVQQLEydFbnRlIENlcn
+ RpZmljYXRvcmUgZGVsIFNpc3RlbWEgQ2FtZXJhbGUxLTArBgNVBAMTJEluZm9DYW1lcmUgU2Vydml
+ 6aSBkaSBDZXJ0aWZpY2F6aW9uZTAeFw0wNDA5MjQxMjM5MTRaFw0wNjA5MjQxMjM5MTRaMIG6MQsw
+ CQYDVQQGEwJpdDELMAkGA1UECBMCQkExDTALBgNVBAcTBEJhcmkxFzAVBgNVBAoTDlJlZ2lvbmUgU
+ HVnbGlhMSQwIgYDVQQLExtDZW50cm8gVGVjbmljbyBSVVBBUiBQdWdsaWExNDAyBgkqhkiG9w0BCQ
+ EWJXBvc3RhLWNlcnRpZmljYXRhQHBlYy5ydXBhci5wdWdsaWEuaXQxGjAYBgNVBAMTEVBvc3RhIEN
+ lcnRpZmljYXRhMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC0leLhc/uKvObezzXBSEX8pXSF
+ gDbYHucPu5CIK0iwl0owd8OyBoXqFozSme8ApxpzLtydveq73R4U7K8e6M1jhX1mypGL9MYior6C4
+ ciw6XI4GEFailH5VgMMhZBXlZ0xGzc1GxmojaI0bkXDiL90NDLtJe7vSf7c1rWX8POdAwIDAQABo4
+ ID4TCCA90wHwYDVR0jBBgwFoAUhHvvYi7edOURH3U5+7wvG5y2MlUwCQYDVR0TBAIwADALBgNVHQ8
+ EBAMCBaAwgc8GA1UdEQSBxzCBxIElcG9zdGEtY2VydGlmaWNhdGFAcGVjLnJ1cGFyLnB1Z2xpYS5p
+ dIaBmmxkYXA6Ly9sZGFwLmluZm9jYW1lcmUuaXQvY24lM0RQb3N0YSUyMENlcnRpZmljYXRhJTJDb
+ 3UlM0RFbnRlJTIwQ2VydGlmaWNhdG9yZSUyMGRlbCUyMFNpc3RlbWElMjBDYW1lcmFsZSUyQ28lM0
+ RJbmZvQ2FtZXJlJTIwU0NwQSUyQ2MlM0RJVD91c2VyY2VydGlmaWNhdGUwPwYJYIZIAYb4QgENBDI
+ WMEluZm9DYW1lcmUgU0NwQSBTU0wgYW5kIFNNSU1FIENsaWVudCBDZXJ0aWZpY2F0ZTCB4wYDVR0S
+ BIHbMIHYgSRzZXJ2aXppLmNlcnRpZmljYXppb25lQGluZm9jYW1lcmUuaXSGga9sZGFwOi8vbGRhc
+ C5pbmZvY2FtZXJlLml0L2NuJTNESW5mb0NhbWVyZSUyMFNlcnZpemklMjBkaSUyMENlcnRpZmljYX
+ ppb25lJTJDb3UlM0RFbnRlJTIwQ2VydGlmaWNhdG9yZSUyMGRlbCUyMFNpc3RlbWElMjBDYW1lcmF
+ sZSUyQ28lM0RJbmZvQ2FtZXJlJTIwU0NwQSUyQ2MlM0RJVD9jYWNlcnRpZmljYXRlMIHSBgNVHR8E
+ gcowgccwgcSggcGggb6GgbtsZGFwOi8vbGRhcC5pbmZvY2FtZXJlLml0L2NuJTNESW5mb0NhbWVyZ
+ SUyMFNlcnZpemklMjBkaSUyMENlcnRpZmljYXppb25lJTJDb3UlM0RFbnRlJTIwQ2VydGlmaWNhdG
+ 9yZSUyMGRlbCUyMFNpc3RlbWElMjBDYW1lcmFsZSUyQ28lM0RJbmZvQ2FtZXJlJTIwU0NwQSUyQ2M
+ lM0RJVD9jZXJ0aWZpY2F0ZXJldm9jYXRpb25saXN0MIGVBgNVHSAEgY0wgYowgYcGBitMDgEBAzB9
+ MDsGCCsGAQUFBwIBFi9odHRwOi8vd3d3LmNhcmQuaW5mb2NhbWVyZS5pdC9jZXJ0L2Nwcy9tb2NhL
+ mh0bTA+BggrBgEFBQcCAjAyGjBJbmZvQ2FtZXJlIFNDcEEgU1NMIGFuZCBTTUlNRSBDbGllbnQgQ2
+ VydGlmaWNhdGUwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMB0GA1UdDgQWBBQXrhtL3kw
+ 9C2LQhsm8AT1D9w3MujANBgkqhkiG9w0BAQUFAAOCAQEAEprUHSxXN8gWE+kGk5+bZqNQ5BeP5VpS
+ E6P0ssUggVX0OjNncBXug8XxPHoAP/9f5oO4KwsCnVmDhUmsHssw6Rpo9T95/eVKelRCOqmjGxkP1
+ zrZA/kbn1ibRr0ChBiq847ArDaVoYfFQIa+Tkimdi0yJkseL786lNu+D5flQKh/LJudBOLiX9TNnd
+ RCvfMNFwQQYhe2O+3ni0z47W3JUKvAemTmMPtfslDnkt15kGa4rhJ50APCe5cVgVYHk1etysCCjkl
+ Q4tgOeoVltq2IoUQPucsSXypCA0SynaJrqA5N2b/ndHL0EyHGDLcuqoCuLZoJP48CwQLDfaz8fvqm
+ 7A==
+mailReceipt: posta-certificata@pec.rupar.puglia.it
+managedDomains: pec.rupar.puglia.it
+description: Servizi di posta certificata per CT RUPAR PUGLIA
+LDIFLocationURL: http://ldap.ct.rupar.puglia.it/ctruparpuglia.ldif
+
+# Banca Popolare di Vicenza S.C.P.A.R.L., postacert
+dn: providerName=Banca Popolare di Vicenza S.C.P.A.R.L.,o=postacert
+objectClass: top
+objectClass: provider
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Authenticated by
+  Trust Italia S.p.A., OU=Member\, VeriSign Trust Network, OU=Persona Not Vali
+ dated, OU=Digital ID Class 1, CN=Banca Popolare di Vicenza Servizi di Posta C
+ ertificata,emailAddress=posta-certificata@postacertificata.popvi.it
+mailReceipt: posta-certificata@postacertificata.popvi.it
+providerCertificate;binary:: MIIEvjCCBCegAwIBAgIQU+HFCAHsaXrzk5tKrF44UzANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDkyODAwMDAwMFoXDTA1MDkyODIzN
+ Tk1OVowggGRMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMT8wPQ
+ YDVQQDEzZCYW5jYSBQb3BvbGFyZSBkaSBWaWNlbnphIFNlcnZpemkgZGkgUG9zdGEgQ2VydGlmaWN
+ hdGExOjA4BgkqhkiG9w0BCQEWK3Bvc3RhLWNlcnRpZmljYXRhQHBvc3RhY2VydGlmaWNhdGEucG9w
+ dmkuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALXHWEgG9ifqzXlpl4wH6oV4A7Ap4ENgy
+ ZVCOXyA3cSYHSa5qO06Vlb8txuRLNgbUi9p1VPJAp5dt835SrNMBcSvIvcwdq4M2QpSvEvWIRrAx2
+ ZEjhUWagGa0g1Zk99cehW9P+6JUF2o+yuGSEleBB8/5YCzXL0wa//l1JCP+NF1AgMBAAGjgeUwgeI
+ wCQYDVR0TBAIwADBoBgNVHR8EYTBfMF2gW6BZhldodHRwOi8vb25zaXRlY3JsLnRydXN0aXRhbGlh
+ Lml0L1RydXN0SXRhbGlhU3BBQ29uc3VtZXJTZXJ2aWNlQ2VudGVyQ2xhc3MxL0xhdGVzdENSTC5jc
+ mwwRQYDVR0gBD4wPDA6BgpghkgBhvhFAQccMCwwKgYIKwYBBQUHAgEWHmh0dHBzOi8vd3d3LnRydX
+ N0aXRhbGlhLml0L3JwYTARBglghkgBhvhCAQEEBAMCB4AwEQYKYIZIAYb4RQEGCQQDAQH/MA0GCSq
+ GSIb3DQEBBAUAA4GBAHdproSVVLETYZLZawCj8Rsa4BQBL5cB+iyadMAxu4BlRqVzkoY8byBz75Yq
+ 742QD2eA99gePTlMOH+tQ8nk3WMYB7L+F3uzeB67g3lxPAktFVbEyk10hFopefpd2AZfOQ5yY9/La
+ 8sE9YDPvU5zMkWS4/7C4XqCZQIbBDrKk9Z+
+managedDomains: postacertificata.popvi.it
+providerName: Banca Popolare di Vicenza S.C.P.A.R.L.
+LDIFLocationURL: https://server.postacertificata.popvi.it/ldif/postacert.ldif
+
+# MKT S.r.l, postacert
+dn: providerName=MKT S.r.l,o=postacert
+mailReceipt: posta-certificata@certemail.it
+managedDomains: certemail.it
+providerCertificate;binary:: MIIEjjCCA/egAwIBAgIQA+ORg76y7afefvMQ4CepfDANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDkyNDAwMDAwMFoXDTA1MDkyNDIzN
+ Tk1OVowggFhMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMRwwGg
+ YDVQQDExNNS1QgUy5yLmwgTUtUIFMuci5sMS0wKwYJKoZIhvcNAQkBFh5wb3N0YS1jZXJ0aWZpY2F
+ 0YUBjZXJ0ZW1haWwuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMD11F8VeZhKbYoyBJg9
+ 4zF2fYfL1EROVgMT6ScLqaplLdntfCvGQ8/AfdhAj1FzqGrymc3LSP/vApGLPlhkUVXxgpDbliEJz
+ mQbxbPHcXyzKdQ/IoL/AzbPalbH2wgLP6HvsPriI8iZF2PeOml6J+dylST44ngrzf+uNq6QQgylAg
+ MBAAGjgeUwgeIwCQYDVR0TBAIwADBoBgNVHR8EYTBfMF2gW6BZhldodHRwOi8vb25zaXRlY3JsLnR
+ ydXN0aXRhbGlhLml0L1RydXN0SXRhbGlhU3BBQ29uc3VtZXJTZXJ2aWNlQ2VudGVyQ2xhc3MxL0xh
+ dGVzdENSTC5jcmwwRQYDVR0gBD4wPDA6BgpghkgBhvhFAQccMCwwKgYIKwYBBQUHAgEWHmh0dHBzO
+ i8vd3d3LnRydXN0aXRhbGlhLml0L3JwYTARBglghkgBhvhCAQEEBAMCB4AwEQYKYIZIAYb4RQEGCQ
+ QDAQH/MA0GCSqGSIb3DQEBBAUAA4GBAE4YD4g2H1pJl6F+Szs231f+ZAZfWuC3HHe1mMIRSMM0Znv
+ QzIQD5pHq5TVCrUIru4fvc4tV6pu2z3dDFlqm4Tb+uUU0KT+DsuSiKTGGxw+PuRy+3tUqK3N/nRPs
+ XNeachKyCtbiI69v5b+keYhla7N+E6vw0J0Jpa+0RFZobt7X
+LDIFLocationURL: http://www.certemail.it/certemail.ldif
+description: Servizio PEC CERTEMAIL.IT
+objectClass: top
+objectClass: provider
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Authenticated  b
+ y Trust Italia S.p.A., OU=Member VeriSign Trust Network, OU=Persona Not Va li
+ dated, OU=Digital ID Class 1, CN=MKT S.r.l MKT S.r.l,emailAddress=posta-c ert
+ ificata@certemail.it
+providerName: MKT S.r.l
+
+# Inrete Srl, postacert
+dn: providerName=Inrete Srl,o=postacert
+objectClass: top
+objectClass: provider
+mailReceipt: posta-certificata@cert.mi.camcom.it
+LDIFLocationURL: https://cert.inrete.it/cert.mi.camcom.it.ldif
+providerName: Inrete Srl
+description: Servizi di posta certificata Cedcamera
+providerCertificateSubject: O=VeriSign\, Inc., OU=VeriSign Trust Network, OU=w
+ ww.verisign.com/repository/RPA Incorp. by Ref.\,LIAB.LTD(c)98, OU=Persona Not
+  Validated, OU=Digital ID Class 1 - Microsoft, CN=Cedcamera Servizi di Posta 
+ Certificata,emailAddress=posta-certificata@cert.mi.camcom.it
+providerCertificate;binary:: MIIEOjCCA6OgAwIBAgIQOS3JZXt2Vw+DKe5T7VQdIzANBgkqh
+ kiG9w0BAQUFADCBzDEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIF
+ RydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5
+ jb3JwLiBCeSBSZWYuLExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0Eg
+ SW5kaXZpZHVhbCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZDAeFw0wNDEyMDMwMDAwM
+ DBaFw0wNTAyMDEyMzU5NTlaMIIBMDEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFl
+ ZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBEBgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9
+ yeS9SUEEgSW5jb3JwLiBieSBSZWYuLExJQUIuTFREKGMpOTgxHjAcBgNVBAsTFVBlcnNvbmEgTm90
+ IFZhbGlkYXRlZDEnMCUGA1UECxMeRGlnaXRhbCBJRCBDbGFzcyAxIC0gTWljcm9zb2Z0MS8wLQYDV
+ QQDFCZDZWRjYW1lcmEgU2Vydml6aSBkaSBQb3N0YSBDZXJ0aWZpY2F0YTEyMDAGCSqGSIb3DQEJAR
+ YjcG9zdGEtY2VydGlmaWNhdGFAY2VydC5taS5jYW1jb20uaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0
+ AMIGJAoGBANs7AM/qswZx22KCO3Huw4WjXg3i4IcNNfT57RMc4Z7DEGOxeFSo4NNz2pVUcZgYdfRT
+ /tIcOSNc5arGLHrRFwTGdWXaKz6z4f0m8V+NJkQ4HSlbvrFHWNZsxnibDc6m35defeoieLXxjSP2m
+ Dn4yxyxOrAPOi5EDHCeYRumMFSXAgMBAAGjgbUwgbIwCQYDVR0TBAIwADBEBgNVHSAEPTA7MDkGC2
+ CGSAGG+EUBBxcDMCowKAYIKwYBBQUHAgEWHGh0dHBzOi8vd3d3LnZlcmlzaWduLmNvbS9ycGEwCwY
+ DVR0PBAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjAzBgNVHR8ELDAqMCigJqAk
+ hiJodHRwOi8vY3JsLnZlcmlzaWduLmNvbS9jbGFzczEuY3JsMA0GCSqGSIb3DQEBBQUAA4GBAHs86
+ e4pDFH2+JRUZVnut86CG0eGpOluMdci1jS9xsyMky/MQieAvGNJ2C6Jf8mDWN0R+RCaF0gAfOzPOx
+ 75MAmm+FZbs8dVdr+5LeSO7BBc+Rv/d4iGyIZjSTHiTo6JeKWURWiG/bbcn9ZixWW4Jrrim3BOMpI
+ ImHk3uRpB9igL
+managedDomains: cert.mi.camcom.it
+
+# Inrete Srl - pec, postacert
+dn: providerName=Inrete Srl - pec,o=postacert
+objectClass: top
+objectClass: provider
+mailReceipt: posta-certificata@cert.inrete.it
+LDIFLocationURL: https://cert.inrete.it/pec.inrete.it.ldif
+providerName: Inrete Srl - pec
+description: Servizi di posta certificata Inrete Srl - pec
+providerCertificateSubject: emailAddress=posta-certificata@cert.inrete.it,CN=cert.inr
+ ete.it,OU=cert.inrete.it certificato da Inrete,O=Inrete S.r.l.,L=Moncalieri (
+ TO),ST=Italy,C=IT
+providerCertificate;binary:: MIIELDCCA5WgAwIBAgIBCjANBgkqhkiG9w0BAQQFADCBrzELM
+ AkGA1UEBhMCSVQxDjAMBgNVBAgTBUl0YWx5MRgwFgYDVQQHEw9Nb25jYWxpZXJpIChUTykxFjAUBg
+ NVBAoTDUlucmV0ZSBTLnIubC4xJzAlBgNVBAsTHklucmV0ZSBDZXJ0aWZpY2F0aW9uIEF1dG9yaXR
+ oeTEWMBQGA1UEAxMNSW5yZXRlIFMuci5sLjEdMBsGCSqGSIb3DQEJARYOaW5mb0BpbnJldGUuaXQw
+ HhcNMDQwNTE4MDkwMTQ5WhcNMDUwNTE4MDkwMTQ5WjCByDELMAkGA1UEBhMCSVQxDjAMBgNVBAgTB
+ Ul0YWx5MRgwFgYDVQQHEw9Nb25jYWxpZXJpIChUTykxFjAUBgNVBAoTDUlucmV0ZSBTLnIubC4xLT
+ ArBgNVBAsTJGNlcnQuaW5yZXRlLml0IGNlcnRpZmljYXRvIGRhIElucmV0ZTEXMBUGA1UEAxMOY2V
+ ydC5pbnJldGUuaXQxLzAtBgkqhkiG9w0BCQEWIHBvc3RhLWNlcnRpZmljYXRhQGNlcnQuaW5yZXRl
+ Lml0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8lP1pBdnVEGt/zk3WAL1xpDP8P5w6+/AFS
+ bt5odQ5qM1ZRWbh/8W3uvEfPC7bbj015DPIyY2vY4/v/NBzIKtsOxTuzsfo0TDmJuoSVmQjVL7QWQ
+ qzlxgQLjW1E7HPjCVk53ykwND+5epXJ/3igjm4yXLGngfnaW43MkfDxjFHdQIDAQABo4IBOzCCATc
+ wCQYDVR0TBAIwADAsBglghkgBhvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUw
+ HQYDVR0OBBYEFPRFMmfVFJUb7KZ5jMQ6FoqRUhBcMIHcBgNVHSMEgdQwgdGAFFD2ngkZqXDVlEs7d
+ oWnejt1XGOboYG1pIGyMIGvMQswCQYDVQQGEwJJVDEOMAwGA1UECBMFSXRhbHkxGDAWBgNVBAcTD0
+ 1vbmNhbGllcmkgKFRPKTEWMBQGA1UEChMNSW5yZXRlIFMuci5sLjEnMCUGA1UECxMeSW5yZXRlIEN
+ lcnRpZmljYXRpb24gQXV0b3JpdGh5MRYwFAYDVQQDEw1JbnJldGUgUy5yLmwuMR0wGwYJKoZIhvcN
+ AQkBFg5pbmZvQGlucmV0ZS5pdIIBADANBgkqhkiG9w0BAQQFAAOBgQC1qbC9TpE6h2grKl47aCDUc
+ YNZQZ4Brq/5f+f4oFSFjV9gTSf/jXgxGWx8ml+Shy+QArrn/oMraSSWffsWtalUU9zJX0oDTwx2ma
+ ZucJJfbAG4f1jN84SX6lvslPtFVhU8yj5MZ0YuyPG3HjF3/RZbU9I7cxf7/jQw7rupswCdQw==
+managedDomains: pec.inrete.it
+
+# Itline srl, postacert
+dn: providerName=Itline srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Itline srl
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it\,rpa (c)00,OU=Authenticated by
+  Trust Italia S.p.A., OU=Member\, VeriSign Trust Network, OU=Persona Not Vali
+ dated, OU=Digital ID Class 1, CN=Itline Srl,emailAddress=posta-certificata@pe
+ c.itline.it
+providerCertificate;binary:: MIIEhjCCA++gAwIBAgIQOaghGpxgglpisYyMvT2NlDANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDkyMzAwMDAwMFoXDTA1MDkyMzIzN
+ Tk1OVowggFZMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMRMwEQ
+ YDVQQDEwpJdGxpbmUgU3JsMS4wLAYJKoZIhvcNAQkBFh9wb3N0YS1jZXJ0aWZpY2F0YUBwZWMuaXR
+ saW5lLml0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWqUPGXpuf8YBmEB1dJU0ZZ5pL6PPK
+ n3IgOBhifaVerQ8yWAoCUeEoOe2nNPQpzSBuW3E9Sv6TOYwj99YAf3SugdT09VieXLIrXi0yKvQDS
+ KSAYOr4BrFwLQSLL1kL64hNckWE/qB1F9QgIzWXsKidksMRz4CukTvC688M2aHxyQIDAQABo4HlMI
+ HiMAkGA1UdEwQCMAAwaAYDVR0fBGEwXzBdoFugWYZXaHR0cDovL29uc2l0ZWNybC50cnVzdGl0YWx
+ pYS5pdC9UcnVzdEl0YWxpYVNwQUNvbnN1bWVyU2VydmljZUNlbnRlckNsYXNzMS9MYXRlc3RDUkwu
+ Y3JsMEUGA1UdIAQ+MDwwOgYKYIZIAYb4RQEHHDAsMCoGCCsGAQUFBwIBFh5odHRwczovL3d3dy50c
+ nVzdGl0YWxpYS5pdC9ycGEwEQYJYIZIAYb4QgEBBAQDAgeAMBEGCmCGSAGG+EUBBgkEAwEB/zANBg
+ kqhkiG9w0BAQQFAAOBgQDhpxG2QU1kxisHbfN0w7uX50gyHpG8u42DBHNxAPCQ/KE5k/+iONuypa6
+ gDd1T9DpZ2veCY+HZfErkV/XqRMXpOCbdoMVXQ9FDMlZkPVtCGmgqGVMj1kdMFPQ3/0fTLhfqX7cu
+ 3Aj7cKN2HiJbn6zEpQuIOdTaa+u81HP7Hn1geQ==
+mailReceipt: posta-certificata@pec.itline.it
+managedDomains: pec.itline.it
+managedDomains: pec.dp2000.it
+managedDomains: legalmail.gotoweb.it
+managedDomains: legalmail.serramenticrippa.it
+LDIFLocationURL: https://pec.itline.it/provider.ldif
+
+# CED srl, postacert
+dn: providerName=CED srl, o=postacert
+mailReceipt: posta-certificata@cedsicuro.it
+LDIFLocationURL: https://www.ced.it/posta-certificata.ldif
+objectClass: top
+objectClass: provider
+providerCertificateSubject: C=IT, ST=Venezia, L=Pianiga, O=CED srl, OU=Servizi
+ o di Posta Elettronica Certificata, CN=cedsicuro.it,emailAddress=posta-certif
+ icata@cedsicuro.it
+providerName: CED srl
+description: Servizio di Posta Elettronica Certificata
+providerCertificate;binary:: MIIEHjCCA4egAwIBAgIBBzANBgkqhkiG9w0BAQQFADCBiTELM
+ AkGA1UEBhMCSVQxEDAOBgNVBAgTB1ZlbmV6aWExEDAOBgNVBAcTB1BpYW5pZ2ExEDAOBgNVBAoTB0
+ NFRCBzcmwxFjAUBgNVBAsTDUJpbGxpbmcgZGVwdC4xDzANBgNVBAMTBkNFRC5JVDEbMBkGCSqGSIb
+ 3DQEJARYMYWRtaW5AY2VkLml0MB4XDTA0MDkyNjIxNTQ0NloXDTA1MDkyNjIxNTQ0Nlowgb0xCzAJ
+ BgNVBAYTAklUMRAwDgYDVQQIEwdWZW5lemlhMRAwDgYDVQQHEwdQaWFuaWdhMRAwDgYDVQQKEwdDR
+ UQgc3JsMTIwMAYDVQQLEylTZXJ2aXppbyBkaSBQb3N0YSBFbGV0dHJvbmljYSBDZXJ0aWZpY2F0YT
+ EVMBMGA1UEAxMMY2Vkc2ljdXJvLml0MS0wKwYJKoZIhvcNAQkBFh5wb3N0YS1jZXJ0aWZpY2F0YUB
+ jZWRzaWN1cm8uaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMzX38O48Qa4IV2YM6xbrRLa
+ +LuMTUb9irYE+GaGrsZ/vx82eNzhMJobhlBl7RNaj5XmDdPthhWmqfq8PjBdyr1kmCq/uZT7gnjOj
+ RJxAP3KaiqEA+iaebBYz5idj3+yhRplrH4XaSFF8HySbreqLG9p9JGl28f93goRvxiha63/AgMBAA
+ GjggFeMIIBWjAJBgNVHRMEAjAAMBEGCWCGSAGG+EIBAQQEAwIFoDAsBglghkgBhvhCAQ0EHxYdT3B
+ lblNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFJB6SkdNJzFFPsNeoYyMpSXDn2Zs
+ MIG2BgNVHSMEga4wgauAFCvoixp34OqVBxwYhuNx7aG+UFitoYGPpIGMMIGJMQswCQYDVQQGEwJJV
+ DEQMA4GA1UECBMHVmVuZXppYTEQMA4GA1UEBxMHUGlhbmlnYTEQMA4GA1UEChMHQ0VEIHNybDEWMB
+ QGA1UECxMNQmlsbGluZyBkZXB0LjEPMA0GA1UEAxMGQ0VELklUMRswGQYJKoZIhvcNAQkBFgxhZG1
+ pbkBjZWQuaXSCAQAwKQYDVR0RBCIwIIEecG9zdGEtY2VydGlmaWNhdGFAY2Vkc2ljdXJvLml0MAkG
+ A1UdEgQCMAAwDQYJKoZIhvcNAQEEBQADgYEApOkZ/N/uN3L6rJHDqgrdl7kp+vf7CaIhQRjMuo6sV
+ ODFWAsZhKuIhvW0Bi32acRu72nJOfLdjPKRheDh5zbHkwc0KOMzZbjxXY+uPJircOpyoJv0Mq/LPy
+ RMs1r6Exl8qeZlS/WeoqzXaHoYF/bVajNoupqKaiaBZRNV8v+T2LI=
+managedDomains: cedsicuro.it
+managedDomains: securedp.it
+managedDomains: posta-certificata.biz
+managedDomains: posta-certificata.name
+managedDomains: posta-certificata.org
+managedDomains: posta-certificata.us
+managedDomains: cedsicuro.info
+managedDomains: securedp.info
+managedDomains: securedp.com
+managedDomains: securedp.net
+
+# Sonic Srl, postacert
+dn: providerName=Sonic Srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Sonic Srl
+providerCertificateSubject: C=IT,ST=Bergamo,L=Grumello del Monte,O=Sonic Srl,C
+ N=certibox.it,emailAddress=posta-certificata@certibox.it
+providerCertificate;binary:: MIICmTCCAgICAQAwDQYJKoZIhvcNAQEEBQAwgZQxCzAJBgNVB
+ AYTAklUMRAwDgYDVQQIEwdCZXJnYW1vMRswGQYDVQQHExJHcnVtZWxsbyBkZWwgTW9udGUxEjAQBg
+ NVBAoTCVNvbmljIFNybDEUMBIGA1UEAxMLY2VydGlib3guaXQxLDAqBgkqhkiG9w0BCQEWHXBvc3R
+ hLWNlcnRpZmljYXRhQGNlcnRpYm94Lml0MB4XDTA0MDcyMzEyMTMyOVoXDTA3MDQxODEyMTMyOVow
+ gZQxCzAJBgNVBAYTAklUMRAwDgYDVQQIEwdCZXJnYW1vMRswGQYDVQQHExJHcnVtZWxsbyBkZWwgT
+ W9udGUxEjAQBgNVBAoTCVNvbmljIFNybDEUMBIGA1UEAxMLY2VydGlib3guaXQxLDAqBgkqhkiG9w
+ 0BCQEWHXBvc3RhLWNlcnRpZmljYXRhQGNlcnRpYm94Lml0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADC
+ BiQKBgQC36QfWcL6nh+XENFkMo4qwVxjJOI2otyFh6rx/hv11FhBeYkM0deQx6IVj/4yfuLybMjwR
+ azaAgclLW9GEV+wZRWoiDob1TtD4bwsRSipqspilBfKCuDB5YR8TG6swM0XW/1W5rLf+CH8xPFHra
+ eD3slvhXxJbky8FAjsyXaVezwIDAQABMA0GCSqGSIb3DQEBBAUAA4GBAJ2rFnuJq4L+ZOxIzKhX6I
+ CMHmZrPdFqem9OJZSOWolx11bWzmTZhv+Q78DPsqwXVwS4RafV8syUuu4wvcJojm223PKQxu8J+6Y
+ g4Tf4eiAIuG00HifPpp4hNS8o7tFb7DWLrf545TXCXmNfvP07KO6KJ4bW9+7z7ePJgSW5/mDU
+mailReceipt: posta-certificata@certibox.it
+managedDomains: certibox.it
+managedDomains: certinet.it
+LDIFLocationURL: https://certibox.it/certibox.ldif
+
+# Tol.it Servizi di Posta Certificata, postacert
+dn: providerName=Tol.it Servizi di Posta Certificata,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Tol.it Servizi di Posta Certificata
+providerCertificateSubject: emailAddress=posta-certificata@postacertificata.to
+ l.it, CN=ALICOM S.r.l. Tol.it, OU=Digital ID Class 1, OU=Persona Not Validate
+ d, OU="Member, VeriSign Trust Network", OU=Authenticated by Trust Italia S.p.
+ A., OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Consumer Service Cent
+ er Class 1, O=Trust Italia S.p.A.
+mailReceipt: posta-certificata@postacertificata.tol.it
+providerCertificate;binary:: MIIEmjCCBAOgAwIBAgIQQELQxyUJ4WEYKbE+s3esYTANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTEwMzAwMDAwMFoXDTA1MTEwMzIzN
+ Tk1OVowggFtMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMR0wGw
+ YDVQQDExRBTElDT00gUy5yLmwuIFRvbC5pdDE4MDYGCSqGSIb3DQEJARYpcG9zdGEtY2VydGlmaWN
+ hdGFAcG9zdGFjZXJ0aWZpY2F0YS50b2wuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALo1
+ RA1xt0x3pWO2+qs5A+EAZWO9ElGedFr+t05clsGjIP7uBO2Tm9QGnsIRWC0zK0SdGW0EJJL0Vuza+
+ Fe0hFAGa5qtW/TL1P7C/Jrog9UD2f5wdAcg8Jq4mZ18mmXe/yBcB1m8E/IuD+NzBPZ4nemyoaI4JX
+ LEIdArQoUoD3v/AgMBAAGjgeUwgeIwCQYDVR0TBAIwADBoBgNVHR8EYTBfMF2gW6BZhldodHRwOi8
+ vb25zaXRlY3JsLnRydXN0aXRhbGlhLml0L1RydXN0SXRhbGlhU3BBQ29uc3VtZXJTZXJ2aWNlQ2Vu
+ dGVyQ2xhc3MxL0xhdGVzdENSTC5jcmwwRQYDVR0gBD4wPDA6BgpghkgBhvhFAQccMCwwKgYIKwYBB
+ QUHAgEWHmh0dHBzOi8vd3d3LnRydXN0aXRhbGlhLml0L3JwYTARBglghkgBhvhCAQEEBAMCB4AwEQ
+ YKYIZIAYb4RQEGCQQDAQH/MA0GCSqGSIb3DQEBBAUAA4GBAOCKw2raSuvBTNQJdY0PJOrrjQQzFHM
+ QMFArwlsRt0NcBtIC19gnbojnxq28Q+wpvPSAkPs65Nin4pkpCvoDbrnjgzoJLno4ud/SUeFVqkaS
+ sjzjvj+3RFFpe00jckAvphI2kxoXEbMblGgW9Vqdczhp6KLumTTtEi9r+/TBoOWO
+LDIFLocationURL: http://pec.tol.it/ldif/postacertificata.tol.it.ldif
+managedDomains: pec.tol.it
+managedDomains: postacertificata.tol.it
+
+# 9net.it Servizi di Posta Certificata, postacert
+dn: providerName=9net.it Servizi di Posta Certificata,o=postacert
+objectClass: top
+objectClass: provider
+providerName: 9net.it Servizi di Posta Certificata
+providerCertificateSubject: emailAddress=posta-certificata@postacertificata.9n
+ et.it, CN=9Net - Web Solutions S.r.l 9net.it, OU=Digital ID Class 1, OU=Perso
+ na Not Validated, OU="Member, VeriSign Trust Network", OU=Authenticated byTru
+ st Italia S.p.A., OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Consume
+ r Service Center Class 1, O=Trust Italia S.p.A.
+mailReceipt: posta-certificata@postacertificata.9net.it
+providerCertificate;binary:: MIIEqTCCBBKgAwIBAgIQMhPbiEm1kMsYxV/pndQxOTANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTEwMzAwMDAwMFoXDTA1MTEwMzIzN
+ Tk1OVowggF8MRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMSswKQ
+ YDVQQDEyI5TmV0IC0gV2ViIFNvbHV0aW9ucyBTLnIubCA5bmV0Lml0MTkwNwYJKoZIhvcNAQkBFip
+ wb3N0YS1jZXJ0aWZpY2F0YUBwb3N0YWNlcnRpZmljYXRhLjluZXQuaXQwgZ8wDQYJKoZIhvcNAQEB
+ BQADgY0AMIGJAoGBAJxSCo5QFHhZhIxuUtBPb0W67eTV2P2VqDFaoYR37hqNzqFR9IMxORND0oBhV
+ pZwK2fYI7xwRw4UUdArS1+VTxkK3lNecEQtOY7ZOJiTJDqQwmHGU6t2NbeWAzng5aR6HbeRJoejTP
+ 7YBmAamdHRqfjQv1IzjQYn9mvqIJITnTLbAgMBAAGjgeUwgeIwCQYDVR0TBAIwADBoBgNVHR8EYTB
+ fMF2gW6BZhldodHRwOi8vb25zaXRlY3JsLnRydXN0aXRhbGlhLml0L1RydXN0SXRhbGlhU3BBQ29u
+ c3VtZXJTZXJ2aWNlQ2VudGVyQ2xhc3MxL0xhdGVzdENSTC5jcmwwRQYDVR0gBD4wPDA6BgpghkgBh
+ vhFAQccMCwwKgYIKwYBBQUHAgEWHmh0dHBzOi8vd3d3LnRydXN0aXRhbGlhLml0L3JwYTARBglghk
+ gBhvhCAQEEBAMCB4AwEQYKYIZIAYb4RQEGCQQDAQH/MA0GCSqGSIb3DQEBBAUAA4GBAJG8RGT0ImV
+ N6IFge9mYVQfpCJOe9jaQI7bxeOsKeMsZMw1hLA48ypq6UUyPZPyl5lKxX5Ema6ra5mW21bT08ejU
+ Nq0Joecrjr2kUscFlJTzrpD6Gl258awqDtckQ9VMP9AIvIh6N2IjGWnuBSIpMwhDwZb4is+Y0uJgw
+ kPyvGjX
+LDIFLocationURL: http://pec.9net.it/ldif/postacertificata.9net.it.ldif
+managedDomains: pec.9net.it
+managedDomains: postacertificata.9net.it
+
+# Aruba.it Servizi di Posta Certificata, postacert
+dn: providerName=Aruba.it Servizi di Posta Certificata,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Aruba.it Servizi di Posta Certificata
+providerCertificateSubject: emailAddress=posta-certificata@postacertificata.ar
+ uba.it, CN=Technorail S.r.l. Aruba.it, OU=Digital ID Class 1, OU=Persona Not 
+ Validated, OU="Member, VeriSign Trust Network", OU=Authenticated by Trust Ita
+ lia S.p.A., OU=Terms of use at www.trustitalia.it/rpa (c)00, OU=Consumer Serv
+ ice Center Class 1, O=Trust Italia S.p.A.
+mailReceipt: posta-certificata@postacertificata.aruba.it
+providerCertificate;binary:: MIIEojCCBAugAwIBAgIQM8rTOPYt+F+u6sO11WYYZjANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MDgwNDAwMDAwMFoXDTA1MDgwNDIzN
+ Tk1OVowggF1MRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMSMwIQ
+ YDVQQDExpUZWNobm9yYWlsIFMuci5sLiBBcnViYS5pdDE6MDgGCSqGSIb3DQEJARYrcG9zdGEtY2V
+ ydGlmaWNhdGFAcG9zdGFjZXJ0aWZpY2F0YS5hcnViYS5pdDCBnzANBgkqhkiG9w0BAQEFAAOBjQAw
+ gYkCgYEAoLETIfZ6ggcBmGWFuduPvxsdwgC53kpMat6w/HrqDmZXw1mxYWPIMbVFTlhMYPHWPddsw
+ vihl/JI09414NrVVPlfV4NNTpCz+Eag4JlEvkc3OFQ/utRlWcLfqF9BqORK6NvUXy5nei++7vQNqz
+ xllXr7IRIvbQxbxvJjWVlvxK8CAwEAAaOB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhMF8wXaBboFm
+ GV2h0dHA6Ly9vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb25zdW1lclNl
+ cnZpY2VDZW50ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwL
+ DAqBggrBgEFBQcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQ
+ QEAwIHgDARBgpghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvcNAQEEBQADgYEAU01sCD9kTQaISoymQms
+ cPefUDuQvNaY1iqimQXnIPDPbBY2DM1Fft5XObTFMaTNfnjpV0Lvq/bOoDSYm1oaddQVw1SnjwA2c
+ H3qjG3tH0tTUM3/YzU71W+ZLXO+I3m/B/ie3UWdYZvwOeV87DKk92HkIFsBbGjN1AM0aQ+JOWTo=
+LDIFLocationURL: https://pec.aruba.it/ldif/postacertificata.aruba.it.ldif.txt
+managedDomains: pec.aruba.it
+managedDomains: postacertificata.aruba.it
+
+# ISTI - CNR, postacert
+dn: providerName=ISTI - CNR, o=postacert
+objectClass: top
+objectClass: provider
+providerName: ISTI - CNR
+providerCertificateSubject: C=IT, ST=Italy, L=Pisa, O=ISTI - CNR, OU=ServizioP
+ osta Certificata, CN=Posta Certificata,emailAddress=posta-certificata@isti.cnr.it
+providerCertificate;binary:: MIIDUDCCArmgAwIBAgIBATANBgkqhkiG9w0BAQQFADBkMQswC
+ QYDVQQGEwJJVDEMMAoGA1UEChMDQ05SMQ0wCwYDVQQLEwRJU1RJMTgwNgYDVQQDEy9JU1RJIC0gQ0
+ 5SIGV4cGVyaW1lbnRhbCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0wNDA0MjMwNTQyMzNaFw0
+ wOTA2MDEwNTQyMzNaMIGwMQswCQYDVQQGEwJJVDEOMAwGA1UECBMFSXRhbHkxDTALBgNVBAcTBFBp
+ c2ExEzARBgNVBAoTCklTVEkgLSBDTlIxIzAhBgNVBAsTGlNlcnZpemlvIFBvc3RhIENlcnRpZmljY
+ XRhMRowGAYDVQQDExFQb3N0YSBDZXJ0aWZpY2F0YTEsMCoGCSqGSIb3DQEJARYdcG9zdGEtY2VydG
+ lmaWNhdGFAaXN0aS5jbnIuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMj1mgrlapFKNmb
+ vs2gFS1Z2KulPzdn+vajTC6qwZbQEgK7M2ABuO9tZ8OKtZjzWqhXK1gsJEB9dKpOvSmwqWlLYNHwI
+ yy0OlajC/ZgowkeDaGJTfWI8CCBq42E+EpOnkHHncMHJr64mvuxr5NLS+98aKUIwjSxqEfs8Mqtdx
+ iTTAgMBAAGjgcQwgcEwKAYJYIZIAYb4QgENBBsWGVNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQ
+ YDVR0OBBYEFJ+U3LLO7cNk79qFSyMJCZ5okyvzMHYGA1UdIwRvMG2haKRmMGQxCzAJBgNVBAYTAkl
+ UMQwwCgYDVQQKEwNDTlIxDTALBgNVBAsTBElTVEkxODA2BgNVBAMTL0lTVEkgLSBDTlIgZXhwZXJp
+ bWVudGFsIENlcnRpZmljYXRpb24gQXV0aG9yaXR5ggEAMA0GCSqGSIb3DQEBBAUAA4GBANs1A6LES
+ nl/vRM8Fq+bpLXolQupZvDzQ6A1YoxeBegq7xUxObFNhnrkhE4/KQ7waNyjJBLyrqcsTGXq87jtXu
+ 8SLJP1+daiR8xwcFfY96l65XtkPIzwZQBls187U6nvtOSEMeR3HdUhx8pN1Go44XPps9s4A2mBwKZ
+ +t+BbYinI
+mailReceipt: ricevute@isti.cnr.it
+LDIFLocationURL: https://mx.isti.cnr.it/LDIF/isti.ldif
+managedDomains: postacert.isti.cnr.it
+description: Servizi di posta certificata per Istituti CNR
+
+# Fabbricadigitale Srl, postacert
+dn: providerName=Fabbricadigitale Srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: Fabbricadigitale Srl
+providerCertificateSubject:: Tz1UcnVzdCBJdGFsaWEgUy5wLkEuLCBPVT1Db25zdW1lciBTZ
+ XJ2aWNlIENlbnRlciBDbGFzcyAxLCBPVT1UZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN0aXRhbGlhLm
+ l0L3JwYSAoYykwMCwgT1U9QXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFsaWEgUy5wLkEuLCBPVT1
+ NZW1iZXJcLCBWZXJpU2lnbiBUcnVzdCBOZXR3b3JrLCBPVT1QZXJzb25hIE5vdCBWYWxpZGF0ZWQs
+ IE9VPURpZ2l0YWwgSUQgQ2xhc3MgMSwgQ049UG9zdGEgRWxldHRyb25pY2EgQ2VydGlmaWNhdGEgZ
+ mFiYnJpY2FkaWdpdGFsZSBzcmwvZW1haWxBZGRyZXNzPXBvc3RhLWNlcnRpZmljYXRhQGZkcGVjLm
+ ZhYmJyaWNhZGlnaXRhbGUuaXQg
+providerCertificate;binary:: MIIEujCCBCOgAwIBAgIQK73C6SVLINaN5d3mJW1+PzANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTEwNTAwMDAwMFoXDTA1MTEwNTIzN
+ Tk1OVowggGNMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMTswOQ
+ YDVQQDEzJQb3N0YSBFbGV0dHJvbmljYSBDZXJ0aWZpY2F0YSBmYWJicmljYWRpZ2l0YWxlIHNybDE
+ 6MDgGCSqGSIb3DQEJARYrcG9zdGEtY2VydGlmaWNhdGFAZmRwZWMuZmFiYnJpY2FkaWdpdGFsZS5p
+ dDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAxBgKY5M6uXSEJSwReI85l6OL1K3wLsIAJUPeY
+ qeawOgOYJK/J4Dn//jsG4mh9IxD9iEz3QcN5zzvHJDlu5IJ/QConLkIVpapnJ01P+OUl/NvKr/+yW
+ rkkyzB1XLOdALsMHp0jDUw+Htyf+637SG6NQykYc8MFto5l7+awzITWQ0CAwEAAaOB5TCB4jAJBgN
+ VHRMEAjAAMGgGA1UdHwRhMF8wXaBboFmGV2h0dHA6Ly9vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQv
+ VHJ1c3RJdGFsaWFTcEFDb25zdW1lclNlcnZpY2VDZW50ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFB
+ gNVHSAEPjA8MDoGCmCGSAGG+EUBBxwwLDAqBggrBgEFBQcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdG
+ FsaWEuaXQvcnBhMBEGCWCGSAGG+EIBAQQEAwIHgDARBgpghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvc
+ NAQEEBQADgYEAD2IVpZKLt0hiSwuN3uthm4r5Yli6AeIZ+HFV3GgjlcHJaDQ+/luQAddVm8kdjc7G
+ pSn+mlD9ze0Ujtmka5Mv3Ql5uD9PRMY2WzSuDwjoETseILsNo/KkKiLWX4+Pmgix2bcrHBUJmGmE/
+ QqLf7j/9kXV15HOyi8PpjrAbyFNAJ0=
+mailReceipt: posta-certificata@fdpec.fabbricadigitale.it
+managedDomains: fdpec.fabbricadigitale.it
+LDIFLocationURL: http://fdpec.fabbricadigitale.it/fdpec.ldif
+
+# NetFLY srl, postacert
+dn: providerName=NetFLY srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: NetFLY srl
+providerCertificateSubject: O=Trust Italia S.p.A., OU=Consumer Service Center 
+ Class 1, OU=Terms of use at www.trustitalia.it\,rpa (c)00,OU=Authenticated by
+  Trust Italia S.p.A., OU=Member\, VeriSign Trust Network, OU=Persona Not Vali
+ dated, OU=Digital ID Class 1, CN=Antonio Ruggiero,emailAddress=posta-certific
+ ata@pec.netfly.it
+providerCertificate;binary:: MIIEjDCCA/WgAwIBAgIQVHxI/33qTB64uGL8sL/27TANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTEwMzAwMDAwMFoXDTA1MTEwMzIzN
+ Tk1OVowggFfMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMRkwFw
+ YDVQQDExBBbnRvbmlvIFJ1Z2dpZXJvMS4wLAYJKoZIhvcNAQkBFh9wb3N0YS1jZXJ0aWZpY2F0YUB
+ wZWMubmV0Zmx5Lml0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC872mzhrGEpe9TvjIv1qot
+ HqpR9ch7qBG5XZBEr9oD6i22rAijzmQ//ul+MCPyPWyUHN5zxg0YxT/1DOv/u73+cg9OJCIbcNuSv
+ nh11CnyXmoPC+Ul45eBZyt0vgS8A4VwbhhlEuVhmtkf6Gm7XNNQwQklTCAjbEed6UZhph4Z5QIDAQ
+ ABo4HlMIHiMAkGA1UdEwQCMAAwaAYDVR0fBGEwXzBdoFugWYZXaHR0cDovL29uc2l0ZWNybC50cnV
+ zdGl0YWxpYS5pdC9UcnVzdEl0YWxpYVNwQUNvbnN1bWVyU2VydmljZUNlbnRlckNsYXNzMS9MYXRl
+ c3RDUkwuY3JsMEUGA1UdIAQ+MDwwOgYKYIZIAYb4RQEHHDAsMCoGCCsGAQUFBwIBFh5odHRwczovL
+ 3d3dy50cnVzdGl0YWxpYS5pdC9ycGEwEQYJYIZIAYb4QgEBBAQDAgeAMBEGCmCGSAGG+EUBBgkEAw
+ EB/zANBgkqhkiG9w0BAQQFAAOBgQCnfreFKAhGjGLKdbM9ZLVfn3CU4/KFEBZq4Qly7n9QVR5z42f
+ Bu5T1P+vYA2RDc4xHOY51yGj3wWtd9hfdLBJgHMutWZAl4aEjiB+fZlBGcsaDpZ5QRyqRnP+kwFJj
+ zjHKzeziNwjOuOlrGP8QEQwvceDvfbiorFRofynD905tLA==
+mailReceipt: posta-certificata@pec.netfly.it
+managedDomains: pec.netfly.it
+LDIFLocationURL: https://pecsrv.netfly.it/netfly.ldif
+
+# Telecom Italia Media, postacert
+dn: providerName=Telecom Italia Media,o=postacert
+objectClass: top
+objectClass: provider
+providerCertificateSubject: c=it,o=Telecom Italia Media S.p.A.,ou=Azienda - Te
+ lecom Italia Media,OU=Settore - Tin.it,CN=posta certificata,emailAddress=posta-certifica
+ ta@cert.tin.it
+providerCertificate;binary:: MIIEBTCCA26gAwIBAgIQYJMi+XdC6Ry5/9yJpSO+3zANBgkqh
+ kiG9w0BAQQFADCBvTEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE9MDsGA1UEAxM0VHJ1c3QgSXRhbGlhIENsYXNzIDIgT25T
+ aXRlIEluZGl2aWR1YWwgU3Vic2NyaWJlciBDQTAeFw0wNDExMDMwMDAwMDBaFw0wNTExMDMyMzU5N
+ TlaMIH+MSQwIgYDVQQKFBtUZWxlY29tIEl0YWxpYSBNZWRpYSBTLnAuQS4xETAPBgNVBAsUCFNlY3
+ VyaXR5MTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN0aXRhbGlhLml0L3JwYSAoYyk
+ wMDEnMCUGA1UECxQeQXppZW5kYSAtIFRlbGVjb20gSXRhbGlhIE1lZGlhMRkwFwYDVQQLFBBTZXR0
+ b3JlIC0gVGluLml0MRowGAYDVQQDExFwb3N0YSBjZXJ0aWZpY2F0YTEsMCoGCSqGSIb3DQEJARYdc
+ G9zdGEtY2VydGlmaWNhdGFAY2VydC50aW4uaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK
+ 6EzwIqcA2c2Zq9RS/My1O0GBkzn67ATPxeFO9k6v0RlBbbRQ9A6JX9cEahNyWAFYwYUIv/NGRokJC
+ s0O9veN6L8tluzZ5pArlDojpuHYffqIrXfefz8QS5X1TQqruNWKiIpgtdQvlqbxYCj8p3myaTz4G8
+ gYMn3OA0MPFVuDVXAgMBAAGjgcIwgb8wCQYDVR0TBAIwADBFBgNVHSAEPjA8MDoGCmCGSAGG+EUBB
+ xwwLDAqBggrBgEFBQcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMAsGA1UdDwQEAw
+ IFoDARBglghkgBhvhCAQEEBAMCB4AwSwYDVR0fBEQwQjBAoD6gPIY6aHR0cDovL29uc2l0ZWNybC5
+ 0cnVzdGl0YWxpYS5pdC9PblNpdGVQdWJsaWMvTGF0ZXN0Q1JMLmNybDANBgkqhkiG9w0BAQQFAAOB
+ gQC5U7ry00NyL1yCugIsl0FN/J44OgZaZMNnSMHmJCcI0fnfau5m+DMpCrj61xUjs0vo/L9xjhQtj
+ 46AUS/mU1BY42SEd0geKNJHvFEvCWRIJN48PhBec6tQ6LUK+7ZZ54n6Nn9i+I2EcZEEbRWug+cVK7
+ q91QilYBgud3xm+w87yg==
+providerName: Telecom Italia Media
+mailReceipt: posta-certificata@cert.tin.it
+managedDomains: cert.tin.it
+managedDomains: cert.virgilio.it
+LDIFLocationURL: https://pec.tin.it/LDIF/ldif.txt
+
+# Exent Srl, postacert
+dn: providerName=Exent Srl, o=postacert
+objectClass: top
+objectClass: provider
+providerName: Exent Srl
+providerCertificateSubject: C=IT,ST=Matera,L=Matera,O=Exent Srl,CN=pec.exent.i
+ t,emailAddress=posta-certificata@exent.it
+providerCertificate;binary:: MIICezCCAeQCAQAwDQYJKoZIhvcNAQEEBQAwgYUxCzAJBgNVB
+ AYTAklUMQ8wDQYDVQQIEwZNYXRlcmExDzANBgNVBAcTBk1hdGVyYTESMBAGA1UEChMJRXhlbnQgU3
+ JsMRUwEwYDVQQDEwxwZWMuZXhlbnQuaXQxKTAnBgkqhkiG9w0BCQEWGnBvc3RhLWNlcnRpZmljYXR
+ hQGV4ZW50Lml0MB4XDTA0MTExMjEwNDA1MloXDTA3MDgwODEwNDA1MlowgYUxCzAJBgNVBAYTAklU
+ MQ8wDQYDVQQIEwZNYXRlcmExDzANBgNVBAcTBk1hdGVyYTESMBAGA1UEChMJRXhlbnQgU3JsMRUwE
+ wYDVQQDEwxwZWMuZXhlbnQuaXQxKTAnBgkqhkiG9w0BCQEWGnBvc3RhLWNlcnRpZmljYXRhQGV4ZW
+ 50Lml0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDnjetV97R1ir0XZ3DKNAtXwhHlJv5HYSN
+ UdZXdgVpLHr167OPO9i2umS/B2np9b2QdsQp6IkPK2MIymiH98GqcrZu5hwHAftpZ3EfISXBpQg1K
+ dvKZ4Q0/jNhsGPfjfCdOSod71TwH7W5u8m3spZzklSN9XAhpOCWoDhI7TPaOyQIDAQABMA0GCSqGS
+ Ib3DQEBBAUAA4GBAB6YCcSJh8GLYMZ0gSzKUQRYY45syOdi2l5xnFuYP8dWPIxbLin7VUXyNqrPDJ
+ iGdm3purNG5lkU8Ffv8HBJIizgXgv498saU2mX0SzpWeRW0nC3T55wfHNQWM9uocbzAmOvCDycIf8
+ 461hnePLSiM3D9xsw7zRHACPV5WRB73KT
+mailReceipt: ricevute@exent.it
+LDIFLocationURL: http://pec.exent.it/pec.ldif
+managedDomains: pec.exent.it
+description: Servizi di posta certificata EXENT S.r.l.
+
+# ALASCOM SOLUTIONS S.R.L., postacert
+dn: providerName=ALASCOM SOLUTIONS S.R.L.,o=postacert
+objectClass: top
+objectClass: provider
+providerName: ALASCOM SOLUTIONS S.R.L.
+providerCertificateSubject: C=IT,ST=MILANO,L=MILANO,O=ALASCOM SOLUTIONS S.R.L.
+ ,OU=Posta Elettronica Certificata,CN=pec.postaforte.it,emailAddress=posta-cer
+ tificata@postaforte.it
+providerCertificate;binary:: MIIDSjCCAjKgAwIBAgICAOswDQYJKoZIhvcNAQEFBQAwOTELM
+ AkGA1UEBhMCSVQxFDASBgNVBAoMC0NlZGFjcmkgU3BBMRQwEgYDVQQDDAtDZWRhY3JpY2VydDAeFw
+ 0wNDExMDgxMDQ2MDhaFw0wNjExMDgxMDQ2MDVaMIHGMQswCQYDVQQGEwJJVDEPMA0GA1UECBMGTUl
+ MQU5PMQ8wDQYDVQQHEwZNSUxBTk8xITAfBgNVBAoTGEFMQVNDT00gU09MVVRJT05TIFMuUi5MLjEm
+ MCQGA1UECxMdUG9zdGEgRWxldHRyb25pY2EgQ2VydGlmaWNhdGExGjAYBgNVBAMTEXBlYy5wb3N0Y
+ WZvcnRlLml0MS4wLAYJKoZIhvcNAQkBFh9wb3N0YS1jZXJ0aWZpY2F0YUBwb3N0YWZvcnRlLml0MI
+ GfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCsxHmBoC7esI9yxw25dWNoHqbawqnsiMbvr3MRqOx
+ 3GG5R3nckcLfepe7qtlOMh677o6WxWHksvM5U6b38I4WdQ6zG0dMetj35YfegwWK7nudAspDhRGF4
+ rkfTX/CYakKpsqXEIQTUWrVjHy3LTLDcpqMqHH3NVGdSuxKdLPvBgwIDAQABo1IwUDAOBgNVHQ8BA
+ f8EBAMCB4AwHwYDVR0jBBgwFoAUQfOSgoNlYnlcIGfm5Xo8+3tpEjYwHQYDVR0OBBYEFO6YGPlx12
+ xWfUJA0fQN8axTysXtMA0GCSqGSIb3DQEBBQUAA4IBAQBFq/ot1OOZNU+O086gZIXJE2/BQunjHvl
+ pQyDzfzPQ+iCFzNLWcT8VJlSKHrj7X3KaDEAFVpODNQ9hUtg5Uz1RI893YMiiwHVQJ0QTDjVebhXh
+ HOYbNj80ox/aQpyWV3mvY4WChyx8xpzvt6fKi2cZ8NTaKf5ON5Duk7MlebATfxOT8B9TRAtF4Nftd
+ e0ty2cyzMNE9EWQZiCkPlNDsesAfCxRpTFkY3jZKyDvtJtriRugdlr9j4BKvWIrttwYqgBWXf6AWC
+ 0w5sYKkmhOvVVI5Oj0niblLRW801l3Q0i9/BpSBogOKUBwgW3sFSqABC/+R2Zp2cJoCKBPocjs5te
+ s
+mailReceipt: posta-certificata@postaforte.it
+managedDomains: postaforte.it
+LDIFLocationURL: https://www.postaforte.it/ldif/provider.ldif
+
+# 1 a 1 Group Srl, postacert
+dn: providerName=1 a 1 Group Srl,o=postacert
+objectClass: top
+objectClass: provider
+providerName: 1 a 1 Group Srl
+providerCertificateSubject: O=Trust Italia S.p.A.,OU=Consumer Service Center C
+ lass 1,OU=Terms of use at www.trustitalia.it/rpa (c)00,OU=Authenticated by Tr
+ ust Italia S.p.A.,OU=Member VeriSign Trust Network,OU=Persona Not Validated,O
+ U=Digital ID Class 1,CN=1 a 1 Srl One to One Group,emailAddress=posta-certifi
+ cata@pec.1a1group.com
+providerCertificate;binary:: MIIFHTCCBIagAwIBAgIQcOKsb6WVhk0WZuP0vWIvTTANBgkqh
+ kiG9w0BAQQFADCBvzEcMBoGA1UEChMTVHJ1c3QgSXRhbGlhIFMucC5BLjEfMB0GA1UECxMWVmVyaV
+ NpZ24gVHJ1c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnR
+ ydXN0aXRhbGlhLml0L3JwYSAoYykwMDE/MD0GA1UEAxM2VHJ1c3QgSXRhbGlhIENsYXNzIDEgQ29u
+ c3VtZXIgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMB4XDTA0MTEyMjAwMDAwMFoXDTA1MTEyMjIzN
+ Tk1OVowggFsMRwwGgYDVQQKFBNUcnVzdCBJdGFsaWEgUy5wLkEuMSgwJgYDVQQLFB9Db25zdW1lci
+ BTZXJ2aWNlIENlbnRlciBDbGFzcyAxMTUwMwYDVQQLEyxUZXJtcyBvZiB1c2UgYXQgd3d3LnRydXN
+ 0aXRhbGlhLml0L3JwYSAoYykwMDEtMCsGA1UECxMkQXV0aGVudGljYXRlZCBieSBUcnVzdCBJdGFs
+ aWEgUy5wLkEuMScwJQYDVQQLEx5NZW1iZXIsIFZlcmlTaWduIFRydXN0IE5ldHdvcmsxHjAcBgNVB
+ AsTFVBlcnNvbmEgTm90IFZhbGlkYXRlZDEbMBkGA1UECxMSRGlnaXRhbCBJRCBDbGFzcyAxMSMwIQ
+ YDVQQDExoxIGEgMSBTcmwgT25lIHRvIE9uZSBHcm91cDExMC8GCSqGSIb3DQEJARYicG9zdGEtY2V
+ ydGlmaWNhdGFAcGVjLjFhMWdyb3VwLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+ AJkjRKg939L/MLdwNbxTYYfcxy+j4IC9+lWBlzApVrNg48hOt26GlWBNjF2fCZwQsFqJG/A6cjCtd
+ rmwXrqnjsh03DbnrdNiODlPkyH8KoYx64qBrXaAIpA8rF4YGGz5kfcEqDK+lyNcBNDERWZJOzeEPl
+ YzZUlMPu0yzwrPwrdeKm0rfHOjICwbsBCWLlWzdk4zkqhO+EF0g/ZsFUJTkkx3iMex9No0KGkUb8e
+ R6pOZmSEV7h68U9pLyGHRsNpsDomL083YTs/DsFGJoab2qZS2aCEm6hTpOOn7ZWeCpKXzPeW2IP+E
+ BoZt4FbxHI+Ra+4OLOSANnvE1xSVI8A7KEECAwEAAaOB5TCB4jAJBgNVHRMEAjAAMGgGA1UdHwRhM
+ F8wXaBboFmGV2h0dHA6Ly9vbnNpdGVjcmwudHJ1c3RpdGFsaWEuaXQvVHJ1c3RJdGFsaWFTcEFDb2
+ 5zdW1lclNlcnZpY2VDZW50ZXJDbGFzczEvTGF0ZXN0Q1JMLmNybDBFBgNVHSAEPjA8MDoGCmCGSAG
+ G+EUBBxwwLDAqBggrBgEFBQcCARYeaHR0cHM6Ly93d3cudHJ1c3RpdGFsaWEuaXQvcnBhMBEGCWCG
+ SAGG+EIBAQQEAwIHgDARBgpghkgBhvhFAQYJBAMBAf8wDQYJKoZIhvcNAQEEBQADgYEA2pvuMTKxo
+ hO1n0WIZ6l5nXSdYR1otGDi816gHO9Nxnm8md0oZUobBR0BMMUc+1+gx1aJnzDNy7qhO0BMGzN7e3
+ OIALdgBYbMxFJjfeKBDmRnAVcy8/9muo+jdss5FxHG2/wQDjbdp5UskwnMsFzP5CrC2kZDWwKTt+2
+ m/8aVu2Q=
+mailReceipt: posta-certificata@pec.1a1group.com
+managedDomains: pec.1a1group.com
+LDIFLocationURL: https://pec.1a1group.com/1a1group.ldif
+
+# Cedacri S.p.A., postacert
+dn: providerName=Cedacri S.p.A.,o=postacert
+objectClass: top
+objectClass: provider
+mailReceipt: PecAdm@postacert.cedacri.it
+LDIFLocationURL: https://www.postacert.cedacri.it/postacert.cedacri.it.ldif
+providerName: Cedacri S.p.A.
+description: Servizio Postacert (PEC) Cedacri
+providerCertificateSubject: C=IT, ST=Parma, L=Collecchio, O=Cedacri_SpA, OU=PE
+ C, CN=postacert.cedacri.it,emailAddress=PecAdm@postacert.cedacri.it
+providerCertificate;binary:: MIIDJTCCAg2gAwIBAgICAPYwDQYJKoZIhvcNAQEFBQAwOTELM
+ AkGA1UEBhMCSVQxFDASBgNVBAoMC0NlZGFjcmkgU3BBMRQwEgYDVQQDDAtDZWRhY3JpY2VydDAeFw
+ 0wNDExMzAxMzQxMjJaFw0wNjExMzAxMzQxMTdaMIGhMQswCQYDVQQGEwJJVDEOMAwGA1UECBMFUGF
+ ybWExEzARBgNVBAcTCkNvbGxlY2NoaW8xFDASBgNVBAoUC0NlZGFjcmlfU3BBMQwwCgYDVQQLEwNQ
+ RUMxHTAbBgNVBAMTFHBvc3RhY2VydC5jZWRhY3JpLml0MSowKAYJKoZIhvcNAQkBFhtQZWNBZG1Ac
+ G9zdGFjZXJ0LmNlZGFjcmkuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAN3FbNzq8LIk9J
+ qLs6CV7kAv+ZlM+2Q+D+fW3IFVEIUuqD2prx7fxFtLYAmwsQx0b17xk3aA+sPR9fOHozUmW0ZCyjf
+ /tdw2LVMzmVn/wfDZBeBj71B/tZGC0vj/5I++ugbiFWtQMAKYvrv9Zinb18fETVh1+dmdoUBbhjKQ
+ wcS7AgMBAAGjUjBQMA4GA1UdDwEB/wQEAwIHgDAfBgNVHSMEGDAWgBRB85KCg2VieVwgZ+blejz7e
+ 2kSNjAdBgNVHQ4EFgQUfYmEtBKeaX9Z38+FazleAryOu/QwDQYJKoZIhvcNAQEFBQADggEBACqBfn
+ uv0R5Ws6rH3EHk36Tws+shqiwAqXVhSRUnJsiukBBRU0CwncI+VygYrsGmKuuAJBrc3iOVso9Dpqz
+ U4aA2g397MUY+kK6JhoMRm1zLCylxeHmkxqkHlViCqG+Y5r1AsfkRlovofQ/7pBr1rF8lJzXFLtgw
+ FzawQjGTg7JkyGWjo78t1c6gXV0zl+Gv/mlXCoETqa/LdpXTRdM76xXIFyT8Lzq3mhzD6Ilaxqzyn
+ Ip8Ms3TMA5czBI/3wejIss/gj3lyXwD5wP2kSu5dHhNBKLnwxkGYdzstVA8vD0h1239lsprQo9vCS
+ 5Qua/sFzEMFUARjbBMCC8m88dscJg=
+providerCertificate;binary:: MIIDOjCCAiKgAwIBAgICAPcwDQYJKoZIhvcNAQEFBQAwOTELM
+ AkGA1UEBhMCSVQxFDASBgNVBAoMC0NlZGFjcmkgU3BBMRQwEgYDVQQDDAtDZWRhY3JpY2VydDAeFw
+ 0wNDExMzAxNDE0MzNaFw0wNjExMzAxNDE0MzBaMIGhMQswCQYDVQQGEwJJVDEOMAwGA1UECBMFUGF
+ ybWExEzARBgNVBAcTCkNvbGxlY2NoaW8xFDASBgNVBAoUC0NlZGFjcmlfU3BBMQwwCgYDVQQLEwNQ
+ RUMxHTAbBgNVBAMTFHBvc3RhY2VydC5jZWRhY3JpLml0MSowKAYJKoZIhvcNAQkBFhtQZWNBZG1Ac
+ G9zdGFjZXJ0LmNlZGFjcmkuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKKjHju3tq1zw9
+ IiLIGumtOkrkARGpCXj8yCmzxxGqMmJE5hQWtiYh+dYHhwmu0TK/qLsgdQ86utkuqNYc8Mn6cjkl5
+ E6mW7MIcvQ0ioDwHzLR/h1k8kdAQ8xrcTyDgDo22rcTlt5lHviiwxr8JutSpWmImHh80P8YlvTN0l
+ GJiFAgMBAAGjZzBlMA4GA1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEG
+ DAWgBRB85KCg2VieVwgZ+blejz7e2kSNjAdBgNVHQ4EFgQUg7w3FC5zCsYfnqm0PXp77LRyFRswDQ
+ YJKoZIhvcNAQEFBQADggEBAKdppJRevLu6sFM85EJ2muy/dTYxCfWMdn2sKHOsLZiup8CT/CxHEtp
+ Cl4r42yw1FRi9gVDGF4QtSWjwCdeLFsRA46P4bbpdP3MHkQZz1RsPoAlkmaBeo6ZF4K19PgNMrC1M
+ bxPiVgkVcLhpHn0EBUDFw++3r4r0o6xWvlGPaidXa8/1/oUyb8FaYp3Xe+tSIxlKoR2TYB/XSJsGA
+ 463gyY7zvrxYZ3hr5Jn8RyKPA6vrcS3HWZoLXbHiTPydedMv+7TgTAeeyvaVpUEih01clVCglT21r
+ X8jXEzVYgD0QzVT5Dt1x+Vls9wml1WNDWtiqgpIi9TuPsM3oKZpzZ9PBA=
+providerCertificate;binary:: MIIDOjCCAiKgAwIBAgICAPgwDQYJKoZIhvcNAQEFBQAwOTELM
+ AkGA1UEBhMCSVQxFDASBgNVBAoMC0NlZGFjcmkgU3BBMRQwEgYDVQQDDAtDZWRhY3JpY2VydDAeFw
+ 0wNDExMzAxNDE1MDNaFw0wNjExMzAxNDE1MDFaMIGhMQswCQYDVQQGEwJJVDEOMAwGA1UECBMFUGF
+ ybWExEzARBgNVBAcTCkNvbGxlY2NoaW8xFDASBgNVBAoUC0NlZGFjcmlfU3BBMQwwCgYDVQQLEwNQ
+ RUMxHTAbBgNVBAMTFHBvc3RhY2VydC5jZWRhY3JpLml0MSowKAYJKoZIhvcNAQkBFhtQZWNBZG1Ac
+ G9zdGFjZXJ0LmNlZGFjcmkuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKVJ5JfX5B9X6r
+ 1EW1Nzf7CkKy3CmZhET+lB7eA+SgVUysOwpql+7JSkQXujd3FK7VCy1ZRzF9CcFnhv9tUzodZlD54
+ T4L87urhuko1EcgLQVbQuZ6JZJzi2zvU3JGaafL3ETBEOwyvJBpi5b+FI3WcaNfosz5TnwPhfSMTf
+ V/JBAgMBAAGjZzBlMA4GA1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEG
+ DAWgBRB85KCg2VieVwgZ+blejz7e2kSNjAdBgNVHQ4EFgQU78tZmQ0aP/gbtA3rVy5vHLnioxYwDQ
+ YJKoZIhvcNAQEFBQADggEBAF7QEp82CaNX9KfSUdM5tK+EV/BmH122zbddNkS6RVHb2rNNIfzcomQ
+ nEgPZFrqFu/cpU3umORNBUX0leJbsV+3AfUsAWBTpXs5RthzFh+7pnps/oEfBEQLrCq28Bn2NdTf8
+ CYGO5DkqJalPgNMlwMfseZpV+B05+C4RtGE3PyBGlTyZbtWYgWORRH3GgqhJWrZ78rU7row/OCBlV
+ CvU1Zq/pNoNwETJo7qj3fsgP+7FRVZL6wBLr+nOD0CDW3MWsny+6TtxuJp9OfB3ADZZQiHtLjin1q
+ muF152IESoRhT/yJtcxzqDy0NQ+HduQufVjWfwpI3h/Cc507WH7RgyXrw=
+providerCertificate;binary:: MIIDOjCCAiKgAwIBAgICAPkwDQYJKoZIhvcNAQEFBQAwOTELM
+ AkGA1UEBhMCSVQxFDASBgNVBAoMC0NlZGFjcmkgU3BBMRQwEgYDVQQDDAtDZWRhY3JpY2VydDAeFw
+ 0wNDExMzAxNDE1MjFaFw0wNjExMzAxNDE1MTlaMIGhMQswCQYDVQQGEwJJVDEOMAwGA1UECBMFUGF
+ ybWExEzARBgNVBAcTCkNvbGxlY2NoaW8xFDASBgNVBAoUC0NlZGFjcmlfU3BBMQwwCgYDVQQLEwNQ
+ RUMxHTAbBgNVBAMTFHBvc3RhY2VydC5jZWRhY3JpLml0MSowKAYJKoZIhvcNAQkBFhtQZWNBZG1Ac
+ G9zdGFjZXJ0LmNlZGFjcmkuaXQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMQB4DBBgUnfjl
+ bJlhoJ9xYY+JPnaQYINxOPAr5mvnPslOScUj7A9Y/Ix/HGuHnUn8J/lLDSSRkoypBvJOFjgG5585t
+ DzqHSBHwlOb2Mr91Z+gqUjch0H3fkCeloLyvHCp286ZPel7qbinoP9kvLVDMIQtgIDV2yhwIkqiso
+ H24VAgMBAAGjZzBlMA4GA1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEG
+ DAWgBRB85KCg2VieVwgZ+blejz7e2kSNjAdBgNVHQ4EFgQUIDeeZAK22EK3a1RrTOR+c1eJ5OgwDQ
+ YJKoZIhvcNAQEFBQADggEBAJ/OIfDHu6bobUGFiwVyFvr17iWmNBOsKn6ptDuTlCozk+XtHWBHZMu
+ NAwGo/75sYpawwue5rR2o13/b1U2UE4h/WfFJS7gAAka0HI0TUID84OZIlni2MvoGckWaIO9aNEy+
+ BFJGJXxKqCWHTrC0+lEFg1sITxo9jRq/ob2/LqpIMvBe3hbU1hzmie4SIKLrNrZb4J3YVD1ERGTb5
+ Ny2Cd0dkpf8bQ8mwFC5fRdkKaQWWQdGsi+0/Vbr5x0RYAAPu2nskxV5g5btKUcIAlHoRcjdNFd+KZ
+ xR/EPYIXuKcHDD3qZhYjmAQOP8L55VFUuhpHTMGYp0E8PqxISqUrrXI9c=
+managedDomains: postacert.cedacri.it
+
+# search result
+
+# numResponses: 46
+# numEntries: 45

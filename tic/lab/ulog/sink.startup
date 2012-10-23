@@ -1,0 +1,17 @@
+# $Id: sink.startup,v 1.2 2007-06-27 19:45:12 doros Exp $
+ifconfig eth0 10.0.0.2 \
+    netmask 255.255.255.0 broadcast 10.0.0.255 up
+ifconfig eth1 192.168.77.2 up
+# start Mysql server
+/etc/init.d/mysql start
+# create database schema
+mysql -u root < /root/db.sql
+# install nulog
+tar zxf /hostwd/nulog-1.2.7.tar.gz -C /var/www
+mv /var/www/nulog-1.2.7 /var/www/nulog
+cp /root/config.php /var/www/nulog/include/config.php
+#sh /var/www/nulog/scripts/ulogd.1.1.6-1.1.7.sql
+# start Apache server
+/etc/init.d/apache start
+#
+# EOF

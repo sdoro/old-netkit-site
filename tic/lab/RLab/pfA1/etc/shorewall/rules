@@ -1,0 +1,28 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.3 2007-04-14 12:59:19 doros Exp $
+#
+#ACTION  SOURCE		DEST      	PROTO	DEST    SOURCE	   ORIGINAL
+#
+# Enable SCP or SSH for Dynamic CHAINS
+SSH/ACCEPT      net       fw
+# BorpLAN probe
+Ping/ACCEPT     net       fw
+# statistics
+SNMP/ACCEPT     net       fw
+# mail
+SMTP/ACCEPT     fw        net
+# time
+NTP/ACCEPT      fw        net
+NTP/ACCEPT      loc       fw
+# DNS
+DNS/ACCEPT      loc       net
+# Ping
+Ping/ACCEPT     loc       net
+# ULOG
+#MySQL/ACCEPT    fw        net:IP-MySQL-Server
+# Proxy (prof)
+ACCEPT          loc:192.168.1.128/25     net:192.168.0.254 tcp 8080
+# borpLAN (prof)
+ACCEPT          loc:192.168.1.128/25     net:192.168.0.254 tcp 443
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

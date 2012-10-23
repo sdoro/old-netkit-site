@@ -1,0 +1,7 @@
+# ~/.muttrc
+# $Id: .muttrc,v 1.2 2005/11/13 09:17:21 doros Exp $
+
+# draconian header weeding
+ignore *
+unignore from date subject
+

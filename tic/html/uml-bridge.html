@@ -1,0 +1,507 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-bridge.html,v 1.18 2007-01-07 10:59:27 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-bridge</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza base su bridge</h3>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-bridgeSTP.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Riteniamo propedeutica l'esperienza sul protocollo ARP
+dal sito di 
+<a href="http://www.netkit.org/"
+   title="link esterno">Netkit</a>
+(<a href="http://www.netkit.org/netkit-labs/basic-topics/arp/netkit-arp.pdf"
+    title="link esterno">docs</a>,
+ <a href="http://www.netkit.org/netkit-labs/basic-topics/arp/netkit-lab_arp.tar.gz"
+    title="link esterno">tarball</a>).
+</p>
+
+<p>
+Questa esperienza si basa sulla rete di laboratorio usata nel
+capitolo 4 del libro di Baldi e Nicoletti 
+<a href="books.html">SWITCHED LAN</a>.
+Dal loro sito internet
+<a href="http://www.netscire.it/" title="link esterno">www.netscire.it</a>
+&egrave; possibile consultare le relative
+<a href="http://www.netscire.it/CourseMaterial/04_Bridging-STP-New_I_C.pdf"
+   title="link esterno: www.netscire.it">slide</a>.
+</p>
+
+
+<p>
+La configurazione della rete &egrave; riassunta in 
+(<a href="pdf/simpleBridge.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/simpleBridge.xml" title="file per Dia">xml</a>)
+dove abbiamo pensato di assegnare alle stazioni indirizzi
+IP della rete 10.0.0.0/8.
+</p>
+
+<p>
+Scarica il <a href="bridge.tgz" title="esperienza Netkit4TIC">tarball</a> contenente il tutto,
+e come al solito si parte scompattandolo in una sottodirectory della
+<code>HOME</code> dell'utente.
+Per ogni stazione X lo script assegna l'IP address
+10.0.0.X e il MAC address indicato sulla mappa.
+Per il bridge lo script assegna
+ad ogni interfaccia ethY (detta anche portY+1) il
+MAC address 00:00:00:00:00:0(Y+1). Iniziamo:
+</p>
+
+<pre>
+realHost$ lstart -d nostp
+</pre>
+
+<p>
+Per prima cosa controlliamo che il kernel abbia caricato gli
+opportuni moduli:
+</p>
+
+<pre>
+b# lsmod | \
+    awk '{ if (NR == 1) print $0; \
+           else if (index ($0, "bridge")) print $0; }' -<span class="blue">
+Module                  Size  Used by
+bridge                 45720  0 
+atm                    40824  1 bridge</span>
+</pre>
+
+<p>
+il pacchetto che permette la configurazione del
+"Linux ethernet bridge" &egrave; <code>bridge-utils</code>.
+Controlliamo la configurazione del bridge <code>b</code>:
+</p>
+
+<pre>
+b# brctl show<span class="blue">
+bridge name     bridge id               STP enabled     interfaces
+br0             8000.000000000001       no              eth0
+                                                        eth1
+                                                        eth2</span>
+</pre>
+
+<p>
+Possiamo notare che l'id del bridge &egrave; ottenuto, come da specifiche,
+dalla concatenazione di bridge priority (default 32768 ossia 0x8000)
+e dal MAC address della prima porta (settato nello script a 00:00:00:00:00:01).
+Vediamo che lo Spanning Tree Protocol (SPT) &egrave; disattivato e che il bridge
+&egrave; composto da tre interfacce (in seguito chiamate port).
+</p>
+
+<p>
+Ora controlliamo la tabella dei MAC address (learned):
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00</span>
+</pre>
+
+<p>
+<a href="bridge-desktop.png" title="immagine PNG">(screenshot)</a>
+ovviamente non ci sono MAC address non locali fino a quando non
+verr&agrave; generato del traffico.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Flooding</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Ora proviamo a sperimentare la caratteristica del <code>flooding</code>
+nel bridge e per far questo, ad esempio, dalla stazione 1 proviamo
+a fare un ping verso un IP address della rete
+<span class="yellow">non appartenente</span> ad alcuna stazione configurata.
+Per prima cosa per&ograve; predisponiamo
+la cattura del traffico:
+</p>
+
+<pre>
+stazione3# tcpdump -i eth0 -v -n
+stazione4# tcpdump -i eth0 -v -n
+</pre>
+
+<p>
+e poi lanciamo il comando di un unico pacchetto ping:
+</p>
+
+<pre>
+stazione1# ping -c 1 10.0.0.10<span class="blue">
+PING 10.0.0.10 (10.0.0.10): 56 data bytes
+
+--- 10.0.0.10 ping statistics ---
+1 packets transmitted, 0 packets received, 100% packet loss</span>
+</pre>
+
+<p>
+I pacchetti transitati saranno gli stessi in tutte le LAN
+(<a href="../capture/simpleBridge-flooding-s3.acp"
+    title="file per Ethereal">LAN B</a>,
+<a href="../capture/simpleBridge-flooding-s4.acp"
+   title="file per Ethereal">LAN C</a>)
+dove possiamo vedere i pacchetti
+di ARP per la ricerca del MAC address associato all'IP 10.0.0.10
+generata dalla richiesta <code>ping</code>.<br>
+In corrispondenza la tabella dei MAC address del bridge subisce
+una modifica poich&egrave; viene aggiunto il MAC address della
+stazione 1:
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  1     08:00:2b:16:50:a0       no                 7.25</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Inoltro selettivo</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Passiamo ora ad analizzare il caso in cui la stazione 1 esegue
+un <code>ping</code> verso la stazione 5 e quindi rispetto alla
+situazione precedente c'&egrave; un pacchetto di risposta della
+stazione 5 verso la stazione 1.
+</p>
+
+<pre>
+stazione1# ping -c 1 stazione5<span class="blue">
+PING stazione5 (10.0.0.5) 56(84) bytes of data.
+64 bytes from stazione5 (10.0.0.5): icmp_seq=1 ttl=64 time=35.0 ms
+
+--- stazione5 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 35.000/35.000/35.000/0.000 ms</span>
+</pre>
+
+<p>
+Come prima attiviamo la cattura del traffico e questa volta i
+pacchetti transitati saranno diversi 
+(<a href="../capture/simpleBridge-reply-s3.acp"
+    title="file per Ethereal">LAN B</a>,
+<a href="../capture/simpleBridge-reply-s4.acp"
+   title="file per Ethereal">LAB C</a>)
+in quanto il pacchetto ARP reply della stazione 5 non viene
+visto dalla stazione 3 cos&igrave; come i successivi pacchetti di ICMP
+request e reply.<br>
+In corrispondenza la tabella dei MAC address del bridge subisce
+una modifica poich&egrave; viene aggiunto anche il MAC address della
+stazione 5:
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  1     08:00:2b:16:50:a0       no                 0.20
+  3     08:00:2b:c4:e6:aa       no                 0.20</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Confinamento del traffico</h3>
+  </td> 
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Ora proviamo a generare del traffico tra la stazione 1 e la stazione 2
+e verifichiamo che ad esclusione del pacchetti di ARP request,
+trasmessi in broadcast, il traffico avviene solo nella LAN A
+(<a href="../capture/simpleBridge-conf-s2.acp"
+    title="file per Ethereal">LAN A</a>,
+<a href="../capture/simpleBridge-conf-s3.acp"
+   title="file per Ethereal">LAN B</a>,
+<a href="../capture/simpleBridge-conf-s4.acp"
+   title="file per Ethereal">LAN C</a>).<br>
+La tabella dei MAC address del bridge:
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  1     08:00:2b:16:50:a0       no                 1.39
+  1     08:00:2b:20:10:56       no                 1.39
+  3     08:00:2b:c4:e6:aa       no                15.50</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Spostamento di una stazione (caso 1)</h3>
+  </td> 
+  <td class=navigation> 
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Spostiamo la stazione 5 dalla LAN C alla LAN A:
+</p>
+
+<pre>
+realHost$ lcrash -d nostp stazione5; \
+          cp nostp/lab.conf nostp/lab.conf.SAVE; \
+          sed -e 's/stazione5\[0\]="C"/stazione5[0]="A"/' \
+              nostp/lab.conf.SAVE &gt; nostp/lab.conf; \
+          lstart -d nostp stazione5
+</pre>
+
+<p>
+e lanciamo da questa
+un <code>ping</code> verso la stazione 2:
+</p>
+
+<pre>
+stazione5# ping -c 1 stazione2
+</pre>
+
+<p>
+Questa attivit&agrave; non manifesta alcun malfunzionamento nella rete
+poich&egrave; il bridge rileva la
+variazione di porta del MAC address e aggiorna di
+conseguenza la tabella:
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  1     08:00:2b:20:10:56       no                 2.56
+  1     08:00:2b:c4:e6:aa       no                 2.56</span>
+</pre>
+
+<p>
+Le relative catture del traffico per
+(<a href="../capture/simpleBridge-move1-s2.acp"
+    title="file per Ethereal">LAN A</a>,
+<a href="../capture/simpleBridge-move1-s3.acp"
+   title="file per Ethereal">LAN B</a>,
+<a href="../capture/simpleBridge-move1-s4.acp"
+   title="file per Ethereal">LAN C</a>).
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Spostamento di una stazione (caso 2)</h3>
+  </td> 
+  <td class=navigation> 
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Ripartiamo dalla situazione iniziale:
+</p>
+
+<pre>
+realHost$ lcrash -d nostp; \
+          cp nostp/lab.conf.SAVE nostp/lab.conf; \
+          lstart -d nostp
+</pre>
+
+<p>
+e supponiamo che la stazione 2 sia 
+gi&agrave; stata contattata dalla stazione 3:
+</p>
+
+<pre>
+stazione3# ping -c 1 stazione2
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  1     08:00:2b:20:10:56       no                 2.60
+  2     08:00:5a:10:40:e1       no                 2.60</span>
+</pre>
+
+<p>
+Ora spostiamo la stazione 2 
+nella LAN C:
+</p>
+
+<pre>
+realHost$ lcrash -d nostp stazione2; \
+          sed -e 's/stazione2\[0\]="A"/stazione2[0]="C"/' \
+              nostp/lab.conf.SAVE &gt; nostp/lab.conf; \
+          lstart -d nostp stazione2
+</pre>
+
+<p>
+e attiviamo la stazione 3 per l'invio di un pacchetto:
+</p>
+
+<pre>
+stazione3# ping -c 1 stazione2
+</pre>
+
+<p>
+Le catture del traffico per
+(<a href="../capture/simpleBridge-move2-s1.acp"
+    title="file per Ethereal">LAN A</a>,
+<a href="../capture/simpleBridge-move2-s3.acp"
+   title="file per Ethereal">LAN B</a>,
+<a href="../capture/simpleBridge-move2-s4.acp"
+   title="file per Ethereal">LAN C</a>). Quindi il bridge
+conosce dalla sua tabella dei MAC address che il MAC
+<code>08:00:2b:20:10:56</code> &egrave; nella port 1 e quindi
+inoltra il pacchetto per quella porta ma la stazione
+&egrave; stata spostata e nella LAN A non c'&egrave; nessuno
+che risponde. Soltanto quando l'entry nella tabella dei
+MAC address del bridge raggiunge l'expire time, il bridge
+si attiva in modalit&agrave; flooding e quindi "riscopre"
+la stazione 2 questa volta collegata alla LAN C e quindi alla
+port 3 e il colloquio si compie.<br>
+Ecco la situazione
+della tabella dei MAC address nel momento di non comunicabilit&agrave;
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  1     08:00:2b:20:10:56       no                41.03
+  2     08:00:5a:10:40:e1       no                 0.15</span>
+</pre>
+
+<p>
+e dopo il flooding:
+</p>
+
+<pre>
+b# brctl showmacs br0<span class="blue">
+port no mac addr                is local?       ageing timer
+  1     00:00:00:00:00:01       yes                0.00
+  2     00:00:00:00:00:02       yes                0.00
+  3     00:00:00:00:00:03       yes                0.00
+  3     08:00:2b:20:10:56       no                 0.82
+  2     08:00:5a:10:40:e1       no                 0.82</span>
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-01-07 10:59:27 $
+</span>
+</address>
+
+
+</body>
+
+</html>

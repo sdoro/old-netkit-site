@@ -1,0 +1,137 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: severi.html,v 1.18 2005/11/01 15:52:50 doros Exp $ -->
+
+
+<head>
+  <title>Gestione della infrastruttura tecnologica</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="../../index.html">
+  <link rel="Next" title="Next" href="netmngm.html">
+</head>
+
+<body>
+<h1 class="center">Gestione della infrastruttura tecnologica</h1>
+<h2 class="center">Materiali usati nel progetto di rete per l'Istituto 
+<a href="http://www.paginebianche.it/pb/mappa.27093170"
+   title="mappa stradale">Severi</a></h2>
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico"> 2003, 2004, 2005
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+
+
+<h3>Scenario</h3>
+<p>
+Per avere una idea delle azioni che occorre intraprendere nel tempo
+elenchiamo di seguito una possibile sequenza di passi:
+<ul>
+  <li>Installazione firewall sulla connessione Internet</li>
+  <li>Suddivisione dell'intera rete in aree</li>
+     <ul>
+        <li>Installazione di router filtranti in ogni area</li>
+     </ul>
+  <li>Attivazione del controllo sulle aree appena costruite</li>
+     <ul>
+        <li>Installazione stazioni server: raccomandazioni
+            sulla distribuzione Debian GNU/Linux</li>
+     </ul>
+  <li>Monitoraggio della rete
+     <ul>
+        <li>monitoraggio traffico dei routers</li>
+        <li>controllo log degli apparati di rete</li>
+        <li>statistiche degli apparati di rete</li>
+        <li>sincronizzazione temporale degli apparati di rete</li>
+     </ul>
+  </li>
+  <li>Ottimizzazione/Controllo/Filtraggio della Navigazione in Internet</li>
+  <li>Estensione del numero delle aree</li>
+  <li>Attivazione dell'autenticazione e file server centralizzato e unificato
+      per alcune aree</li>
+  <li>Cablaggio ad almeno 100Mbit tra le aree (consigliata la
+      cablatura ottica ad almeno 1Gbit)</li>
+  <li>Estensione della autenticazione e file server ad altre aree
+     <ul>
+        <li>Designazione di una stanza condizionata ad accesso controllato
+            in cui installare le macchine e le persone che gestiscono
+            l'intera rete</li>
+     </ul>
+  </li>
+</ul
+</p>
+
+
+<h3>Lavoro effettuato e in corso</h3>
+<ul>
+  <li>Installazione
+      <a href="bering.html"
+         title="Approfondimento">firewall</a></li>
+  <li>Installazione
+      <a href="/tic/html/Debian.html"
+         title="Approfondimento">stazione server</a></li>
+  <li><a href="area.html"
+         title="Approfondimento">Gestione rete: backbone e sottoaree</a></li>
+  <li>Cablaggio</li>
+  <li><a href="netmngm.html"
+         title="Approfondimento">Raccolta dati sulla situazione della rete</a></li>
+  <li>Installazione
+      <a href="squid.html"
+         title="Approfondimento">proxy servers</a></li>
+  <li>Servizi di rete</li>
+</ul>
+
+
+
+<h3>Gruppo di lavoro</h3>
+<p>
+Per la organizzazione/riorganizzazione della rete d'Istituto
+collaborano, oltre al sottoscritto, il collega Prof. Rocco Italiano che in passato
+ha gestito a livello operativo la rete e due assistenti tecnici che sono
+Carlo Milan e Rosario Profeta che hanno competenze varie ed
+approfondite su alcune tematiche di interesse di questo progetto.
+</p>
+
+
+
+<h3>Materiali</h3>
+<p>
+I materiali usati saranno prevalentemente quelli utilizzati nel corso
+<a href="/tic/html/index.html"
+   title="Approfondimento">UMTS/TIC C2</a>.
+</p>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/11/01 15:52:50 $
+</span>
+</address>
+
+
+</body>
+
+</html>

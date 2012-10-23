@@ -1,0 +1,8 @@
+#!/bin/sh
+# /usr/lib/mon/alert.d/haStop.alert
+# $Id: haStop.alert,v 1.1 2005/08/15 19:17:22 doros Exp $
+
+/etc/init.d/heartbeat stop
+
+#
+# bot

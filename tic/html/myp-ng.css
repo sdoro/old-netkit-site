@@ -1,0 +1,76 @@
+/* $Id: myp-ng.css,v 1.1 2006/11/18 21:27:34 doros Exp $ */
+
+.box-title{
+  float:left;
+  margin-top:10px;
+  border:0px solid #900;
+  padding:0.4em;
+  width:80%;
+  height:100px;
+  background-color:#eee;
+  color: #900;
+}
+
+.box-right{
+  float:right;
+  margin-top:10px;
+  border:0px solid #900;
+  padding:0.4em;
+  width:5px;
+  height:100px;
+  background-color:#fafafa;
+  color: #900;
+}
+
+.box-up{
+  float:right;
+  margin-top:10px;
+  border:0px solid #900;
+  padding:0.4em;
+  width:5px;
+  height:100px;
+  background-color:#fafafa;
+  color: #900;
+}
+
+.box-left{
+  float:right;
+  margin-top:10px;
+  border:0px solid #900;
+  padding:0.4em;
+  width:5px;
+  height:100px;
+  background-color:#fafafa;
+  color: #900;
+}
+
+.box-clear{
+clear:right;
+border:0px solid #900;
+width:1px;
+height:1px;
+}
+
+.img-right{
+  border:0px solid #900;
+  padding:0em;
+  margin-top:25px;
+  margin-left:-7px;
+  display: none;
+}
+
+.img-up{
+  border:0px solid #900;
+  padding:0em;
+  margin-top:25px;
+  margin-left:-7px;
+  display: none;
+}
+
+.img-left{
+  border:0px solid #900;
+  padding:0em;
+  margin-top:25px;
+  margin-left:-7px;
+  display: none;
+}

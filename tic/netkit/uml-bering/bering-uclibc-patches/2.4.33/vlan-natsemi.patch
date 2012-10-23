@@ -1,0 +1,28 @@
+--- linux-2.4.33/drivers/net/natsemi.c.orig	2006-09-23 16:37:43.587021956 +0200
++++ linux-2.4.33/drivers/net/natsemi.c	2006-09-23 15:54:10.954653194 +0200
+@@ -165,6 +165,7 @@
+ #include <linux/rtnetlink.h>
+ #include <linux/mii.h>
+ #include <linux/crc32.h>
++#include <linux/if_vlan.h>
+ #include <asm/processor.h>	/* Processor type for cache alignment. */
+ #include <asm/bitops.h>
+ #include <asm/io.h>
+@@ -1294,7 +1295,7 @@
+ 	/* DRTH 0x10: start copying to memory if 128 bytes are in the fifo
+ 	 * MXDMA 0: up to 256 byte bursts
+ 	 */
+-	np->rx_config = RxMxdma_256 | 0x20;
++	np->rx_config = RxAcceptLong | RxMxdma_256 | 0x20;
+ 	writel(np->rx_config, ioaddr + RxConfig);
+ 
+ 	/* Disable PME:
+@@ -1506,7 +1507,7 @@
+ 	/* 2) RX ring */
+ 	np->dirty_rx = 0;
+ 	np->cur_rx = RX_RING_SIZE;
+-	np->rx_buf_sz = (dev->mtu <= 1500 ? PKT_BUF_SZ : dev->mtu + 32);
++	np->rx_buf_sz = (dev->mtu <= 1500 ? PKT_BUF_SZ + VLAN_HLEN : dev->mtu + 32 + VLAN_HLEN);
+ 	np->oom = 0;
+ 	np->rx_head_desc = &np->rx_ring[0];
+ 

@@ -1,0 +1,6 @@
+# /etc/default/shorewall
+# $Id:$
+
+startup=1
+
+# EOF

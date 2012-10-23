@@ -1,0 +1,3 @@
+# add mppe kernel module
+insmod /root/ppp_mppe.o > /tmp/insmod-warnings.txt
+dmesg | tail -n 1

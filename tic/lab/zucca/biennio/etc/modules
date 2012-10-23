@@ -1,0 +1,144 @@
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file should contain the names of kernel modules that are
+# to be loaded at boot time, one per line.  Comments begin with
+# a `#', and everything on the line after them are ignored.
+#
+# All modules should reside in /lib/modules, and you are required
+# to list what you need *in the correct order*. Modprobe is not
+# used and there is no dependacy checking.
+# How they are loaded:  insmod [mount][dir]/"$module".o $args
+# For additional modules check the modules.dep file in the modules
+# tarball for the dependencies and correct loading order.
+
+########################################################################
+# More modules available from:
+# http://leaf.cvs.sourceforge.net/leaf/bin/bering-uclibc/packages/
+########################################################################
+
+# Some modules need this, like 8390, natsemi, 8139too, tulip
+crc32
+
+# ISA ethernet cards
+#3c509
+#eepro io=0x300
+
+# 8390 based ethernet cards
+#8390
+#ne2k-pci
+#      card1,card2
+#ne io=0x300,0x350
+
+# Those realtek based NICs need mii module
+#mii
+#8139cp
+#8139too
+#eepro100
+#epic100
+#pcnet32
+#via-rhine
+#winbond-840 
+
+# PCI ethernet cards 
+#3c59x
+natsemi
+#tulip
+
+# Modules needed for PPP connection
+#slhc
+#ppp_generic
+#ppp_async
+# The three following modules are not always needed
+#zlib_inflate
+#zlib_deflate
+#ppp_deflate
+
+# Modules needed for PPP/PPPOE connection
+#slhc
+#n_hdlc
+#ppp_generic
+#ppp_synctty
+#pppox
+#pppoe
+
+# Modules needed for PPTP connection
+#slhc
+#ppp_generic
+#ppp_async
+#ppp_mppe 
+ 
+# Modules needed for L2TP connection
+#slhc
+#ppp_generic
+#pppox
+#pppol2tp
+#ppp_mppe
+
+# Modules needed for PPPOA connection
+# An ATM adapter module must be loaded for this to work
+# (e.g. unicorn_pci_atm or unicorn_usb_atm)
+#slhc
+#ppp_generic
+#pppoatm
+
+# Modules needed for ISDN
+# Look for type, io and irq settings at help page of isdn.lrp documentation
+#slhc
+#isdn
+#hisax type= io= irq=
+
+# Masquerading 'helper' modules
+# Don't remove anything here, unless you know what you are doing
+# Other modules available in kernel/net/ipv4/netfilter
+ip_conntrack
+ip_conntrack_ftp
+ip_conntrack_irc
+iptable_nat
+ip_nat_ftp
+ip_nat_irc
+ipt_MASQUERADE
+ipt_REDIRECT
+ipt_conntrack
+ipt_helper
+ipt_state
+ipt_ipp2p
+
+# Watchdog support, always choose one
+# standard software watchdog
+#softdog
+# .. or ..
+# wd1100 module available in kernel/drivers/char
+wd1100 timeout=25 graceful=0
+
+# ipv6 support
+#ipv6
+
+# Templates for extra functionnalities 
+# Warning: the following modules are not provided on Bering-uClibc floppy
+# they must be downloaded
+
+#
+# Bridge support
+#bridge
+
+#
+# IDE/CD-ROM support
+#ide-mod
+#ide-disk
+#ide-probe-mod
+
+#
+# USB support
+# do not forget to mount none /proc/bus/usb -t usbdevfs
+#usbcore
+#usb-uhci
+# .. or ..
+#usb-ohci
+
+#
+# Traffic control modules
+#sch_htb
+#sch_sfq
+#sch_ingress
+#cls_fw
+#cls_u32

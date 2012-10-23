@@ -1,0 +1,68 @@
+#
+# /etc/shorewall/maclist
+# $Id:$
+#
+###############################################################################
+#INTERFACE       MAC                     IP ADDRESSES
+# work/repo/repo2
+eth2            00:50:da:de:da:9f
+eth2            00:10:5a:ef:e9:c5
+eth2            00:08:c7:09:6d:f8
+#
+# gea/urano
+eth2            00:13:72:3b:9a:80
+eth2            00:13:72:3b:9b:fd
+# virtuale
+eth2            00:13:72:3b:9a:80
+eth2            00:13:72:3b:9b:fd
+eth2            00:13:72:3b:9a:80
+eth2            00:13:72:3b:9b:fd
+#
+# ltsp
+eth2            00:20:ed:3b:88:ab
+#
+# ciclope/caos
+eth2            00:14:22:72:7a:ff
+eth2            00:14:22:72:7b:c5
+# virtuale
+eth2            00:14:22:72:7a:ff
+eth2            00:14:22:72:7b:c5
+eth2            00:14:22:72:7a:ff
+eth2            00:14:22:72:7b:c5
+#
+# scilla/cariddi
+eth2            00:04:23:c8:26:5b
+eth2            00:04:23:c8:25:33
+# virtuale scilla/cariddi
+eth2            00:04:23:c8:25:33
+eth2            00:04:23:c8:26:5b
+eth2            00:04:23:c8:25:33
+eth2            00:04:23:c8:26:5b
+#
+# fw(m/b)
+eth2            00:0d:b9:04:24:26
+eth2            00:0d:b9:02:77:ea
+# fw virtuale
+eth2            00:0d:b9:04:24:26
+eth2            00:0d:b9:02:77:ea
+#
+# PFs
+eth2            00:0d:b9:02:76:3c
+eth2            00:0d:b9:01:e4:f0
+eth2            00:0d:b9:02:76:1c
+eth2            00:0d:b9:02:75:a0
+eth2            00:0d:b9:04:61:e8
+eth2            00:0d:b9:04:24:34
+eth2            00:0d:b9:04:67:18
+eth2            00:0d:b9:04:24:28
+eth2            00:0d:b9:04:66:38
+eth2            00:0d:b9:04:24:38
+eth2            00:0d:b9:04:65:c8
+eth2            00:0d:b9:04:24:3c
+eth2            00:0d:b9:02:76:40
+eth2            00:0d:b9:03:95:64
+eth2            00:0d:b9:02:76:38
+eth2            00:0d:b9:04:67:08
+#
+###############################################################################
+#LAST LINE -- ADD YOUR ENTRIES ABOVE THIS LINE -- DO NOT REMOVE

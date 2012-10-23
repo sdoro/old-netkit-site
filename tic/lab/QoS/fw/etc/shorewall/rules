@@ -1,0 +1,33 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.3 2007-02-20 15:18:08 doros Exp $
+#
+#ACTION         SOURCE    DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+SSH/ACCEPT      loc       fw
+SSH/ACCEPT      loc       dmz
+SSH/ACCEPT      dmz       fw  # ssh for mrtg/rrd
+Web/ACCEPT      loc       dmz
+DNS/ACCEPT      loc       dmz
+DNS/ACCEPT      dmz       net
+DNS/ACCEPT      fw        net
+#
+Ping/ACCEPT     net       fw
+Ping/ACCEPT     loc       fw
+Ping/ACCEPT     dmz       fw
+Ping/ACCEPT     loc       dmz
+Ping/ACCEPT     dmz       loc
+Ping/ACCEPT     dmz       net
+Ping/ACCEPT     fw        loc
+Ping/ACCEPT     fw        net
+Ping/ACCEPT     net       dmz # Only with Proxy ARP and
+Ping/ACCEPT     net       loc # static NAT
+#
+# Forward the request to another system (192.168.1.102 in DMZ)
+#
+DNS/DNAT        net       dmz:192.168.1.102
+Web/DNAT        net       dmz:192.168.1.102
+SSH/DNAT        net       dmz:192.168.1.102
+#
+SNMP/ACCEPT     dmz       fw  # SNMP for mrtg/rrd
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

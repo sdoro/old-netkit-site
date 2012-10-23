@@ -1,0 +1,10 @@
+# /etc/hosts.allow
+# $Id: hosts.allow,v 1.1 2006/08/31 14:54:18 doros Exp $
+
+bootpd:    0.0.0.0
+in.tftpd:  192.168.100.
+portmap:   192.168.100.
+mountd:    192.168.100.
+
+#
+# bot

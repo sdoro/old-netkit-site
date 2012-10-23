@@ -1,0 +1,32 @@
+
+
+fprobe - export captured traffic to remote NetFlow Collector
+fprobe-ng - export captured traffic to remote NetFlow Collector (meta)
+fprobe-ulog - export captured traffic to remote NetFlow Collector (ULOG version)
+----------------------
+apt-get install fprobe
+
+
+apt-get install pmacct
+
+
+
+nfdump - netflow capture daemon
+
+softflowd - Flow-based network traffic analyser
+
+#flowscan - flow-based IP traffic analysis and visualization tool
+#flowscan-cuflow - Flowscan module combining CampusIO and SubNetIO
+#flowscan-cugrapher - A CGI interface for flowscan-cuflow
+
+iptraf - Interactive Colorful IP LAN Monitor
+
+iperf e' stato installato ?   NONO
+strace e' stato installato ?   NONO
+apt-cache show tcpreplay ? NONO
+apt-cache show uml-utilities ? NONO
+
+
+
+flow-tools - collects and processes NetFlow data
+

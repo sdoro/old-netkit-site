@@ -1,0 +1,449 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-NetEx5.html,v 1.7 2006/10/10 15:29:39 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-NetEx5</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 10 - Pratica sulle reti</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Definizione piano di indirizzamento per sei LAN</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetEx4.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NET.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+<p>
+L'esercitazione che andremo a sviluppare è presa da un esercizio proposto nel
+<a href="http://puntoeduft.indire.it/materialic/Modulo10/modulo_10_a_2_2_C2.html"
+   title="link esterno">modulo 10</a> dei materiali ministeriali
+dei corsi UMTS/TIC C2.
+</p>
+
+<p>
+<cite  class="border">
+Definire un piano di indirizzamento <b>ottimizzato</b> per sei
+LAN pubbliche A, B, C, D, E, F variamente interconnesse attraverso router
+come in figura 
+(<a href="pdf/uml-sixLAN.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/uml-sixLAN.xml" title="file per Dia">xml</a>).
+La LAN A &egrave; formata da 1000 host, la LAN B da 500 host,
+la LAN C da 30 host, la LAN D da 60, la LAN E da 100 e la LAN F da 200
+mentre le WAN G, H e I sono reti minimali (parte rete di 30 bit).
+</cite>
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Soluzione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Riportiamo di seguito la tabella di una possibile assegnazione:
+</p>
+
+
+<table border="1" width="100%" cellspacing="0" cellpadding="4">
+ <tr>
+   <td colspan="3">
+   Logical IP Subnet (LIS) e Netmask</td>
+   <td rowspan="2">Tipi di impiego</td>
+ </tr>
+ <tr>
+   <td valign="middle">Label</td>
+   <td valign="middle">
+     Notazione binaria
+   </td>
+   <td valign="top">
+     Notazione<br> decimale puntata
+   </td>
+ </tr>
+
+ <tr>
+   <td valign="middle">A</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0000 . 0000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 11</b>00 . 0000 0000</td>
+   <td>200.0.0.0<br>
+   255.255.252.0</td>
+   <td >Rete A con al pi&ugrave;<br>1000 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">B</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0100 . 0000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 111</b>0 . 0000 0000</td>
+   <td>200.0.4.0<br>
+   255.255.254.0</td>
+   <td>Rete B con al pi&ugrave;<br>500 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">F</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0110 . 0000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 </b>. 0000 0000</td>
+   <td>200.0.6.0<br>
+   255.255.255.0</td>
+   <td>Rete F con al pi&ugrave;<br>200 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">E</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0111 . 0000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1</b>000 0000</td>
+   <td>200.0.7.0<br>
+   255.255.255.128</td>
+   <td>Rete E con al pi&ugrave;<br>100 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">D</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0111 . 1000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 11</b>00 0000</td>
+   <td>200.0.7.128<br>
+   255.255.255.192</td>
+   <td>Rete D con al pi&ugrave;<br>60 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">C</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0111 . 1100 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 111</b>0 0000</td>
+   <td>200.0.7.192<br>
+   255.255.255.224</td>
+   <td>Rete C con al pi&ugrave;<br>30 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">G</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0111 . 1110 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1111 11</b>00</td>
+   <td>200.0.7.224<br>
+   255.255.255.252</td>
+   <td rowspan="3" >Reti minimali con<br>2 hosts</td>
+ </tr>
+ <tr>
+   <td valign="middle">H</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0111 . 1110 0100<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1111 11</b>00</td>
+   <td>200.0.7.228<br>
+   255.255.255.252</td>
+ </tr>
+ <tr>
+   <td valign="middle">I</td>
+   <td class=binary>1100 1000 . 0000 0000 . 0000 0111 . 1110 1000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1111 11</b>00</td>
+   <td>200.0.7.232<br>
+   255.255.255.252</td>
+ </tr>
+
+</table>
+
+
+
+<p>
+La tabella del range degli indirizzi &egrave; la seguente:
+</p>
+
+<table border="1" cellspacing="0" cellpadding="4">
+ <tr>
+   <td rowspan="2" valign="middle">Rete</td>
+   <td colspan="2">Range indirizzi</td>
+ </tr>
+ <tr>
+   <td>HostMin</td>
+   <td>HostMax</td>
+ </tr>
+ <tr>
+   <td valign="middle">A</td>
+   <td>200.0.0.1</td>
+   <td>200.0.3.254</td>
+ </tr>
+ <tr>
+   <td valign="middle">B</td>
+   <td>200.0.4.1</td>
+   <td>200.0.5.254</td>
+ </tr>
+ <tr>
+   <td valign="middle">F</td>
+   <td>200.0.6.1</td>
+   <td>200.0.6.254</td>
+ </tr>
+ <tr>
+   <td valign="middle">E</td>
+   <td>200.0.7.1</td>
+   <td>200.0.7.126</td>
+ </tr>
+ <tr>
+   <td valign="middle">D</td>
+   <td>200.0.7.129</td>
+   <td>200.0.7.190</td>
+ </tr>
+ <tr>
+   <td valign="middle">C</td>
+   <td>200.0.7.193</td>
+   <td>200.0.7.222</td>
+ </tr>
+</table>
+
+
+
+<p>
+Assegniamo gli indirizzi alle interfacce dei router:
+</p>
+
+
+<table border="1" cellspacing="0" cellpadding="4">
+ <tr>
+   <td valign="middle">Host</td>
+   <td valign="middle">Interfaccia</td>
+   <td valign="middle">IP</td>
+   <td valign="middle">Netmask</td>
+   <td valign="middle">broadcast</td>
+ </tr>
+ <tr>
+   <td rowspan="3" valign="middle">r1</td>
+   <td>eth0</td>
+   <td>200.0.3.254</td>
+   <td>255.255.252.0</td>
+   <td>200.0.3.255</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>200.0.7.225</td>
+   <td>255.255.255.252</td>
+   <td>200.0.7.227</td>
+ </tr>
+ <tr>
+   <td>eth2</td>
+   <td>200.0.5.254</td>
+   <td>255.255.254.0</td>
+   <td>200.0.5.255</td>
+ </tr>
+ <tr>
+   <td rowspan="3" valign="middle">r2</td>
+   <td>eth0</td>
+   <td>200.0.5.253</td>
+   <td>255.255.254.0</td>
+   <td>200.0.5.255</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>200.0.7.229</td>
+   <td>255.255.255.252</td>
+   <td>200.0.7.231</td>
+ </tr>
+ <tr>
+   <td>eth2</td>
+   <td>200.0.7.233</td>
+   <td>255.255.255.252</td>
+   <td>200.0.7.235</td>
+ </tr>
+ <tr>
+   <td rowspan="2" valign="middle">r3</td>
+   <td>eth0</td>
+   <td>200.0.7.190</td>
+   <td>255.255.255.192</td>
+   <td>200.0.7.191</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>200.0.7.230</td>
+   <td>255.255.255.252</td>
+   <td>200.0.7.231</td>
+ </tr>
+ <tr>
+   <td rowspan="2" valign="middle">r4</td>
+   <td>eth0</td>
+   <td>200.0.7.222</td>
+   <td>255.255.255.224</td>
+   <td>200.0.7.223</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>200.0.7.234</td>
+   <td>255.255.255.252</td>
+   <td>200.0.7.235</td>
+ </tr>
+ <tr>
+   <td rowspan="3" valign="middle">r5</td>
+   <td>eth0</td>
+   <td>200.0.6.254</td>
+   <td>255.255.255.0</td>
+   <td>200.0.6.255</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>200.0.7.126</td>
+   <td>255.255.255.128</td>
+   <td>200.0.7.127</td>
+ </tr>
+ <tr>
+   <td>eth2</td>
+   <td>200.0.7.226</td>
+   <td>255.255.255.252</td>
+   <td>200.0.7.227</td>
+ </tr>
+
+</table>
+
+
+
+
+<p>
+Per costruire la rete virtuale cos&igrave; come &egrave; stata
+descritta con 9 hub e 5 router per un totale di 13 NIC diamo il
+comando:
+</p>
+
+<pre>
+realHost$ lstart -d exercise-05
+</pre>
+
+
+
+<p>
+In seguito attiviamo manualmente il protocollo di routing RIP implementato
+da <code>zebra</code> in ogni router r[1-5]:
+</p>
+
+<pre>
+rX# /etc/init.d/zebra start
+</pre>
+
+<p>
+A titolo di verifica, consultiamo la
+<span class="yellow">tabella di routing</span> ricavata dal RIP
+per il router r5:
+</p>
+
+<pre>
+r5# telnet localhost zebra<span class="blue">
+Password:</span> root<span class="blue">
+[...]
+zebrad&gt;</span> show ip route<span class="blue">
+Codes: K - kernel route, C - connected, S - static, <span class="yellow">R - RIP</span>, O - OSPF,
+       B - BGP, &gt; - selected route, * - FIB route
+
+C&gt; 127.0.0.0/8 is directly connected, lo
+<span class="yellow">R&gt; 200.0.0.0/22 [120/2] via 200.0.7.225, eth2, 00:01:47</span>
+<span class="yellow">R&gt; 200.0.4.0/23 [120/2] via 200.0.7.225, eth2, 00:01:47</span>
+C&gt; 200.0.6.0/24 is directly connected, eth0
+C&gt; 200.0.7.0/25 is directly connected, eth1
+<span class="yellow">R&gt; 200.0.7.128/26 [120/4] via 200.0.7.225, eth2, 00:01:47</span>
+<span class="yellow">R&gt; 200.0.7.192/27 [120/4] via 200.0.7.225, eth2, 00:01:47</span>
+C&gt; 200.0.7.224/30 is directly connected, eth2
+<span class="yellow">R&gt; 200.0.7.228/30 [120/3] via 200.0.7.225, eth2, 00:01:47</span>
+<span class="yellow">R&gt; 200.0.7.232/30 [120/3] via 200.0.7.225, eth2, 00:01:47</span>
+zebrad&gt;</span> quit
+</pre>
+
+<p>
+Per completare la rete con i sei pc, uno per ogni LAN, occorre dare il
+comando:
+</p>
+
+<pre>
+realHost$ lstart -d exercise-05b
+</pre>
+
+<p>
+che configura la risoluzione dei nomi attraverso il file
+<code>/etc/hosts</code>
+ed &egrave; quindi possibile sperimentare i comandi <code>ping</code>
+e <code>traceroute</code> utilizzando i nomi dei pc. Ad esempio:
+</p>
+
+<pre>
+pcF# traceroute pcC<span class="blue">
+traceroute to pcC (200.0.7.193), 64 hops max, 40 byte packets
+ 1  r5-eth0 (200.0.6.254)  11 ms  9 ms  2 ms
+ 2  r1-eth1 (200.0.7.225)  4 ms  3 ms  3 ms
+ 3  r2-eth0 (200.0.5.253)  10 ms  9 ms  9 ms
+ 4  r4-eth1 (200.0.7.234)  18 ms  6 ms  7 ms
+ 5  pcC (200.0.7.193)  25 ms  11 ms  19 ms</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/10 15:29:39 $
+</span>
+</address>
+
+
+</body>
+
+</html>

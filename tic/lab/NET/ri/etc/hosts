@@ -1,0 +1,8 @@
+#
+# /etc/hosts
+# $Id: hosts,v 1.1 2006/06/29 14:01:14 doros Exp $
+
+127.0.0.1     localhost ri
+
+#
+# bot

@@ -1,0 +1,407 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-PKI.html,v 1.13 2005/05/07 18:28:14 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-PKI</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-sockets.html">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 16 - Creazione e mantenimento di un sito Web</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza di una infrastruttura PKI con OpenSSL</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-sockets.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Questa esercitazione è contenuta nel
+<a href="PKI.tgz" title="esperienza Netkit4TIC">tarball</a>
+(40KB) dove sono presenti tutti i file
+per la costruzione e configurazione dell'esperimento.
+Dopo aver settato correttamente l'ambiente Netkit lancia lo script:
+</p>
+
+<pre>
+user@realhost$ ./lab start
+</pre>
+
+<p>
+Nel file system delle macchine virtuali da noi usate ci sono gi&agrave;
+tutti i pacchetti necessari. Nel caso di una macchina reale occorre
+invece installare il pacchetto <code>openssl</code> e anche il
+pacchetto <code>wipe</code> per la cancellazione affidabile 
+dei files dai mezzi magnetici (nel nostro caso virtuale non serve
+anche perch&egrave; funziona solo se il supporto &egrave; magnetico).
+</p>
+
+<p>
+La descrizione della struttura a livello di filesystem usata da openssl
+&egrave; la seguente:
+</p>
+
+<pre>
+/etc/ssl/openssl.cnf           master configuration file
+./demoCA                       main CA directory
+./demoCA/cacert.pem            CA certificate
+./demoCA/private/cakey.pem     CA private key
+./demoCA/serial                CA serial number file
+./demoCA/serial.old            CA serial number backup file
+./demoCA/index.txt             CA text database file
+./demoCA/index.txt.old         CA text database backup file
+./demoCA/certs                 certificate output file
+</pre>
+
+<p>
+Sono state fatte due leggere modifiche nei file di configurazione:
+<ul>
+  <li>
+Nel file 
+<a href="../lab/PKI/CA.pl"
+   title="file di configurazione"><code>/usr/lib/ssl/misc/CA.pl</code></a>
+sono stati portati a 3650 il numero di giorni di validit&agrave;
+del certificato della CA.</li>
+
+<li>
+Abbiamo impostato i valori di default nella procedura di generazione
+dei certificati modificando il file 
+<a href="../lab/PKI/openssl.cnf"
+   title="file di configurazione"><code>/etc/ssl/openssl.cnf</code></a>
+come segue:
+
+<pre>
+# /etc/ssl/openssl.cnf
+countryName                    = Country Name
+countryName_default            = IT
+
+stateOrProvinceName            = State or Province Name
+stateOrProvinceName_default    = Italy
+
+localityName                   = Locality Name
+localityName_default           = Mestre-Venezia
+
+0.organizationName             = Organization Name
+0.organizationName_default     = MIUR
+
+organizationalUnitName         = Organizational Unit Name
+organizationalUnitName_default = R&amp;D
+</pre>
+</li>
+</ul>
+
+
+<p>
+In seguito generiamo i certificati e le chiavi per la nostra
+Certification Authority (CA) con il comando (password <code>umts4tic</code>):
+</p>
+
+<pre>
+root@PKI# /usr/lib/ssl/misc/CA.pl -newca
+</pre>
+
+<p>
+rispondendo come segue alle domande:
+</p>
+
+<pre>
+Country Name [IT]:
+State or Province Name [Italy]:
+Locality Name [Mestre-Venezia]:
+Organization Name [MIUR]:
+Organizational Unit Name [R&amp;D]:
+Common Name []:ca.istituto.it
+Email Address []:ca@istituto.it
+</pre>
+
+<p>
+Per vedere i dettagli del certificato appena generato:
+</p>
+
+<pre>
+root@PKI# openssl x509 -noout -text -in ./demoCA/cacert.pem
+</pre>
+
+<p>
+Per vedere i dettagli della chiave appena generata:
+</p>
+
+<pre>
+root@PKI# openssl rsa -noout -text -in ./demoCA/private/cakey.pem
+</pre>
+
+
+
+<p>
+Tutti i dati verranno salvati all'interno della directory
+<code>demoCA</code> che viene automaticamente costruita all'interno della
+directory corrente. La passwd della CA &egrave; <code>umts4tic</code>.
+</p>
+
+<p>
+Passiamo ora a generare i certificati e le chiavi per coprire il nostro
+fabbisogno. Ogni identit&agrave; che vuole/deve generare la propria
+coppia di chiavi ha l'obbligo di custodire la chiave primaria in
+un luogo sicuro e pu&ograve; memorizzarla ad esempio in una
+smart card. La CA non si render&agrave; depositoria delle chiavi
+private degli utenti e metter&agrave; massima cura nella conservazione
+della propria chiave privata utilizzata per certificare i propri utenti.
+</p>
+
+<p>
+Un utente che vuole generare una coppia di chiavi utilizzando
+OpenSSL deve dare i seguenti comandi:
+</p>
+
+<pre>
+$ /usr/lib/ssl/misc/CA.pl -newreq
+</pre>
+
+<p>
+Eventualmente per decodificare la richiesta di certificato appena
+generata:
+</p>
+
+<pre>
+$ openssl req -text -noout &gt; newreq.pem
+</pre>
+
+
+<p>
+Ora si consegna il certificato alla CA che lo firmer&agrave;:
+</p>
+
+<pre>
+root@PKI# /usr/lib/ssl/misc/CA.pl -sign
+</pre>
+
+<p>
+Troveremo il certificato firmato nel file <code>newcert.pem</code>.
+In seguito sar&agrave; compito della CA mettere a disposizione i certificati
+da lei firmati cos&igrave; come la lista dei certificati revocati.
+</p>
+
+<p>
+Nel caso in cui volessimo costruire la richiesta di certificato
+senza usare lo script <code>CA.pl</code> occorrerebbe prima generare
+le chiavi e poi il certificato secondo i seguenti comandi:
+</p>
+
+<pre>
+$ openssl genrsa -des3 -out user.key 1024
+$ openssl req -new -key user.key -out user.csr
+$ cat  user.key user.csr &gt; newreq.pem
+</pre>
+
+
+
+<p>
+I certificati sono tutti protetti da password e quindi se sono
+usati all'interno di servizi WEB causano la richiesta, allo startup del
+servizio, della digitazione della password. Per ovviare a questo
+problema &egrave; possibile rimuovere la cifratura del certificato
+con il comando:
+</p>
+
+<pre>
+$ openssl rsa < newreq.pem > newkey.pem
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=revoca></a>Revoca</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per revocare un certificato:
+</p>
+
+<pre>
+root@PKI# openssl ca -revoke cert.pem
+</pre>
+
+<p>
+per generare la lista dei certificati revocati:
+</p>
+
+<pre>
+root@PKI# openssl ca  -gencrl -out file.crl
+</pre>
+
+<p>
+per vederne i dettagli:
+</p>
+
+<pre>
+root@PKI# openssl crl -noout -text -in file.crl
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=export></a>Esportazione per Browser/MUA</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per trasformare un certificato in un file importabile da un browser:
+</p>
+
+<pre>
+$ openssl pkcs12 -export -in demoCA/newcerts/01.pem \
+          -inkey demoCA/private/01.pem \
+          -certfile demoCA/cacert.pem \
+          -name "OpenCA Digital Certificate" -out mycert.p12
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=cleanup></a>Cancellazione database</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Nel caso reale dovremmo cancellare i dati dal supporto magnetico con:
+</p>
+
+<pre>
+root@PKI# wipe -r demoCA *.pem
+</pre>
+
+<p>
+e terminare la sessione sull'host PKI.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=istituto></a>I certificati del dominio &quot;istituto.it&quot;</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questa esercitazione &egrave; usata anche come base per le altre
+esercitazioni che hanno bisogno di certificati digitali. In questa
+sezione indichiamo i parametri per la costruzione dei seguenti
+certificati all'interno del dominio <code>istituto.it</code>:
+</p>
+
+<ul> 
+ <li>per il nodo <code>server</code> (Common Name: server.istituto.it,
+     Email Address: server@istituto.it)</li>
+ <li>per il nodo <code>rserver</code> (Common Name: rserver.istituto.it,
+     Email Address: rserver@istituto.it)</li>
+ <li>per il nodo <code>client</code> (Common Name: client.istituto.it,
+     Email Address: client@istituto.it)</li>
+</ul>
+
+<p>
+dove le password dei certificati sono rispettivamente i nomi
+(non FQDN) degli host stessi.
+Nel file <code>CA-istituto.it.tgz</code> &egrave; stata salvata
+la directory <code>demoCA</code> che contiene il database. Se
+dobbiamo/vogliamo costruire altri certificati nel dominio basta
+aprire il file e procedere nel costruire i certificati e a
+firmarli. Il certificato della CA ha scadenza l'8 Aprile 2015
+e gli altri hanno scadenza il 9 Aprile 2008 (lunga vita a Netkit4TIC!).
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/05/07 18:28:14 $
+</span>
+</address>
+
+</body>
+
+</html>

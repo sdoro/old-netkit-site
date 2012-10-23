@@ -1,0 +1,4 @@
+ifconfig eth0 80.204.240.254 up
+route add default gw 80.204.240.182
+# start deferred execution scheduler atd
+/etc/init.d/atd start

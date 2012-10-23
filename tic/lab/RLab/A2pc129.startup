@@ -1,0 +1,4 @@
+# configure IP address
+ifconfig eth0 192.168.2.129
+route add default gw 192.168.2.254
+# dns

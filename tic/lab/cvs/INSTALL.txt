@@ -1,0 +1,5 @@
+
+Risultano mancanti:
+
+apt-get install viewcvs cvsweb cvsgraph
+

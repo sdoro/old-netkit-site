@@ -1,0 +1,59 @@
+$Id: README,v 1.3 2007-02-09 16:41:28 doros Exp $
+
+UML Side
+===============================================================================
+In this experience the virtual nodes "net" and "fw" have network connectivity
+(tun module) with the real host. Before start the Netkit script you must create
+two tap devices as normal user:
+
+realHost$ ifname1=`sudo tunctl -b -u knoppix`; \
+          ifname2=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname1 206.1.1.254; \
+          sudo ifconfig $ifname2 203.1.1.254
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+Enable ip forward:
+
+realHost# echo "1" > /proc/sys/net/ipv4/ip_forward
+
+Then setup devilspie:
+
+realHost$ mkdir ~/.devilspie; \
+          cp netkit4tic.ds ~/.devilspie/ ; \
+          devilspie &
+
+
+QEMU Side
+===============================================================================
+
+Prepare QEMU environment:
+
+realHost$ ifname3=`sudo tunctl -b -u knoppix`
+realHost$ su
+realHost# umount /dev/shm; \
+          mount -t tmpfs -o size=160m none /dev/shm; \
+          modprobe kqemu; \
+          cp qemu-ifup /etc; \
+          exit
+realHost$ export VM-Repository="path locale/remote to VM images"
+realHost$ qemu-img create -b $VM-Repository/XPPSP2.img \
+                          -f qcow delta-XPPSP2.img
+
+Start QEMU:
+
+realHost$ export QEMU_SW="-usb -usbdevice tablet -kernel-kqemu"; \
+          export QEMU_NET="-net nic -net tap,$ifname3"; \
+          qemu -m 140 -hda delta-XPPSP2.img $QEMU_SW $QEMU_NET
+
+
+In XP:
+
+Connessioni di rete
+Crea una nuova connessione
+

@@ -1,0 +1,10 @@
+fw# w
+ 17:12:01 up 1 min, load average: 0.34, 0.14, 0.05
+ USER       TTY      IDLE      FROM           HOST
+ root       tty0     00:00m    Dec 27 17:11   
+ nk4tic     ppp0     ?         Dec 27 17:11   203.1.1.1
+
+
+net# route add -host 192.168.1.1 gw 192.168.1.130
+
+

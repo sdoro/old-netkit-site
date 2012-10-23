@@ -1,0 +1,31 @@
+# ~/.muttrc
+# $Id: .muttrc-tizio,v 1.2 2005/11/13 09:19:28 doros Exp $
+
+set pager_context=1
+set pager_index_lines=6             # show a mini-index in pager
+set status_on_top                   # put status line at top
+set sort=threads                    # sort by message threads in index
+
+set record="$HOME/MuttMail/sent"    # sent mail is saved here
+set delete=yes                      # delete without prompting
+set include=yes                     # quote msg in reply
+set fast_reply=yes                  # no prompting on reply
+set beep=no                         # no noise
+set confirmappend=no                # no prompt for save to =keep
+
+set folder = $HOME/MuttMail
+mailboxes =sent
+
+save-hook .* =keep                  # default mbox to (s)ave mail is =keep
+
+# draconian header weeding
+ignore *
+unignore from date subject
+
+set imap_user="tizio"
+set pop_user="tizio"
+set from="Tizio <tizio@tic.fdns.net>"
+set use_from=yes
+
+# disable tls
+#set ssl_starttls=no

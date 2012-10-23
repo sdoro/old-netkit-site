@@ -1,0 +1,53 @@
+;; $Id: rlab.ds,v 1.3 2007-05-12 15:36:24 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "www")
+  (begin
+      (geometry "484x173+4+100")
+      (set_workspace 4)
+    )
+  )
+
+(if (contains (application_name) "pfA1")
+  (begin
+      (geometry "484x316+355+20")
+      (set_workspace 4)
+    )
+  )
+
+(if (contains (application_name) "pfA2")
+  (begin
+      (geometry "484x316+449+50")
+      (set_workspace 4)
+    )
+  )
+
+(if (contains (application_name) "A1pc1")
+  (begin
+      (geometry "484x264+4+405")
+      (set_workspace 4)
+    )
+  )
+
+(if (contains (application_name) "A1pc129")
+  (begin
+      (geometry "484x251+22+466")
+      (set_workspace 4)
+    )
+  )
+
+(if (contains (application_name) "A2pc1")
+  (begin
+      (geometry "484x264+514+405")
+      (set_workspace 4)
+    )
+  )
+
+(if (contains (application_name) "A2pc129")
+  (begin
+      (geometry "484x251+536+466")
+      (set_workspace 4)
+    )
+  )
+
+)

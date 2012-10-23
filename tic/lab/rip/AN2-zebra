@@ -1,0 +1,9 @@
+! /etc/zebra/zebra.conf
+! $Id: AN2-zebra,v 1.1 2005/04/22 21:08:55 doros Exp $
+!
+hostname AN2
+password zebra
+enable password zebra
+!
+log file /var/log/zebra/zebra.log
+!

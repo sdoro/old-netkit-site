@@ -1,0 +1,65 @@
+# $Id: hosts.ldif,v 1.2 2009-10-05 05:05:35 doros Exp $
+
+dn: cn=localhost,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 127.0.0.1
+cn: localhost
+
+dn: cn=server,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.10
+cn: server
+
+dn: cn=gate,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.254
+cn: gate
+
+dn: cn=client1,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.101
+cn: client1
+
+dn: cn=client5,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.105
+cn: client5
+
+dn: cn=nfs1,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.1
+cn: nfs1
+
+dn: cn=nfs2,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.2
+cn: nfs2
+
+dn: cn=nfs3,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.3
+cn: nfs3
+
+dn: cn=nfs4,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.4
+cn: nfs4
+

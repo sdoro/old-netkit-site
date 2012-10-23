@@ -1,0 +1,12 @@
+# /etc/hosts
+# $Id: hosts,v 1.5 2007-04-30 21:41:00 doros Exp $
+
+10.10.20.29	mngm      mngm.tic.fdns.net
+#
+10.10.20.1  sensor01  sensor01.tic.fdns.net
+10.10.20.2  sensor02  sensor02.tic.fdns.net
+10.10.20.3  sensor03  sensor03.tic.fdns.net
+10.10.20.4  sensor04  sensor04.tic.fdns.net
+10.10.20.5  sensor05  sensor05.tic.fdns.net
+#
+# bot

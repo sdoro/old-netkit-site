@@ -1,0 +1,51 @@
+# $Id: ldapentries.diff,v 1.1 2005/09/01 20:07:41 doros Exp $
+
+dn: dc=istituto,dc=it
+objectClass: dcObject
+objectClass: organization
+dc: istituto
+o: istituto.it
+description: Root LDAP
+
+dn: ou=People,dc=istituto,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: People
+
+dn: cn=admin,ou=People,dc=istituto,dc=it
+objectClass: organizationalRole
+cn: admin
+description: Administrator
+
+dn: cn=Mario Rossi,ou=People,dc=istituto,dc=it
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: krb5Principal
+objectClass: posixAccount
+sn: Rossi
+cn: Mario Rossi
+mail: mrossi@istituto.it
+krb5PrincipalName: mrossi@ISTITUTO.IT
+userPassword: {KERBEROS}mrossi@ISTITUTO.IT
+uid: mrossi
+uidNumber: 2002
+homeDirectory: /afs/istituto.it/home/mrossi
+gidNumber: 100
+
+dn: ou=Group,dc=istituto,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: Group
+
+dn: cn=users,ou=Group,dc=istituto,dc=it
+objectClass: posixGroup
+objectClass: top
+cn: users
+gidNumber: 100
+memberUid: mrossi
+
+dn: ou=Computers,dc=istituto,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: Computers

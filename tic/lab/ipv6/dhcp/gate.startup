@@ -1,0 +1,21 @@
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#
+ifconfig eth0 hw ether 00:00:00:00:00:01
+ifconfig eth0 0.0.0.0 up
+#
+ifconfig eth1 hw ether 00:00:00:00:00:02
+ifconfig eth1 0.0.0.0 up
+ifconfig eth1 add 2001:5c0:1101:f701::3/64
+#
+#
+dpkg -i /hostlab/radvd_1.1-3_i386.deb
+echo "1" > /proc/sys/net/ipv6/conf/all/forwarding
+route -A inet6 add ::/0 gw 2001:5c0:1101:f700::1 dev eth0
+#
+/etc/init.d/radvd start
+#
+#dpkg -i /hostlab/dibbler-server_0.7.1-2_i386.deb
+#
+# bot

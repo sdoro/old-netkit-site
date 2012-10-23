@@ -1,0 +1,6 @@
+ifconfig eth0 192.168.2.230 up
+route add default gw 192.168.2.254
+# start deferred execution scheduler atd
+/etc/init.d/atd start
+#
+# bot

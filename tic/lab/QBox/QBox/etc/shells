@@ -1,0 +1,5 @@
+# /etc/shells: valid login shells
+# $Id: shells,v 1.1 2005/11/06 18:42:32 doros Exp $
+/bin/bash
+/bin/ash
+/bin/sh

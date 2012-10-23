@@ -1,0 +1,15 @@
+#!/bin/sh
+# $Id: S99uml_switch.extend-capacity,v 1.1 2005/01/01 16:08:50 doros Exp $
+
+set -e
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# if I understood it correctly the uml switches are implemented with 
+# UNIX sockets, however the capacity of the UNIX sockets is typically 
+# limited to 10 datagrams. does it help to increase 
+# /proc/sys/net/unix/max_dgram_qlen (on the host, on the umls)?
+
+echo "300" > /proc/sys/net/unix/max_dgram_qlen
+
+exit 0

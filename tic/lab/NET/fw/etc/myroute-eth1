@@ -1,0 +1,13 @@
+# /etc/myroute-eth1
+# $Id: myroute-eth1,v 1.2 2004/09/13 19:30:14 doros Exp $
+
+#ifconfig eth1 hw ether 00:00:00:00:00:0C
+ip link set eth1 address 00:00:00:00:00:0C
+#route add -net 10.10.10.0 netmask 255.255.255.192 gw 10.10.10.78
+ip route add 10.10.10.0/26 via 10.10.10.78
+#route add -net 10.10.20.0 netmask 255.255.255.224 gw 10.10.10.78
+ip route add 10.10.20.0/27 via 10.10.10.78
+#route add -net 10.10.30.0 netmask 255.255.255.192 gw 10.10.10.78
+ip route add 10.10.30.0/26 via 10.10.10.78
+
+# bot

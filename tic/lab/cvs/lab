@@ -1,0 +1,175 @@
+#!/bin/bash
+# $Id: lab,v 1.4 2006/01/26 23:02:15 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 2
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    vstart repository --append="eth0=tuntap,tap0" --eth1=A --mem=128 $X
+    waitfinish repository
+
+    vstart node --eth0=A --mem=32 $X
+    waitfinish node
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started *** "
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash repository
+    vcrash node
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+     if [ `grep tap0 /proc/net/dev|wc -l` = 0 ] ; then
+       echo "missing tap0 device"
+       exit 1
+     fi
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ "$1" = "clean" ]; then
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+    # and it is NEVER executed by in the host environment
+    #
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+
+    repository)
+        # config IP addr
+        ifconfig eth0 192.168.77.2
+        ifconfig eth1 192.168.50.2
+        # make/init a CVS repository
+        mkdir /mnt/repository
+        echo 'export CVSROOT=/mnt/repository' >> /etc/profile
+        cvs -d /mnt/repository init
+        # setup cvsweb
+        mv /etc/cvsweb.conf /etc/cvsweb.conf.org
+        cp $SCRIPTDIR/cvsweb.conf /etc/cvsweb.conf
+        ln -s /usr/share/cvsweb/css/cvsweb.css /var/www/cvsweb.css
+        # create users
+        (sleep 3; echo "not24get"; sleep 3; echo "not24get") | \
+           adduser --gecos 'Caio' caio
+        (sleep 3; echo "not24get"; sleep 3; echo "not24get") | \
+           adduser --gecos 'Tizio' tizio
+        #
+        addgroup cvsgrp
+        mkdir /home/tizio/.ssh
+        chown tizio:cvsgrp /home/tizio/.ssh
+        mkdir /home/caio/.ssh
+        chown tizio:cvsgrp /home/caio/.ssh
+        adduser caio cvsgrp
+        adduser tizio cvsgrp
+        chgrp -R cvsgrp /mnt/repository
+        chmod g+w /mnt/repository
+        chgrp cvsgrp /mnt/repository/CVSROOT
+        # Start sshd daemon
+        rm -f /etc/ssh/sshd_not_to_be_run
+        /etc/init.d/ssh start
+        # install viewcvs
+        export DEBIAN_FRONTEND=noninteractive
+        dpkg -i viewcvs*deb
+        # setup viewcvs
+        cp /etc/apache2/conf.d/viewcvs /etc/apache/conf.d/
+        cp $SCRIPTDIR/viewcvs.conf /etc/viewcvs/viewcvs.conf
+        cp $SCRIPTDIR/httpd.conf  /etc/apache/httpd.conf
+        # start apache
+        /etc/init.d/apache start
+
+        notifyfinish repository
+        ;;
+
+    node)
+        # config IP addr
+        ifconfig eth0 192.168.50.1
+        #
+        (sleep 3; echo "not24get"; sleep 3; echo "not24get") | \
+           adduser --gecos 'A Programmer' prg
+        # create data
+        mkdir /home/prg/test
+        cp $SCRIPTDIR/apache2 /home/prg/test/apache2
+        chown -R prg:prg /home/prg/test
+
+        notifyfinish node
+        ;;
+
+    #
+    #
+    ################################################# end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

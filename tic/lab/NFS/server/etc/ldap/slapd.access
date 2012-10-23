@@ -1,0 +1,24 @@
+# /etc/ldap/slapd.access
+# $Id: slapd.access,v 1.1 2008-12-09 15:50:44 doros Exp $
+
+# The userPassword by default can be changed
+# by the entry owning it if they are authenticated.
+# Others should not be able to see it, except the
+# admin entry below
+access to attrs=userPassword
+        by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+        by dn="cn=nssuser,ou=DSA,dc=istituto,dc=it" read
+        by anonymous auth
+        by self write
+        by * none
+
+# The admin has full write access
+# the trusted networks (192.168.77.0/24, 192.168.50.0/24) have read access
+access to *
+        by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+        by peername.ip=127.0.0.1 read
+        by peername.ip=192.168.77.0%255.255.255.0 read
+        by peername.ip=192.168.50.0%255.255.255.0 read
+        by * none
+#
+# bot

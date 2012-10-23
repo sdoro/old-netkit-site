@@ -1,0 +1,32 @@
+# $Id: lvm.startup,v 1.1 2008-10-04 20:48:03 doros Exp $
+
+# install missing software
+dpkg -i /root/lvm2*deb
+# We'll initialize ubdb as a physical volume:
+pvcreate -ff -y /dev/ubdb
+# we will create a volume group which is built up of them:
+vgcreate db-vol /dev/ubdb
+# If you've done this correctly you'll be able to see it included
+# in the output of vgscan:
+vgscan
+# For test purposes we'll create a small volume with the name 'test':
+lvcreate -n test --size 10m db-vol
+# The logical volume will now be accessible via /dev/db-vol/test,
+# and may be formatted and mounted just like any other partition:
+mkfs.ext3 /dev/db-vol/test
+mkdir /home/test
+mount /dev/db-vol/test  /home/test
+# create snapshot named dbbackup for Logical Volume db-vol/test
+lvcreate -L1M -s -n dbbackup /dev/db-vol/test
+
+exit
+###############################################
+
+# mount the backuped filesystem
+mkdir /mnt/backup
+mount /dev/db-vol/dbbackup /mnt/backup
+# remove snapshot
+umount /mnt/backup
+lvremove -f /dev/db-vol/dbbackup
+#
+# bot

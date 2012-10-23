@@ -1,0 +1,116 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: telnet.html,v 1.17 2004/05/23 17:48:46 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - telnet</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 4</h1>
+<h2 class="center">Individuazione dei malfunzionamenti</h2>
+<h3>telnet</h3>
+
+<p>
+Questo piccolo strumento ci permette di dialogare con i server in Internet
+senza dover installare i programmi specifici o magari, come nel nostro caso,
+provare a capire quali sono i problemi per i quali il programma specifico non funziona.
+Per poter far questa prova occorre conoscere un minimo di linguaggio per ogni
+tipologia di server che vogliamo contattare.
+</p>
+
+<ul>
+  <li>http (80)</li>
+  <li>pop3 (110)</li>
+  <li>smtp (25)</li>
+  <li>news (119)</li>
+  <li>whois (43)</li>
+</ul>
+
+<p>
+L'importante &egrave; riuscire a instaurare una connessione poich&egrave; per
+l'idividuazione del malfunzinamento non serve conoscere in dettaglio tutto il
+protocollo. In genere basta conoscere la porta associata al servizio, il modo
+per autenticarsi e un comando di get/set di un elemento.
+</p>
+
+<ul>
+  <li>
+    http<br>
+	Questo servizio occupa la porta 80 del server e per contattarlo basta dare
+	il comando <code>telnet</code>. Quando ci compare il &quot;prompt&quot; possiamo specificare
+	il nome del server e la porta digitando <code>open nome-server 80</code>.
+	Per la piattaforma M$ il programma telnet non &egrave; impostato
+	per mostrare l'eco dei comandi per cui bisogna impostarlo a mano con
+	il comando <code>set localecho</code>. Ora per dare il comando di
+	ricevimento della home page basta digitare <code>GET / HTTP/1.0</code> seguito
+	da un doppio invio. La home page del server sar&agrave; visualizzata di seguito sul
+	terminale del telnet. Una sessione di cattura
+	del traffico di Ethereal potrebbe visualizzarci il dialogo tra le
+	macchine coinvolte nel test (client browser, ARP msgs, servers DNS,
+	firewall/proxy, server web). Nel caso in cui dobbiamo usare il proxy la stringa
+	da digitare diventa <pre>GET http://www.myproxy.it/ HTTP/1.0</pre>.
+  </li>
+  
+  <li>
+    https<br>
+	non &egrave; cos&igrave; facile come 
+	il caso precedente. Nel caso di Linux prima usavamo la sequenza:
+	<pre>
+$ telnet localhost 80
+GET / HTTP/1.0
+    </pre>
+	ora ci facciamo aiutare dal comando s_client di OpenSSL:
+    <pre>
+$ openssl s_client -connect localhost:443 -state -debug
+GET / HTTP/1.0
+    </pre>
+	e otterremo dettagliate informazioni sulla sequenza di handshake di SSL.
+	Un tool pi&ugrave; completo &egrave; 
+	<a href="http://curl.haxx.nu/" title="link esterno">cURL</a> che ci permette di scrivere
+	indifferentemente:
+	<pre>
+$ curl http://localhost/
+$ curl https://localhost/
+	</pre>
+  </li>
+  
+</ul>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/05/23 17:48:46 $
+</span>
+</address>
+
+
+</body>
+
+</html>

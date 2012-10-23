@@ -1,0 +1,256 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: area.html,v 1.11 2009-10-03 15:59:26 doros Exp $ -->
+
+
+<head>
+  <title>Area backbone e Sottoaree </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+</head>
+
+<body>
+
+<h3>Gestione rete: backbone e sottoaree</h3>
+
+
+
+<p>
+In questo contesto usiamo il termine area per indicare zone della
+rete adibite ad usi omogenei: ad esempio tutti i laboratori possono essere
+visti come singole aree distinte. Altri esempi di aree possono
+essere: biblioteca, sala professori, aula magna, access point etc.
+</p>
+
+<p>
+I benefici che si possono ottenere dall'uso delle aree sono molteplici.
+Dal lato fisico riducono il traffico complessivo della rete
+e confinano gli eventuali problemi all'interno delle aree stesse.
+A livello logico la gestione delle stesse pu&ograve; essere
+demandata al personale interno all'area.
+</p>
+
+<p>
+Un aspetto importante delle aree &egrave; la loro configurazione. Ad
+esempio tutti gli access point sono una potenziale fonte di problemi
+legati alla sicurezza e quindi il loro traffico va isolato e controllato
+in maniera particolare. Stesso discorso per aree come segreteria o
+sala professori dove ci
+sono procedure e documenti soggetti a vincoli di privatezza e/o
+segretezza.
+</p>
+
+
+
+<p>
+Le aree a livello di rete saranno delle sottoreti di classe C. Possiamo
+pensare di allocare una classe C (ad esempio 192.168.0.0/24) per la
+rete centrale o backbone e poi allocare una classe C per ogni area "i"
+(ad esempio 192.168.i.0/24). Ogni area avr&agrave; quindi bisogno
+di un agente di tipo router per il forwarding del traffico tra le reti.
+Il router
+sar&agrave; anche il luogo ideale per inserire delle regole per
+filtrare il traffico passante. La classe C garantisce una larghezza
+d'area di 254 pc ma possiamo pensare ad aree particolarmente
+dense come insiemi di due o pi&ugrave; classi C
+o passare ad utilizzare la classe B con numerazione
+172.16.0.0/16 fino a 172.31.0.0/16 o la classe A con
+numerazione 10.0.0.0/8.
+</p>
+
+
+<p>
+Dunque ogni area avr&agrave; delle sue peculiari regole (in seguito
+policy) che verranno trasformate sul corrispondente router in regole
+a cui il traffico passante sar&agrave; soggetto.<br>
+La regola condivisa da tutte le aree &egrave; invece quella che abilita e
+disabilita il traffico da e per le stazioni dell'area. A questo
+scopo &egrave; stata approntata una interfaccia web che visualizza una
+mappa stilizzata delle stazioni presenti nell'area e attraverso
+la quale si abilita o disabilita la/e stazione/i selezionata/e.
+</p>
+
+<p>
+&Egrave; stata approntata l'esperienza virtuale
+<a href="/tic/html/uml-RLab.html"
+   title="esperienza Netkit4TIC">RLab</a>
+che ne illustra il funzionamento su due aree di esempio.
+</p>
+
+
+
+<h3 id="area">Proposta di assegnazione indirizzi ip</h3>
+
+<p>
+Per una proposta di assegnazione degli indirizzi IP nell'area
+backbone e nelle sottoaree, abbiamo pensato di usare due modelli.
+In entrambi abbiamo preferito adottare
+intervalli con dimensioni pari a potenze di due in modo da poter
+eventualmente costruire facilmente dei filtri o fare subnetting.
+</p>
+
+<table cellspacing="0" cellpadding="4">
+  <tr>
+  <td>
+    
+    <table cellspacing="0" cellpadding="4">
+      <caption>Area backbone (anche DMZ)</caption>
+      <tr>
+        <th align="center">IP<br>address</th>
+        <th align="center">range</th>
+        <th align="center">utilizzatore</th>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">254</td>
+        <td align="right">1</td>
+        <td>router<br>(gateway vrrp)</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">193-253</td>
+        <td align="right">61</td>
+        <td>servers</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">191-192</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">129-190</td>
+        <td align="right">62</td>
+        <td>apparati di rete</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">127-128</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr>
+        <td align="right">1-126</td>
+        <td align="right">126</td>
+        <td>non usato</td>
+      </tr>
+    
+    </table>
+  
+  </td>
+
+  <td>
+  
+    <table cellspacing="0" cellpadding="4">
+      <caption>Altre Aree</caption>
+      <tr>
+        <th align="center">IP<br>address</th>
+        <th align="center">range</th>
+        <th align="center">utilizzatore</th>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">254</td>
+        <td align="right">1</td>
+        <td>router<br>(gateway)</td>
+      </tr>
+    
+      <tr>
+        <td align="right">249-253</td>
+        <td align="right">5</td>
+        <td>non usato</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">247-248</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">241-246</td>
+        <td align="right">6</td>
+        <td>printers</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">239-240</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">225-238</td>
+        <td align="right">14</td>
+        <td>servers</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">223-224</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">193-222</td>
+        <td align="right">30</td>
+        <td>Apparati di rete<br>(router, switch, AP)</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">191-192</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">129-190</td>
+        <td align="right">62</td>
+        <td>utenti-2<br>(professori/tecnici)</td>
+      </tr>
+    
+      <tr class="red">
+        <td align="right">127-128</td>
+        <td align="right">2</td>
+        <td>non usabile</td>
+      </tr>
+    
+      <tr class="yellow">
+        <td align="right">1-126</td>
+        <td align="right">126</td>
+        <td>utenti-1<br>(studenti)</td>
+      </tr>
+    
+    </table>
+  </td>
+  </tr>
+
+</table>
+
+<p>
+Lo schema per le aree generiche
+prende in considerazione anche l'ipotesi di un accorpamento di
+pi&ugrave; laboratori in un'unica area di competenza e in questo caso
+i due gruppi con nome utenti-1 ed utenti-2 possono essere suddivisi
+ulteriormente.
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/">
+   <img alt="Creative Commons License"
+        src="80x15.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: 2009-10-03 15:59:26 $
+</span>
+</address>
+
+</body>
+
+</html>

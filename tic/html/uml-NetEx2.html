@@ -1,0 +1,167 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-NetEx2.html,v 1.4 2006/10/08 10:00:06 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-NetEx2</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 10 - Pratica sulle reti</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esercizio su static routing e default gateway</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetEx1.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetEx4.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+<p>
+Per questa prova ci riferiremo all'esercizio proposto nel sito
+di
+<a href="http://www.netkit.org/" title="link esterno">Netkit</a>
+nella parte riguardante la configurazione statica
+delle tabelle di routing
+(<a href="http://www.netkit.org/netkit-labs/basic-topics/static-routing/netkit-static-routing.pdf"
+   title="link esterno">netkit-static-routing</a>)
+:
+</p>
+
+<p>
+<cite class="border">
+"La mappa 
+(<a href="pdf/staticRoute.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/staticRoute.xml" title="file per Dia">xml</a>)
+della rete proposta &egrave; abbastanza semplice
+da poter configurare i router <code>r1</code> ed <code>r2</code>
+usando esclusivamente il default route. Motivare l'affermazione e
+determinare i relativi comandi di configurazione della tabella
+di routing."
+</cite>
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Soluzione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Controlla la soluzione proposta nei files
+<code>exercise-01/*.startup</code>
+e poi fai partire l'esperienza virtuale
+con il comando:
+</p>
+
+<pre>
+realHost$ lstart -d exercise-02
+</pre>
+
+<p>
+che genera la rete con 2 host, 3 hub e 2 router.
+Verifichiamo la raggiungibilit&agrave; con il comando <code>ping</code>
+e verifichiamo il percorso con il comando <code>traceroute</code>:
+</p>
+
+
+<pre>
+pc1# ping -c 1 pc2<span class="blue">
+PING pc2 (200.1.1.7) 56(84) bytes of data.
+64 bytes from pc2 (200.1.1.7): icmp_seq=1 ttl=62 time=27.3 ms
+[...]</span>
+pc1# traceroute pc2<span class="blue">
+traceroute to pc2 (200.1.1.7), 64 hops max, 40 byte packets
+ 1  195.11.14.1 (195.11.14.1)  4 ms  3 ms  2 ms
+ 2  100.0.0.10 (100.0.0.10)  3 ms  7 ms  8 ms
+ 3  pc2 (200.1.1.7)  5 ms  5 ms  4 ms</span>
+pc2# traceroute pc1<span class="blue">
+traceroute to pc1 (195.11.14.5), 64 hops max, 40 byte packets
+ 1  200.1.1.1 (200.1.1.1)  3 ms  3 ms  2 ms
+ 2  100.0.0.9 (100.0.0.9)  3 ms  4 ms  4 ms
+ 3  pc1 (195.11.14.5)  5 ms  5 ms  4 ms</span>
+</pre>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/08 10:00:06 $
+</span>
+</address>
+
+
+</body>
+
+</html>

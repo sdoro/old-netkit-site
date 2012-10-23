@@ -1,0 +1,12 @@
+# $Id: build-aufs.txt,v 1.3 2009-10-17 15:11:37 doros Exp $
+
+cd /usr/src/modules/
+tar zxf aufs-cvs.tgz
+make KDIR=/home/knoppix/Desktop/replay/linux-2.6.28.4 -f local.mk
+cp fs/aufs25/aufs.ko aufs.ko
+
+
+Note: If you want to build a module inside a kernel source do:
+make KDIR=/home/knoppix/Desktop/replay/linux-2.6.28.4 -f local.mk kconfig
+and follow instrunctions.
+

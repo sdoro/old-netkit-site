@@ -1,0 +1,5 @@
+# $Id: pcA.startup,v 1.1 2006/10/07 16:44:04 doros Exp $
+# configure IP address
+ifconfig eth0 200.0.0.1 up \
+         netmask 255.255.252.0 broadcast 200.0.3.255 up
+route add default gw 200.0.3.254

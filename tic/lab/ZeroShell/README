@@ -1,0 +1,26 @@
+
+To print partition table:
+
+$ /sbin/fdisk -l -u ZS-CF512.img 
+You must set cylinders.
+You can do this from the extra functions menu.
+
+Disk ZS-CF512.img: 0 MB, 0 bytes
+16 heads, 62 sectors/track, 0 cylinders, total 0 sectors
+Units = sectors of 1 * 512 = 512 bytes
+
+       Device Boot      Start         End      Blocks   Id  System
+ZS-CF512.img1   *          62        8927        4433   83  Linux
+ZS-CF512.img2            8928      225183      108128   83  Linux
+ZS-CF512.img3          225184     1000927      387872   83  Linux
+
+
+To mount p1: (512*62=31744)
+# mount -r -o loop,offset=31744 hda1 /CF
+
+To mount p2: (512*8928=4571136)
+# mount -r -o loop,offset=4571136 hda1 /CF
+
+To mount p3: (512*225184=115294208)
+# mount -r -o loop,offset=115294208 hda1 /CF
+

@@ -1,0 +1,4 @@
+# $Id: ftp.startup,v 1.1 2008-01-04 16:19:53 doros Exp $
+ifconfig eth0 192.168.100.2 up
+# restart xinetd
+/etc/init.d/xinetd restart

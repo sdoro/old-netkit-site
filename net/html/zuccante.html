@@ -1,0 +1,240 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: zuccante.html,v 1.8 2007-12-09 15:08:38 doros Exp $ -->
+
+
+<head>
+  <title>Gestione della infrastruttura tecnologica</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Gestione della infrastruttura tecnologica</h1>
+<h2 class="center">Materiali usati nel progetto di rete per l'Istituto 
+<a href="http://www.paginebianche.it/pb/mappa.33881854"
+   title="mappa stradale">Zuccante</a></h2>
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico"> 2004, 2005, 2006, 2007
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="progetto"></a>Scenario</h3>
+  </td>
+  <!--
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  -->
+  </tr>
+</table>
+
+<p>
+Per avere una idea delle azioni che occorre intraprendere nel tempo
+elenchiamo di seguito una possibile sequenza di passi:
+<ul>
+  <li>Installazione di una coppia di firewall ridondata per la
+      connessione Internet della sede centrale</li>
+  <li>Installazione di un firewall per la
+      connessione Internet per la sede staccata</li>
+  <li>Connessione VPN tra le due sedi</li>
+  <li>Suddivisione dell'intera rete in aree (per entrambe le reti)
+     <ul>
+        <li>Installazione di router filtranti in ogni area</li>
+     </ul></li>
+  <li>Attivazione del controllo sulle aree appena costruite
+     <ul>
+        <li>Installazione stazioni server: raccomandazioni
+            sulla distribuzione Debian GNU/Linux</li>
+     </ul></li>
+  <li>Monitoraggio della rete
+     <ul>
+        <li>monitoraggio traffico dei routers</li>
+        <li>controllo log degli apparati di rete</li>
+        <li>statistiche degli apparati di rete</li>
+        <li>sincronizzazione temporale degli apparati di rete</li>
+     </ul>
+  </li>
+  <li>Ottimizzazione/Controllo/Filtraggio della Navigazione in Internet</li>
+  <li>Estensione del numero delle aree</li>
+  <li>Attivazione dell'autenticazione e file server centralizzato e unificato
+      per alcune aree</li>
+  <li>Cablaggio ad almeno 100Mbit tra le aree (consigliata la
+      cablatura ottica ad almeno 1Gbit)</li>
+  <li>Estensione della autenticazione e file server ad altre aree
+     <ul>
+        <li>Designazione di una stanza condizionata ad accesso controllato
+            in cui installare le macchine e dove staranno le persone che
+            gestiranno l'intera rete</li>
+        <li>Il sistema si baser&agrave; su un nodo primario e tre nodi
+            secondari due dei quali presso la sede staccata. Un ulteriore
+            nodo ha la responsabilit&agrave; dell'archiviazione delle
+            cartelle personali degli utenti. Si calcola che la capacit&agrave;
+            di immagazzinamento sia dell'ordine di un TB.</li>
+     </ul>
+  </li>
+</ul>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="action"></a>MacroAttivit&agrave;</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<ul>
+  <li>Installazione
+      <a href="bering.html"
+         title="Approfondimento">firewall LEAF/Bering uClibc</a></li>
+  <li>Installazione
+      <a href="/tic/html/uml-VPN.html"
+         title="Approfondimento">VPN LEAF/Bering uClibc</a></li>
+  <li>Installazione
+      <a href="/tic/html/Debian.html"
+         title="Approfondimento">stazione server</a></li>
+  <li><a href="area.html"
+         title="Approfondimento">Gestione rete: backbone e sottoaree</a></li>
+  <li>Cablaggio</li>
+  <li><a href="netmngm.html"
+         title="Approfondimento">Raccolta dati sulla situazione della rete</a></li>
+  <li>Installazione
+      <a href="squid.html"
+         title="Approfondimento">proxy servers</a></li>
+  <li>Servizi di rete: autenticazione e autorizzazione</li>
+</ul>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=gruppo></a>Gruppo di lavoro</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la organizzazione/riorganizzazione della rete d'Istituto il referente
+a livello d'Istituto &egrave; stato inizialmente il prof. Memo Alessandro.
+Dal 2007/2008 il responsabile della rete &egrave; il prof. Doro Sandro.
+Il progetto, la implementazione e la realizzazione della rete
+sono a cura del prof. Sandro Doro con l'aiuto di Andrea De Rossi.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=materiali></a>Materiali</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+I materiali usati saranno prevalentemente quelli utilizzati nel
+<a href="/tic/html/lab.html"
+   title="Approfondimento">Laboratorio Virtuale Netkit4TIC</a> e nel corso
+<a href="/tic/html/index.html"
+   title="Approfondimento">UMTS/TIC C2</a>.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="fasi"></a>Fasi del progetto</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+<p>
+Il progetto &egrave; stato pensato come una mossa a tenaglia
+tra due progetti partiti nell'anno scolastico 2004/05:
+</p>
+<ul>
+  <li><a href="/net/html/P-OEN1.html"
+         title="approfondimento">Progetto P-OEN1</a>: il progetto
+      &egrave; stato inquadrato
+      all'interno del progetto del MIUR/IBM denominato linux@school</li>
+  <li><a href="/net/html/P-biennio.html"
+         title="approfondimento">Progetto P-biennio</a>:
+      il progetto consiste nel dotare 
+      la sede staccata di una infrastruttura standardizzata
+      comprensiva di sicurezza, autenticazione, riservatezza e
+      protezione nella navigazione</li>
+</ul>
+
+<p>
+Alla conclusione dei due progetti, la loro unione denominata
+<a href="/net/html/P-MAN.html"
+   title="approfondimento">Progetto P-MAN</a>
+porter&agrave; nell'anno scolastico 2005/06 e successivi alla
+unificazione e standardizzazione dell'intera rete MAN.
+</p>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-12-09 15:08:38 $
+</span>
+</address>
+
+
+</body>
+
+</html>

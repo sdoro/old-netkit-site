@@ -1,0 +1,23 @@
+<!DOCTYPE xbel ><xbel>
+ <folder folded="no" toolbar="yes" >
+  <title>Toolbar</title>
+  <bookmark href="file:/cdrom/index.html" >
+   <title>CD-Index</title>
+  </bookmark>
+  <bookmark href="http://www.tic.fdns.net/tic/html/lab.html" >
+   <title>Netkit4TIC - Home Page</title>
+  </bookmark>
+  <bookmark href="http://www.tic.fdns.net/phpbb" >
+   <title>Netkit4TIC - forum</title>
+  </bookmark>
+  <bookmark href="http://www.tic.fdns.net/tic/html/las.html" >
+   <title>Linux@School</title>
+  </bookmark>
+  <bookmark href="http://www.tic.fdns.net/net/html/index.html" >
+   <title>Infrastrutture scolastiche</title>
+  </bookmark>
+  <bookmark href="http://www.tic.fdns.net/cgi-bin/cvsweb/" >
+   <title>CVS Repository</title>
+  </bookmark>
+ </folder>
+</xbel>

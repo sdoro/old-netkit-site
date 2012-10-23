@@ -1,0 +1,170 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module4.html,v 1.36 2006/10/30 13:24:09 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 4</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 4</h1>
+<h2 class="center">Individuazione dei malfunzionamenti</h2>
+
+
+<p>
+<ul>
+  <li> <a id="telnet" href="telnet.html" title="approfondimento"><b>telnet</b></a><br>
+       Questo client diffuso su molte
+       installazioni pu&ograve; esserti utile per
+       scoprire malfunzionamenti per protocolli tcp.</li>
+  <li> <a id="wget"
+       href="http://www.gnu.org/software/wget/" title="link esterno"><b>wget</b></a><br>
+       Questo client serve per il download
+	   non interattivo di files da Web. Sar&agrave; molto
+	   utile nel laboratorio virtuale quando ci servir&agrave;
+	   un browser leggero privo di interfaccia grafica.
+       Si  pu&ograve; impostare il campo "header" con i valori descritti in
+       <a href="http://en.wikipedia.org/wiki/User_agent"
+          title="Wikipedia">User Agent</a>; ad esempio per "simulare"
+       IE 6.0 su Windows XP SP2 usa l'opzione -U:
+	   <pre>wget -U &quot;Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)&quot; URL</pre>
+       </li>
+  <li> <a id="tcpdump" href="http://www.tcpdump.org/" title="link esterno"><b>tcpdump</b></a><br>
+  		Questo applicativo &egrave; il tool di cattura vero e proprio,
+		attraverso il quale &egrave; possibile catturare il traffico di dati
+		da una rete. Il tool permette, tra l'altro, di filtrare i pacchetti
+		definendo ad esempio, l'interfaccia di ascolto, il protocollo o la
+		porta utilizzata. Sono inoltre disponibili una serie di ulteriori
+		opzioni interessanti, tra le quali merita ricordare la possibilit&agrave;
+		di limitare il numero di pacchetti catturati.<br>
+		Di seguito si riporta un classico esempio di comando, utilizzato al
+		fine di effettuare una cattura di pacchetti DNS:
+		<pre>tcpdump -i eth0 -w dns-01.acp -s 1024 udp port 53</pre>
+		
+		dove <code>-i eth0</code> rappresenta l'interfaccia dalla quale si intende
+		catturare; <code>-w dns-01.acp</code> rappresenta il nome del file che
+		conterr&agrave; i pacchetti catturati in formato acp; <code>-s 1024</code>
+		indica la lunghezza massima di un pacchetto; <code>udp</code> le
+		catture sono da effettuarsi a questo protocollo; <code>port 53</code>
+		questo rappresenta un filtro ai pacchetti in quanto limita le catture
+		alla porta 53.<br>
+		Per l'estensione dei file delle catture di traffico viene comunemente usata la stringa
+		acp e quindi &egrave; conveniente settare nel proprio ambiente di lavoro
+		l'associazione di questa estensione con il lancio automatico di ethereal.
+       </li>
+  <li> <a id="ethereal" href="http://www.ethereal.com/" title="link esterno"><b>Ethereal</b></a><br>
+       Usa questo analizzatore di traffico sulla piattaforma di tua preferenza
+	   e tieni presente che differisce da tcpdump principalmente per l'interfaccia grafica.
+       Ricordati di installare per prima cosa
+       la libreria [win|lib]pcap (&egrave; tutto documentato nel sito ufficiale).
+	   Per verificare la comprensione della struttura del traffico puoi catturare del traffico
+	   che hai generato tu stesso altrimenti puoi reperire in internet esempi di traffico:
+	   <ul>
+	   <li>presso lo stesso sito di <a href="http://www.ethereal.com" title="link esterno">Ethereal</a></li>
+	   <li>presso <a href="http://ita.ee.lbl.gov/index.html" title="link esterno">Internet Traffic Archive</a></li>
+	   <li>presso il progetto <a href="http://mawi.wide.ad.jp/mawi/" title="link esterno">WIDE</a></li>
+	   </ul>
+       Nella versione per GNU/Linux assieme con ethereal viene fornito anche il
+       programma tethereal che &egrave; privo di interfaccia grafica. Per catturare
+       il traffico sull'interfaccia eth0 e salvare il risultato sul file <code>/tmp/ofile.acp</code>
+       basta lanciarlo con il comando:
+       <pre>tethereal -i eth0 -V -w /tmp/ofile.acp</pre>
+       Successivamente 
+       poi vuoi vedere il dump da ethereal andando nel menu <i>Open</i> e selezionando il nome
+       del file.<br>
+       Usa questo tool con discrezione visto che la privacy
+       &egrave; una cosa molto seria.</li>
+  <li> <a HREF="http://www.insecure.org/nmap/" title="link esterno"><b>nmap</b></a><br>
+       Quali sono le porte &quot;aperte&quot; di un host? Se hai una
+       shell su quell'host puoi usare <code>netstat -a</code> altrimenti usa ... nmap.
+	   Pu&ograve esserti utile ad esempio da una postazione in internet per controllare
+	   la configurazine del tuo router/firewall. Attenzione ad usarlo in internet: alcuni amministratori possono
+       arrabbiarsi moltissimo quando vedono le loro reti &quot;esplorate&quot;! Questo
+	   tool &egrave; apparso in &quot;Matrix Reloaded&quot;. Nel sito ufficiale puoi
+	   vedere delle immagini tratte dal film.</li>
+  <li> <a href="http://www.net-snmp.org/" title="link esterno"><b>ucd-snmp</b></a><br>
+       &Egrave; una suite formata da un agent SNMP estensibile, da una libreria SNMP,
+       dalle utility per set/get su agenti SNMP e da un insieme di
+       tool per generare traps. Esiste anche una versione SNMP del
+       comando netstat: snmpnetstat. Nella rete di sperimentazione
+       C2 di cui il web server a cui sei collegato f&agrave; parte
+       &egrave; installato un Agent in ogni host. C'&egrave un professore
+	   dell'Universit&agrave di Pisa di nome
+       <a href="http://jake.unipi.it/~deri/" title="link esterno">Luca Deri</a>
+	   che lo ha usato in una tesina per &quot;Definizione di un MIB SNMP
+	   per il controllo e la gestione da remoto di un aeromobile 
+	   <a href="http://jake.unipi.it/~deri/Teaching/Rossi.pdf" title="link esterno"><b>Airbus A300</b></a>.</li>
+  <li> <a href="http://people.ee.ethz.ch/~oetiker/webtools/mrtg/" title="link esterno"><b>mrtg</b></a><br>
+       Il Multi Router Traffic Grapher (MRTG) &egrave; 
+	   un tool per monitorare
+       il carico di traffico sui links della rete. Esso genera pagine HTML
+       con immagini png che danno una visualizzazione LIVE del traffico.
+       Osserva le immagini del traffico dei routers e switch a livello
+	   <a href="http://www.noc.garr.it/mrtg/"
+	   title="link esterno">nazionale</a>.
+	   Nel caso tu voglia sperimentare la configurazione
+	   di mrtg prova l'esperienza <a href="uml-bering.html"
+	   title="Esperienza Netkit4TIC">Firewall</a>
+	   dove mrtg viene configurato per costruire i grafici di utilizzo
+	   delle sue due interfacce.</li>
+  <li> <a href="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/"
+          title="link esterno"><b>rrdtool</b></a><br>
+       Il Round Robin Database Tool &egrave; 
+       sia un piccolo database che un tool grafico per alcune tipologie
+       di dati. Se gi&agrave; conosci MRTG hai sicuramente una idea
+       del tipo di output che puoi ottenere; pensa a rrdtool come
+       a uno strumento pi&ugrave; flessibile e quindi pi&ugrave;
+       complesso.
+	   Nel caso tu voglia sperimentare la configurazione
+	   di rrdtool prova l'esperienza <a href="uml-QoS.html"
+	   title="Esperienza Netkit4TIC">QoS</a>
+	   dove rrdtool viene configurato per costruire i grafici di utilizzo
+	   delle varie fasce di traffico.</li>
+  <li> <a id="nino" href="http://sourceforge.net/projects/nino" title="link esterno"><b>NINO</b></a><br>
+       NINO &egrave; una soluzione per l'amministrazione della rete
+       basata su SNMP. Monitorizza il traffico, lo stato, i traps
+       della rete.
+  Hai la possibilit&agrave; di provare NINO come
+  come esperienza <a href="uml-Nino.html"
+  title="Esperienza Netkit4TIC">Nino</a>.  </li>
+  <li> <b>RFC 1147</b><br>
+       FYI on a Network Management Tool Catalog: Tools for Monitoring
+       and Debugging TCP/IP Internets and Interconnected Devices.</li>
+</ul>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/30 13:24:09 $
+</span>
+</address>
+
+
+</body>
+
+</html>

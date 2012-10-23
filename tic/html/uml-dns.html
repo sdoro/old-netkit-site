@@ -1,0 +1,177 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-dns.html,v 1.9 2007-01-15 08:30:55 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - quota ed ACL</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 17 - Internet Server</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su DNS</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-HA.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-email.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p> 
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Scarica il <a href="lab-dns.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente l'esercitazione
+<a href="dns-desktop.png" title="screenshot">(screenshot)</a>.
+</p>
+
+<p>
+Questa esercitazione ripercorre gli stessi passi di quella presente
+nel sito
+<a href="http://www.netkit.org/docs/netkit-dns-02.pdf"
+   title="link esterno">www.netkit.org</a>
+ma con la differenza di usare bind9 al posto di bind e
+l'aggiunta di TTL nei files <code>/etc/bind/db.root</code>.
+</p>
+
+
+<p>
+Per avere la lista dei root server si utilizza
+<code>dig</code> e il suo output viene memorizzato nel file
+<code>/etc/bind/db.root</code>. Nel caso reale avremo dato
+il comando:
+</p>
+
+<pre>
+realHost$ dig +nostats +nocmd +noquestion +nocomment<span class="blue">
+.			446697	IN	NS	I.ROOT-SERVERS.NET.
+.			446697	IN	NS	J.ROOT-SERVERS.NET.
+.			446697	IN	NS	K.ROOT-SERVERS.NET.
+.			446697	IN	NS	L.ROOT-SERVERS.NET.
+.			446697	IN	NS	M.ROOT-SERVERS.NET.
+.			446697	IN	NS	A.ROOT-SERVERS.NET.
+.			446697	IN	NS	B.ROOT-SERVERS.NET.
+.			446697	IN	NS	C.ROOT-SERVERS.NET.
+.			446697	IN	NS	D.ROOT-SERVERS.NET.
+.			446697	IN	NS	E.ROOT-SERVERS.NET.
+.			446697	IN	NS	F.ROOT-SERVERS.NET.
+.			446697	IN	NS	G.ROOT-SERVERS.NET.
+.			446697	IN	NS	H.ROOT-SERVERS.NET.
+A.ROOT-SERVERS.NET.	359979	IN	A	198.41.0.4
+B.ROOT-SERVERS.NET.	409437	IN	A	192.228.79.201
+C.ROOT-SERVERS.NET.	380844	IN	A	192.33.4.12
+D.ROOT-SERVERS.NET.	200414	IN	A	128.8.10.90
+E.ROOT-SERVERS.NET.	200414	IN	A	192.203.230.10
+F.ROOT-SERVERS.NET.	200414	IN	A	192.5.5.241
+G.ROOT-SERVERS.NET.	200414	IN	A	192.112.36.4
+H.ROOT-SERVERS.NET.	200414	IN	A	128.63.2.53
+I.ROOT-SERVERS.NET.	200414	IN	A	192.36.148.17
+J.ROOT-SERVERS.NET.	359979	IN	A	192.58.128.30
+K.ROOT-SERVERS.NET.	200414	IN	A	193.0.14.129
+L.ROOT-SERVERS.NET.	200414	IN	A	198.32.64.12
+M.ROOT-SERVERS.NET.	200414	IN	A	202.12.27.33</span>
+</pre>
+
+<p>
+Nel nostro caso virtuale:
+</p>
+
+<pre>
+pc1# dig @dnslug.lugroma3.org ns +nostats +nocmd +noquestion +nocomment<span class="blue">
+.                       604779  IN      NS      ROOT-SERVER.
+ROOT-SERVER.            604779  IN      A       192.168.0.5</span>
+pc2# dig @dnsnano.nanoinside.net ns +nostats +nocmd +noquestion +nocomment<span class="blue">
+.                       604754  IN      NS      ROOT-SERVER.
+ROOT-SERVER.            604754  IN      A       192.168.0.5</span>
+</pre>
+
+
+
+<p>
+Abbiamo registrato la cattura
+completa
+dell'intero traffico
+<a href="../capture/dns-all.acp"
+   title="file per Ethereal">(File ACP)</a> generato dal comando:
+</p>
+
+<pre>
+pc1# ping -c 1 pc2.nanoinside.net
+</pre>
+
+
+<p>
+&Egrave; stata aggiunta la completa numerazione inversa per la
+rete 192.168.0.0/24 per cui ad esempio:
+</p>
+
+
+<pre>
+dnslug# host 192.168.0.50<span class="blue">
+50.0.168.192.in-addr.arpa domain name pointer host50-0.pool192168.monopolio.it.</span>
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-01-15 08:30:55 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

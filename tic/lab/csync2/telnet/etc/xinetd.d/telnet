@@ -1,0 +1,11 @@
+# /etc/xinet.d/telnet
+# $Id: telnet,v 1.1 2008-01-04 16:21:04 doros Exp $
+service telnet
+{
+        socket_type         = stream
+        wait                = no
+        nice                = 10
+        user                = root
+        server              = /usr/sbin/telnetd
+        server_args         = -h
+}                                                                               

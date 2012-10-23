@@ -1,0 +1,90 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: bering.html,v 1.12 2005/11/26 13:41:21 doros Exp $ -->
+
+
+<head>
+  <title>Firewall</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Next" title="Next" href="netusage.html">
+</head>
+
+<body>
+
+<h3>Installazione di un Firewall LEAF/Bering uClibc</h3>
+
+
+
+<p>
+La prima cosa che occorre fare per iniziare il cammino verso una rete
+sicura &egrave; l'installazione di un firewall. Dal momento che siamo
+in una struttura scolastica con specializzazione informatica orientata
+quindi alla conoscenza di come si fanno le cose abbiamo deciso di
+autocostruirlo. Il prodotto che abbiamo scelto si chiama
+LEAF/Bering uClibc che essendo Open Source non serve acquistare.
+Le informazioni sul progetto si possono trovare su
+<a href="http://leaf.sourceforge.net/bering-uclibc/"
+   title="link esterno">sourceforge</a>.
+</p>
+
+<p>
+Le richieste hardware per questo prodotto sono assai limitate in quanto
+&egrave; sufficiente utilizzare un personal computer con CPU intel
+486, una RAM di 24MB e una unit&agrave; floppy.
+Per il nostro progetto abbiamo deciso di avere una macchina leggermente
+pi&ugrave; ampia e quindi come CPU un Intel Pentium, memoria RAM 32MB
+e abbiamo aggiunto una unit&agrave; CD-ROM. Questo perch&egrave; vogliamo
+costruire un firewall con molte funzionalit&agrave; e quindi tutto il
+software non pu&ograve; essere contenuto all'interno di un singolo floppy.
+&Egrave; importante osservare che a livello operativo l'intero firewall
+non avr&agrave; bisogno di particolari attenzioni e viene controllato
+dal pulsante on/off. Grazie al fatto di basarsi solo su floppy protetto
+in scrittura e di un CD-ROM il sistema non permette l'insediamento permanente di
+virus o worms di sorta che nel caso venissero rilevati saranno automaticamente
+rimossi dal semplice spegnimento e riaccensione dell'apparato.
+</p>
+
+<p>
+Le istruzioni per la costruzione del
+firewall con il supporto per il CD-ROM si trovano
+nella documentazione dei 
+<a href="../../tic/html/bering.html#CD"
+   title="approfondimento">corsi C2 (UMTS/TIC)</a>.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/11/26 13:41:21 $
+</span>
+</address>
+
+
+</body>
+
+</html>

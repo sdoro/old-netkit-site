@@ -1,0 +1,17 @@
+# $Id: nfs3.startup,v 1.2 2009-10-04 14:13:25 doros Exp $
+
+#
+# configure IP address
+ifconfig eth0 192.168.50.3 up
+route add default gw 192.168.50.254
+#
+mkdir /staff
+> /staff/nfs3.txt
+mkdir /dir212
+> /dir212/nfs3.txt
+#
+/etc/init.d/portmap start
+/etc/init.d/nfs-common start
+/etc/init.d/nfs-kernel-server start
+#
+# bot

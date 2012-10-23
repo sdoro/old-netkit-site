@@ -1,0 +1,5 @@
+# $Id: attacker.startup,v 1.1 2008-01-03 16:32:49 doros Exp $
+ifconfig eth0 192.168.0.137 up
+ifconfig eth0 hw ether 00:00:00:FA:CA:DE
+#
+# bot

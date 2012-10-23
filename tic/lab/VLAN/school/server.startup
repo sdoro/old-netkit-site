@@ -1,0 +1,16 @@
+# $Id: server.startup,v 1.3 2007-12-15 15:41:13 doros Exp $
+ifconfig eth0 up
+ifconfig eth0 hw ether 00:00:00:01:00:00
+# load vlan module
+modprobe 8021q
+# define and configure VLANs
+vconfig add eth0 2
+vconfig add eth0 3
+# Assign IP address
+ifconfig eth0.2 192.168.2.254 up
+ifconfig eth0.3 192.168.3.254 up
+# fix uml_switch vlan bug
+ifconfig eth0.2 mtu 1496
+ifconfig eth0.3 mtu 1496
+#
+# bot

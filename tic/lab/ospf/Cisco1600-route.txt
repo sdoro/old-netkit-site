@@ -1,0 +1,19 @@
+Cisco1600# show ip route
+Codes: K - kernel route, C - connected, S - static, R - RIP, O - OSPF,
+       B - BGP, > - selected route, * - FIB route
+
+C>* 127.0.0.0/8 is directly connected, lo
+O>* 192.168.1.0/24 [110/20] via 192.168.3.1, eth0, 00:04:58
+                            via 192.168.2.2, eth1, 00:04:58
+O   192.168.2.0/24 [110/10] is directly connected, eth1, 00:05:50
+C>* 192.168.2.0/24 is directly connected, eth1
+O   192.168.3.0/24 [110/10] is directly connected, eth0, 00:05:50
+C>* 192.168.3.0/24 is directly connected, eth0
+O>* 192.168.16.0/24 [110/20] via 192.168.64.4, eth2, 00:04:47
+O   192.168.64.0/24 [110/10] is directly connected, eth2, 00:05:50
+C>* 192.168.64.0/24 is directly connected, eth2
+O>* 192.168.65.0/24 [110/40] via 192.168.64.4, eth2, 00:04:48
+O>* 192.168.66.0/24 [110/30] via 192.168.64.4, eth2, 00:04:48
+O>* 192.168.67.0/24 [110/20] via 192.168.64.4, eth2, 00:04:58
+O>* 192.168.77.0/24 [110/20] via 192.168.64.4, eth2, 00:04:57
+O>* 192.168.128.0/24 [110/20] via 192.168.3.1, eth0, 00:05:08

@@ -1,0 +1,9 @@
+# SSO-server.startup
+# $Id: SSOserver.startup,v 1.1 2006-06-29 13:58:23 doros Exp $
+#
+# Config IP address
+ifconfig eth0 10.10.10.1 \
+  netmask 255.255.255.192 broadcast 10.10.10.63 up
+route add default gw 10.10.10.62
+# starting postfix server
+/etc/init.d/postfix start

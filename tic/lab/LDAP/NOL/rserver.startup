@@ -1,0 +1,7 @@
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+# configure IP address
+ifconfig eth0 192.168.50.2 up
+ifconfig eth1 192.168.77.2
+#
+# bot

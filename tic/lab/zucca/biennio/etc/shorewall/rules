@@ -1,0 +1,50 @@
+# /etc/shorewall/rules
+# $Id:$
+
+##############################################################################
+#ACTION		SOURCE		DEST		PROTO	DEST	SOURCE	ORIGINAL
+
+# NATTING verso DMZ
+DNAT		net		dmz:10.0.2.222	udp	domain
+DNAT		net		dmz:10.0.2.222	tcp	domain
+#
+# SMB (sede<->biennio)
+#
+SMB/ACCEPT      vpn       loc
+SMB/ACCEPT      loc       net
+#
+# LDAP (sede<->biennio)
+#
+LDAP/ACCEPT     vpn       loc
+LDAP/ACCEPT     loc       vpn
+#
+# Enable SCP or SSH for Dynamic CHAINS
+SSH/ACCEPT      loc       fw
+SSH/ACCEPT      loc       dmz
+SSH/ACCEPT      vpn       fw
+SSH/ACCEPT      vpn       loc
+SSH/ACCEPT      vpn       dmz
+# statistics
+SNMP/ACCEPT     vpn       fw
+SNMP/ACCEPT     fw        vpn
+SNMP/ACCEPT     vpn       loc
+SNMP/ACCEPT     vpn       loc
+# mail
+SMTP/ACCEPT     fw        net
+# time
+NTP/ACCEPT      fw        net
+NTP/ACCEPT      loc       fw
+NTP/ACCEPT      dmz       net
+# DNS
+DNS/ACCEPT      fw        net
+DNS/ACCEPT      fw        dmz
+DNS/ACCEPT      dmz       net
+DNS/ACCEPT      loc       dmz
+# Ping
+Ping/ACCEPT     loc       net
+# http (apt-get)
+HTTP/ACCEPT     dmz       net
+# ULOG
+MySQL/ACCEPT    fw        vpn:192.168.100.219
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

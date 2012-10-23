@@ -1,0 +1,111 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang="en">
+<!-- $Id: howtoBeringCustomize.html,v 1.2 2006/10/18 15:09:16 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uBering customization</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+
+<h2>uBering customization</h2>
+
+<p>
+The uBering distribution boot from a Read Only media
+and then copy everthing into RAM disk. At the end the media
+from which it was booted is forgotten.
+<br>
+The customization process is made of the following steps:
+<ul>
+   <li>build a minix filesystem of size sufficient to store
+   all needed packages and relative modules;</li>
+   <li>copy the lrp packages from Bering/uClibx_*_iso_bering-uclibc-iso.bin
+   into above filesystem;</li>
+   <li>add a custom package to configure the uBering box for the
+   virtual environment. This package is named "customvm.lrp"
+   and <span class="yellow">must be loaded as last lrp package</span>.</li>
+</ul>
+
+
+
+
+<h2>uBering virtual machine startup</h2>
+
+<p>
+In the summer 2006 we moved the startup script from the low level netkit
+interface named "v-command" to a more high level netkit interface named "l-command".
+The l-command uses the <code>lab.conf</code> file to configure the
+startup of any virtual machine. For example:
+</p>
+
+<pre>
+# lab.conf
+[...]
+fw[0]="A"
+fw[1]="B"
+fw[k]=<span class="yellow">"/usr/local/netkit/kernel/ub.krnl"</span>
+fw[mem]=32
+fw[append]=<span class="yellow">LRP=root,config,etc,local,iptables,shorwall,ulogd,libz,libcrpto,<span class="red">customvm</span></span>
+[...]
+</pre>
+
+
+
+
+<h2>Building customvm.lrp</h2>
+
+<p>
+The next example shows how to build a customvm.lrp file
+with a <code>/etc/network/interfaces</code> copied from $repository directory
+and store the <code>customvm.lrp</code> file in the same directory.
+Note: we strongly suggest to use "root" account because it is important
+that the files have the right permissions.
+</p>
+
+<pre>
+# mkdir /tmp/$mountPoint
+# cd /tmp/$mountPoint
+# mkdir -p etc/network
+# cp $repository/interfaces etc/network/interfaces
+# tar czf $repository/customvm.lrp *
+# cd -
+</pre>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/18 15:09:16 $
+</span>
+</address>
+
+
+</body>
+</html>

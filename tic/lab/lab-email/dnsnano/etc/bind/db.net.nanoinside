@@ -1,0 +1,17 @@
+; $Id: db.net.nanoinside,v 1.2 2007-01-19 08:45:23 doros Exp $
+$TTL 60000
+@               IN      SOA     dnsnano.nanoinside.net.    root.dnsnano.nanoinside.net. (
+                        2002102801 ; serial
+                        28 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        15 ; default_ttl
+                        )
+@               IN      NS      dnsnano.nanoinside.net.
+@               IN      MX 5    mail.nanoinside.net.
+dnsnano         IN      A       192.168.0.22
+pc2             IN      A       192.168.0.222
+mail            IN      CNAME   dnsnano.nanoinside.net.
+smtp            IN      CNAME   dnsnano.nanoinside.net.
+pop             IN      CNAME   dnsnano.nanoinside.net.
+imap            IN      CNAME   dnsnano.nanoinside.net.

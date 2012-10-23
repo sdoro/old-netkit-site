@@ -1,0 +1,24 @@
+# $Id: group.ldif,v 1.3 2004/10/18 15:17:19 doros Exp $
+
+dn: cn=nane,ou=Group,dc=istituto,dc=it
+objectClass: posixGroup
+objectClass: top
+cn: nane
+userPassword: {crypt}x
+gidNumber: 1003
+
+dn: cn=toni,ou=Group,dc=istituto,dc=it
+objectClass: posixGroup
+objectClass: top
+cn: toni
+userPassword: {crypt}x
+gidNumber: 1004
+
+dn: cn=tic,ou=Group,dc=istituto,dc=it
+objectClass: posixGroup
+objectClass: top
+cn: tic
+userPassword: {crypt}x
+gidNumber: 1005
+memberUid: nane
+memberUid: toni

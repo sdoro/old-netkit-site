@@ -1,0 +1,6 @@
+# $Id: left.startup,v 1.2 2007-02-20 11:05:20 doros Exp $
+ifconfig eth0 192.168.0.217 up hw ether 00:00:00:BB:BB:BB
+route add default gw 192.168.0.254
+# starting apache server
+rm /var/www/index.html
+/etc/init.d/apache start

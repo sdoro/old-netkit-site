@@ -1,0 +1,8 @@
+# configure IP address
+ifconfig eth0 80.204.240.177 up
+#route add default gw 80.204.240.182
+# ssh
+rm -f /etc/ssh/sshd_not_to_be_run
+/etc/init.d/ssh start
+# prepare file
+dd if=/dev/zero of=/var/www/bigfile bs=4096 count=4096

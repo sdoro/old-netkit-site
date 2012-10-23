@@ -1,0 +1,7 @@
+# $Id: student2.startup,v 1.4 2007-12-15 15:40:28 doros Exp $
+ifconfig eth0 192.168.3.1 up
+ifconfig eth0 hw ether 00:00:00:04:00:00
+# fix uml_switch vlan bug
+ifconfig eth0 mtu 1496
+#
+# bot

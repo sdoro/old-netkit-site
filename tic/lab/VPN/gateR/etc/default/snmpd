@@ -1,0 +1,8 @@
+# /etc/default/snmpd
+# $Id: snmpd,v 1.2 2006/06/30 06:47:35 doros Exp $
+
+# snmpd control (yes means start daemon).
+SNMPDRUN=yes
+
+# snmpd options (use syslog, close stdin/out/err).
+SNMPDOPTS='-Lsd -Lf /dev/null -p /var/run/snmpd.pid 10.10.20.3'

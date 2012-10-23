@@ -1,0 +1,32 @@
+
+sudo echo 'KERNEL=="kqemu", NAME="%k", MODE="0666"' > /etc/udev/kqemu.rules
+sudo ln -s /etc/udev/kqemu.rules /etc/udev/rules.d/010_kqemu.rules
+
+ONLY IF USING UDEV - create and edit the file /etc/modprobe.d/kqemu so it looks like below:
+
+options kqemu major=0
+
+
+
+I've changed the "tun" entry in /etc/udev/rules.d/50-mdk.rules to read
+like this:
+
+KERNEL="tun",                                   SYMLINK="net/%k",  MODE="0666"
+
+
+#
+Edit /etc/udev/permissions.rules and add KERNEL==tun, MODE=0666
+#
+Edit /etc/udev/links.conf and change M net/tun c 10 200 with M net/tun c 10 200 mode=666
+
+
+*
+Edit /etc/qemu-ifup and change it to contain (make sure it is executable with chmod a+x /etc/qemu-ifup):
+
+#!/bin/sh
+sudo sh -c 'ifconfig tap0 172.20.0.1 up;
+            iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+            echo "1" >/proc/sys/net/ipv4/ip_forward'
+
+
+

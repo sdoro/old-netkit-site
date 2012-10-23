@@ -1,0 +1,32 @@
+<html>
+<!-- $Id: js.html,v 1.1 2006/11/18 21:24:41 doros Exp $ -->
+<head>
+<title>JavaScript counter</title>
+</head>
+<body onLoad="retun incrementalCount(document.demo);">
+
+  <center>
+  <script>
+    var n;
+      n = -1;
+
+    function incrementalCount(form) {
+      n = n + 1;
+      if (n==0) {
+        s = " The button has not been clicked at all. "
+      } else {
+        s = " The button has not been clicked " + n + " times."
+      }
+      form.elements["OutputArea"].value = s;
+    }
+  </script>
+
+  <center>
+    <form name="demo">
+      <input type="button" name="ButtonClick" value=" Click here "
+        onClick="incrementalCount(this.form);">
+      <textarea name="OutputArea" rows="1" COLS="42"> </textarea>
+    </form>
+
+</body>
+</html>

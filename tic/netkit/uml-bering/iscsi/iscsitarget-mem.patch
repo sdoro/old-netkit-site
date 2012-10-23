@@ -1,0 +1,15 @@
+diff -urN iscsitarget-0.3.8.orig/kernel/target_cmnd.c iscsitarget-0.3.8/kernel/target_cmnd.c
+--- iscsitarget-0.3.8.orig/kernel/target_cmnd.c	2004-11-29 17:58:22.000000000 +0100
++++ iscsitarget-0.3.8/kernel/target_cmnd.c	2006-07-27 22:48:50.000000000 +0200
+@@ -57,8 +57,9 @@
+ 	memset(tcmnd->pvec, 0, count);
+ 
+ 	for (i = 0; i < tcmnd->pg_cnt; i++) {
+-		if ((page = alloc_page(GFP_KERNEL)) == NULL) {
+-			yield();
++		do {
++			if (!(page = alloc_page(GFP_KERNEL)))
++				yield();
+ 		} while (!page);
+ 
+ 		tcmnd->pvec[i] = page;

@@ -1,0 +1,176 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: index.html,v 1.36 2008-09-21 06:46:58 doros Exp $ -->
+<head>
+  <title>Netkit4TIC</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <META http-equiv="Content-Script-Type" content="type">
+</head>
+
+<body>
+                                        
+<h1 class="center">Gestione della Infrastruttura Tecnologica</h1>
+<h2 class="center">Abacus/Sirio &nbsp;-&nbsp; Linux@School &nbsp;-&nbsp; corsi UMTS/TIC C2</h2>
+<h4 class="center"><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" src="88x31.png"></a> 
+            <a name=tutor href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;" title="e-mail tutor">Sandro Doro</a></h4>
+
+<p>
+Questo live-DVD contiene un ambiente preconfigurato GNU/Linux per lo studio di
+reti e della infrastruttura tecnologica attraverso la tecnica di
+virtualizzazione di un intero nodo di rete. In generale tutto il software
+&egrave; rilasciato sotto la GNU General Public License ma
+rimandiamo ad ogni pacchetto le informazioni legate alla
+particolare licenza di distribuzione.
+I sistemi di virtualizzazione utilizzati sono
+<a href="http://user-mode-linux.sourceforge.net/"
+    title="link esterno">User-Mode-Linux (UML)</a> e
+<a href="http://www.qemu.org/"
+    title="link esterno">QEMU</a>.
+</p>
+
+<p>
+Le esperienze sperimentabili attraverso questo live-DVD,
+oltre a quelle scaricabili dal sito di
+<a href="http://http://www.netkit.org/labs.html"
+   title="Netkit Labs and Lecture Slides">Netkit</a>
+stesso,
+per
+ragioni legate alla loro dinamicit&agrave; nel tempo, sono 
+scaricabili da
+<a href="http://www.tic.fdns.net/tic/html/lab.html"
+   title="Netkit4TIC home page">Netkit4TIC home page</a>
+con licenza 
+<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"
+   title="link esterno">Attribution-NonCommercial-ShareAlike 3.0</a>.
+</p>
+
+                     
+
+<p>
+Per una introduzione all'uso di
+<a href="http://www.netkit.org"
+   title="CompuNet Research Group @ Univ. of Rome III">Netkit</a>
+&egrave; vivamente consigliato lo studio delle
+<a href="netkit-introduction.pdf"
+   title="documento pdf di: CompuNet Research Group @ Univ. of Rome III">slide</a>
+messe gentilmente a disposizione da
+CompuNet Research Group @ Universit&agrave; di Roma 3.
+Come test sul corretto funzionamento del sistema &egrave;  consigliata
+la sperimentazione delle esperienze
+<a href="netkit-lab_single-host.pdf"
+   title="documento pdf di: CompuNet Research Group @ Univ. of Rome III">Single&nbsp;Host</a> e
+<a href="netkit-lab_two-hosts.pdf"
+         title="documento pdf di: CompuNet Research Group @ Univ. of Rome III">Two&nbsp;hosts</a>.
+</p>
+
+
+<p>
+All'Istituto "C.Zuccante" di Mestre-Venezia si tengono corsi di
+Linux con tutor il prof. Sandro Doro e con l'ausilio di questo DVD.
+
+Nell'ambito del progetto
+<a href="http://www.istruzione.it/innovazione/progetti/linux.shtml"
+   title="link esterno">Linux@School</a>
+si tiene il corso di
+<a href="http://www.tic.fdns.net/tic/html/las.html"
+   title="corso GNU/Linux@Zuccante">Linux Avanzato</a>
+
+e per progetto biennio si tiene il corso base
+<a href="http://netkit.zuccante.it/moodle"
+   title="corso GNU/Linux@biennio">Linux@biennio.zuccante.it</a>
+di introduzione al pinguino.<br>
+
+Per la
+Formazione Continua Individuale e Aziendale nel Veneto
+&egrave; proposto un
+<a href="http://www.formazione.individuale.it/home/catalogo-corsi.aspx"
+   title="Catalogo Regione del Veneto">Catalogo</a>
+di corsi per professionisti e aziende.<br>
+
+Dall'anno scolastico 2008/09 il prof. Doro &egrave; il referente
+Linux d'Istituto, il coordinatore del Gruppo
+Utenti Linux dello Zuccante (GULZ)
+e dal 2006 riveste l'incarico
+di amministratore della rete didattica unificata delle due sedi.
+</p>
+
+
+
+<p>
+Buon Networking!
+</p>
+
+
+<p class="note">
+L'ultima release del live-DVD &egrave; la 3.0 rilasciata il
+<a href="Z08.pdf"
+    title="documento pdf di S.Doro: annuncio rilascio">22 Settembre 2008</a>.
+&Egrave; ottenuta personalizzando 
+<a href="http://www.knoppix.net/"
+    title="link esterno">Knoppix</a> 5.1.1,
+
+di
+<a href="http://www.netkit.org/download/netkit/netkit-2.6.tar.bz2"
+    title="link esterno a: Netkit core version 2.6 and documentation">"Netkit core"</a> versione 2.6
+
+e aggiungendo
+<a href="http://code.google.com/p/visual-netkit/"
+   title="link esterno a: Visual Netkit version 1.0">"Visual Netkit"</a> versione 1.1.<br>
+
+L'host kernel &egrave; della versione 2.6.19
+con il supporto SKAS3 dalle patches di
+(<a href="http://www.user-mode-linux.org/~blaisorblade/patches/skas3-2.6/skas-2.6.12-v8.2/"
+    title="link esterno">Paolo Giarrusso</a>).
+
+Sono disponibili tre differenti guest kernel UML:
+quello per la
+<a href="http://www.debian.org/"
+   title="link esterno">Debian</a>
+Lenny (v.5.0)
+con guest UML kernel 2.6.26 DFSG (Debian Free Software Guidelines),
+
+quello per la
+<a href="http://leaf.sourceforge.net/bering-uclibc/"
+   title="link esterno">LEAF/Bering-uClibc</a> (v.3.1)
+con guest UML kernel 2.4.34
+
+e quello per
+<a href="http://www.netkit.org/download/netkit-kernel/netkit-kernel-K2.5.tar.bz2"
+   title="link esterno a: Netkit kernel version 2.5 (includes a 2.6.22 UML kernel)">"Netkit kernel"</a> versione K2.5
+con guest UML kernel 2.6.22.
+
+Assieme ai kernel sono forniti
+i relativi filesystem di Debian Lenny e di Leaf/Bering.<br>
+
+Il secondo sistema di virtualizzazione a disposizione &egrave;
+<a href="http://www.qemu.org/"
+   title="link esterno">QEMU</a>, completo del modulo acceleratore kqemu,
+utilizzato principalmente per sperimentare il nodo di tipo "Windows".
+</p>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/">
+   <img alt="Creative Commons License"
+        src="80x15.png"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+</span>
+</address>
+
+
+</body>
+</html>

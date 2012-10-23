@@ -1,0 +1,44 @@
+# $Id: rrd.startup,v 1.2 2007-01-31 22:54:55 doros Exp $
+ifconfig eth0 192.168.77.2 up
+ifconfig eth1 192.168.1.102 up
+route add default gw 192.168.1.254
+# route for tap:
+route add -net 192.168.2.0/24 gw 192.168.1.254
+route add -net 10.100.1.0/24 gw 192.168.1.254
+# apache
+/etc/init.d/apache start
+# cleanup other scripts
+rm -f /etc/cron.d/*
+# start crond
+/etc/init.d/cron start
+# start deferred execution scheduler atd
+/etc/init.d/atd start
+# rrd collector: set/reset statistics
+pushd /var/lib/rrdcollect/leaf
+  sh ../eth0.rrd
+  sh ../eth1.rrd
+  sh ../eth2.rrd
+  sh ../eth0-10.rrd
+  sh ../eth0-20.rrd
+  sh ../eth0-30.rrd
+  sh ../eth0-40.rrd
+popd
+#
+touch /var/www/rrd/eth0-1h.png
+chgrp www-data /var/www/rrd/eth0-1h.png
+chmod g+rw /var/www/rrd/eth0-1h.png
+touch /var/www/rrd/eth1-1h.png
+chgrp www-data /var/www/rrd/eth1-1h.png
+chmod g+rw /var/www/rrd/eth1-1h.png
+touch /var/www/rrd/eth2-1h.png
+chgrp www-data /var/www/rrd/eth2-1h.png
+chmod g+rw /var/www/rrd/eth2-1h.png
+#
+touch /var/www/rrd/eth0-ac-1h.png
+chgrp www-data /var/www/rrd/eth0-ac-1h.png
+chmod g+rw /var/www/rrd/eth0-ac-1h.png
+# ssh
+chmod go= /root/.ssh/id_dsa
+chmod u+x /usr/local/bin/getStats.pl
+#
+# bot

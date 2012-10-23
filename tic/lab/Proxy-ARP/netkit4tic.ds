@@ -1,0 +1,28 @@
+;; $Id: netkit4tic.ds,v 1.1 2006/06/29 23:09:25 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "schoolRouter")
+  (begin
+      (geometry "484x160+525+60")
+    )
+  )
+
+(if (contains (application_name) "fw")
+  (begin
+      (geometry "484x173+525+300")
+    )
+  )
+
+(if (contains (application_name) "left")
+  (begin
+      (geometry "484x160+8+556")
+    )
+  )
+
+(if (contains (application_name) "right")
+  (begin
+      (geometry "484x160+525+556")
+    )
+  )
+
+)

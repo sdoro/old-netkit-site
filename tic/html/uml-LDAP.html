@@ -1,0 +1,1144 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-LDAP.html,v 1.53 2009-10-03 09:37:26 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-ldap</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Amministrazione, gestione e autenticazione in rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su OpenLDAP</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-KTS.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-Samba.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+
+<p>
+Nella mappa
+(<a href="pdf/ldap.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/ldap.xml" title="file per Dia">xml</a>)
+della rete proposta ci sono tre host collegati
+allo stesso dominio di collisione (192.168.50.0/29).
+Nell'host <code>server</code> (192.168.50.1) sono configurati
+i servizi LDAP e DNS. Il servizio DNS &egrave; autoritativo per
+il dominio <code>istituto.it</code> assegnato a questo segmento di rete.
+Nell'host <code>rserver</code> (192.168.50.2)
+&egrave; configurato il servizio replica LDAP
+mentre nell'host <code>client</code> (192.168.50.3) sono configurati
+i programmi per testare il lato client.
+</p>
+
+<p>
+Questa sperimentazione si divide nelle seguenti sezioni:
+</p>
+
+<ul>
+ <li><a href="#gq">Configurazione del browser LDAP gq</a></li>
+ <li><a href="#ldap">Installazione e configurazione di una coppia master/replica di server LDAP</a></li>
+ <li><a href="#acl">Configurazione delle Access Control Lists</a></li>
+ <li><a href="#auth">Configurazione e migrazione della autenticazione</a></li>
+ <li><a href="#nss">Configurazione Name Service Switch</a></li>
+ <li><a href="#tls">Configurazione della comunicazione con TLS</a></li>
+ <li><a href="#pam">Configurazione Pluggable Authentication Module</a></li>
+ <li><a href="#mt">Esempio di utilizzo in mozilla-thunderbird</a></li>
+ <li><a href="#OpenPEC">Esempio OpenPEC</a></li>
+</ul>
+
+<p>
+Scarica il
+<a href="LDAP.tgz" title="esperienza Netkit4TIC">tarball</a> (40KB)
+contenente il tutto, e come al solito si parte scompattandolo in una sottodirectory della HOME dell'utente. 
+Il nodo <code>rserver</code> &egrave; connesso
+alla rete reale ed &egrave; quindi gateway per tutte le macchine
+della rete virtuale.
+</p>
+
+<p>
+Dopo aver settato correttamente l'ambiente Netkit
+lancia lo script:
+</p>
+
+<pre>
+realhost$ ./lab start
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=gq></a>Configurazione del browser LDAP gq</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per prendere dimestichezza con LDAP consigliamo l'uso di un
+browser grafico per alberi LDAP come ad esempio
+<a href="http://biot.com/gq/" title="link esterno">gq</a>
+(<a href="gq-LDAP.png" title="immagine PNG">screenshot</a>).
+Per mandarlo in esecuzione da riga di comando basta
+digitare <code>gq</code>.
+</p>
+
+<p>
+Per impostare un nuovo server, ad esempio 192.168.50.1, si utilizza il menu:
+seleziona &quot;Files-&gt;Preferences&quot; poi seleziona il
+tab &quot;Servers&quot; e poi schiaccia il bottone &quot;New&quot;.
+I campi che vanno compilati sono:
+</p>
+
+<ul>
+  <li>&quot;Name&quot;: nick name identificativo della entry</li>
+  <li>&quot;LDAP host/URI&quot;: mettere ldap://192.168.50.1</li>
+  <li>&quot;Base DN&quot;: mettere dc=istituto,dc=it</li>
+</ul>
+
+<p>
+Dopo aver fatto questa operazione sia per il server che per la replica
+possiamo ottenere la lista degli elementi memorizzati nei server LDAP.<br>
+Per l'accesso anche in scrittura occorre specificare
+il "bind DN" come <code>cn=admin,ou=DSA,dc=istituto,dc=it</code>
+e ricordarsi che la password vale <code>Wserver</code>.
+</p>
+
+<p>
+Le impostazioni del programma <code>gq</code> sono memorizzate
+nel file <code>~/.gq</code> (in formato xml) e quindi
+invece di impostare i parametri da interfaccia grafica &egrave;
+possibile editarlo a mano oppure
+<a href="../lab/LDAP/.gq" title="file per gq">scaricarne</a>
+uno gi&agrave; impostato per l'occorrenza 
+e copiarlo nella propria  <code>HOME</code>
+<a href="ldap-easy.png" title="screenshot">(screenshot)</a>.
+</p>
+
+<p>
+Per sperimentare il browsing di server in Internet
+possiamo usare quelli della distribuzione Debian.
+Occorre impostare come LDAP URI <code>ldap://db.debian.org</code> e
+come Base DN <code>"dc=debian,dc=org"</code>.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=ldap></a>Installazione e configurazione di una coppia master/replica di server LDAP</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per nostra comodit&agrave; ogni macchina virtuale &egrave; fornita con
+tutto il corredo software di cui hanno bisogno le esperienze Netkit4TIC
+realizzate. Nel caso si operasse su una macchina reale occorrerebbe
+dare il comando <code>apt-get install ldap-utils</code> 
+(la parte client di LDAP) su tutte le macchine
+mentre sulle macchine server e/o replica occorrerebbe dare il comando
+<code>apt-get install slapd</code> (la parte server di LDAP).
+</p>
+
+<p>
+Il caricamento del database LDAP sui due server &egrave; stato
+pensato diviso in una prima parte, uguale per entrambe i nodi,
+che carica la struttura base minimale e sui cui poggiano le
+autorizzazioni per l'accesso (futuro) del sistema. La seconda
+parte, eseguita solo sul master e riportata dai meccanismi
+stessi del sistema di replica sulla replica, consiste nel caricamento
+di informazioni aggiuntive quali ad esempio le informazioni
+legate a due utenti di prova.
+</p>
+
+<p>
+Per testare se quanto installato funziona occorre configurare il
+client e quindi impostare il file <code>/etc/ldap/ldap.conf</code>
+come segue:
+</p>
+
+<pre>
+# /etc/ldap/ldap.conf
+BASE    dc=istituto,dc=it
+# Server LDAP replica
+URI     ldap://192.168.50.2 ldap://192.168.50.1
+</pre>
+
+<p>
+Questa &egrave; in effetti la configurazione predisposta nella 
+esperienza virtuale al termine dello startup. Per sperimentarla basta
+lanciare sul nodo <code>rserver</code> un tcpdump e sul nodo <code>client</code>
+un ldapsearch (scansione dell'intero albero replica):
+</p>
+
+<pre>
+rserver# tcpdump -i eth1 -n -s 1500 -w /hosthome/ldap-ldapsearch.acp
+
+client# ldapsearch -x
+</pre>
+
+<p>
+Utilizzando Ethereal e la traccia
+<a href="../capture/ldap-ldapsearch.acp"
+   title="file per Ethereal">(File ACP)</a>
+possiamo visualizzare e mettere in evidenza tutto il traffico:
+</p>
+
+<pre>
+realHost$ ethereal ~/ldap-ldapsearch.acp
+</pre>
+
+<p>
+Proviamo a colorare/filtrare i pacchetti
+(<a href="ldap-ether-05.png" title="screenshot">screenshot</a>):
+<ul>
+  <li>
+    Definiamo 2 filtri di nome <code>4dns</code> e
+    <code>4ldap</code> a cui associamo il rispettivo traffico dns e ldap:
+    andiamo sul menu, selezioniamo
+    &quot;Analize&quot;-&gt;Display&nbsp;Filters...&quot; e schiacciamo
+    il bottone &quot;New&quot;
+    (<a href="ldap-ether-01.png" title="screenshot">screenshot</a>) e
+    (<a href="ldap-ether-02.png" title="screenshot">screenshot</a>).</li>
+  <li>
+    Ora coloriamo di rosso i pacchetti del filtro <code>4dns</code>
+    e di verde i pacchetti del filtro <code>4ldap</code>:
+    andiamo sul menu, selezioniamo
+    &quot;View&quot;-&gt;Coloring&nbsp;Rules...&quot; e schiacciamo
+    il bottone &quot;New&quot;
+    (<a href="ldap-ether-03.png" title="screenshot">screenshot</a>) e
+    (<a href="ldap-ether-04.png" title="screenshot">screenshot</a>).</li>
+</ul>
+
+<p>
+&Egrave; possibile anche selezionare la visualizzazione di una
+certa tipologia di pacchetti impostando il campo &quot;Filter&quot;
+al valore di un filtro
+(<a href="ldap-ether-06.png" title="screenshot">screenshot</a>)
+o alla combinazione logica di pi&ugrave; filtri
+(<a href="ldap-ether-07.png" title="screenshot">screenshot</a>)..
+
+</p>
+
+
+<p>
+Se vogliamo invece
+interrogare il server master dobbiamo sostituire il default settato in precedenza
+e il comando precedente diventa:
+</p>
+
+<pre>
+client# ldapsearch -x -H ldap://server/
+</pre>
+
+<p>
+o anche:
+</p>
+
+<pre>
+client# ldapsearch -x -H ldap://server.istituto.it/ \
+                   -b "dc=istituto,dc=it"
+</pre>
+
+<p>
+Per visualizzare tutte le persone che hanno come nome e cognome
+&quot;Toni Ballarin&quot; (in gergo LDAP &quot;Common Name&quot; o
+in forma abbreviata &quot;cn&quot;):
+</p>
+
+<pre>
+realHost$ ldapsearch -x -H ldap://192.168.50.1/ \
+                     -b "dc=istituto,dc=it" &quot;(cn=Toni Ballarin)&quot;<span class="blue">
+dn: uid=toni,ou=People,dc=istituto,dc=it
+uid: toni
+cn: Toni Ballarin
+objectClass: account
+objectClass: posixAccount
+objectClass: top
+objectClass: shadowAccount
+shadowLastChange: 12708
+shadowMax: 99999
+shadowWarning: 7
+loginShell: /bin/bash
+uidNumber: 1004
+gidNumber: 1004
+homeDirectory: /home/toni
+gecos: Toni Ballarin,,,</span>
+</pre>
+
+<p>
+o in forma grafica attraverso <code>gq</code>
+(<a href="ldap-toni.png" title="screenshot">screenshot</a>).
+Nel caso volessimo visualizzare sono alcuni attributi, ad esempio,
+<code>cn</code> e <code>gecos</code> basta aggiungerli in coda
+al comando <code>ldapsearch</code>. Per esempio se vogliamo
+visualizzare tutti gli uid per cui il campo gecos non &egrave;
+vuoto (is present) e senza commenti:
+</p>
+
+<pre>
+realHost$ ldapsearch -LLL -x  &quot;(&amp;(objectClass=posixAccount)(gecos=*))&quot; cn gecos <span class="blue">
+dn: uid=nane,ou=People,dc=istituto,dc=it
+cn: Nane Vianello
+gecos: Nane Vianello,,,
+
+dn: uid=toni,ou=People,dc=istituto,dc=it
+cn: Toni Ballarin
+gecos: Toni Ballarin,,, </span>
+</pre>
+
+<p>
+Nel caso volessimo fare una ricerca per sottostringa potremmo
+chiedere quali sono gli ipHost che nel campo cn contengono la
+sottostringa "ser":
+</p>
+
+<pre>
+realHost$ ldapsearch -LLL -x  &quot;(&amp;(objectClass=ipHost)(cn=*ser*))&quot; cn<span class="blue">
+dn: cn=server,ou=Hosts,dc=istituto,dc=it
+cn: server
+
+dn: cn=rserver,ou=Hosts,dc=istituto,dc=it
+cn: rserver </span>
+</pre>
+
+
+
+<p>
+Le direttive LDAP che definiscono la replica sono:
+</p>
+
+<pre>
+# Set up replication for entire database to 192.168.50.2.
+# Please note that this does not use a secure connection!
+replica host=rserver:389 bindmethod=simple \
+        binddn="cn=replicator,ou=DSA,dc=istituto,dc=it" \
+        credentials=Zserver
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=acl></a>Configurazione delle Access Control Lists</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Una corretta impostazione delle ACL deve garantire che gli utenti abbiano
+accesso ai dati di cui hanno bisogno e contemporaneamente deve rispettare
+la privacy. Abbiamo definito tre utenti nella
+<code>ou=DSA,dc=istituto,dc=it</code>:
+</p>
+
+<ul>
+  <li><code>cn=admin,ou=DSA,dc=istituto,dc=it</code>: ha accesso ad ogni cosa
+      (passwd: <code>Wserver</code>);</li>
+  <li><code>cn=nssuser,ou=DSA,dc=istituto,dc=it</code>: permette il lookup dei
+      dati NSS (passwd: <code>Yserver</code>);</li>
+  <li><code>cn=replicator,ou=DSA,dc=istituto,dc=it</code>: permette l'accesso
+      al server replica (passwd: <code>Zserver</code>).</li>
+</ul>
+
+<p>
+Nel caso volessimo cambiare la password occorre usare il comando
+per generare il nuovo valore che poi va inserito nel campo
+<code>userPassword</code>:
+</p>
+
+<pre>
+server# slappasswd -h {crypt} -s not24get<span class="blue">
+{CRYPT}JNNbwWM3gur2I</span>
+</pre>
+
+
+<p>
+Le direttive LDAP che definiscono le ACL sono:
+</p>
+
+<pre>
+# The userPassword by default can be changed
+# by the entry owning it if they are authenticated.
+# Others should not be able to see it, except the
+# admin entry below
+access to attrs=userPassword
+        by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+        by dn="cn=nssuser,ou=DSA,dc=istituto,dc=it" read
+        by anonymous auth
+        by self write
+        by * none
+
+# The admin dn has full write access;
+# the trusted networks (192.168.77.0/24, 192.168.50.0/24) have read access
+access to *
+        by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+        by peername.ip=127.0.0.1 read
+        by peername.ip=192.168.77.0%255.255.255.0 read
+        by peername.ip=192.168.50.0%255.255.255.0 read
+        by * none
+</pre>
+
+
+<h4>Nota sulla configurazione del client LDAP</h4>
+
+<p>
+La struttura gerarchica delle directory implica che i servizi
+LDAP possono essere implementati come sistemi distribuiti. Quindi
+l'intero Directory Information Tree (DIT) pu&ograve; essere
+partizionato in piccole aree disgiunte dove ognuna &egrave;
+un albero connesso.<br>
+Ogni area pu&ograve; essere gestita da un server separato e dove
+i collegamenti tra le aree possono essere memorizzati all'interno
+della struttura stessa. Quando un client fa una richiesta che
+non riguarda l'area di competenza del server, questo ha due
+possibilit&agrave;. La prima &egrave; ricercare l'informazione
+dal server competente al posto del client con una tecnica chiamata
+chaining. L'altra possibilit&agrave; &egrave; redirigere (&quot;refer&quot;)
+il client al giusto server e sar&agrave; quindi compito del client
+contattare il nuovo server per ricercare le informazioni.
+</p>
+
+<p>
+Per aumentare la tolleranza ai guasti del servizio LDAP una stessa
+area pu&ograve; essere gestita da pi&ugrave; server.
+La distribuzione del carico prevede un master, eventualmente
+in cluster HA (High Availability), e uno o pi&ugrave; replicazioni.
+Le modifiche fatte sul database master vengono diffuse nei
+server replica ma le modifiche fatte sui server replica non
+vengono eseguite e si rediziona il client verso il server master. Quindi se i client sono in grado
+di interpretare la redirezione sono sempre configurati a
+collegarsi al server replica pi&ugrave; conveniente mentre
+quando mancano di questa funzionalit&agrave; la configurazione
+dipende dal tipo di operazione che devono fare. Per la sola
+operazione di consultazione del database vale la configurazione
+precedente mentre se devono anche fare operazioni di modifica
+devono essere connessi direttamente al master.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=auth>Configurazione e migrazione della autenticazione</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questo esempio assumiamo di avere gi&agrave;
+un sistema di autenticazione configurato in modo tradizionale: nel
+file <code>/etc/hosts</code> ci sono i tre IP address della rete
+(anche se &egrave; configurato un DNS che risponde per il dominio
+<code>istituto.it</code> associato al segmento di rete) e sono
+configurati due utenti di nome <code>nane</code> e <code>toni</code>.
+<br>
+Tutti i comandi per la modifica del database LDAP vengono effettuati
+in modalit&agrave; "in chiaro" dal momento che sono fatte da un utente locale.
+</p>
+
+
+<p>
+Per prima cosa dobbiamo installare il pacchetto
+<code>migrationtools</code>.
+Poi si imposta il
+file <code>/usr/share/migrationtools/migrate_common.ph</code> come segue:
+</p>
+
+<pre>
+# /usr/share/migrationtools/migrate_common.ph
+# Default DNS domain
+$DEFAULT_MAIL_DOMAIN = "istituto.it";
+
+# Default base
+$DEFAULT_BASE = "dc=istituto,dc=it";
+
+# turn this on to support more general object clases
+# such as person.
+$EXTENDED_SCHEMA = 1;
+</pre>
+
+<p>
+Ora ci predisponiamo l'infrastruttura di base
+spostandoci sulla directory <code>/usr/share/migrationtools</code>
+e lanciando il comando:
+</p>
+
+<pre>
+server# migrate_base.pl &gt; base.ldif
+</pre>
+
+<p>
+Editiamo il file risultante per eliminare le cose superflue
+quali informazioni legate al NIS e le cose duplicate come People.
+Ora lo si carica nel server ldap (e le sue repliche) in modalit&agrave;
+non cifrata con:
+</p>
+
+<pre>
+server# ldapadd -x -H ldap://server/ \
+             -D"cn=admin,ou=DSA,dc=istituto,dc=it" -W -f base.ldif
+</pre>
+
+<p>
+Passiamo a generare a partire dal file <code>/etc/hosts</code> il
+file da importare nel server:
+</p>
+
+<pre>
+server# migrate_hosts.pl /etc/hosts &gt; hosts.ldif
+</pre>
+
+<p>
+e poi, dopo averlo ripulito, lo carichiamo:
+</p>
+
+<pre>
+server# ldapadd -x -H ldap://server/ \
+          -D"cn=admin,ou=DSA,dc=istituto,dc=it" -W -f hosts.ldif
+</pre>
+
+<p>
+e procediamo nello stesso modo per i gruppi e gli utenti:
+</p>
+
+<pre>
+server# migrate_group.pl /etc/group &gt; group.ldif
+server# ldapadd -x -H ldap://server/ \
+          -D"cn=admin,ou=DSA,dc=istituto,dc=it" -W -f group.ldif
+
+server# migrate_passwd.pl /etc/passwd &gt; passwd.ldif
+server# ldapadd -x -H ldap://server/ \
+          -D"cn=admin,ou=DSA,dc=istituto,dc=it" -W -f passwd.ldif
+</pre>
+
+<p>
+Il database per il nostro esempio &egrave; ora completo, in particolare
+sono consultabili i singoli files:
+<code><a href="../lab/LDAP/ldif/boot-base.ldif" title="">boot-base.ldif</a></code>,
+<code><a href="../lab/LDAP/ldif/base.ldif" title="">base.ldif</a></code>,
+<code><a href="../lab/LDAP/ldif/hosts.ldif" title="">hosts.ldif</a></code>,
+<code><a href="../lab/LDAP/ldif/group.ldif" title="">group.ldif</a></code>,
+<code><a href="../lab/LDAP/ldif/passwd.ldif" title="">passwd.ldif</a></code>.
+Sono definiti solo
+due utenti: <code>nane</code> e <code>toni</code> con password
+entrambe al valore <code>not24get</code>;
+nel caso le volessimo cambiare possiamo usare <code>slappasswd</code>.
+Un tool grafico specializzato per la gestione degli utenti
+e dei gruppi &egrave;
+<a href="http://www.usm.edu.ec/~amadorm/directoryadmin/"
+   title="link esterno">Directory administrator</a>.
+Il suo file di inizializzazione viene momorizzato in
+<code>~/.directory_administrator/profiles</code> e si pu&ograve; fare il
+<a href="../lab/LDAP/profiles" title="file per da">download</a>
+di quello utile per l'esperienza virtuale
+<a href="ldap-diramm.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=nss>Configurazione Name Service Switch</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questo paragrafo mostremo come configurare il servizio Name Service Switch
+in modo da permettere l'utilizzo di LDAP quando
+un comando richiede la consultazione di informazioni riguardanti
+sinonimi di mail, numeri ethernet, gruppi di utenti,
+nomi Host e IP address, protocolli di rete, password di utenti,
+servizi di rete, password shadow di utenti.
+</p>
+
+<p>
+Per la operativit&agrave; di questa funzione mediante l'uso di LDAP
+&egrave; necessario il pacchetto libnss-ldap ovviamente
+gi&agrave; installato nelle macchine del laboratorio virtuale.
+</p>
+
+
+<p>
+I due file di configurazione sono:
+</p>
+
+<ul>
+ <li><a href="../lab/LDAP/nsswitch.conf"
+        title="file di configurazione">/etc/nsswitch.conf</a>:
+     presente nella configurazione base di ogni macchina.
+     Serve a indicare come le
+     informazioni vengono recuperate dalla libreria glibc. Pu&ograve; essere
+     interessante consultare il manuale della libc con il comando
+     <code>info libc nss</code>.</li>
+ <li><a href="../lab/LDAP/libnss-ldap.conf"
+        title="file di configurazione">/etc/libnss-ldap.conf</a>:
+     presente nel pacchetto libnss-ldap.
+     Regola l'accesso al server LDAP</li>
+</ul>
+
+<p>
+A questo punto passiamo nel laboratorio virtuale: al termine dello
+script <code>lab start</code> 
+la macchina <code>client</code> &egrave; configurata per
+usare NSS (in chiaro).
+Per verificarne il corretto funzionamento usiamo il
+il comando <code>getent</code>:
+</p>
+
+<pre>
+client# getent shadow | grep -e "toni\|nane\|root"<span class="blue">
+nane:$1$/N8ZAlof$2hjMoJXv4rz43RHZPVZjL0:12708::99999:7:::0
+toni:$1$PqF3arYG$JyIOSL40utVJa/d1cONX5.:12708::99999:7:::0
+root:fdKHUdSNrBKIw:11696:0:99999:7:::</span>
+client# su - toni
+client$ getent shadow | grep -e "toni\|nane"<span class="blue">
+nane:x:12708::99999:7:::0
+toni:x:12708::99999:7:::0</span>
+client# getent group | grep -e "toni\|nane\|tic"<span class="blue">
+nane:x:1003:
+toni:x:1004:
+tic:x:1005:nane,toni</span>
+client# id toni<span class="blue">
+uid=1004(toni) gid=1004(toni) groups=1004(toni),1005(tic)</span>
+</pre>
+
+
+<p>
+Riportiamo le catture del primo comando rispettivamente senza 
+TLS/SSL
+<a href="../capture/ldap-getent-shadow.acp" title="file per Ethereal">(File ACP)</a> e con
+<a href="../capture/ldap-tls-getent-shadow.acp" title="file per Ethereal">(File ACP)</a>.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=tls>Configurazione della comunicazione con TLS</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per questa sezione ci appoggiamo all'esperienza
+<a href="uml-PKI.html#istituto" title="esperienza Netkit4TIC">PKI</a>
+dove sono stati generati i certificati per i tre nodi della rete.
+</p>
+
+
+
+<p>
+Per configurare il lato server per la comunicazione
+tramite TLS occorre impostare il file di configurazione
+<code>/etc/ldap/slapd.conf</code> come segue:
+</p>
+
+<pre>
+TLSCertificateFile        /etc/ldap/ldapreq.pem
+TLSCertificateKeyFile     /etc/ldap/ldapkey.pem
+TLSCipherSuite            HIGH
+TLSCACertificateFile      /etc/ldap/cacert.pem
+</pre>
+
+<p>
+mentre nel client occorre impostare il file di configurazione
+<code>/etc/ldap/ldap.conf</code> come segue:
+</p>
+
+<pre>
+URI               ldaps://server.istituto.it
+
+tls_checkpeer     yes
+tls_cacertfile    /etc/ldap/cacert.pem
+</pre>
+
+<p>
+Occorre fare attenzione alla riga URI
+dove deve essere usato il nome presente nel certificato e quindi
+deve essere configurato correttamente un server DNS.
+L'ultima modifica riguarda il file
+che controlla le opzioni di start/stop del server
+<a href="../lab/LDAP/slapd-master"
+   title="script di start/stop">master</a>
+dove deve avere attivata la connessione ldaps invece che ldap.
+Nel caso della
+<a href="../lab/LDAP/slapd-replica"
+   title="script di start/stop">replica</a>
+sono attive entrambe poich&egrave;
+l'attivit&agrave; di replica viene fatta in modalit&agrave;
+in chiaro. Come spunto di approfondimento sarebbe utile imparare a
+configurare una connessione stunnel per proteggere quest'ultima
+operazione.
+</p>
+
+<p>
+Ora siamo pronti per provare la configurazione con TLS.
+La sequenza di comandi da dare nelle console delle tre macchine
+virtuali sono:
+</p>
+
+<pre>
+server# /etc/init.d/slapd stop
+server# cp -f /etc/ldap/slapd.conf-tls /etc/ldap/slapd.conf
+server# cp -f /etc/default/slapd-master /etc/default/slapd
+server# /etc/init.d/slapd start
+server# tcpdump -i eth0 -n -s 1500 -w tls-ldapsearch.acp
+
+rserver# /etc/init.d/slapd stop
+rserver# cp -f /etc/ldap/slapd.conf-tls /etc/ldap/slapd.conf
+rserver# cp -f /etc/default/slapd-replica /etc/default/slapd
+rserver# /etc/init.d/slapd start
+
+client# cp -f /etc/ldap/ldap.conf-tls /etc/ldap/ldap.conf
+client# cp -f /etc/libnss-ldap.conf-tls /etc/libnss-ldap.conf
+client# cp -f /etc/pam_ldap.conf-tls /etc/pam_ldap.conf
+client# ldapsearch -x
+</pre>
+
+<p>
+e controlliamone la traccia
+<a href="../capture/ldap-tls-ldapsearch.acp" title="file per Ethereal">(File ACP)</a> con ethereal.
+Un ottimo e approfondito documento sulla comunicazione con TLS lo trovi in
+<a href="http://www.openldap.org/pub/ksoper/OpenLDAP_TLS_howto.html" title="link esterno">OpenLDAP_TLS_howto</a>.
+</p>
+
+<p>
+Nel caso volessimo, come nel caso delle connessioni in chiaro, accedere
+al server master, 
+dobbiamo sostituire il default settato in precedenza
+e il comando precedente diventa:
+</p>
+
+<pre>
+client# ldapsearch -x -H ldaps://server.istituto.it/
+</pre>
+
+<p>
+Per le utility grafiche, il supporto TLS non &egrave; ancora affidabile,
+anche se presente, e i pochi test che abbiamo fatto non si sono risolti
+con successo.
+</p>
+
+<p>
+Per poter
+<a href="gq-LDAP-tls.png" title="immagine PNG">visualizzare</a>
+dalla macchina reale l'albero LDAP
+con <code>gq</code> 
+occorre impostare nel file <code>/etc/hosts</code> la
+risoluzione dei nomi <code>server.istituto.it</code> e
+<code>rserver.istituto.it</code>. Inoltre occorre impostare
+il file <code>/etc/ldap/ldap.conf</code> e copiare il file
+<code>cacert.pem</code>. 
+</p>
+
+<h4>Nota sul test delle connessioni TLS/SSL</h4>
+<p>
+Per il test delle connessioni utilizziamo direttamente lo stesso
+pacchetto openssl. Per testare la singola connettivit&agrave; TLS
+procediamo con il comando (da una qualsiasi della macchine):
+</p>
+
+<pre>
+openssl s_client -connect server:636 -showcerts -state \
+  -CAfile /etc/ldap/cacert.pem
+</pre>
+
+<p>
+mentre per la connettivit&agrave; con autenticazione:
+</p>
+
+<pre>
+openssl s_client -connect server:636 -showcerts -state \
+  -CAfile /etc/ldap/cacert.pem \
+  -cert /etc/ldap/ldapcert.pem -key /etc/ldap/ldapkey.pem
+</pre>
+
+
+
+<h4>Nota sulla rimozione dei file di backup</h4>
+
+<p>
+Nella configurazione di default del modulo backend BDB
+i file di log non vengono rimossi. Lo scopo di questa
+impostazione &egrave; quello di permettere all'amministratore
+di compiere un backup giornaliero dei log file e quindi di
+garantirsi da un eventuale guasto dell'hard disk rifacendo
+eseguire le operazioni registrate nei log file.
+</p>
+
+<p>
+Questa configurazione pu&ograve; essere cambiata utilizzando
+il file DB_CONFIG oppure si pu&ograve; operare a posteriori
+cancellando i file di log non pi&ugrave; necessari
+inserendo i seguenti comandi in un file da aggiungere ai
+lavori per cron:
+</p>
+
+<pre>
+# cd /var/lib/ldap; db4.2_archive | xargs rm -f
+</pre>
+
+<p>
+Il comando <code>db4.2_archive</code> si trova nel
+package <code>db4.2-util</code> denominato "Berkeley v4.2 Database Utilities".
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pam>Configurazione Pluggable Authentication Module</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per un panoramica sulle funzionalit&agrave; dei moduli PAM
+pu&ograve; essere utile realizzare l'esperienza
+<a href="uml-pam.html" title="esperienza Netkit4TIC">PAM</a>.<br>
+Per configurare il modulo PAM per l'uso di LDAP
+&egrave; necessario installare il pacchetto <code>libpam-ldap</code>
+che ovviamente &egrave; gi&agrave; installato sulle macchine del
+laboratorio virtuale.
+</p>
+
+<p>
+I due passi di configurazione sono legati ai seguenti file:
+</p>
+
+<ul>
+ <li>il file <a href="../lab/LDAP/pam_ldap.conf"
+                title="file di configurazione">/etc/pam_ldap.conf</a>
+     che regola l'accesso al server LDAP</li>
+ <li>i file nella directory <code>/etc/pam.d/</code> (uno
+     per applicazione). Nella recende Debian sarge l'organizzazione
+     di questa directory &egrave; migliorata poich&egrave; nei singoli
+     file &egrave; stata usata la direttiva <code>@include</code>
+     che permette di cambiare il funzionamento di tutti gli applicativi
+     modificando il solo file incluso.<br>
+     Per esempio, per quanto riguarda l'autorizzazione, se operiamo
+     le seguenti modifiche:
+     
+<pre>
+# /etc/pam.d/common-auth
+auth sufficient pam_ldap.so
+auth required&nbsp;&nbsp; pam_unix.so
+</pre>
+
+     otterremo che in tutte le applicazioni che usano
+     <code>@include common-auth</code> si utilizzino
+     le informazioni LDAP e solo nel caso che non vengano trovate
+     si utilizzeranno quelle dello Unix standard (su file).
+     Questo ultimo caso viene visualizzato al login (per esempio) con una
+     seconda richiesta di password che indica il fallimento del
+     primo modulo dello stack. Per evitare questo funzionamento
+     basterebbe aggiungere <code>use_first_pass</code> come argomento
+     ai moduli successivi al primo ma noi lasciamo questa configurazione a
+     scopo di debug per evidenziare a quale livello dello stack siamo
+     &quot;accettati&quot;.</li>
+</ul>
+
+<p>
+A questo punto passiamo nel laboratorio virtuale e settiamo
+la macchina <code>client</code> in modo che PAM usi LDAP
+riportando con il nome corretto i file gi&agrave; preparati
+dallo script:
+</p>
+
+<pre>
+client# cp /etc/pam_ldap.conf.new /etc/pam_ldap.conf
+client# cp -f /etc/pam.d/common-auth.new /etc/pam.d/common-auth
+client# cp -f /etc/pam.d/common-account.new /etc/pam.d/common-account
+client# cp -f /etc/pam.d/common-session.new /etc/pam.d/common-session
+</pre>
+
+<p>
+Per sollecitare la configurazione appena impostata possiamo provare
+il login ssh da una macchina virtuale o dalla macchina reale (attenzione
+per&ograve; a ricordarsi di restartare il servizio ssh!) oppure
+rifare il login sulla stessa macchina <code>client</code>:
+</p>
+
+<pre>
+client# /etc/init.d/ssh restart
+
+server# ssh -l root client
+ssh -l root client<span class="blue">
+The authenticity of host 'client (192.168.50.3)' can't be established.
+RSA key fingerprint is c8:f2:e3:b3:02:2f:56:31:db:4b:83:1e:c7:8f:c9:9b.
+Are you sure you want to continue connecting (yes/no)?</span> yes<span class="blue">
+Warning: Permanently added 'client,192.168.50.3' (RSA) to the list of known hosts.
+Password: </span>root<span class="blue">
+Password: </span>root<span class="blue">
+client# </span>exit<span class="blue">
+server# </span>ssh -l toni client<span class="blue">
+Password: </span>not24get<span class="blue">
+client$ </span>exit
+</pre>
+
+<p>
+Riportiamo le catture del login rispettivamente in chiaro
+<a href="../capture/ldap-login.acp" title="file per Ethereal">(File ACP)</a>
+e con TLS/SSL
+<a href="../capture/ldap-tls-login.acp" title="file per Ethereal">(File ACP)</a>.
+</p>
+
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=mt>Esempio di utilizzo in mozilla-thunderbird</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+L'utilizzo di un servizio di directory &egrave; oramai previsto
+in ogni programma per la spedizione della posta. Nel nostro
+esempio lanciamo
+</p>
+
+<pre>
+realHost# mozilla-thunderbird
+</pre>
+
+<p>
+Il programma ci chiede per prima cosa l'impostazione di un
+account di e-mail. Diamo dei risultati "ammissibili" in modo
+da proseguire oltre.<br>
+L'impostazione del servizio di directory &egrave; nella sezione
+riguardante l'agenda indirizzi. Attiviamo quindi
+la voce "Address Book". In seguito selezioniamo
+dal Menu la voce Edit-&gt;Preferences e di seguito la voce "Composition".
+Nella zona "Address Autocomposition" selezioniamo la voce "Directory Server"
+e successivamente la voce "Edit Directories". Siamo arrivati
+al termine: aggiungiamo un LDAP Directory Server
+(<a href="ldap-email-setting.png"
+    title="screenshot">Directory Server Properties</a>).
+</p>
+
+<p>
+Ora possiamo usare il contenuto del servizio LDAP sia
+quando scriviamo un messaggio che per le nostre ricerche.
+In questo ultimo caso attiviamo la voce di menu
+Edit-&gt;Search Addresses. Nel riquadro
+"Search in" selezioniamo il nostro server e poi
+impostiamo una condizione di ricerca e
+verifichiamo il funzionamento
+(<a href="ldap-email-search.png"
+    title="screenshot">Advanced Address Book Search</a>).
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=OpenPEC>Configurazione OpenPEC</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La Posta Elettronica Certificata (PEC) &egrave; implementabile
+anche con una soluzione Open Source di nome
+<a href="http://www.openpec.org/" title="link esterno">OpenPEC</a>.
+Il server LDAP &egrave; richiesto perch&egrave; replica localmente
+il contenuto dell'indice dei gestori. Allo stato attuale per ottenere
+una copia locale di questo indice basta dare il comando:
+</p>
+
+<pre>
+$ ldapsearch -L -x -h indicepa.gov.it -b o=postacert \
+    -s "sub" "(objectclass=*)" &gt; exp_pec.ldif
+</pre>
+
+<p>
+Per ottenere una copia dello schema invece:
+</p>
+
+<pre>
+$ wget http://www.openpec.org/docs/ind_pec.schema
+</pre>
+
+
+<p>
+Purtroppo il database fornito dal cnipa non rispetta lo standard
+(definito da lui stesso) e dal conseguente schema definito da openpec
+nel campo <code>providerCertificateSubject</code>. In dettaglio
+riporto quello che &egrave; possibile leggere nella
+mailing list
+<a href="https://lists.sourceforge.net/lists/listinfo/openpec-users"
+   title="link esterno">openpec-users</a>
+"il campo &egrave; definito con una sintassi
+'1.3.6.1.4.1.1466.115.121.1.12' che come da rfc 2256 indica un
+distiguished name, e quindi soggetto alle regole di sintassi definite
+nella rfc 2253 'Lightweight Directory Access Protocol (v3): UTF-8 String
+Representation of Distinguished Names' e invece dal database 
+troviamo anche caratteri come lo 'slash'.
+Solo la vecchia release
+2.0 di OpenLDAP lo digerisce poich&egrave; 'di bocca buona'".<br>
+Per prova ho cambiato a mano la valorizzazione di un
+<a href="http://www.openpec.org/testldif/demopec.openpec.org.ldif"
+   title="link esterno">record di prova</a>
+e infatti viene caricato.<br>
+Se vuoi provare lancia l'esperienza:
+</p>
+
+<pre>
+realHost$ ./OpenPEC start
+</pre>
+
+<p>
+poi copia il file di inizializzazione di
+<a href="../lab/LDAP/.gq" title="file per gq">gq</a> sulla tua home directory e lancia
+<code>gq</code>
+(<a href="gq-OpenPEC.png" title="screenshot">screenshot</a>) e ricorda
+che la password &egrave; <code>not24get</code>.<br>
+Se vuoi provare a vedere le difficolt&agrave; di caricamento del database,
+prova:
+</p>
+
+<pre>
+OpenPECserver# slapadd -f /etc/ldap/slapd.conf -l exp_pec.ldif
+</pre>
+
+<p>
+e poi:
+</p>
+
+<pre>
+OpenPECserver# /etc/init.d/slapd restart
+</pre>
+
+<p>
+e un refresh in <code>gq</code>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2009-10-03 09:37:26 $
+</span>
+</address>
+
+
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+Host requirement
+----------------
+
+Kernel modules:
+
+-
+
+Debian Packages
+
+minicom
+
+
+Guest requirement
+-----------------
+
+Kernel modules:
+
+ppp_async
+zlib_inflate
+zlib_deflate
+bsd_comp
+ppp_deflate
+
+
+Debian packages
+
+minicom
+ppp
+

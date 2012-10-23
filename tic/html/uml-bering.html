@@ -1,0 +1,1003 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-bering.html,v 1.54 2007-02-19 17:36:42 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-bering</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico" width="15"> 2003-2006
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail tutor/coordinatore del progetto" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su firewall LEAF/Bering uClibc (&quot;a due interfacce&quot;)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-VLAN.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-beringDMZ.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>)</span>.
+</p>
+
+
+<p>
+Di seguito forniamo la mappa
+(<a href="pdf/hw-01.pdf" title="documento pdf">pdf</a>)
+della rete 
+dell'esercizio proposto con il relativo schema di numerazione. 
+</p>
+
+<p>
+Lo scopo di questa esercitazione &egrave; quello di testare le
+funzionalit&agrave; di una piccola rete locale connessa ad Internet
+tramite un firewall:
+</p>
+
+<ul>
+ <li>navigazione in Internet da un client della LAN</li>
+ <li>navigazione da Internet verso un server WEB interno,</li>
+ <li>navigazione in Internet attraverso l'uso di proxy con:
+ <ul>
+   <li>configurazione "classica" mediante il setting manuale del browser</li>
+   <li>configurazione "esotica" detta "transparent proxy"</li>
+ </ul>
+ </li>
+</ul>
+
+<p>
+Per quanto riguarda la configurazione del firewall come macchina
+virtuale rimandiamo alla lettura di
+<a href="howtoBeringCustomize.html">Virtual uBering</a>.
+</p>
+
+<p>
+Modificando la lista dei pacchetti da caricare al boot e memorizzata
+nella variabile
+<code>LRP</code> possiamo ottenere un'installazione personalizzata.
+Alla classica lista dei pacchetti aggiungiamo:
+</p>
+
+<ul>
+  <li><code>sshd.lrp</code>: per dare la possibilit&agrave;
+      all'amministratore del firewall di
+      accedere in maniera sicura sia dalla rete privata che da Internet.</li>
+
+  <li><code>netutils.lrp</code> e <code>mawk.lrp</code>: per una questione
+      di comodit&agrave; visto che sono opzionali ma che ci
+      offrono i comandi
+      <code>route</code>, <code>netstat</code> e <code>awk</code>.</li>
+
+  <li><code>snmpmibs.lrp</code>, <code>libsnmp.lrp</code> e
+      <code>netsnmpd.lrp</code>:
+       per aggiungere la funzionalit&agrave; di agent SNMP.</li>
+</ul>
+
+<p>
+Le due interfacce di rete eth0 ed eth1 sono configurate attraverso
+l'impostazione del file <code>/etc/network/interfaces</code>.
+Inoltre Shorewall &egrave; settato
+in modalit&agrave; &quot;two interface&quot; con attivazione
+del mascheramento. Per un esempio dei file
+di configurazione vai sul progetto
+<a href="bering.html">Bering uClibc</a> reale.
+</p>
+
+<p>
+Dopo aver settato correttamente l'ambiente Netkit
+scarica il <a href="Firewall.tgz" title="esperienza Netkit4TIC">tarball</a>
+e lancia lo script che costruisce il firewall, i tre nodi (e relativi hub):</p>
+
+
+<pre>
+realHost$ lstart net fw proxy loc01
+</pre>
+
+<p>
+che attiva un server apache sui nodi <code>net</code>,
+<code>loc01</code> e <code>proxy</code>. Inoltre attiva i server squid
+e Dansguardian sul nodo <code>proxy</code>
+<a href="bering-desktop.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+
+<p>
+Il documento si divide nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li>Proxy server "Tradizionale"
+     <ul>
+        <li><a href="#browsing"
+               title="">Navigazione in Internet dalla rete LAN</a>
+        </li>
+        <li><a href="#nmap"
+               title="">Network exploration tool and security scanner</a>
+        </li>
+        <li><a href="#nat"
+               title="">Navigazione da Internet tramite NAT</a>
+        </li>
+        <li><a href="#snmp"
+               title="">Configurazione agent SNMP e navigazione MIB tramite snmpwalk</a>
+        </li>
+        <li><a href="#ssh"
+               title="">Configurazione e uso di ssh</a>
+        </li>
+        <li><a href="#squid" title="">squid</a></li>
+        <li><a href="#dg" title="">DansGuardian</a></li>
+     </ul></li>
+  <li>Transparent Proxy server
+     <ul>
+        <li><a href="#c-transpro" title="">Configurazione transparent proxy</a></li>
+        <li><a href="#s-transpro" title="">Sperimentazione transparent proxy</a></li>
+     </ul></li>
+</ul>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="browsing">Navigazione in Internet dalla rete LAN</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Dal nodo <code>loc01</code> ricerchiamo la home page su <code>net</code>:
+</p>
+
+<pre>
+loc01# lynx -dump http://217.57.5.218/ | strings<span class="blue">
+   Benvenuto 217.57.5.217 su 217.57.5.218</span>
+</pre>
+
+<p>
+Verifichiamo il mascheramento controllando il file di log di apache:
+</p>
+
+<pre>
+net# tail -f /var/log/apache/access.log<span class="blue">
+217.57.5.217 - - [25/Aug/2005:18:24:37 +0200] "GET / HTTP/1.0" 200 196 "-" \
+  "Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/1.0.16"</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="nmap">Network exploration tool and security scanner</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Utilizzando <code>nmap</code> costruiamo 
+delle richieste di rete che facciano scattare
+le regole di DROP o REJECT del firewall, per esempio con:
+</p>
+
+<pre>
+net# nmap 217.57.5.217 -p 21-22<span class="blue">
+[...]
+PORT   STATE    SERVICE
+21/tcp filtered ftp
+22/tcp open     ssh
+[...]</span>
+
+loc01# nmap 10.10.10.78  -p 21-22<span class="blue">
+[...]
+PORT   STATE  SERVICE
+21/tcp closed ftp
+22/tcp open   ssh
+[...]</span>
+</pre>
+
+<p>
+e verifichiamo il risultato nel log del firewall con:
+</p>
+
+<pre>
+fw# tail -f /var/log/messages<span class="blue">
+Sep  9 07:23:13 localhost kernel: Shorewall:net2all:<span class="yellow">DROP</span>:IN=eth0 OUT= \
+  MAC=fe:fd:d9:39:05:d9:fe:fd:d9:39:05:da:08:00 \
+  SRC=217.57.5.218 DST=217.57.5.217 LEN=40 TOS=0x10 PREC=0x00 TTL=44 \
+  ID=5239 PROTO=TCP SPT=60808 DPT=21 WINDOW=1024 RES=0x00 SYN URGP=0 
+
+Sep  9 07:23:14 localhost kernel: Shorewall:net2all:<span class="yellow">DROP</span>:IN=eth0 OUT= \
+  MAC=fe:fd:d9:39:05:d9:fe:fd:d9:39:05:da:08:00 \
+  SRC=217.57.5.218 DST=217.57.5.217 LEN=40 TOS=0x10 PREC=0x00 TTL=39 \
+  ID=924 PROTO=TCP SPT=60809 DPT=21 WINDOW=4096 RES=0x00 SYN URGP=0
+
+Sep  9 08:32:42 localhost kernel: Shorewall:all2all:<span class="yellow">REJECT</span>:IN=eth1 OUT= \
+  MAC=fe:fd:0a:0a:0a:4e:fe:fd:0a:0a:0a:41:08:00 \
+  SRC=10.10.10.65 DST=10.10.10.78 LEN=40 TOS=0x10 PREC=0x00 TTL=56 \
+  ID=54416 PROTO=TCP SPT=45151 DPT=21 WINDOW=1024 RES=0x00 SYN URGP=0</span>
+</pre>
+
+<p>
+Facciamo notare che il traffico non ammesso proveniente da Internet 
+subisce DROP e quello da rete locale subisce REJECT.
+</p>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="nat">Navigazione da Internet tramite NAT</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Ci connettiamo da <code>net</code> (Internet) al web server
+(NAT su 10.10.10.65) sul nodo <code>loc01</code>:
+</p>
+
+<pre>
+net# lynx -dump http://217.57.5.217/ | strings<span class="blue">
+   Benvenuto 217.57.5.218 su 217.57.5.217</span>
+</pre>
+
+<p>
+Controlliamo il log del server web della rete privata:
+</p>
+
+<pre>
+loc01# tail -f /var/log/apache/access.log<span class="blue">
+217.57.5.218 - - [25/Aug/2005:18:28:15 +0200] "GET /index.php HTTP/1.0" 200 196 "-" \
+  "Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/1.0.16"</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="capture">Alcune catture di traffico</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Ecco di seguito le catture di traffico (analizzabili con <code>ethereal</code>):
+</p>
+
+<ul>
+	<li>traffico ARP tra i nodi <code>net</code> e <code>fw</code>
+        <a href="../capture/firewall-arp.acp"
+           title="file per Ethereal">(File ACP)</a>:
+<pre>
+net# tcpdump -i eth0 -n -s 1518 arp -w /hosthome/firewall-arp.acp
+loc01# ping -c 1 217.57.5.218
+</pre>
+        </li>
+	<li>traffico icmp tra i nodi <code>loc01</code> e <code>net</code>
+        <a href="../capture/firewall-icmp.acp"
+           title="file per Ethereal">(File ACP)</a>:
+<pre>
+net# tcpdump -i eth0 -n -s 1518 icmp -w /hosthome/firewall-icmp.acp
+loc01# ping -c 1 217.57.5.218
+</pre>
+        </li>
+	<li>traffico http tra i nodi <code>loc01</code> e <code>net</code>
+        <a href="../capture/firewall-http.acp"
+           title="file per Ethereal">(File ACP)</a>
+<pre>
+net# tcpdump -i eth0 -n -s 1518 port 80 -w /hosthome/firewall-http.acp
+loc01# lynx -dump http://217.57.5.218/ | strings
+</pre>
+        </li>
+</ul>
+
+<p>
+Lasciamo al lettore la
+verifica della connettivit&agrave; al firewall attraverso <b>ssh</b> sia dalla
+rete interna che da quella esterna.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="snmp">Configurazione agent SNMP e navigazione MIB tramite snmpwalk</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+&Egrave; stato
+<a href="../lab/Firewall/snmpd.conf"
+   title="file di configurazione">configurato</a> un agent
+<a href="http://www.net-snmp.org/"
+   title="link esterno">ucd-snmp</a> sul firewall e il tool
+<a href="http://people.ee.ethz.ch/~oetiker/webtools/mrtg/"
+   title="link esterno">mrtg</a> sul nodo <code>proxy</code> della rete locale.
+Per consultare le informazioni dell'agent possiamo usare il
+comando <code>snmpwalk</code>. Ad esempio se vogliamo conoscere
+la lista delle interfacce del nodo 10.10.10.78 (lo filtriamo
+con un grep per rendere minimo l'output):
+</p>
+
+<pre>
+loc01# snmpwalk -Os -c public -v 1 10.10.10.78 \
+  .iso.org.dod.internet.mgmt.mib-2.interfaces.ifTable.ifEntry.ifDescr \
+  | grep -e "eth0\|eth1"<span class="blue">
+ifDescr.4 = STRING: eth0
+ifDescr.5 = STRING: eth1</span>
+
+loc01# snmpwalk -n -Os -c public -v 1 10.10.10.78 \
+  .1.3.6.1.2.1.2.2.1.2 \
+  | grep -e "eth0\|eth1"<span class="blue">
+IF-MIB::ifDescr.4 = STRING: eth0
+IF-MIB::ifDescr.5 = STRING: eth1</span>
+</pre>
+
+<p>
+Per consultare le statistiche costruite da mrtg interrogando l'agent snmp
+basta puntare un browser nel seguente URL:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://192.168.77.2/mrtg/firewall.eth[0-1].html
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="ssh">Configurazione e uso di ssh</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per attivare una sessione SSH sul firewall:
+</p>
+
+<pre>
+loc01# ssh 10.10.10.78<span class="blue">
+The authenticity of host '10.10.10.78 (10.10.10.78)' can't be established.
+RSA key fingerprint is 1c:14:d4:b1:16:40:de:d2:42:ea:d4:1c:4a:50:f3:66.
+Are you sure you want to continue connecting (yes/no)?</span> yes<span class="blue">
+Warning: Permanently added '10.10.10.78' (RSA) to the list of known hosts.
+root@10.10.10.78's password: </span>root<span class="blue">
+LEAF Bering-uClibc fw 2.4.26-bs1 #2 Fri Dec 31 11:32:18 CET 2004
+
+Type in help if you are really lost</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="squid">Proxy server: Squid</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La navigazione pu&ograve; essere resa pi&ugrave; sicura, veloce
+e priva di banner mediante l'uso di un server proxy. Nel caso di
+software Open Source quello pi&ugrave; usato &egrave; sicuramente
+<a href="http://www.squid-cache.org" title="link esterno">squid</a>.
+</p>
+
+<p>
+Nel nostro caso per evitare che una dimenticanza di configurazione
+del browser permetta al browser di navigare senza l'uso del proxy
+permettiamo al solo server proxy di generare
+traffico uscente verso Internet che utilizza le porte 80 e 443.
+<p>
+
+<p>
+Per prima cosa restringiamo la policy in modo da negare qualsiasi
+accesso a Internet da parte della rete interna. Nel file
+<code>policy</code> occorre
+commentare la precedente regola
+di abilitazione alla navigazione e sostituirla con il divieto per tutti:
+</p>
+
+<pre>
+# /etc/shorewall/policy
+#SOURCE         DEST            POLICY      LOG LEVEL
+<strike>loc             net             ACCEPT</strike>
+loc             net             <span class="yellow">REJECT</span>      info
+</pre>
+
+<p>
+Quindi ora occorre abilitare il traffico per la navigazione della
+sola macchina <code>proxy</code>. Cambiamo quindi la riga del file
+<code>rules</code> della configurazione di shorewall:
+</p>
+
+
+<pre>
+# /etc/shorewall/rules
+#ACTION       SOURCE            DEST     PROTO   DEST
+<strike>Web/ACCEPT    loc               net</strike>
+Web/ACCEPT    <span class="yellow">loc:10.10.10.77</span>   net
+</pre>
+
+<p>
+Rifacciamo partire shorewall:
+</p>
+
+<pre>
+fw# /etc/init.d/shorewall restart
+</pre>
+
+
+Possiamo verificare che la regola impedisca la navigazione attraverso
+un semplice tentativo di accedere al server <code>net</code>. In seguito
+per impostare il proxy per il <code>wget</code> occorre impostare la
+variabile d'ambiente <code>http_proxy</code> e riprovare:
+</p>
+
+
+<pre>
+loc01# export http_proxy="http://10.10.10.77:3128/"
+loc01# lynx -dump http://217.57.5.218/ | strings<span class="blue">
+   Benvenuto 217.57.5.217 su 217.57.5.218</span>
+</pre>
+
+
+<p>
+Catturando il
+<a href="../capture/firewall-proxy-net.acp"
+   title="file per Ethereal">traffico</a>
+in Internet generato dal comando <code>lynx</code>
+eseguito dal nodo <code>proxy</code> e quello generato dallo stesso
+comando eseguito dal nodo <code>loc01</code> non vediamo alcuna differenza
+mentre se controlliamo il
+<a href="../capture/firewall-proxy-loc.acp"
+   title="file per Ethereal">traffico</a>
+nella rete locale scopriamo che
+il comando HTTP di richiesta home page "<code>GET / HTTP/1.0</code>" diventa
+"<code>GET http://217.57.5.218/ HTTP</code>".
+</p>
+
+<p>
+Volendo utilizzare il comando <code>nc</code> (netcat) proviamo a richiere
+la home page direttamente:
+</p>
+
+<pre>
+loc01# echo -e "GET / HTTP/1.0\r\n\r\n" | \
+              nc 217.57.5.218 80
+</pre>
+
+<p>
+e attraverso il proxy:
+</p>
+
+<pre>
+loc01# echo -e "GET http://217.57.5.218/ HTTP/1.0\r\n\r\n" | \
+              nc 10.10.10.77 3128
+</pre>
+
+<p>
+Un ottimo generatore di report per squid &egrave;
+<a href="http://sarg.sourceforge.net/sarg.php"
+   title="link esterno">Sarg</a> le cui iniziali stanno per
+Squid Analysis Report Generator. &Egrave; un generatore di pagine
+Web e quindi ha bisogno di un server Web.
+Attraverso <code>cron</code> deve essere lanciato in
+esecuzione giornalmente in modo da elaborare
+i dati di log di Squid e riportare i report
+nella directory <code>/var/www/squid-reports</code>.
+Per visualizzarli forziamo una esecuzione di <code>sarg</code>
+e poi lanciamo il browser:
+</p>
+
+<pre>
+proxy# sarg
+realHost$ mozilla-firefox http://10.10.10.77/squid-reports/
+</pre>
+
+<p>
+I dati sono molto dettagliati sia per utente/IP address che per
+ora, traffico generato e siti visitati.
+</p>
+
+<p>
+Per i vincoli dovuti alle norme sulla privacy occorre configurare
+il server proxy in modo che vengano mantenuti i file di log per
+almeno un anno e nel contempo attivare una procedura di backup
+e salvataggio degli stessi a livello trimestrale. Il programma
+da configurare per il salvataggio dei log si chiama
+<code>logrotate</code> che nel caso di squid sar&agrave;
+configurato come segue:
+</p>
+
+<pre>
+# /etc/logrotate.d/squid
+# Logrotate fragment for squid
+/var/log/squid/*.log {
+        daily
+        compress
+        delaycompress
+        rotate <span class="yellow">400</span>
+        missingok
+        nocreate
+        sharedscripts
+        prerotate
+                test ! -x /usr/sbin/sarg-maint || /usr/sbin/sarg-maint
+        endscript
+        postrotate
+                test ! -e /var/run/squid.pid || /usr/sbin/squid -k rotate
+        endscript
+}
+</pre>
+
+
+<p>
+Per l'analisi delle prestazioni del proxy tramite
+il programma <code>sarg</code> &egrave; preferibile
+settare la raccolta differenziata per mese:
+</p>
+
+<pre>
+# /etc/cron.monthly/squid
+#Get current date
+TODAY=$(date +%d/%m/%Y)
+ 
+#Get current date
+TD=$(date --date "1 month ago" +%Y-%m)
+ 
+#Get one month ago today
+YESTERDAY=$(date --date "1 month ago" +%d/%m/%Y)
+ 
+#Get one month ago today (4touch)
+YD=$(date --date "1 month ago" +%m/%d/%Y)
+
+touch -d $YD /tmp/a
+cat /var/log/squid/access.log.1 &gt; /var/log/squid/monthly/squid-$TD
+find /var/log/squid/ -newer /tmp/a -name access.log\*gz | \
+  xargs zcat &gt;&gt; /var/log/squid/monthly/squid-$TD
+
+ln -f -s /var/log/squid/monthly/squid-$TD /var/4sarg
+sarg -o /var/www/squid-reports/monthly -d $YESTERDAY-$TODAY
+</pre>
+
+<p>
+Attenzione che i log contengono dati sensibili e quindi quelli
+relativi agli utenti non
+possono essere consultati senza infrangere la Legge Italiana.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="dg">Proxy server: DansGuadian</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Un altro proxy server, normalmente usato in cascata a Squid, utile 
+come analizzatore di contenuti &egrave;
+<a href="http://dansguardian.org/"
+         title="link esterno">DansGuardian</a>.
+Questo programma si frappone tra il browser e Squid permettendo di
+filtrare le pagine visitate attraverso vari metodi: URL, IP address,
+frasi, estensioni di file e altre caratteristiche.
+</p>
+
+<p>
+Esplicitiamo quindi ora il funzionamento dei due proxy server in
+una configurazione cooperativa. Dansguardian &egrave; in attesa
+di richieste dai vari browser sulla porta TCP 8080. Se la richiesta
+non &egrave; vietata in base all'IP, all'URL o a qualche altro filtro,
+Dansguardian passa la richiesta a Squid via loopback (quindi locale) sulla porta
+TCP 3128. Squid ricerca la pagina (inserendola nella cache per
+successive richieste) e la manda indietro a Dansguardian per
+l'ispezione del contenuto. Se il contenuto &egrave; accettabile,
+Dansguardian passa la pagina al browser che ne aveva fatto richiesta.
+Se il contenuto non &egrave; accettabile viene visualizzata
+una pagina web di negazione della richiesta.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="c-transpro">Configurazione Transparent Proxy Server</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Un altro metodo per configurare l'uso del proxy consiste
+nel cambiare il funzionamento del sistema invece che cambiare
+il funzionamento delle applicazioni.<br>
+Le motivazioni che spingono verso l'utilizzo del
+Transparent Proxy sono:
+</p>
+
+<ul>
+  <li>forzare i client ad usare il proxy che lo vogliano o no</li>
+  <li>vogliamo che i client usino il proxy ma non vogliamo che
+      lo vengano a sapere</li>
+  <li>vogliamo che i client usino il proxy ma non vogliamo
+      configurare i centinaia/migliaia di browser della nostra rete</li>
+</ul>
+
+<p>
+Il meccanismo &egrave; schematizzato 
+(<a href="pdf/transpro.pdf" title="documento pdf">pdf</a>)
+come segue. Il browser manda la richiesta al server web
+e ha l'illusione di parlare con il server reale. La richiesta
+viene invece rediretta al server proxy che si incarica
+di mandare la richiesta al server reale. L'illusione
+della trasparenza si ferma al client poich&egrave; il server
+si rende conto che &egrave; in comunicazione con il proxy.
+In effetti il server web &egrave; illuso di comunicare
+con client e invece &egrave; in dialogo con il proxy.
+</p>
+
+<p>
+Un ottimo documento sull'argomento si trova presso
+<a href="http://tldp.org/HOWTO/TransparentProxy.html"
+   title="link esterno">Transparent Proxy</a>.
+</p>
+
+<p>
+Per prima cosa occorre cambiare la configurazione di squid:
+</p>
+
+<pre>
+# /etc/squid/squid.conf
+[...]
+httpd_accel_host virtual
+httpd_accel_port 80
+httpd_accel_with_proxy on
+httpd_accel_uses_host_header on
+[...]
+</pre>
+
+<p>
+e sempre sul nodo dove &egrave; installato squid associare all'attivazione
+della scheda di rete (eth1 nel nostro caso) il seguente comando di
+redirezione:
+</p>
+
+<pre>
+proxy# iptables -t nat -A PREROUTING -i eth1 -d ! 10.10.10.77 \
+              -p tcp --dport 80 -j REDIRECT --to-ports 3128
+
+</pre>
+
+
+<p>
+Le rimanenti operazioni sono tutte da fare sul router.<br>
+Aggiungiamo alla tabella delle tavole una entry <code>www.out</code>:
+</p>
+
+<pre>
+fw# echo 202 www.out &gt;&gt; /etc/iproute2/rt_tables
+</pre>
+
+<p>
+Nel file di inizializzazione di shorewall aggiungiamo:
+</p>
+
+<pre>
+# /etc/shorewall/init
+if [ -z "`ip rule list | grep www.out`" ] ; then
+        ip rule add fwmark 0xCA table www.out # Note 0xCA = 202
+        ip route add default via 10.10.10.77 dev eth1 table www.out
+        ip route flush cache
+        echo 0 &gt; /proc/sys/net/ipv4/conf/eth1/send_redirects
+fi
+</pre>
+
+<p>
+Modifichiamo il file:
+</p>
+
+<pre>
+# /etc/shorewall/interfaces
+[...]
+#ZONE INTERFACE  BROADCAST    OPTIONS
+loc   eth1       10.10.10.79  <span class="yellow">routeback</span>
+</pre>
+
+<p>
+e infine aggiungiamo il file:
+</p>
+
+<pre>
+# /etc/shorewall/start.d/transpro
+iptables -t mangle -A PREROUTING -i eth1 -s ! 10.10.10.77 \
+  -p tcp --dport 80 -j MARK --set-mark 202
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="s-transpro">Sperimentazione Transparent Proxy Server</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per sperimentare la configurazione con il
+transparent proxy a partire dall'esperienza appena illustrata occorre
+"sostituire" i due nodi <code>fw</code> e <code>proxy</code>:
+</p>
+
+<pre>
+realHost$ lcrash fw proxy; \
+          lstart fwtp proxytp
+</pre>
+
+<p>
+Invece nel caso in cui si sia salta la sperimentazione precedente 
+basta lanciare:
+</p>
+
+<pre>
+realHost$ lstart net fwtp proxytp loc01
+</pre>
+
+<p>
+che costruisce i medesimi nodi con gli stessi servizi
+elencati precedentemente ma con le configurazioni specializzate.
+</p>
+
+
+<p>
+Attiviamo una sessione di navigazione dal client della rete
+privata:
+</p>
+
+<pre>
+loc01# lynx -dump http://217.57.5.218/ | strings<span class="blue">
+   Benvenuto 217.57.5.217 su 217.57.5.218</span>
+</pre>
+
+<p>
+e controlliamo l'effetto sul proxy e sul web server:
+</p>
+
+<pre>
+proxytp# tail -n 1 /var/log/squid/access.log<span class="blue">
+1130753977.005     25 10.10.10.65 TCP_MISS/200 509 \
+  GET http://217.57.5.218/ - DIRECT/217.57.5.218 text/html</span>
+net # tail -n 1 /var/log/apache/access.log<span class="blue">
+217.57.5.217 - - [31/Oct/2005:11:19:36 +0100] \
+  "GET / HTTP/1.0" 200 196 "-" \
+  "Lynx/2.8.5rel.1 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/1.0.16"</span>
+</pre>
+
+<p>
+Il file di cattura traffico
+<a href="../capture/firewall-tp.acp"
+   title="file per Ethereal">(File ACP)</a>
+pu&ograve; essere poi elaborato con un filtro del tipo
+"http" in modo da evidenziare il
+"solo traffico http" 
+<a href="bering-filter.png" title="immagine PNG">(screenshot)</a>:
+</p>
+
+
+<pre>
+No. Source       Destination   Prot  MAC address src    MAC address dst   Info
+ 5  10.10.10.65  217.57.5.218  HTTP  00:00:00:00:00:65  00:00:00:00:00:78 GET / HTTP/1.0
+
+No. Source       Destination   Prot  MAC address src    MAC address dst   Info
+ 7  10.10.10.65  217.57.5.218  HTTP  00:00:00:00:00:78  00:00:00:00:00:77 GET / HTTP/1.0
+
+No. Source       Destination   Prot  MAC address src    MAC address dst   Info
+12  10.10.10.77  217.57.5.218  HTTP  00:00:00:00:00:77  00:00:00:00:00:78 GET / HTTP/1.0
+
+No. Source       Destination   Prot  MAC address src    MAC address dst   Info
+14  217.57.5.218 10.10.10.77   HTTP  00:00:00:00:00:78  00:00:00:00:00:77 HTTP/1.1 200 OK
+
+No. Source       Destination   Prot  MAC address src    MAC address dst   Info
+17  217.57.5.218 10.10.10.65   HTTP  00:00:00:00:00:77  00:00:00:00:00:65 HTTP/1.0 200 OK
+</pre>
+
+<p>
+dove, per facilitare la lettura,
+ abbiamo assegnato i MAC address delle schede dei nodi della LAN
+al valore 00:00:00:00:00:NN dove NN &egrave; il quarto numero dell'indirizzo IP.
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3 id="PunchingHoles">How Skype &amp; Co. get round firewalls</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Read the Jurgen Schmidt's article 
+<a href="http://www.heise-security.co.uk/articles/82481/0"
+   title="link esterno">The hole trick</a> in
+"heise Security" 
+and than experiment it in our labs. Please startup a subset of lab:
+</p>
+
+<pre>
+realHost$ lstart net fw loc01
+</pre>
+
+<p>
+Firstly start a UDP listener on UDP port 14141 on the <code>loc01</code>
+node behind the firewall:
+</p>
+
+<pre>
+loc01# nc -u -l -p 14141 &amp;
+</pre>
+
+<p>
+An external computer <code>net</code> then attempts to contact it
+(fw IP address: 217.57.5.217):
+</p>
+
+<pre>
+net# echo "Hello" | nc -p 53 -u 217.57.5.217 14141
+</pre>
+
+<p>
+However, as expected nothing is received on <code>loc01</code> and,
+thanks to the firewall,
+nothing is returned to net. Now on a node <code>loc01</code>, hping2,
+our universal tool for generating IP packets, punches a hole in the firewall
+(net IP address: 217.57.5.218):
+</p>
+
+<pre>
+loc01# hping2 -c 1 -2 -s 14141 -p 53  217.57.5.218
+</pre>
+
+<p>
+As long as <code>net</code> is behaving itself, it will send back a
+"port unreachable" response via ICMP - however this is of no consequence.
+On the second attempt:
+</p>
+
+<pre>
+net# echo "Hello" | nc -p 53 -u 217.57.5.217 14141
+</pre>
+
+
+<p>
+the netcat listener on node <code>loc01</code> then coughs up a "Hello"
+- the UDP packet from outside has passed through the firewall
+and arrived at the computer behind it.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-19 17:36:42 $
+</span>
+</address>
+
+
+</body>
+
+</html>

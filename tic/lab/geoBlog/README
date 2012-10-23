@@ -1,0 +1,13 @@
+# $Id: README,v 1.1 2008-08-27 21:40:13 doros Exp $
+
+# copy real host resolv.conf file in to vproxy vm:
+realHost$ /bin/cp /etc/resolv.conf geoBlog/etc/resolv.conf
+# make and configure a tap device with MASQ on eth2 (Internet)
+#                                              ^^^^
+# ---------------------------------------------++++
+realHost$ sudo tunctl -u `whoami`
+realHost# ifconfig tap0 192.168.77.1; \
+             echo "1" > /proc/sys/net/ipv4/ip_forward; \
+             iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE
+#                                              ^^^^
+# ---------------------------------------------++++

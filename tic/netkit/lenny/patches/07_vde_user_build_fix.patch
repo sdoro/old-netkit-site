@@ -1,0 +1,41 @@
+
+Fixed this error:
+
+  CC      arch/um/drivers/vde_user.o
+  /home/wangcong/Projects/linux-2.6/arch/um/drivers/vde_user.c: In
+function ‘vde_init_libstuff’:
+/home/wangcong/Projects/linux-2.6/arch/um/drivers/vde_user.c:81:
+error: implicit declaration of function ‘kmalloc’
+/home/wangcong/Projects/linux-2.6/arch/um/drivers/vde_user.c:81:
+warning: assignment makes pointer from integer without a cast
+make[2]: *** [arch/um/drivers/vde_user.o] Error 1
+make[1]: *** [arch/um/drivers/vde_user.ko] Error 2
+make: *** [sub-make] Error 2
+
+Signed-off-by: WANG Cong <wangcong@zeuux.org>
+Cc: jdike@addtoit.com
+
+---
+diff --git a/arch/um/drivers/vde_user.c b/arch/um/drivers/vde_user.c
+index 56533db..744eacf 100644
+--- a/arch/um/drivers/vde_user.c
++++ b/arch/um/drivers/vde_user.c
+@@ -78,7 +78,7 @@ void vde_init_libstuff(struct vde_data *vpri, struct vde_init *init)
+ {
+ 	struct vde_open_args *args;
+ 
+-	vpri->args = kmalloc(sizeof(struct vde_open_args), UM_GFP_KERNEL);
++	vpri->args = uml_kmalloc(sizeof(struct vde_open_args), UM_GFP_KERNEL);
+ 	if (vpri->args == NULL) {
+ 		printk(UM_KERN_ERR "vde_init_libstuff - vde_open_args "
+ 		       "allocation failed");
+
+-------------------------------------------------------------------------
+This SF.Net email is sponsored by the Moblin Your Move Developer's challenge
+Build the coolest Linux based applications with Moblin SDK & win great prizes
+Grand prize is a trip for two to an Open Source event anywhere in the world
+http://moblin-contest.org/redirect.php?banner_id=100&url=/
+_______________________________________________
+User-mode-linux-devel mailing list
+User-mode-linux-devel@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/user-mode-linux-devel

@@ -1,0 +1,21 @@
+$Id: $
+
+In this experience the replica server has network connectivity (tun module)
+with the real host. Before start the Netkit script you must
+create a tap device as normal user:
+
+realHost$ i=`whoami` && ifname=`sudo tunctl -b -u $i` && unset i
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname 192.168.77.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+Than you can add a routing rule:
+
+realHost# echo "1" > /proc/sys/net/ipv4/ip_forward; \
+          route add -net 192.168.50.0/29 gw 192.168.77.2
+

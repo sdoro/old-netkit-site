@@ -1,0 +1,9 @@
+/* $Id: style.css,v 1.1 2005/04/28 17:22:03 doros Exp $ */
+
+body {
+  font-size: small;
+  font-family: "Verdana", "Lucida Grande", "Lucida", "Arial", "Helvetica",
+               "sans-serif";
+  width: 100%;
+}
+

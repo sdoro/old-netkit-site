@@ -1,0 +1,65 @@
+;; $Id: NFS.ds,v 1.2 2009-10-18 11:44:24 doros Exp $
+
+;; devilspie configuration file
+
+(begin
+
+;;(debug)
+
+(if (contains (application_name) "client5")
+  (begin
+      (geometry "496x343+3279+168")
+    )
+  )
+
+(if (contains (application_name) "client4")
+  (begin
+      (geometry "496x343+3179+100")
+    )
+  )
+
+(if (contains (application_name) "client1")
+  (begin
+      (geometry "496x343+3079+22")
+    )
+  )
+
+(if (contains (application_name) "nfs4")
+  (begin
+      (geometry "496x343+1218+168")
+    )
+  )
+
+(if (contains (application_name) "nfs3")
+  (begin
+      (geometry "496x343+1156+120")
+    )
+  )
+
+(if (contains (application_name) "nfs2")
+  (begin
+      (geometry "496x343+1094+72")
+    )
+  )
+
+(if (contains (application_name) "nfs1")
+  (begin
+      (geometry "496x343+1032+24")
+    )
+  )
+
+(if (contains (application_name) "server")
+  (begin
+      (geometry "496x343+2121+69")
+    )
+  )
+
+(if (contains (application_name) "gate")
+  (begin
+      (geometry "496x343+2055+22")
+    )
+  )
+
+)
+
+;; bot

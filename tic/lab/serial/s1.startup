@@ -1,0 +1,27 @@
+# s1.startup
+# $Id: s1.startup,v 1.3 2006/08/09 18:10:38 doros Exp $
+
+# restart syslogd to activate separate ppp log into /var/log/ppp.log file
+/etc/init.d/sysklogd restart
+# make serial devices
+mknod /dev/ttyS0 c 4 64
+stty -F /dev/ttyS0 38400
+dmesg | grep Serial
+dmesg | grep "assigned console"
+# start getty on ttyS0
+echo "T0:23:respawn:/sbin/getty -L ttyS0 38400 vt100" >> /etc/inittab
+echo "ttyS0" >> /etc/securetty
+init Q
+# load module needed for pppd daemon
+modprobe ppp_async
+#modprobe zlib_inflate
+#modprobe zlib_deflate
+#modprobe bsd_comp
+#modprobe ppp_deflate
+# start pppd daemon on ttyS0
+#pppd debug local 10.0.0.1:10.0.0.2 nodetach noauth lock ttyS0 &
+# add fppp user
+echo "fppp::504:100:Free PPP Public Account:/tmp:/etc/ppp/ppplogin" >> /etc/passwd
+adduser fppp dip
+# adjust permissions
+chmod a+x /etc/ppp/ppplogin

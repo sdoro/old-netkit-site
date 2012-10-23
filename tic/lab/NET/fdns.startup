@@ -1,0 +1,10 @@
+# fdns.startup
+# $Id: fdns.startup,v 1.1 2006/06/29 13:58:40 doros Exp $
+#
+# configure IP address
+ifconfig eth0 216.57.5.215 up
+# for semplicity
+route add default gw 216.57.5.221
+# starting bind server
+/etc/init.d/bind9 start
+/etc/init.d/postfix start

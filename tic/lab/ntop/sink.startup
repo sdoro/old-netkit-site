@@ -1,0 +1,8 @@
+#
+ifconfig eth0 10.0.0.1
+ifconfig eth1 192.168.77.2
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#
+# bot

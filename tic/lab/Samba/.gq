@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gq-config>
+
+    <config-version>3</config-version>
+    <asked-config-version>3</asked-config-version>
+    <last-asked>3</last-asked>
+    <confirm-mod>False</confirm-mod>
+    <search-argument>Begins with</search-argument>
+    <show-dn>True</show-dn>
+    <show-oc>True</show-oc>
+    <show-rdn-only>True</show-rdn-only>
+    <sort-search-mode>False</sort-search-mode>
+    <sort-browse-mode>False</sort-browse-mode>
+    <browse-use-user-friendly>True</browse-use-user-friendly>
+    <restore-window-sizes>True</restore-window-sizes>
+    <restore-window-positions>False</restore-window-positions>
+    <restore-search-history>True</restore-search-history>
+    <restore-tabs>False</restore-tabs>
+    <never-leak-credentials>True</never-leak-credentials>
+    <do-not-use-ldap-conf>False</do-not-use-ldap-conf>
+    <ldif-format>UMich</ldif-format>
+    
+    <ldapserver>
+        <name>ldap://192.168.50.1/</name>
+        <ldaphost>ldap://192.168.50.1</ldaphost>
+        <ldapport>389</ldapport>
+        <basedn>dc=istituto,dc=it</basedn>
+        <binddn>cn=samba,ou=DSA,dc=istituto,dc=it</binddn>
+        <pw-encoding>Base64</pw-encoding>
+        <search-attribute>cn</search-attribute>
+    </ldapserver>
+
+    <defaults>
+    </defaults>
+
+</gq-config>

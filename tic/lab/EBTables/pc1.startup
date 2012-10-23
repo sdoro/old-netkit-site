@@ -1,0 +1,15 @@
+# $Id: pc1.startup,v 1.1 2008-01-03 16:27:07 doros Exp $
+ifconfig eth0 192.168.2.1 up
+ifconfig eth0 hw ether 00:00:00:00:02:01
+# fix uml_switch vlan bug
+ifconfig eth0 mtu 1496
+# load 802.1q module
+modprobe 8021q
+# set VLANs names
+vconfig set_name_type DEV_PLUS_VID_NO_PAD
+#vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+# make vlan 3
+vconfig add eth0 3
+ifconfig eth0.3 192.168.3.1 up
+#
+# bot

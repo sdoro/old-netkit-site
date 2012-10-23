@@ -1,0 +1,94 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: mysql.html,v 1.17 2004/05/23 17:19:29 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - mysql</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 17</h1>
+<h2 class="center">Internet Server</h2>
+<h3>MySQL</h3>
+
+<p>
+    I due server della rete sperimentale sono configurati per essere uno
+	la replica dell'altro. Delle slide che illustrano come configurare questa
+	funzionalit&agrave; le puoi trovare
+	<a href="http://jeremy.zawodny.com/mysql/managing-mysql-replication"
+       title="link esterno">qu&igrave;</a>.
+	<p>
+	Il server slave &egrave; utilizzato durante le ore di laboratorio da due classi
+    quinte che lo adoperano per costruire semplici schemi di
+    database, programmi in Visual Basic e applicazioni Access.
+	Per l'accesso
+	al database da remoto esiste l'ottimo programma Open Source 
+	<a href="http://www.mysql.com/products/mysqlcc/index.html"
+       title="link esterno">MySQLCC</a>
+	(MySQL Control Center) che ha le seguenti funzionalit&agrave;:
+</p>
+
+	<ul>
+	  <li>costruzione interattiva di query all'interno di un editor</li>
+	  <li>amministrazione dei database e delle tabelle</li>
+	  <li>aministrazione del server stesso</li>
+	</ul>
+
+<p>	 
+	Per l'uso con il linguaggio Visual Basic si possono usare componenti 
+	ADO (ActiveX Data Objects) collegati via ODBC attraverso
+	<a href="http://www.mysql.com/downloads/api-myodbc.html"
+       title="link esterno">MySQL ODBC</a>
+	(utilizzato anche da Access).
+	I pc client dei laboratori sono macchine Windows 98 e 2000.
+	Per un esauriente articolo che descrive una tipica applicazione solo
+	su macchine M$ e con l'uso del database da parte di Word, Excel, VB e Access vai a
+	<a href="http://thelabwiz.home.mindspring.com/mysql.html"
+       title="link esterno">VB project</a>. <br>
+	Per l'uso con il linguaggio 
+	<a href="http://java.sun.com/j2se/" title="link esterno">java (J2SE)</a>
+	si sono fatti test con
+	<a href="http://www.mysql.com/downloads/api-jdbc-old.html"
+       title="link esterno">MySQL Connector/J</a>
+	il driver JDBC ufficiale per MySQL e
+	anche con il classico ODBC Bridge. Sono stati testati anche
+	applet che permettono l'accesso al database dall'interno di un browser.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/05/23 17:19:29 $
+</span>
+</address>
+
+
+</body>
+
+</html>

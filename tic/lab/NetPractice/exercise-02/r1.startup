@@ -1,0 +1,7 @@
+# $Id: r1.startup,v 1.1 2006/10/08 08:32:12 doros Exp $
+# configure IP address
+ifconfig eth0 195.11.14.1 up
+ifconfig eth1 100.0.0.9 \
+         netmask 255.255.255.252 broadcast 100.0.0.11 up
+# default route
+route add default gw 100.0.0.10

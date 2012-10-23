@@ -1,0 +1,25 @@
+$Id: README,v 1.11 2007-02-09 16:45:44 doros Exp $
+
+
+To switch into TLS enabled
+--------------------------
+
+server:
+/etc/init.d/slapd stop
+cp -f /etc/ldap/slapd.conf-tls /etc/ldap/slapd.conf
+cp -f /etc/default/slapd-master /etc/default/slapd
+/etc/init.d/slapd start
+
+
+rserver:
+/etc/init.d/slapd stop
+cp -f /etc/ldap/slapd.conf-tls /etc/ldap/slapd.conf
+cp -f /etc/default/slapd-replica /etc/default/slapd
+/etc/init.d/slapd start
+
+
+client:
+cp -f /etc/ldap/ldap.conf-tls /etc/ldap/ldap.conf
+cp -f /etc/libnss-ldap.conf-tls /etc/libnss-ldap.conf
+cp -f /etc/pam_ldap.conf-tls /etc/pam_ldap.conf
+

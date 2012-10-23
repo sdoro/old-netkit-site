@@ -1,0 +1,7 @@
+#
+# /etc/shorewall/masq
+# $Id: masq,v 1.2 2006/06/30 06:45:04 doros Exp $
+#
+#INTERFACE	        SUBNET		ADDRESS
+eth0			eth1
+#LAST LINE -- ADD YOUR ENTRIES ABOVE THIS LINE -- DO NOT REMOVE

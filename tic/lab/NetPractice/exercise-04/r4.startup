@@ -1,0 +1,7 @@
+# $Id: r4.startup,v 1.1 2006/10/08 09:58:30 doros Exp $
+# configure IP address
+ifconfig eth0 10.0.8.4 netmask 255.255.255.0 broadcast 10.0.8.255
+ifconfig eth1 10.0.7.4 netmask 255.255.255.0 broadcast 10.0.7.255
+ifconfig eth2 10.0.9.4 netmask 255.255.255.0 broadcast 10.0.9.255
+# route
+route add default gw 10.0.7.2

@@ -1,0 +1,56 @@
+
+dn: nisMapName=/net,dc=istituto,dc=it
+objectClass: top
+objectClass: nisMap
+nisMapName: /net
+
+
+dn: cn=dir1,nisMapName=/net,dc=istituto,dc=it
+objectClass: nisObject
+cn: dir1
+nisMapEntry: -fstype=nfs nfs1.istituto.it:/dir1
+nisMapName: /net
+
+
+
+dn: cn=dir2,nisMapName=/net,dc=istituto,dc=it
+objectClass: nisObject
+cn: dir2
+nisMapEntry: -fstype=autofs ldap://ldap.istituto.it/ nisMapName=/net/dir2,dc=istituto,dc=it
+nisMapName: /net
+
+
+
+dn: nisMapName=/net/dir2,dc=istituto,dc=it
+objectClass: top
+objectClass: nisMap
+nisMapName: /net/dir2
+
+
+dn: cn=dir21,nisMapName=/net/dir2,dc=istituto,dc=it
+objectClass: nisObject
+cn: dir21
+nisMapEntry: -fstype=autofs ldap://ldap.istituto.it/nisMapName=/net/dir2/dir21,dc=istituto,dc=it
+nisMapName: /net/dir2
+
+
+dn: nisMapName=/net/dir2/dir21,dc=istituto,dc=it
+objectClass: top
+objectClass: nisMap
+nisMapName: /net/dir2/dir21
+
+
+dn: cn=dir211,nisMapName=/net/dir2/dir21,dc=istituto,dc=it
+objectClass: nisObject
+cn: dir211
+nisMapEntry: -fstype=nfs nfs1.istituto.it:/dir211
+nisMapName: /net/dir2/dir21
+
+
+dn: cn=dir212,nisMapName=/net/dir2/dir21,dc=istituto,dc=it
+objectClass: nisObject
+cn: dir212
+nisMapEntry: -fstype=nfs nfs3.istituto.it:/dir212
+nisMapName: /net/dir2/dir21	
+
+

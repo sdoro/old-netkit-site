@@ -1,0 +1,26 @@
+$Id: README,v 1.5 2008-11-15 21:04:07 doros Exp $
+
+In this experience the pcR node has network connectivity
+(tun module) with the real host. Before start the Netkit script
+you must create a tap device as normal user:
+
+realHost$ ifname=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname 192.168.77.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+
+
+Fix a konsole-tab bug:
+realHost# cp konsole-tab.sh $NETKIT_HOME/bin
+
+Setup
+
+realHost$ cp netkit4tic.ds /ramdisk/home/knoppix/.devilspie/4autostart.ds
+realHost$ devilspie&
+

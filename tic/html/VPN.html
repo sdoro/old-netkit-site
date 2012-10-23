@@ -1,0 +1,331 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: VPN.html,v 1.16 2006/11/20 07:43:35 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - vpn</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 8</h1>
+<h2 class="center">VPN</h2>
+
+
+
+<p>
+Una virtual private network (VPN) &egrave; un modo di usare la cifratura in modo
+tale che si possa usare una rete pubblica (ad esempio Internet) come se fosse una
+rete privata (uno spezzone del nostro cablaggio). Una VPN &egrave; il tentativo
+di combinare i vantaggi della rete pubblica (&egrave; economica e diffusa) con
+alcuni dei vantaggi della rete privata (&egrave; sicura).
+</p>
+
+<p>In sostanza tutte le VPN che usano Internet impiegano lo stesso principio:
+il traffico viene cifrato, protetta l'integrit&agrave; e incapsulato in
+nuovi pacchetti i quali sono mandati in Internet dove qualcuno rifar&agrave;
+a ritroso l'operazione sul traffico ricevuto.
+</p>
+
+<p>Le VPN non sono esattamente una tecnologia di firewall ma spesso sono discusse
+in argomenti di firewall per i seguenti motivi:
+</p>
+
+<ul>
+	<li>se usi una VPN con un firewall devi fare attenzione poich&egrave; il
+	firewall non pu&ograve; controllare il traffico entrante nella VPN e questo
+	pu&ograve; essere un modo per evitare il controllo del firewall e aprire
+	delle insicurezze.</li>
+	
+	<li>il firewall &egrave; il posto pi&ugrave; conveniente per aggiungere
+	la funzionalit&agrave; di VPN.</li>
+	
+	<li>spesso l'uso di VPN &egrave; il mezzo per fornire servizi remoti
+	che non possono essere resi sicuri usando tecniche di firewall.</li>
+</ul>
+
+<p>Il protocollo che &egrave; diventato lo standard de facto per questo
+tipo di comunicazione &egrave; IPSec (Internet Protocol Security), del quale
+sono disponibili numerose implementazioni a seconda dell'amibiente in cui
+viene impiegato. Il pacchetto IPSec pi&ugrave in uso in ambiente Linux &egrave;
+<a href="http://www.openswan.org" title="link esterno">Openswan IPSEC</a>.
+</p>
+
+<p>Tre sono i protocolli usati:
+</p>
+
+<ul>
+<li>AH (Authentication Header) fornisce il servizio di autenticazione
+ a livello di pachetto.</li>
+ 
+<li>ESP (Encapsulating Security Payload)
+ fornisce cifratura con autenticazione.</li>
+ 
+<li>IKE (Internet Key Exchange)
+ negozia i parametri di connessione, incluse le chiavi, per gli altri due.</li>
+</ul>
+
+<p>L'implementazione &egrave; realizzata in tre parti:
+</p>
+<ul>
+<li>KLIPS (kernel IPsec) implementa
+ AH, ESP, e la manipolazione del pacchetto a livello di kernel.</li>
+<li>Pluto (an IKE daemon) implementa
+ IKE, e la negoziazione della connessione con altri sistemi.</li>
+<li>vari script che fornisco l'interfaccia per l'amministratore della macchina.</li>
+</ul>
+
+<p>
+Comunque una buona documentazione di IPSec la trovi nel sito stesso.
+</p>
+
+
+
+
+
+
+
+
+<h3>La configurazione di IPSec</h3>
+
+<p>
+I due file di configurazione sono:
+</p>
+
+<ul>
+	<li><code>ipsec.secrets</code><br>
+	Il file ipsec.secrets contiene una tabella di secrets. Questi sono
+	usati da ipsec_pluto, il demone Internet Key Exchange (IKE), per
+	autenticare gli altri host. Noi memorizzeremo solo un tipo di
+	secrets: le chiavi RSA che avremo per l'occasione generato con:
+	<pre>
+ipsec newhostkey &gt; /etc/ipsec.secrets
+chmod 600 /etc/ipsec.secrets
+	</pre>
+    &Egrave; vitale che il file sia di appartenenza del super-user, 
+	e che le sue permission ne impediscano l'accesso da tutti gli
+	altri utenti.
+	Una volta installata la chiave nel file ipsec.secrets il passo
+	successivo &egrave; distribuire la chiave pubblica a tutti i sistemi
+	con cui prevedi di configurare una connessione con chiavi pubbliche.
+	Per estrarre la parte pubblica in un formato corretto occorre dare
+	i comandi:
+	<pre>
+ipsec showhostkey --left
+ipsec showhostkey --right
+	</pre>
+    Nel caso in cui si voglia averla in un formato per inserirla
+	in un record di tipo KEY per il DNS il comando diventa:
+	<pre>
+ipsec showhostkey
+	</pre>
+	L'aspetto del file &egrave; il seguente:
+<pre>
+# This file holds shared secrets or RSA private keys for inter-Pluto
+# authentication.  See ipsec_pluto(8) manpage, and HTML documentation.
+# $Id: VPN.html,v 1.16 2006/11/20 07:43:35 doros Exp $
+#
+#
+# RSA private key for this host, authenticating it to any other host
+# which knows the public part.  Suitable public keys, for ipsec.conf, DNS,
+# or configuration of other implementations, can be extracted conveniently
+# with "ipsec showhostkey".
+: RSA   {
+    # RSA 1024 bits   gateL   Wed Aug  6 21:59:18 2003
+    # for signatures only, UNSAFE FOR ENCRYPTION
+    #IN KEY 0x4200 4 1 AQNw76rLzb6ATTlZty9SunFr3skE4x/hADmqQmT1ux/jvwE27l4...
+    # (0x4200 = auth-only host-level, 4 = IPSec, 1 = RSA)
+    Modulus: 0x70efaacbcdbe804d3959b72f52ba716bdec904e31fe10039aa4264f5bb1...
+    PublicExponent: 0x03
+    # everything after this point is secret
+    PrivateExponent: 0x12d29c774cf5156234399e87e31f12e74fcc2b7b2ffad55ef1b...
+    Prime1: 0xda7cb713a68ebf29f833426e41b0552ed0b9886ef74e315c2c5c17ef643b...
+    Prime2: 0x84539cf66d1173cf6936b427340c96a5d50c52c6cfdfd26ee335029cc6f6...
+    Exponent1: 0x91a87a0d19b47f7150222c49812038c9e07bb049fa3420e81d92ba9f9...
+    Exponent2: 0x5837bdf99e0ba28a4624781a22b30f1938b2e1d9dfea8c49ecce01bdd...
+    Coefficient: 0x018a69edc1278a81f89fd81f5efca57d8c6945d93252eef8a274783...
+    }
+# do not change the indenting of that "}"
+</pre>
+
+	dove la chiave RSA &egrave; stata generata con il comando
+	<code>ipsec rsasigkey 1024</code>.</li>
+	
+	
+	<li><code>ipsec.conf</code><br>
+	Il file ipsec.conf specifica molte delle configurazioni e controlli
+	per il sottosistema FreeS/WAN. Il suo contenuto non ha informazioni
+	sensibili per la sicurezza a meno che non sia usata la chiave manuale.<br>
+	Il file &egrave; un file di testo, formato da una o pi&ugrave; sezioni:
+	<ul>
+		<li>conn sections<br>
+		contiene le definizioni di una connessione
+		di rete da instaurare con IPSec. Il nome &egrave; arbitrario
+		e serve per identificare la connessione. Ecco un esempio:
+		
+		<pre>
+conn sample
+ # Left security gateway, subnet behind it, next hop toward right.
+ left=212.1.1.1
+ leftsubnet=10.10.10.0/24
+ leftnexthop=212.1.1.2
+ # Right security gateway, subnet behind it, next hop toward left.
+ right=212.1.2.1
+ rightsubnet=10.10.20.0/24
+ rightnexthop=212.1.2.2
+ # To start the connection at startup
+ auto=start
+
+</pre>
+
+		Allo scopo di evitare l'editing del file di configurazione per
+		adattarlo a ciascun sistema coinvolto nella connessione,
+		le specifiche delle connessioni sono scritte in termini di sinistro
+		(left) e destro (right) invece che in termini di locale e remoto.
+		Quale dei partecipanti sia considerato sinistro o destro &egrave;
+		arbitrario; IPSec lo identifica in base a informazioni interne.
+		Questo permette di usare le stesse specifiche di connessione
+		per entrambe le estremit&agrave;. Left rappresenta l'indirizzo
+		pubblico del gateway sinistro. Leftsubnet &egrave; l'indirizzo
+		della rete privata sinistra. Leftnexthop &egrave; il router di
+		riferimento per la connessione alla rete publica sinistra.
+		La stringa auto=start specifica che la connessione viene attivata
+		allo startup del demone.
+		
+		</li>
+		
+		<li>config section<br>
+		Al momento presente l'unica sezione config &egrave; quella chiamata
+		setup che contiene informazioni usate quando il software viene
+		fatto partire. Ecco un esempio:
+		
+		<pre>
+config setup
+ interfaces=&quot;ipsec0=eth1&quot;
+ # Debug-logging controls: "none" for (almost) none, "all" for lots.
+ klipsdebug=none
+ plutodebug=none
+ plutoload=%search
+ plutostart=%search
+ # Close down old connection when new one using same ID shows up.
+ uniqueids=yes
+        </pre>
+		
+		dove interface &egrave; una lista di coppie del tipo
+		virtual=physical.
+		</li>
+	</ul>
+	</li>
+</ul>
+
+<p>
+I file di configurazione per il nostro esempio sono:
+</p>
+
+<ul>
+ <li><a href="../lab/VPN/gateL/etc/ipsec.conf"
+        title="file di configurazione">ipsec.conf</a> e
+     <a href="../lab/VPN/gateR/etc/ipsec.conf"
+        title="file di configurazione">ipsec.conf</a> coincidenti</li>
+ <li><a href="../lab/VPN/gateL/etc/ipsec.secrets"
+        title="file di configurazione">ipsec.secrets</a> valido per il gateway left</li>
+ <li><a href="../lab/VPN/gateL/etc/ipsec.secrets"
+        title="file di configurazione">ipsec.secrets</a> valido per il gateway right</li>
+</ul>
+
+<ul>
+ <li>la security policy del firewall<br>
+     Possiamo ora stabilire una semplice politica di sicurezza:<br>
+	 <b>&quot;Rifiutare tutte le connessioni iniziate dalla rete pubblica
+	 verso il firewall e verso la LAN da lui protetta, tranne quelle dirette
+	 alla porta 22/tcp per l'amministrazione remota e quelle dirette verso
+	 la porta 80/tcp delll'host pcL che partono dall'host pcR.
+	 Il traffico in uscita
+	 dal firewall e dalla LAN protetta &egrave; invece permesso, ma solo
+	 per i protocolli DNS, SSH, HTTP/HTTPS, SMTP.&quot;</b><br>
+	   
+     Vediamo in dettaglio solo i files pi&ugrave; importanti:
+	  <ul>
+	   <li>Left Gateway
+	   <ul>
+		<li><a href="../lab/VPN/gateL/etc/shorewall/zones"
+               title="file di configurazione">zones</a>:
+            descrive il partizionamento della rete in zone;</li>
+		<li><a href="../lab/VPN/gateL/etc/shorewall/policy"
+               title="file di configurazione">policy</a>:
+            lista di regole di default per la gestione della sicurezza a livello del firewall;</li>
+		<li><a href="../lab/VPN/gateL/etc/shorewall/rules"
+               title="file di configurazione">rules</a>:
+            lista di regole che infrangono le regole espresse nella policy;</li>
+		<li><a href="../lab/VPN/gateL/etc/shorewall/interfaces"
+               title="file di configurazione">interfaces</a>:
+            elenco delle interfacce fisiche;</li>
+		<li><a href="../lab/VPN/gateL/etc/shorewall/tunnels"
+               title="file di configurazione">tunnels</a>:
+            per la configurazione di tunnel IPSec;</li>
+		<li><a href="../lab/VPN/gateL/etc/shorewall/masq"
+               title="file di configurazione">masq</a>:
+            per configurare il mascheramento.</li>
+	   </ul></li>
+	   <li>Rigth Gateway
+	   <ul>
+		<li><a href="../lab/VPN/gateR/etc/shorewall/zones"
+               title="file di configurazione">zones</a>:
+            descrive il partizionamento della rete in zone;</li>
+		<li><a href="../lab/VPN/gateR/etc/shorewall/policy"
+               title="file di configurazione">policy</a>:
+               lista di regole di default per la gestione della sicurezza a livello del firewall;</li>
+		<li><a href="../lab/VPN/gateR/etc/shorewall/rules"
+               title="file di configurazione">rules</a>:
+            lista di regole che infrangono le regole espresse nella policy;</li>
+		<li><a href="../lab/VPN/gateR/etc/shorewall/interfaces"
+               title="file di configurazione">interfaces</a>:
+            elenco delle interfacce fisiche;</li>
+		<li><a href="../lab/VPN/gateR/etc/shorewall/tunnels"
+               title="file di configurazione">tunnels</a>:
+            per la configurazione di tunnel IPSec;</li>
+		<li><a href="../lab/VPN/gateR/etc/shorewall/masq"
+               title="file di configurazione">masq</a>:
+            per configurare il mascheramento.</li>
+	   </ul></li>
+	  </ul>
+	   
+	 </li>
+</ul>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/11/20 07:43:35 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+# $Id: master.cf,v 1.2 2006/06/29 14:13:54 doros Exp $
+
+#
+# ==========================================================================
+# service type  private unpriv  chroot  wakeup  maxproc command + args
+#               (yes)   (yes)   (yes)   (never) (100)
+# ==========================================================================
+#smtp	  inet	n	-	-	-	-	smtpd
+#628	  inet	n	-	-	-	-	qmqpd
+pickup	  fifo	n	-	-	60	1	pickup
+cleanup	  unix	n	-	-	-	0	cleanup
+qmgr	  fifo	n	-	-	300	1	qmgr
+#qmgr	  fifo	n	-	-	300	1	nqmgr
+rewrite	  unix	-	-	-	-	-	trivial-rewrite
+bounce	  unix	-	-	-	-	0	bounce
+defer	  unix	-	-	-	-	0	bounce
+flush	  unix	n	-	-	1000?	0	flush
+proxymap  unix	-	-	n	-	-	proxymap
+smtp	  unix	-	-	-	-	-	smtp
+relay	  unix	-	-	-	-	-	smtp
+#	-o smtp_helo_timeout=5 -o smtp_connect_timeout=5
+showq     unix	n	-	-	-	-	showq
+error     unix	-	-	-	-	-	error
+#local	  unix	-	n	n	-	-	local
+virtual	  unix	-	n	n	-	-	virtual
+lmtp	  unix	-	-	n	-	-	lmtp
+
+#
+# Interfaces to non-Postfix software. Be sure to examine the manual
+# pages of the non-Postfix software to find out what options it wants.
+#
+# maildrop. See the Postfix MAILDROP_README file for details.
+#
+maildrop  unix  -       n       n       -       -       pipe
+  flags=DRhu user=vmail argv=/usr/local/bin/maildrop -d ${recipient}
+#
+# The Cyrus deliver program has changed incompatibly, multiple times.
+cyrus	  unix	-	n	n	-	-	pipe
+  flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
+# Cyrus 2.1.5 (Amos Gouaux)
+#cyrus     unix  -       n       n       -       -       pipe
+#  user=cyrus argv=/cyrus/bin/deliver -e -r ${sender} -m ${extension} ${user}
+uucp	  unix	-	n	n	-	-	pipe
+  flags=Fqhu user=uucp argv=uux -r -n -z -a$sender - $nexthop!rmail ($recipient)
+ifmail    unix  -       n       n       -       -       pipe
+  flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
+bsmtp     unix  -       n       n       -       -       pipe
+  flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -d -t$nexthop -f$sender $recipient
+scalemail-backend unix	-	n	n	-	2	pipe
+  flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}
+
+# only used by postfix-tls
+#tlsmgr	  fifo	-	-	n	300	1	tlsmgr
+#smtps	  inet	n	-	n	-	-	smtpd -o smtpd_tls_wrappermode=yes -o smtpd_sasl_auth_enable=yes
+#587	  inet	n	-	n	-	-	smtpd -o smtpd_enforce_tls=yes -o smtpd_sasl_auth_enable=yes
+trace	  unix	-	-	-	-	0	bounce
+verify	  unix	-	-	-	-	1	verify

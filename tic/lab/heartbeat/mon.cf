@@ -1,0 +1,94 @@
+# /etc/mon/mon.cf, configuration file for mon
+# $Id: mon.cf,v 1.2 2005/11/06 13:15:20 doros Exp $
+
+#
+# Run `/etc/init.d/mon reload' after editing this file in order for your
+# changes to take effect.
+
+# There is no default configuration for mon.  The docs most useful for
+# setting up your /etc/mon/mon.cf file are the mon(1) man page,
+# /usr/share/doc/mon/README.hints*, /usr/share/doc/mon/README.monitors*
+# and /usr/share/doc/mon/examples/mon.cf*.
+
+# When you do configure your server, it's a good idea to include these
+# settings (to restrict access to the server to the local machine):
+#
+#    serverbind = localhost
+#    trapbind   = localhost
+
+#
+# global options
+#
+#cfbasedir   = /usr/lib/mon/etc
+#alertdir    = /usr/lib/mon/alert.d
+#mondir      = /usr/lib/mon/mon.d
+maxprocs    = 20
+histlength = 100
+randstart = 60s
+
+
+#
+# authentication types:
+#   getpwnam      standard Unix passwd, NOT for shadow passwords
+#   shadow        Unix shadow passwords (not implemented)
+#   userfile      "mon" user file
+#
+#authtype = getpwnam
+authtype = userfile
+userfile = /etc/mon/uf
+
+
+#
+# NB:  hostgroup and watch entries are terminated with a blank line (or
+# end of file).  Don't forget the blank lines between them or you lose.
+#
+
+#
+# group definitions (hostnames or IP addresses)
+#
+hostgroup cluster-http 193.206.185.10
+
+hostgroup cluster-nfs 193.206.185.11
+
+watch cluster-http
+  service http
+    description "check http service availability"
+    interval 1m
+    monitor http.monitor
+    period month {Jan-Dec}
+      alertafter 2
+      alert file.alert /var/www/alert.txt
+      upalert file.alert /var/www/alert.txt
+      alert apacheRestart.alert
+  service http-takeover
+    description "check http service availability for takeover"
+    interval 1m
+    monitor http.monitor
+    period month {Jan-Dec}
+      alertafter 3 10m
+      numalerts 1
+      alert file.alert /var/www/alert.txt
+      alert haStop.alert
+
+watch cluster-nfs
+  service nfs
+    description "check NFS service availability"
+    interval 1m
+    monitor rpc.monitor -r mountd -r nfs 
+    period month {Jan-Dec}
+      alertafter 2
+      alert file.alert /nfs/alert.txt
+      upalert file.alert /nfs/alert.txt
+      alert nfsRestart.alert
+  service nfs-takeover
+    description "check NFS service availability for takeover"
+    interval 1m
+    monitor rpc.monitor -r mountd -r nfs 
+    period month {Jan-Dec}
+      alertafter 3 10m
+      numalerts 1
+      alert file.alert /nfs/alert.txt
+      alert haStop.alert
+
+#
+# bot

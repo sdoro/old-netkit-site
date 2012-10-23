@@ -1,0 +1,64 @@
+# $Id: passwd.ldif,v 1.1 2008-12-09 15:47:20 doros Exp $
+
+dn: uid=nane,ou=People,dc=istituto,dc=it
+uid: nane
+cn: Nane Vianello
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+sn: Vianello
+mail: n.vianello@istituto.it
+userPassword: {crypt}$1$/N8ZAlof$2hjMoJXv4rz43RHZPVZjL0
+shadowLastChange: 12708
+shadowMax: 99999
+shadowWarning: 7
+loginShell: /bin/bash
+uidNumber: 1003
+gidNumber: 1003
+homeDirectory: /home/nane
+gecos: Nane Vianello,,,
+telephoneNumber: 555-555-5555
+facsimileTelephoneNumber: 555-555-5556
+postalCode: 70555
+postalAddress: PO BOX 55555
+physicalDeliveryOfficeName: Netkit4TIC, Inc, R&D
+ou: R&D
+st: Veneto
+l: Carpenedo
+homePhone: 555-555-5559
+mobile: 555-555-5558
+pager: 555-555-5557
+
+dn: uid=toni,ou=People,dc=istituto,dc=it
+uid: toni
+cn: Toni Ballarin
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+userPassword: {crypt}$1$PqF3arYG$JyIOSL40utVJa/d1cONX5.
+shadowLastChange: 12708
+shadowMax: 99999
+shadowWarning: 7
+loginShell: /bin/bash
+uidNumber: 1004
+gidNumber: 1004
+homeDirectory: /home/toni
+gecos: Toni Ballarin,,,
+sn: Ballarin
+mail: t.ballarin@istituto.it
+telephoneNumber: 444-444-4444
+facsimileTelephoneNumber: 444-444-4446
+postalCode: 70444
+postalAddress: PO BOX 44444
+physicalDeliveryOfficeName: Netkit4TIC, Inc, R&D
+ou: R&D
+st: Veneto
+l: Carpenedo
+homePhone: 444-444-4449
+mobile: 444-444-4448
+pager: 444-444-4447
+

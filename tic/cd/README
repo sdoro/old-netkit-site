@@ -1,0 +1,19 @@
+
+This is DVD/USB Netkit relase 2.6-K2.7-F5.0
+
+- Knoppix 6.0.1 with patched SKAS3 kernel
+
+- Netkit
+  - netkit-2.6.tar.bz2
+  - netkit-kernel-i386-K2.7.tar.bz2
+  - netkit-filesystem-i386-F5.0.tar.bz2
+
+- VisualNetkit visualnetkit-1.4-i686-static.tar.bz
+
+
+30 Mar 2009
+
+Sandro Doro
+http://www.tic.fdns.net/tic/html/lab.html
+
+

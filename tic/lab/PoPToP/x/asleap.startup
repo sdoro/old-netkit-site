@@ -1,0 +1,5 @@
+# $Id:$
+ifconfig eth0 203.1.1.1
+route add default gw 203.1.1.254
+# install missing package
+dpkg -i /root/asleap_1.4-1_i386.deb

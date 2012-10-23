@@ -1,0 +1,21 @@
+;
+; $Id: db.net,v 1.4 2005/01/19 08:27:24 doros Exp $
+$TTL    60000
+@               IN      SOA     ns.net.    root.ns.net. (
+                        2002102801 ; serial
+                        28800 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@                   IN      NS      ns.net.
+@                   IN      MX      10 smtp.net.
+ns                  IN      A       216.57.5.214
+fdns                IN      NS      ns.fdns.net.
+ns.fdns             IN      A       216.57.5.215
+
+smtp         604800 IN CNAME ns.net.
+ns1          604800 IN CNAME ns.net.
+ns2          604800 IN CNAME ns.net.
+ns1.fdns     604800 IN CNAME ns.fdns.net.
+ns2.fdns     604800 IN CNAME ns.fdns.net.

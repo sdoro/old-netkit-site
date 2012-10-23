@@ -1,0 +1,513 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-RLab.html,v 1.36 2009-10-03 09:37:26 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-RLab</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su rete segmentata con gestione WEB</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-proxyArp.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-VPN.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+Lo scopo di questa esercitazione &egrave; quella di illustrare una
+applicazione "Web based" per il controllo della navigazione all'interno
+di una o pi&ugrave; aree in cui &egrave; suddivisa una rete scolastica. Tale
+applicazione viene usata dal docente o dal responsabile dell'area
+per abilitare/disabilitare certe tipologie di traffico dalle stazioni
+dell'area verso il backbone o Internet.
+</p>
+
+<p>
+Questo lavoro &egrave; nato da un lavoro realizzato da 
+<a>Giovanni Coffaro</a> che l'ha scritto e battezzato <code>NIET</code>.
+Un altro software con le stesse funzionalit&agrave; ma forse pi&ugrave;
+conosciuto &egrave;
+<a href="http://opensource.dschola.it/" title="link esterno">Net-Control</a>
+sponsorizzato anche dall'Osservatorio Tecnologico per la Scuola
+<a href="http://www.osservatoriotecnologico.net/software/riuso/netcontrol.htm"
+   title="link esterno">OTE</a>.
+</p>
+
+<p>
+In seguito nell'anno scolastico 2005/2006 uno studente
+dell'Istituto "C.Zuccante", pur mantenendo
+inalterata l'infrastruttura, ha migliorato
+l'interfaccia grafica e ha dato una sistemazione al software
+realizzando un applicativo di nome <code>borpLAN</code>.
+&Egrave; stato registrato su sourceforge e si pu&ograve;
+accedere al repository cvs per scaricarne i sorgenti
+con il comando:
+</p>
+
+<pre>
+$ export CVSROOT=:ext:USER@borplan.cvs.sourceforge.net:/cvsroot/borplan
+$ export CVS_RSH=ssh
+$ cvs checkout .
+</pre>
+
+<pre>
+Subversion Server:
+
+https://borplan.svn.sourceforge.net
+Path to Repository:
+
+/svnroot/borplan
+Access Instructions:
+
+Information about accessing this Subversion repository may be found in our document titled "Subversion (Version Control for Source Code)".
+
+https://sourceforge.net/docs/E09
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=infra></a>Infrastruttura</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La mappa
+(<a href="pdf/uml-RLab.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/uml-RLab.xml" title="file per Dia">xml</a>)
+della rete prende in considerazione per semplicit&agrave;
+il caso di due sole aree collegate al backbone. &Egrave;
+immediata l'estensione a pi&ugrave; aree.
+</p>
+
+
+
+<p>
+Questa topologia &egrave; utilizzabile a partire dalle piccole scuole dove
+ci sono pochi laboratori per finire nei grandi istituti tecnici dove
+si possono trovare pi&ugrave; di una decina di laboratori.
+Essa si ricollega alla progettazione della rete del
+<a href="uml-NET.html" title="">modulo 10</a>
+dove si prevede che ogni area come ad
+esempio laboratori, biblioteca, access points, aula magna, segreterie,
+aula professori, palestra, etc. venga
+separata dalle altre e gestita con politiche specifiche quali:
+<ul>
+  <li>regole fisse dettate dall'uso a cui &egrave; destinata l'area;</li>
+  <li>regole dinamiche dettate dalla presenza di particolari materie
+      e/o da particolari esigenze didattiche.</li>
+</ul>
+
+<p>
+Ogni area viene connessa al backbone attraverso un router LEAF/Bering uClibc
+con funzionalit&agrave; di packet filter e dove viene configurata
+la tabella di routing per la raggiungibilit&agrave; di una parte o
+di tutte le subnet presenti nel backbone.
+(Ricordiamo che la configurazione della tabella di routing deve essere fatta
+per tutti gli host presenti nell'area backbone.)<br>
+Nel router &egrave; preconfigurato un server DHCP che assegna
+gli IP all'interno dell'area secondo una tabella prestabilita.
+Lo schema di numerazione &egrave;
+conforme alla proposta di numerazione presentata in
+<a href="/net/html/area.html#area" title="Approfondimento">Numerazione Aree</a>
+dove per l'area interna e per l'area perimetrale abbiamo adottato
+la numerazione riportata come &quot;area backbone&quot;.
+</p>
+
+<p>
+Per la visibilit&agrave; delle macchine M$ distribuite sulle varie
+subnet occorre che nel backbone
+sia installato un NetBIOS "WINS server like" come Samba e che venga
+configurato per tutte le macchine M$ che vogliano operare oltre
+la propria subnet.
+</p>
+
+<p>
+Le regole di filtraggio nei sistemi Linux vengono definite
+attraverso comandi <code>iptables</code> ma abbiamo preferito usare
+una interfaccia ad alto livello di nome <code>shorewall</code>
+che ci semplifica notevolmente il lavoro.
+</p>
+
+<p>
+Per la precisione abbiamo pensato di intervenire in maniera
+non invasiva e cooperativa con Shorewall utilizzando il
+meccanismo che Shorewall stesso utilizza per aggiungere/togliere
+dinamicamente alcune regole di filtraggio.<br>
+Infatti Shorewall usa una <code>chain</code> di nome <code>dynamic</code>
+per inserire "a caldo" dei nodi presenti in una blacklist.
+Questa lista &egrave; caricata al boot e
+pu&ograve; essere aggiornata a &quot;run time&quot; senza dover
+fermare e riavviare il firewall.
+Il meccanismo originale di shorewall risulta essere per&ograve; troppo
+restrittivo in quanto il nodo aggiunto alla blacklist non potr&agrave;
+utilizzare Internet ma non potr&agrave; neppure usare un qualsiasi
+altro servizio presente sulla rete backbone.
+Per risolvere questo problema abbiamo specializzato la blacklist
+aggiungendo alla regola di iptable l'IP destinazione.
+</p>
+
+<p>
+L'applicazione WEB ricava dalla mappa visualizzata sul browser i nodi
+da aggiungere/togliere alla blacklist e traduce le selezioni operate
+sul browser in comandi da inviare al router utilizzando un canale SSH
+con autenticazione con chiavi RSA detto a chiavi pubbliche.<br>
+Per ragioni di sicurezza allo startup del router tutti gli IP
+associati agli studenti sono disabilitati alla navigazione.
+</p>
+
+
+<p>
+Per l'attivazione del servizio SSH sul router occorre inserirlo
+nella lista dei moduli da far partire nel file <code>leaf.cfg</code>.
+</p>
+
+
+<p>
+L'esecuzione
+remota, tramite SSH, &egrave; permessa e controllata attraverso 
+la registrazione nel router della chiave publica dello user 
+proprietario del processo web (nelle distribuzioni Debian
+&egrave; <code>www-data</code>).<br>
+Questo settaggio per semplicit&agrave; &egrave; gi&agrave; impostato dallo
+script attivato da <code>lstart</code> e
+riportiamo di seguito i due passi di cui &egrave; formato:
+</p>
+
+<ol>
+  <li>generazione una tantum di una chiave DSA associata all'utente
+      <code>www-data</code> di 1024 bit di lunghezza per
+      l'utilizzo della versione 2 del protocollo:
+
+<pre>
+www-data@www$ ssh-keygen -t dsa -b 1024 -N ''
+</pre>
+
+      al completamento del quale nella directory <code>~/.ssh</code>
+      vengono generati due file <code>id_dsa</code> e <code>id_dsa.pub</code>
+      rispettivamente chiave privata e chiave pubblica.</li>
+
+  <li>distribuzione della chiave publica
+      su tutte le macchine remote a cui vogliamo connetterci
+      appendendola al file <code>~/.ssh/authorized_keys2</code>
+      dove il simobolo tilde &egrave; una abbreviazione per indicare
+      la home directory dell'utente che autorizza e concede l'esecuzione
+      in locale del comando impartito dall'applicazione web.</li>
+</ol>
+
+
+<p>
+L'applicazione essendo 'Web based' ha bisogno di un Web server ma le
+risorse richieste sono molto modeste.
+Per il fatto che l'utente deve autenticarsi
+abbiamo scelto il protocollo <code>https</code> in modo che tutte le
+comunicazioni browser/server e viceversa siano cifrate.<br>
+Prevediamo una pagina iniziale dove sono listate tutte le aree
+in cui &egrave; stata divisa la rete e a cui &egrave; associato
+del personale di competenza autorizzato con la relativa password.
+L'utente una volta entrato nella pagina/area di propria competenza
+viene invitato a impostare la coppia user/password e in
+caso positivo gli viene presentata la mappa dei computer disposti
+nell'area e il relativo stato.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=v></a>Sperimentazione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per provare l'esperienza virtuale scarica il file
+<a href="RLab.tgz" title="esperienza Netkit4TIC">tarball</a>,
+scompattalo in una sottodirectory della
+<code>HOME</code> dell'utente, entra nella directory
+<code>Rlab</code> e lancia il comando <code>lstart</code>
+<a href="RLab-desktop.png" title="screenshot">(screenshot)</a>.
+</p>
+
+
+
+<p>
+Per verificare che tutto &egrave; configurato correttamente proviamo
+a vedere se l'utente <code>www-data</code> del nodo <code>www</code>
+pu&ograve; eseguire comandi remoti sul nodo <code>pf-a1</code>:
+</p>
+
+<pre>
+www# su - www-data
+www-data@www$ ssh root@192.168.0.201<span class="blue">
+LEAF Bering-uClibc pf-a1 2.4.32-bs3 #2 Thu May 25 09:37:54 CEST 2006
+pf-a1#</span>
+</pre>
+
+<p>
+se compare il prompt del nodo <code>pf-a1</code> allora &egrave; tutto ok.
+</p>
+
+<p>
+&Egrave; possibile visualizzare anche via shell le attuali regole impostate:
+</p>
+
+<pre>
+www# su - www-data ssh root@192.168.0.201 shorewall show <span class="yellow">dynamic</span>
+</pre>
+<p>
+Per provare la raggiungibilit&agrave; del nodo <code>www</code>
+ad esempio  sulla porta 8080 installiamo un &quot;surrogato&quot; di
+proxy server:
+</p>
+
+
+<pre>
+www# iperf -s -p 8080<span class="blue">
+------------------------------------------------------------
+Server listening on TCP port 8080
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------</span>
+</pre>
+
+
+<p>
+e per verificarne la raggiungibilit&agrave; in seguito alla
+attivazione/disabilitazione del nodo <code>a1-1</code> tramite interfaccia web
+utilizzermo il comando:
+</p>
+
+
+<pre>
+a1-1# iperf -c 192.168.0.254 -p 8080
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=borplan></a>borpLAN</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per visualizzare/modificare il settaggio del packet filter
+basta usare un browser
+(<a href="borpLAN-firefox.png" title="screenshot">screenshot1</a>,
+<a href="borpLAN-desktop.png" title="screenshot">screenshot2</a>):
+</p>
+
+<pre>
+realHost$ mozilla-firefox https://192.168.77.2/borpLAN/Area1/index.php
+</pre>
+
+<p>
+dove la password dell'utente <code>admin</code> &egrave; <code>admin</code>.
+Tutte le stazioni dei docenti hanno la possibilit&agrave; a livello
+TCP/IP porta 443 di accedere all'applicativo WEB. Inoltre tutte le
+postazioni docente possono accedere a livello TCP/IP alla porta 8080
+del proxy. Si intende che gli applicati WEB sono protetti da
+password individuali o di gruppo (nel caso di gestione aree).
+</p>
+
+
+<p>
+Per simulare un browser lanciamo il comando:
+</p>
+
+<pre>
+a1-1# iperf -c 192.168.0.254 -p 8080
+</pre>
+
+<p>
+e andiamo ad agire sull'interfaccia Web in corrispondenza del nodo
+<code>a1-1</code> per poi verificarne gli effetti.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=webconf></a>Configurazione di LEAF attraverso interfaccia WEB</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Recentemente &egrave; stato rilasciato un nuovo modulo di
+nome <code>webconf</code> che realizza una interfaccia WEB
+per tutte le operazioni di configurazione e manutenzione
+del firewall.
+</p>
+
+<p>
+Lo potete sperimentare puntando il browser su (user=root, passwd=root):
+</p>
+
+
+<pre>
+realHost$ mozilla-firefox http://192.168.0.201/
+</pre>
+
+<p>
+Riportiamo solo alcuni screenshot relativi a
+<a href="webconf-01.png" title="screenshot">pagina generale</a>,
+<a href="webconf-02.png" title="screenshot">stato complessivo</a>,
+<a href="webconf-03.png" title="screenshot">configurazione shorewall</a>.
+</p>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=dhcp></a>Utilizzazione DHCP</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per verificare il funzionamento del server DHCP del router ci spostiamo sul
+nodo <code>a1-1</code> e ne disattiviamo l'interfaccia. In seguito
+chiediamo il leasing di un IP address:
+</p>
+
+<pre>
+a1-1# ifconfig eth0 down; \
+      dhclient eth0<span class="blue">
+Listening on LPF/eth0/fe:fd:c0:a8:01:01
+Sending on   LPF/eth0/fe:fd:c0:a8:01:01
+Sending on   Socket/fallback
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 5
+DHCPOFFER from 192.168.1.254
+DHCPREQUEST on eth0 to 255.255.255.255 port 67
+DHCPACK from 192.168.1.254
+bound to 192.168.1.1 -- renewal in 35645 seconds.</span>
+</pre>
+
+
+<p>
+Ora simuliamo che il nodo sia la stampante <code>hplj4</code>
+con MAC 08:00:46:00:00:00 preconfigurata nel server DHCP con IP 
+fisso a 192.168.1.241:
+</p>
+
+<pre>
+a1-1# dhclient -r eth0; \
+      ifconfig eth0 down; \
+           ifconfig eth0 up; \
+           ifconfig eth0 hw ether 08:00:46:00:00:00; \
+           dhclient eth0<span class="blue">
+DHCPREQUEST on eth0 to 255.255.255.255 port 67
+DHCPNAK from 192.168.1.254
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 7
+DHCPOFFER from 192.168.1.254
+DHCPREQUEST on eth0 to 255.255.255.255 port 67
+DHCPACK from 192.168.1.254
+bound to 192.168.1.241 -- renewal in 41422 seconds.</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2009-10-03 09:37:26 $
+</span>
+</address>
+
+
+</body>
+</html>

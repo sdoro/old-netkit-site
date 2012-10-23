@@ -1,0 +1,6 @@
+ifconfig eth0 192.168.77.2
+route add default gw 192.168.77.1
+#
+dpkg -i /hostlab/deb/*.deb
+#
+# bot

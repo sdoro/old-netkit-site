@@ -1,0 +1,446 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-VLAN.html,v 1.32 2008-01-04 21:24:46 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-vlan</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Virtual LAN 
+      (<a href="http://en.wikipedia.org/wiki/Virtual_LAN"
+         title="Wikipedia">VLAN</a>)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-bridgeSTP.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-bering.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Requisiti</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per sperimentare l'argomento in questione
+occorre che il kernel della macchina virtuale utilizzata abbia attivato
+il supporto per VLAN
+(<a href="http://cateee.net/lkddb/web-lkddb/VLAN_8021Q.html"
+    title="Linux Kernel Driver DataBase">CONFIG_VLAN_8021Q</a>=[M,Y]).
+Per caricare il modulo basta dare il comando:
+</p>
+
+<pre>
+vm# modprobe 8021q
+</pre>
+
+<p>
+e per controllare l'effettivo caricamento (sia in kernel modulari che statici):
+</p>
+
+<pre>
+vm# dmesg | grep 802.1Q<span class="blue">
+802.1Q VLAN Support vX.Y Ben Greear &lt;greearb@candelatech.com&gt;</span>
+</pre>
+
+<p>
+Per i kernel modulari si pu&ograve; verificare anche con:
+</p>
+
+<pre>
+vm# lsmod | grep 802<span class="blue">
+8021q                  17544  0</span>
+</pre>
+
+<p>
+Avendo terminato i requisiti "lato kernel" 
+passiamo ai requisiti "lato user space": occorre
+aver installato il pacchetto <code>vlan</code>
+che contiene i programmi utente per aggiungere o rimuovere
+device di tipo VLAN dai nostri device ethernet.
+</p>
+
+<p>
+Per configurare l'interfaccia di rete occorre
+procedere in modo leggermente diverso dallo standard:
+supponiamo di dover definire sulla interfacccia eth0 la VLAN 2
+e che questa abbia 192.158.50.1 come IP address:
+</p>
+
+<pre>
+vm# ifconfig eth0 0.0.0.0 up
+</pre>
+
+<p>
+Aggiungiamo la "trunked virtual interfaces" 2:
+</p>
+
+<pre>
+vm# vconfig add eth0 2<span class="blue">
+Added VLAN with VID == 2 to IF -:eth0:-</span>
+</pre>
+
+<p>
+Assegniamo l'IP address (e verifichiamo):
+</p>
+
+<pre>
+vm# ifconfig <span class="yellow">eth0.2</span> 192.168.50.1 up</span>
+vm# cat /proc/net/vlan/config<span class="blue">
+VLAN Dev name    | VLAN ID
+Name-Type: VLAN_NAME_TYPE_RAW_PLUS_VID_NO_PAD
+eth0.2         | 2  | eth0</span>
+</pre>
+
+<p>
+&Egrave; possibile dare dei nomi diversi ai device di
+tipo eth?.* come ad esempio:
+</p>
+
+<pre>
+vm# vconfig set_name_type VLAN_PLUS_VID_NO_PAD<span class="blue">
+Set name-type for VLAN subsystem. Should be visible in /proc/net/vlan/config</span>
+# vconfig add eth0 3<span class="blue">
+Added VLAN with VID == 3 to IF -:eth0:-</span>
+vm# ifconfig <span class="yellow">vlan3</span> 192.168.51.1 up</span>
+vm# cat /proc/net/vlan/config<span class="blue">
+VLAN Dev name    | VLAN ID
+Name-Type: VLAN_NAME_TYPE_PLUS_VID_NO_PAD
+vlan3          | 3  | eth0</span>
+</pre>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza "base"</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+
+<p>
+La rete che useremo la organizziamo come
+rete switched anarchica e cio&egrave; tutte le stazioni sono
+VLAN-aware e quindi tutti i collegamenti sono trunked.
+Il piano di numerazione della rete 192.168.50.0/29 ha tre host connessi:
+</p>
+
+<ul>
+ <li>X con indirizzo 192.168.50.1 e vlan 2</li>
+ <li>Y con indirizzo 192.168.50.2 e vlan 3</li>
+ <li>Z con indirizzo 192.168.50.3 e vlan 3</li>
+</ul>
+
+<p>
+e viene costruita automaticamente dallo script <code>lstart</code>
+(scarica il
+<a href="VLAN.tgz" title="esperienza Netkit4TIC">materiale</a>
+per l'esperienza):
+</p>
+
+<pre>
+realHost$ lstart
+</pre>
+
+<p>
+Il funzionamento delle VLAN si pu&ograve; provare semplicemente
+con il comando ping e osservando che dall'host X non sono
+raggiungibili ne Y ne Z. Invece il ping dall'host Y verso l'host Z e
+viceversa diagnostica connettivit&agrave;.
+</p>
+
+<p>
+Se andiamo a vedere le specifiche e i frame che vengono passati
+in un collegamento "trunked" notiamo che il frame viene esteso
+con 4 byte e da questo ne segue che i
+driver dei dispositivi ethernet devono essere opportunamente
+programmati. Nel nostro caso il programma <code>uml_switch</code> che realizza
+il nostro switch/hub virtuale non &egrave; VLAN compatibile in quanto
+non permette l'invio di frame con dimensione superiore a 1500 byte.
+Per ovviare a questo bug
+dobbiamo diminuire di 4 byte la lughezza dei frame trasmessi.
+Quindi dopo aver configurato e attivato una scheda di rete
+basta aggiungere il comando che setta
+l'<a href="http://en.wikipedia.org/wiki/Maximum_transmission_unit"
+     title="link to Wikipedia">mtu</a> a 1496 byte.<br>
+Il comando che ricerca il pi&ugrave; piccolo mtu nel path
+che congiunge due nodi &egrave; <code>tracepath</code> contenuto
+nel pacchetto Debian <code>iputils-tracepath</code>:
+</p>
+
+<pre>
+Y# tracepath -n 192.168.50.2<span class="blue">
+ 1:  192.168.50.2      3.633ms pmtu 1496
+ 1:  192.168.50.3      2.903ms reached
+     Resume: <span class="yellow">pmtu 1496</span> hops 1 back 1</span>
+Z# tracepath -n 192.168.50.3<span class="blue">
+ 1:  192.168.50.3      5.125ms pmtu 1496
+ 1:  192.168.50.2      3.004ms reached
+     Resume: <span class="yellow">pmtu 1496</span> hops 1 back 1</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Una applicazione per i laboratori scolastici</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+&Egrave; possibile associare pi&ugrave; VLAN alla stessa interfaccia e quindi
+abbiamo pensato di costruire una rete con un nodo <code>server</code> con
+tante VLAN quanti sono i nodi di tipo studente. Nel nostro esempio i nodi sono
+due: <code>student1</code> e <code>student2</code> e sono di tipo VLAN-unaware
+in modo da non essere vulnerabili ad una eventuale riconfigurazione
+della interfaccia di rete.
+La nostra rete illustra una situazione di prova pratica in
+una rete di un laboratorio
+(per esercizio 192.168.i.0/24) dove non si vuole che le
+macchine client si possano scambiare informazioni.
+La configurazione IP &egrave; 
+(per i client ho cercato di far tornare l'ultimo numero IP (della parte rete)
+con il numero della VLAN di appartenza in modo da facilitare la lettura
+delle tracce):
+</p>
+
+<ul>
+ <li>server con indirizzo
+    <ul>
+      <li>192.168.2.254 associato alle VLAN 2</li>
+      <li>192.168.3.254 associato alle VLAN 3</li>
+    </ul></li>
+ <li>student1 con indirizzo 192.168.2.1 VLAN-unaware associato alla VLAN 2</li>
+ <li>student2 con indirizzo 192.168.3.1 VLAN-unaware associato alla VLAN 3</li>
+</ul>
+
+<p>
+che viene costruita automaticamente dal comando:
+</p>
+
+<pre>
+realHost$ lstart -d school
+</pre>
+
+<p>
+Riportiamo comunque la configurazione delle VLAN 2 e 3 per la
+macchina server:
+</p>
+
+<pre>
+server# vconfig add eth0 2
+server# ifconfig <span class="yellow">eth0.2</span> 192.168.2.254 up
+server# vconfig add eth0 3
+server# ifconfig <span class="yellow">eth0.3</span> 192.168.3.254 up
+server# cat /proc/net/vlan/config<span class="blue">
+VLAN Dev name    | VLAN ID
+Name-Type: VLAN_NAME_TYPE_RAW_PLUS_VID_NO_PAD
+eth0.2         | 2  | eth0
+eth0.3         | 3  | eth0</span>
+</pre>
+
+<p>
+La connettivit&agrave; tra lato VLAN-aware e lato WLAN-unaware lo
+abbiamo realizzato tramite un bridge: abbiamo creato un nodo con
+tre ethernet: la prima connessa al server e VLAN-aware e quindi con
+le VLAN 2 e 3; la seconda connessa a <code>student1</code> e la
+terza connessa a <code>student2</code> entrambe VLAN-unaware.
+</p>
+
+<p>
+Possiamo verificare con il comando <code>ping</code> che non esiste
+raggiungibilit&agrave; tra gli host <code>student1</code> e
+<code>student2</code> i quali riescono a
+comunicare solo con l'host <code>server</code>.
+Ecco le traccie sulla VLAN2
+<a href="../capture/vlan2-icmp.acp"
+   title="file per Ethereal">(File ACP)</a>
+e sulla VLAN3
+<a href="../capture/vlan3-icmp.acp"
+   title="file per Ethereal">(File ACP)</a>
+ricavate rispettivamente dai seguenti lanci di tcpdump:
+</p>
+
+<pre>
+server# tcpdump -i <span class="yellow">eth0.2</span> -w vlan2-icmp.acp
+server# tcpdump -i <span class="yellow">eth0.3</span> -w vlan3-icmp.acp
+</pre>
+
+<p>
+Osserviamo che solo dalla cattura completa su eth0
+<a href="../capture/vlan23-icmp.acp"
+   title="file per Ethereal">(File ACP)</a>
+possiamo vedere nella
+dissezione di WireShark il tag VLAN. Prendiamo ad esempio la
+richiesta ARP:
+</p>
+
+<pre>
+server# tcpdump -i <span class="yellow">eth0</span> -w vlan23-icmp.acp
+</pre>
+
+<pre>
+Frame 1 (46 bytes on wire, 46 bytes captured)
+Ethernet II, Src: 00:00:00_00:20:00 (00:00:00:00:20:00),
+             Dst: Broadcast (ff:ff:f f:ff:ff:ff)
+    Destination: Broadcast (ff:ff:ff:ff:ff:ff)
+    Source: 00:00:00_00:20:00 (00:00:00:00:20:00)
+    Type: 802.1Q Virtual LAN (0x8100)
+<span class="yellow">802.1Q Virtual LAN
+    000. .... .... .... = Priority: 0
+    ...0 .... .... .... = CFI: 0
+    .... 0000 0000 0010 = ID: 2</span>
+    Type: ARP (0x0806)
+Address Resolution Protocol (request)
+</pre>
+
+
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Verifica di un collegamento trunked tra bridge</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Con una piccola modifica dell'esempio precedente possiamo provare
+il funzionamento trunked tra due bridge. Lo schema che adotteremo &egrave;:
+
+<pre>
+                  eth1                                eth1
+                    +-----------+          +-----------+
+  +----------+      |           |          |           |      +----------+
+  |   pc11   |------+    br0    |  eth0.2  |    br0    +------|   pc21   |
+  +----------+      |           |          |           |      +----------+
+                    |  -------  +-- eth0 --+  -------  |
+  +----------+      |           |          |           |      +----------+
+  |   pc12   |------+    br1    |  eth0.3  |    br1    +------|   pc22   |
+  +----------+      |           |          |           |      +----------+
+                    +-----------+          +-----------+
+                  eth2                                eth2
+</pre>
+
+dove pcXX sono VLAN-unaware e sono cos&igrave; assegnati:
+pc11 e pc21 sono nella VLAN2; pc12 e pc22 sono assegnati alla
+VLAN 3. Il collegamento tra i due bridge &egrave; trunked ossia
+veicoler&agrave; i VLAN tag di VLAN 2 e di VLAN 3.
+</p>
+
+<p>
+Per attivare questo esperimento basta lanciare il comando:
+</p>
+
+<pre>
+realHost$ lstart -d trunkBridge
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2008-01-04 21:24:46 $
+</span>
+</address>
+
+
+</body>
+
+</html>

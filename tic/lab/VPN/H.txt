@@ -1,0 +1,1 @@
+nano -w debian/rules, add --with-dlz-mysql to ./debian/rules line and change --enable-threads to --disable-threads

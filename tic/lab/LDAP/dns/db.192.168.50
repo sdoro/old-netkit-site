@@ -1,0 +1,17 @@
+; reverse lookup database 
+; /etc/bind/db.192.168.50
+; $Id: db.192.168.50,v 1.1 2003-08-22 19:14:07 doros Exp $
+;
+$TTL    1
+@               IN      SOA     1.50.168.192.in-addr.arpa.    nobody.nowere. (
+                        2002102801 ; serial
+                        28 ; refresh
+                        14 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@                             IN      NS      1.50.168.192.in-addr.arpa.
+1.50.168.192.in-addr.arpa.    IN      A       192.168.50.1
+1 PTR        server.
+2 PTR        rserver.
+3 PTR        client.

@@ -1,0 +1,14 @@
+# configure IP address
+ifconfig eth0 192.168.1.222 up
+route add default gw 192.168.1.254
+# starting bind server
+/etc/init.d/bind9 start
+# starting apache server
+/etc/init.d/apache start
+# starting ssh server
+rm -f /etc/ssh/sshd_not_to_be_run
+/etc/init.d/ssh start
+# prepare file
+dd if=/dev/zero of=/var/www/bigfile bs=4096 count=4096
+ln -s /var/www/bigfile /var/www/tic/bigfile
+ln -s /var/www/bigfile /var/www/net/bigfile

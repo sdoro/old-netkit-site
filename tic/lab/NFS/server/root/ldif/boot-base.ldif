@@ -1,0 +1,29 @@
+# $Id: boot-base.ldif,v 1.3 2009-10-18 11:43:57 doros Exp $
+
+dn: dc=istituto,dc=it
+objectClass: dcObject
+objectClass: organization
+o: R&D
+dc: istituto
+
+dn: ou=DSA,dc=istituto,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: DSA
+description: Directory Security Accounts (DSA)
+
+dn: cn=admin,ou=DSA,dc=istituto,dc=it
+objectClass: organizationalRole
+objectClass: top
+objectClass: simpleSecurityObject
+cn: admin
+description: LDAP administrator
+userPassword: {CRYPT}i1oc7Gt36DU1g
+# userPassword: netkit
+
+# People, server
+dn: ou=People,dc=istituto,dc=it
+objectClass: organizationalUnit
+ou: People
+
+

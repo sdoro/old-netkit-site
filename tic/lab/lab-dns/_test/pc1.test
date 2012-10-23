@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Ask to resolve some names
+for name in pc1.lugroma3.org . pc2.nanoinside.net; do
+   dig pc1.lugroma3.org | grep -Ei "((question)|(answer)|(authority)|(additional)) section" -A 1
+done
+
+sleep 5
+halt

@@ -1,0 +1,26 @@
+# /etc/network/interfaces -- configuration file for LEAF network
+# $Id: interfaces,v 1.3 2005/05/30 05:43:40 doros Exp $
+#
+auto lo
+iface lo inet loopback
+#
+auto eth0
+iface eth0 inet static
+        address 80.204.240.182
+        netmask 255.255.255.248
+        broadcast 80.204.240.183
+        gateway 80.204.240.177
+#
+auto eth1
+iface eth1 inet static
+        address 192.168.1.254
+        netmask 255.255.255.0
+        broadcast 192.168.1.255
+#
+auto eth2
+iface eth2 inet static
+        address 192.168.2.254
+        netmask 255.255.255.0
+        broadcast 192.168.2.255
+#
+# bot

@@ -1,0 +1,390 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-CVS.html,v 1.6 2011-01-17 10:10:18 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-PKI</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 16 - Creazione e mantenimento di un sito Web</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza di un repository basato su CVS</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-Nino.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-php.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+La <a href="cvs.tgz" title="esperienza Netkit4TIC">configurazione</a> (4KB)
+che andremo a provare consiste nella costruzione
+di un repository centrale e di un nodo generico per
+la simulazione dell'utilizzo del repository da parte degli utenti
+collegati in rete. Quindi lo
+scenario virtuale sar&agrave; composto da un nodo server <code>repository</code>, sede
+del repository, e da un nodo client <code>node</code> come postazione esempio
+per l'utilizzo del repository. A tale scopo &egrave; possibile
+utilizzare lo stesso nodo reale.<br>
+In generale i comandi per manipolare il repository hanno una forma per
+esteso che non prevede l'uso di variabili d'ambiente e una
+forma pi&ugrave; sintetica che usa le varibili <code>CVSROOT</code>
+e <code>CVS_RSH</code>. Noi useremo quest'ultima forma.
+</p>
+
+<p>
+Per prima cosa occorre aggiungere nel nodo server l'utenza.
+Per questioni di protezione delle directory l'utenza appartiene
+allo stesso gruppo che dovr&agrave; avere diritti di lettura
+e scrittura sul repository.<br>
+Nel nostro esempio sono stati costruiti i due utenti
+<code>caio</code> e <code>tizio</code> e il gruppo <code>cvsgrp</code>.
+</p>
+
+<p>
+Decidiamo il path dove vogliamo radicare il repository, ad
+esempio <code>/mnt/repository</code>, inizializziamo il repository,
+costruiamo il gruppo di lavoro e lo abilitiamo alla lettura/scrittura
+nel repository:
+</p>
+
+<pre>
+repository# mkdir /mnt/repository
+repository# export CVSROOT=/mnt/repository
+repository# cvs init
+repository# addgroup cvsgrp
+repository# chgrp -R cvsgrp /mnt/repository
+repository# chmod -R g+uw /mnt/repository
+</pre>
+
+<p>
+Ora attiviamo il servizio ssh per dare connettivit&agrave;
+di rete al repository:
+</p>
+
+<pre>
+repository# /etc/init.d/ssh start
+</pre>
+
+
+<p>
+Tutti questi passi sono fatti automagicamente dallo lancio dello script:
+</p>
+
+<pre>
+realHost$ ./lab start
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=base></a>Sperimentazione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Selezioniamo il nodo <code>node</code> e ci autentichiamo
+come utente <code>prg</code> (password <code>not24get</code>):
+</p>
+
+<pre>
+node login: prg<span class="blue">
+Password:</span> not24get
+</pre>
+
+<p>
+Generiamo una coppia di chiavi
+per l'accesso SSH e trasferiamo la chiave pubblica nell'host server
+(con IP 192.168.50.2) e dando &quot;invio&quot; alla richiesta
+di password nel comando ssh-keygen:
+</p>
+
+<pre>
+node$ ssh-keygen -t dsa<span class="blue">
+Generating public/private dsa key pair.
+Enter file in which to save the key (/home/prg/.ssh/id_dsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/prg/.ssh/id_dsa.
+Your public key has been saved in /home/prg/.ssh/id_dsa.pub.
+The key fingerprint is:
+69:0a:2d:e8:bd:84:4e:40:5e:a0:89:52:e6:b9:80:f3 prg@node</span>
+node$ scp ~/.ssh/id_dsa.pub \
+          tizio@192.168.50.2:/home/tizio/.ssh/authorized_keys2<span class="blue">
+The authenticity of host '192.168.50.2 (192.168.50.2)' can't be established.
+RSA key fingerprint is c8:f2:e3:b3:02:2f:56:31:db:4b:83:1e:c7:8f:c9:9b.
+Are you sure you want to continue connecting (yes/no)?</span>yes<span class="blue">
+Warning: Permanently added '192.168.50.2' (RSA) to the list of known hosts.
+Password:</span>not24get<span class="blue">
+id_dsa.pub                                    100%  601     0.6KB/s   00:00</span>
+</pre>
+
+
+<p>
+Ora occorre impostare le variabili d'ambiente:
+</p>
+
+<pre>
+node$ export CVSROOT=:ext:tizio@192.168.50.2:/mnt/repository
+node$ export CVS_RSH=ssh
+</pre>
+
+<p>
+Siamo operativi! Facciamo subito una prova. Ci costruiamo
+una directory dove supponiamo abbiamo i file da inserire nel
+repository. Nel nostro caso abbiamo la directory <code>test</code>
+con all'interno il solo file <code>apache2</code>. Dall'interno
+della directory diamo il comando di inserimento nel repository
+della cartella corrente:
+</p>
+
+<pre>
+node$ cd test
+node$ cvs import -m &quot;First Test&quot; test vtag rtag
+</pre>
+
+<p>
+Il comando inserisce nel repository una directory <code>test</code>
+e ci inserisce tutti i file presenti nella directory corrente.
+I file vengono marcati con vendor tag <code>vtag</code>
+e release tag <code>rtag</code>.
+</p>
+
+<p>
+Ora possiamo costruire la &quot;sandbox&quot;. Costruiamo
+una directory <code>sb</code> e diamo il comando di <code>checkout</code>:
+</p>
+
+
+<pre>
+node$ mkdir ~/sb
+node$ cd ~/sb
+node$ cvs checkout test<span class="blue">
+cvs checkout: Updating test
+U test/apache2</span>
+</pre>
+
+<p>
+Simuliamo una modifica (sostituendo uno 0 con un 1) e verifichiamo:
+</p>
+
+<pre>
+node$ mcedit test/apache2
+node$ cvs diff test/apache2 
+Index: test/apache2
+===================================================================
+RCS file: /mnt/repository/test/lab,v
+retrieving revision 1.1.1.1
+diff -r1.1.1.1 apache2
+2c2
+&lt; NO_START=0
+---
+&gt; NO_START=1
+</pre>
+
+<p>
+per riportare le modifiche sul repository:
+</p>
+
+<pre>
+node$ cvs commit -m &quot;magics&quot; test/apache2<span class="blue">
+/mnt/repository/test/apache2,v  &lt;--  test/apache2
+new revision: 1.2; previous revision: 1.1</span>
+</pre>
+
+<p>
+Installando i pacchetti <code>cvsweb</code> o <code>viewcvs</code>
+&egrave; possibile navigare il repository
+<a href="cvs-cvsweb.png" title="screenshot">(ScreenShot)</a>
+utilizzando un
+browser:
+</p>
+
+<pre>
+realHost$ firefox http://192.168.77.2/cgi-bin/cvsweb.cgi
+realHost$ firefox http://192.168.77.2/cgi-bin/viewcvs.cgi
+</pre>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=storyboard></a>Esempio di applicazione: la storyboard</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Come esempio di applicazione ed utilizzo del repository
+utilizzeremo il metodo che ho usato nella realt&agrave; quando
+sono stato incaricato di installare software o apparati di
+rete. In pratica ho utilizzato in prima istanza un foglio di
+carta in cui venivano descritte le operazioni che venivano fatte
+e poi salvavo da qualche parte i file di configurazione.
+Questo metodo quando viene informatizzato si trasforma
+in pagine Web protette da password e cifrate dove sono
+trascritte le operazioni effettuate e da dove si pu&ograve;
+comandare il download dei file. Questi appunti li ho in
+seguito chiamati storyboard.
+</p>
+
+<p>
+Purtroppo, per ragioni di sicurezza, non possiamo mostrare il
+&quot;vero&quot; repository e mostriamo solo un esempio non
+reale. Vedremo un breve storyboard di una installazione di apache2.
+</p>
+
+<p>
+Configuriamo <code>apt</code> in modo che faccia riferimento
+ai repository ufficiali Debian e che
+il database interno sia up to date:
+</p>
+
+<pre>
+vm# apt-get update
+</pre>
+
+<p>
+In seguito diamo il comando di installazione del pacchetto
+<code>apache2</code>:
+<p>
+
+<pre>
+vm# apt-get install apache2<span class="blue">
+Reading Package Lists... Done
+Building Dependency Tree... Done
+The following extra packages will be installed:
+  apache2-common apache2-mpm-worker
+Suggested packages:
+  apache2-doc
+The following NEW packages will be installed:
+  apache2 apache2-common apache2-mpm-worker
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 1035kB of archives.
+After unpacking 2490kB of additional disk space will be used.
+Do you want to continue? [Y/n]</span>Y<span class="blue">
+Get:1 http://http.us.debian.org sarge/main apache2-common 2.0.53-5 [798kB]
+Get:2 http://http.us.debian.org sarge/main apache2-mpm-worker 2.0.53-5 [204kB]
+Get:3 http://http.us.debian.org sarge/main apache2 2.0.53-5 [32.4kB]
+Fetched 1035kB in 16s (62.4kB/s) 
+Selecting previously deselected package apache2-common.
+(Reading database ... 32261 files and directories currently installed.)
+Unpacking apache2-common (from .../apache2-common_2.0.53-5_i386.deb) ...
+Selecting previously deselected package apache2-mpm-worker.
+Unpacking apache2-mpm-worker (from .../apache2-mpm-worker_2.0.53-5_i386.deb) ...
+Selecting previously deselected package apache2.
+Unpacking apache2 (from .../apache2_2.0.53-5_i386.deb) ...
+Setting up apache2-common (2.0.53-5) ...
+Setting Apache2 not to start, as something else appears to be using Port 80.
+To allow apache2 to start, set NO_START to 0 in /etc/default/apache2.
+Apache2 has been set to listen on port 80 by default, so please
+edit /etc/apache2/ports.conf as desired.
+Note that the Port directive no longer works.
+Module userdir installed; run /etc/init.d/apache2 force-reload to enable.
+
+Setting up apache2-mpm-worker (2.0.53-5) ...
+Not starting apache2 - edit /etc/default/apache2 and change NO_START to be 0.
+
+Setting up apache2 (2.0.53-5) ...</span>
+</pre>
+
+<p>
+Ora disattiviamo apache:
+</p>
+
+<pre>
+repository:~# /etc/init.d/apache stop
+Stopping web server: apache.
+</pre>
+
+<p>
+utilizziamo il file di configurazione nel CVS
+<a href="../lab/cvs/apache2" title="CVS repository file">
+/etc/default/apache2</a> con &quot;NO START&quot; a 1.
+</p>
+
+<pre>
+repository# cp apache2 /etc/default/apache2
+repository# /etc/init.d/apache2 start
+</pre>
+
+<p>
+Non differisce davvero dalla classica pagina del laboratorio
+virtuale, vero? In effetti spesso il mondo virtuale &egrave; lo
+storyboard di ...
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+   <img alt="Creative Commons License"
+        src="88x31.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

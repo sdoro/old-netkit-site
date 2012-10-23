@@ -1,0 +1,5 @@
+# $Id: tftpd-hpa2,v 1.1 2006/08/28 21:58:55 doros Exp $
+#
+# Defaults for tftpd-hpa
+RUN_DAEMON="yes"
+OPTIONS="-l -s /tftpboot"

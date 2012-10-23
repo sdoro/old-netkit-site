@@ -1,0 +1,3 @@
+#!/bin/sh
+# $Id: up-eth0,v 1.1 2007-02-20 11:04:29 doros Exp $
+ip link set eth0 address 00:00:00:00:00:FA

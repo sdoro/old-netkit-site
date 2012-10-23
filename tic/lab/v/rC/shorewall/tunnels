@@ -1,0 +1,8 @@
+#
+# /etc/shorewall/tunnels
+# $Id:$
+#
+#
+# TYPE			ZONE	GATEWAY		GATEWAY ZONE
+ipsec			net	    88.36.248.228
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

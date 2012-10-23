@@ -1,0 +1,13 @@
+# /etc/hosts.allow
+# $Id: hosts.allow,v 1.1 2003/11/02 11:25:28 doros Exp $
+
+# list of hosts that are allowed to access the system.  See
+# hosts_access(5) and /usr/doc/net/portmapper.txt
+#
+# Example:    ALL: LOCAL @some_netgroup
+#             ALL: .foobar.edu EXCEPT terminalserver.foobar.edu
+#
+ALL: 10.10.10.64/255.255.255.240 192.168.77.0/255.255.255.0
+
+#
+# bot

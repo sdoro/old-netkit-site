@@ -1,0 +1,192 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: bind.html,v 1.25 2007-04-23 07:39:15 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - bind</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 17</h1>
+<h2 class="center">Internet Server</h2>
+
+
+<h3>Domain Name Server (DNS)</h3>
+
+<p>
+Per ottenere un dominio una organizzazione deve registrarsi presso
+un ufficio del registro riconosciuto. Ad ogni organizzazione viene
+assegnato un suffisso univoco.
+</p>
+
+<p>
+Il modello di riferimento per il servizio DNS &egrave; client/server
+e una delle maggiori caratteristiche &egrave; la possibilit&agrave;
+per ogni organizzazione di gestirsi in maniera autonoma lo spazio
+degli indirizzi assegnato.<br>
+Il sistema DNS si comporta globalmente come un database distribuito
+di grandi dimensioni dove ogni organizzazione ha un suo server
+e ogni server ha dei collegamenti ad altri server in modo che
+l'intero sistema funzioni come un unico sistema coordinato.<br>
+Quando una applicazione necessita di tradurre un nome nel relativo
+IP address diventa formalmente un client e quindi manda una richiesta
+al server DNS della sua organizzazione per ottenere la traduzione.
+</p>
+
+<p>
+I server DNS sono organizzati gerarchicamente e sono detti
+autoritativi per la parte di loro competenza. Ad esempio il
+<code>ROOT</code> server, che in realt&agrave; &egrave; un insieme
+di 12/13 server distribuiti geograficamente sui continenti e in
+postazioni protette, non conosce i nomi dei computer del dominio
+<code>fdns.net</code> ma conosce chi &egrave; gestore del
+dominio <code>net</code>. In maniera analoga il server che gestisce
+il dominio <code>net</code> non conosce i nomi dei computer del dominio
+<code>tic.fdns.net</code> ma conosce chi &egrave; il gestore del
+dominio <code>fdns.net</code>.
+</p>
+
+<p>
+Tutti i server sono collegati tra loro in modo da formare un sistema
+unico: ogni server conosce come raggiungere il <code>ROOT</code> server
+e come raggiungere i server che sono autoritativi per i nomi
+dei suoi eventuali sottodomini.
+</p>
+
+<p>
+Ogni risolutore di nomi in IP address &egrave; configurato per
+chiedere servizio al DNS della propria organizzazione. Se la richiesta
+che arriva al server &egrave; per un dominio di cui &egrave; autoritativo
+allora il server risponde immediatamente. In caso
+contrario diventa un client di un altro server DNS (in particolare
+del <code>ROOT</code> server). Dalla radice e scendendo ogni volta di
+un livello viene interrogato il server DNS autoritativo fino a quando non
+si risolve il nome.
+</p>
+
+<p>
+In modo analogo a quanto avviene per un nome di dominio avviene
+l'assegnazione di un dominio <code>in-addr.arpa</code>. Questo
+particolare dominio serve per compiere l'operazione (inversa)
+di trovare il nome di un nodo a partire dall'indirizzo IP.
+</p>
+
+<p>
+Allo scopo di ottimizzare le prestazioni il servizio memorizza le
+risposte in modo da non ripercorrere tutto l'albero.
+</p>
+
+
+<h3>Bind</h3>
+
+<p>
+    La documentazione in lingua inglese fornita nell'installazione la puoi
+	trovare nel pacchetto <code>bind9-doc</code> oppure cercando con Google
+    il titolo "BIND 9 Administrator Reference Manual" (Bv9ARM).<br>
+	Il gestore di domini di terzo
+	livello che ci fornisce gratuitamente il dominio <code>tic.fdns.net</code>
+    &egrave; nord americano e lo trovi seguendo il link
+	<a href="http://www.fdns.net/" title="link esterno">FDNS.NET</a>.
+    Nel servizio &egrave; anche compreso la registrazione sul server DNS
+    di una chiave per attivare le connessioni VPN.
+</p>
+
+
+    <p>
+	Dalla versione 9 in poi
+	di Bind si possono costruire delle view (split) attraverso le quali
+	il server risponde in modo diverso in funzione di chi chiede le
+	informazioni. Questa funzionalit&agrave; ci &egrave; sembrata
+	utile dal lato della sicurezza per non dare informazioni
+	aggiuntive e quindi nascondere la configurazione interna. Abbiamo
+	costruito due view:
+	</p>
+
+    <p>	
+	Le associazioni nomi-IP per l'esterno (view=<code>ext</code>) :
+	</p>
+	<ul>
+	  <li>ns1.tic.fdns.net: 217.57.5.219</li>
+      <li>www, mail, ldap, srv1 sono tutti alias del precedente</li>
+	  <li>ns2.tic.fdns.net: 217.57.5.220</li>
+      <li>mail2, ldap2, srv2 sono tutti alias del precedente</li>
+	  <li>re o re.tic.fdns.net: 217.57.5.217</li>
+      <li>fw o fw.tic.fdns.net: 217.57.5.218 (omesso per sicurezza)</li>
+    </ul>
+	
+	
+    <p>
+    Le associazioni nomi-IP per la rete perimetrale interna
+	(view=<code>pint</code>) :
+    <ul>
+      <li>re o re.tic.fdns.net: 217.57.5.217</li>
+      <li>srv1 o srv1.tic.fdns.net: 10.10.10.65</li>
+      <li>srv2 o srv2.tic.fdns.net: 10.10.10.66</li>
+      <li>fw o fw.tic.fdns.net: 10.10.10.77</li> 
+      <li>mngm o mngm.tic.fdns.net: 10.10.20.29</li>
+	  <li>ri o ri.tic.fdns.net: 10.10.10.78/29</li>
+	  <li>pfx o pfx.tic.fdns.net: 10.10.10.61/26</li>
+    </ul>
+
+
+    <p>
+    Per la risoluzione nel dominio <code>in-addr.arpa</code> da IP a nome ho
+    utilizzato la documentazione
+    <a href="http://www.ietf.org/rfc/rfc2317.txt"
+       title="link esterno">RFC 2317</a> per la delegazione di
+    sottoreti.
+    </p>
+
+
+    <p>
+    A scopo di esercizio si potrebbe pensare che ogni laboratorio abbia un suo DNS
+	che risponde alle associazioni relative  al suo	spazio di indirizzamento in modo
+	da non dover configurare i due DNS d'istituto quando variano dei nomi all'interno
+	di qualche laboratorio.
+    </p>
+
+<p>
+Ho preparato una esercitazione
+<a href="uml-NET.html" title="esperienza Netkit4TIC">Netkit4TIC</a> proprio con questa
+configurazione compresi il ROOT server e i server DNS autoritativi
+rispettivamente per il
+dominio <code>net</code> e il dominio <code>fdns.net</code>. &Egrave; stata
+anche configurata la risoluzione inversa nel dominio <code>in-addr.arpa</code>.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-04-23 07:39:15 $
+</span>
+</address>
+
+
+</body>
+
+</html>

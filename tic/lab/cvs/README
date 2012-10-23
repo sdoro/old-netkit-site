@@ -1,0 +1,20 @@
+$Id: README,v 1.2 2007-02-09 16:42:58 doros Exp $
+
+In this experience the vHost has network connectivity
+(tun module) with the real host. Before start the Netkit script
+you must create a tap device as normal user:
+
+realHost$ ifname=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname 192.168.77.1
+
+# echo "1" > /proc/sys/net/ipv4/ip_forward; \
+             iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+

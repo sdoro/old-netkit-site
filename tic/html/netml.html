@@ -1,0 +1,82 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang="en">
+<!-- $Id: netml.html,v 1.3 2007-02-10 08:07:06 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - NetML</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+
+<h2>NetML in Netkit4TIC</h2>
+
+<p>
+The NetML (2005-12-10) installed in the live-{CD,USB} is
+<a href="/netml/NetML-2005-12-10.patch.gz"
+   title="patch file">patched</a>
+to avoid the step of cloning the package itself in
+every working directory. Therefore 
+the environment is set as follow:
+</p>
+
+<pre>
+realHost$ export NETML=/usr/local/netml; \
+          export PATH=$PATH:$NETML
+</pre>
+
+
+
+<p>
+To use it with input file <code>lab.xml</code>:
+</p>
+
+<pre>
+realHost$ Netkit2.sh -x lab.xml -o lab.sh; \
+          chmod u+x lab.sh; \
+          ./lab.sh start
+</pre>
+
+<p>
+To use it read
+<a href="http://www.dia.uniroma3.it/~compunet/netml/netml-labs/hosts.pdf"
+   title="link esterno">"Using NetML to describe hosts"</a>!.
+</p>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-10 08:07:06 $
+</span>
+</address>
+
+
+</body>
+</html>

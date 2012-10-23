@@ -1,0 +1,28 @@
+ip and (ip[12:4] = ip[16:4])
+or
+ip and (ip[0] & 0xf0 != 0x40)
+or
+ip and not igmp
+   and (not src net 172.21)
+   and
+   (
+   (ip[19] = 0xff)
+   or
+   (ip[19] = 0x00)
+   or
+   (ip[6:1] & 0x20 != 0)
+   or
+   ((ip[6:1] & 0x20 = 0) and (ip[6:2] & 0x1fff != 0))
+   or
+   (net 0)
+   or
+   (net 1 or net 2 or net 5 or net 23 or net 31)
+   or
+   ((ip[12] & 0xC0 = 64) and (ip[16] & 0xC0 = 64))
+   or
+   (net 191.255 or net 197 or net 201 or net 223)
+   or
+   (ip[12] > 239)
+   or
+   (ip[0:1] & 0x0f > 5)
+   )

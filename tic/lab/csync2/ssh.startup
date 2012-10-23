@@ -1,0 +1,5 @@
+# $Id: ssh.startup,v 1.1 2008-01-04 16:20:49 doros Exp $
+ifconfig eth0 192.168.100.3 up
+# start ssh server
+rm -f /etc/ssh/sshd_not_to_be_run
+/etc/init.d/ssh start

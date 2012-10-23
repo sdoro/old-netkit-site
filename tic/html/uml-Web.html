@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- $Id: uml-Web.html,v 1.2 2006/11/19 09:04:29 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-Web</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="StyleSheet" href="my-ng.css" type="text/css"  media="screen" />
+  <link rel="StyleSheet" href="myp-ng.css" type="text/css" media="print" />
+</head>
+
+<body>
+
+<p> 
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratory</h1>
+<h2 class="center">Module 15 - Interattivit&agrave; sul Web</h2>
+
+
+
+<div class="box-title">
+  <h3><a href="http://en.wikipedia.org/wiki/World_Wide_Web"
+         title="Wikipedia">World Wide Web</a> technologies</h3>
+</div>
+<div class="box-right">
+    <a href="uml-php.html"><img class="img-right" src="/icons/right.png" alt="right" title="right" /></a>
+</div>
+<div class="box-up">
+    <a href="lab.html"><img class="img-up" src="/icons/up.png" alt="up" title="up" /></a>
+</div>
+<div class="box-left">
+    <a href="uml-CVS.html"><img class="img-left" src="/icons/left.png" alt="left" title="left" /></a>
+</div>
+<div class="box-clear">
+</div>
+
+
+<p>
+For this module we'll use
+<a href="lab.html" title="virtual laboratory">Netkit4TIC</a>
+<span class="yellow">with the
+<a href="lab-setting.html#network" title="approfondimento">connettivity</a>
+with the real network (read <code>README</code> file).</span>
+</p>
+
+
+<p>
+For ours purpose we'll use
+<a href="http://en.wikipedia.org/wiki/Wikipedia"
+   title="Wikipedia">Wikipedia</a>
+extensively. We follow chapter 35, 36 and 37 of
+Douglas Comer &quot;Computer Networks and Internet&quot;.
+</p>
+
+
+
+<div class="box-title">
+  <h3><a id="cp35"></a>(35) World Wide Web Pages and Browsing</h3>
+</div>
+<div class="box-up">
+    <a href="#up"><img class="img-up" src="/icons/up.png" alt="up" title="up" /></a>
+</div>
+<div class="box-clear">
+</div>
+
+
+<ul>
+
+  <li>The Network Architecture
+      <a href="http://en.wikipedia.org/wiki/Client_server"
+         title="Wikipedia">Client/Server</a> is the base for the
+      <a href="http://en.wikipedia.org/wiki/Web_browser"
+         title="Wikipedia">Browser</a>, e.g. a
+      <a href="http://en.wikipedia.org/wiki/User_agent"
+         title="Wikipedia">User agent</a> that retrives a
+      <a href="http://en.wikipedia.org/wiki/Web_page"
+         title="Wikipedia">Web page</a> and interprets
+      <a href="http://en.wikipedia.org/wiki/HyperText"
+         title="Wikipedia">HyperText</a> documents with
+      <a href="http://en.wikipedia.org/wiki/Hyperlink"
+         title="Wikipedia">Hypermedia</a>.
+  </li>
+
+  <li><a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier"
+         title="Wikipedia">URI</a> is used to identify a resource and
+      <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Locator"
+         title="Wikipedia">URL</a> provides means of acting upon.
+  </li>
+
+  <li>The language used is based on
+      <a href="http://en.wikipedia.org/wiki/HTML_element"
+         title="Wikipedia">HTML element</a>
+      or a more recent
+      <a href="http://en.wikipedia.org/wiki/XHTML"
+         title="Wikipedia">XHTML</a>.
+  </li>
+
+  <li>The protocol is
+      <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"
+         title="Wikipedia">Hypertext Transfer Protocol</a>
+      where it uses
+      <a href="http://en.wikipedia.org/wiki/MIME"
+         title="Wikipedia">MIME</a>
+      to encode/decode data. Inside the protocol there
+      are hook for
+      <a href="http://en.wikipedia.org/wiki/Web_cache"
+         title="Wikipedia">Web cache</a>.
+  </li>
+
+  <li>Usually different client are included in Browser as
+      <a href="http://en.wikipedia.org/wiki/Plugin"
+         title="Wikipedia">Plugin</a>.
+  </li>
+
+</ul>
+
+
+
+<div class="box-title">
+  <h3><a id="cp36"></a>(36) Dynamic Web Document Technologies (CGI,PHP)</h3>
+</div>
+<div class="box-up">
+    <a href="#up"><img class="img-up" src="/icons/up.png" alt="up" title="up" /></a>
+</div>
+<div class="box-clear">
+</div>
+
+<ul>
+<li>
+<a href="http://en.wikipedia.org/wiki/Server-side_scripting"
+   title="Wikipedia">Server-side scripting</a>
+<br />
+  <ul>
+    <li>
+<a href="http://en.wikipedia.org/wiki/Common_Gateway_Interface"
+   title="Wikipedia">Common Gateway Interface</a>
+<br />
+    Remember that during apache installation you can choose to
+    configure a feature of apache where CGI scripts are run by the user who
+    owns the script.  It is useful if your users have CGI access and don't
+    trust each other.
+    (Other important files:  /etc/apache/httpd.conf, /etc/apache/modules.conf)
+    </li>
+    <li>
+<a href="http://en.wikipedia.org/wiki/Perl"
+   title="Wikipedia">Perl</a>
+<br />
+    </li>
+  </ul>
+  </li>
+  <li>
+<a href="http://en.wikipedia.org/wiki/Client-side_scripting"
+   title="Wikipedia">Client-side scripting</a>
+<br />
+    <ul>
+      <li>
+<a href="http://en.wikipedia.org/wiki/JavaScript"
+   title="Wikipedia">JavaScript</a>
+<br />
+      </li>
+      <li>
+<a href="http://en.wikipedia.org/wiki/PHP"
+   title="Wikipedia">PHP</a>
+<br />
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+<p>
+See VMWare to read LAMP descriptions
+</p>
+
+<p>
+Start the experience with:
+</p>
+
+<pre>
+realHost$ lstart
+</pre>
+
+<p>
+To test a simple CGI program that prints the date and time at
+which is was run
+(<a href="../lab/Web/www/usr/local/lib/cgi-bin/show.php?date.sh"
+    title="php source">date.sh</a>):
+</p>
+
+<pre>
+realhost$ mozilla-firefox http://192.168.77.2/cgi-bin/date.sh
+</pre>
+
+<p>
+To test the Long-Term State information CGI program
+(<a href="../lab/Web/www/usr/local/lib/cgi-bin/show.php?ipaddr.sh"
+    title="php source">ipaddr.sh</a>):
+</p>
+
+<pre>
+realhost$ mozilla-firefox http://192.168.77.2/cgi-bin/ipaddr.sh
+</pre>
+
+<p>
+To test the Short-Term State information CGI program:
+which is was run
+(<a href="../lab/Web/www/usr/local/lib/cgi-bin/show.php?counter.sh"
+    title="php source">counter.sh</a>):
+</p>
+
+<pre>
+realhost$ mozilla-firefox http://192.168.77.2/cgi-bin/counter.sh
+</pre>
+
+
+
+<div class="box-title">
+  <h3><a id="cp37"></a>(37) Active Web Document Technologies (Java, JavaScript)</h3>
+</div>
+<div class="box-up">
+    <a href="#up"><img class="img-up" src="/icons/up.png" alt="up" title="up" /></a>
+</div>
+<div class="box-clear">
+</div>
+
+<ul>
+<li>
+<a href="http://en.wikipedia.org/wiki/Java_%28programming_language%29"
+   title="Wikipedia">Java Programming Language</a>
+<br />
+</li>
+
+
+</ul>
+<p>
+To test the example applet
+(<a href="../lab/Web/www/var/www/Web/show.php?clickcount.html"
+    title="html source">clickcount.html</a>,
+ <a href="../lab/Web/www/var/www/Web/show.php?clickcount.java"
+    title="java source">clickcount.java</a>):
+</p>
+
+<pre>
+realhost$ mozilla-firefox http://192.168.77.2/clickcount.html
+</pre>
+
+<p>
+To test the example of interaction with a browser
+(<a href="../lab/Web/www/var/www/Web/show.php?buttons.html"
+    title="html source">buttons.html</a>,
+ <a href="../lab/Web/www/var/www/Web/show.php?buttons.java"
+    title="java source">buttons.java</a>):
+</p>
+
+<pre>
+realhost$ mozilla-firefox http://192.168.77.2/buttons.html
+</pre>
+
+
+<p>
+To test the example of JavaScipt
+(<a href="../lab/Web/www/var/www/Web/show.php?js.html"
+    title="html source">js.html</a>):
+</p>
+
+<pre>
+realhost$ mozilla-firefox http://192.168.77.2/js.html
+</pre>
+
+
+
+
+
+<div class="box-title">
+</div>
+<div class="box-up">
+    <a href="#up"><img class="img-up" src="/icons/up.png" alt="up" title="up" /></a>
+</div>
+<div class="box-clear">
+</div>
+
+
+<?php
+require ('Address.php');
+$a = new Address('$Date: 2006/11/19 09:04:29 $');
+?>
+
+
+
+</body>
+</html>

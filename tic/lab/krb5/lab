@@ -1,0 +1,246 @@
+#!/bin/sh
+# $Id: lab,v 1.7 2005/10/17 21:05:47 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 2
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    f=~/.Xdefaults-`hostname`
+    if [ -f $f ] ; then
+      mv $f $f.save
+    fi
+
+    echo "*xterm*geometry: 80x24+1+35">$f
+    vstart kdc --eth0=A  --mem=128 $X
+    waitfinish kdc
+
+    echo "*xterm*geometry: 80x24-1+35">$f
+    vstart srv --eth0=A  --mem=64 $X
+    waitfinish srv
+
+    echo "*xterm*geometry: 80x40+269+128">$f
+    vstart client --append="eth0=tuntap,tap0" --eth1=A  --mem=64 $X
+    waitfinish client
+
+    if [ -f $f.save ] ; then
+      mv $f.save $f
+    else
+      rm -f $f
+    fi
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started ***"
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash kdc
+    vcrash srv
+    vcrash client
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+     if [ `grep tap0 /proc/net/dev|wc -l` = 0 ] ; then
+       echo "missing tap0 device"
+       exit 1
+     fi
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+	# and it is NEVER executed by in the host environment
+	#
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+
+    kdc)
+        # configure IP address 
+        ifconfig eth0 192.168.10.4 up
+        route add default gw 192.168.10.200
+        # configure and start bind
+        cp $SCRIPTDIR/dns/db.root /etc/bind/db.root
+        cp $SCRIPTDIR/dns/db.192.168.* /etc/bind
+        cp $SCRIPTDIR/dns/db.istituto /etc/bind/db.istituto
+        cp $SCRIPTDIR/dns/named.conf /etc/bind/named.conf
+        /etc/init.d/bind9 start
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # Kerberos
+        mv  /etc/krb5.conf /etc/krb5.conf.org
+        cp $SCRIPTDIR/krb5.conf /etc/krb5.conf
+        cp $SCRIPTDIR/kdc.conf /etc/krb5kdc/kdc.conf
+        cp $SCRIPTDIR/kadm5.acl /etc/krb5kdc/kadm5.acl
+        # scripts
+        cp $SCRIPTDIR/kdc.sh /root
+        cp $SCRIPTDIR/principals.sh /root
+        cp $SCRIPTDIR/principals2.sh /root
+        # setup kerberos
+        sh kdc.sh
+        sh principals.sh
+        sh principals2.sh
+        #
+        cp $SCRIPTDIR/krb5-admin-server /etc/default/krb5-admin-server
+        # ssh
+        cp $SCRIPTDIR/authorized_keys2 /root/.ssh/authorized_keys2
+        rm -f /etc/ssh/sshd_not_to_be_run
+        chmod go= /root
+        /etc/init.d/ssh start
+        # ldap
+        gzip -dc $SCRIPTDIR/samba.schema.gz > /etc/ldap/schema/samba.schema
+        gzip -dc $SCRIPTDIR/krb5-kdc.schema.gz > /etc/ldap/schema/krb5-kdc.schema
+        mv /etc/ldap/slapd.conf /etc/ldap/slapd.conf.org
+        cp $SCRIPTDIR/slapd.* /etc/ldap
+        cp $SCRIPTDIR/ldapentries.diff /root
+        # module
+        cp $SCRIPTDIR/pw-kerberos.so /usr/lib/pw-kerberos.so
+        # libkrb53: /usr/lib/libkrb5.so.3.2
+        slapadd -l ldapentries.diff 
+        /etc/init.d/slapd start
+
+        notifyfinish kdc
+        ;;
+
+    srv)
+        # configure IP address 
+        ifconfig eth0 192.168.10.10 up
+        route add default gw 192.168.10.200
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # krb5
+        cp $SCRIPTDIR/krb5.conf /etc/krb5.conf
+        cp $SCRIPTDIR/kadm5.acl /etc/krb5kdc/kadm5.acl
+        # xinetd
+        cp $SCRIPTDIR/ftp /etc/xinetd.d/ftp
+        cp $SCRIPTDIR/telnet /etc/xinetd.d/telnet
+        /etc/init.d/xinetd start
+        # ssh
+        cp $SCRIPTDIR/id_dsa* /root/.ssh
+        chmod go= /root/.ssh/id_dsa
+        cp $SCRIPTDIR/known_hosts /root/.ssh/known_hosts
+        scp 192.168.10.4:/etc/krb5-srv.keytab /etc/krb5.keytab
+        # http
+        mv /etc/apache/httpd.conf /etc/apache/httpd.conf.org
+        cp $SCRIPTDIR/httpd.conf /etc/apache/httpd.conf
+        mkdir /var/www/protected
+        cp $SCRIPTDIR/index.php /var/www/protected/
+        chgrp www-data /etc/krb5.keytab
+        chmod g+r /etc/krb5.keytab
+        /etc/init.d/apache start
+        # NSS/LDAP
+        cp $SCRIPTDIR/libnss-ldap.conf /etc
+        cp $SCRIPTDIR/nsswitch.conf /etc
+        #
+        mkdir /home/mrossi
+        chown 500:100 /home/mrossi
+
+        notifyfinish srv
+        ;;
+
+    client)
+        # configure IP address 
+        ifconfig eth0 192.168.77.2 up
+        ifconfig eth1 192.168.10.200 up
+        route add default gw 192.168.77.1
+        # setup resolv.conf
+        cp $SCRIPTDIR/dns/resolv.conf /etc/resolv.conf
+        > /etc/hosts
+        # ssh
+        cp $SCRIPTDIR/id_dsa* /root/.ssh
+        chmod go= /root/.ssh/id_dsa
+        cp $SCRIPTDIR/known_hosts /root/.ssh/known_hosts
+        scp 192.168.10.4:/etc/krb5-client.keytab /etc/krb5.keytab
+        # NSS/LDAP
+        cp $SCRIPTDIR/libnss-ldap.conf /etc
+        cp $SCRIPTDIR/nsswitch.conf /etc
+        # Kerberos
+        mv  /etc/krb5.conf /etc/krb5.conf.org
+        cp $SCRIPTDIR/krb5.conf /etc/krb5.conf
+        #
+        mkdir /home/mrossi
+        chown 500:100 /home/mrossi
+        # PAM
+        cp $SCRIPTDIR/common-* /etc/pam.d/
+
+        notifyfinish client
+        ;;
+
+    #
+    #
+    ############################################## end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

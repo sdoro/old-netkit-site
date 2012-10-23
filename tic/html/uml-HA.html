@@ -1,0 +1,1277 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-HA.html,v 1.11 2009-02-14 10:10:28 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-HA</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su High Availability (HA) con heartbeat, DRBD e mon</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-csync2.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-dns.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+In questo modulo sperimenteremo un
+<a href="http://en.wikipedia.org/wiki/High-availability_cluster"
+   title="Riferimento esterno Wikipedia">High availability cluster</a>
+(HA Cluster)
+costituito da un
+<a href="http://en.wikipedia.org/wiki/Two-node_cluster"
+   title="Riferimento esterno Wikipedia">two-node cluster</a>.
+Un cluster HA ha il compito di erogare i servizi limitando al
+minimo i danni provocati dal blocco di un nodo. Lo scopo infatti
+&egrave; quello di eliminare i punti deboli del sistema chiamati
+&quot;Single Points of Failures&quot; (SPoF).<br>
+Per questa esercitazione ci siamo ispirati alla tesi di laurea
+&quot;Un Cluster in Alta Disponibilit&agrave; in Ambiente Linux&quot;
+di Sabino Cal&ograve;.
+</p>
+
+<p>
+Tra le due tipologie Active-Passive e
+<a href="http://linux-ha.org/ActiveActive"
+   title="riferimento esterno">Active-Active</a>
+abbiamo
+scelto la seconda in modo da ottenere maggiori prestazioni
+in mancanza di guasti a scapito di peggiori prestazioni
+nel caso opposto. I due nodi li abbiamo chiamati <code>left</code>
+e <code>right</code> con attivi due servizi indipendenti:
+su left &egrave; attivato il servizio http (apache) e su
+right &egrave; attivato il servizio NFS. In caso di guasto
+il nodo superstite offrir&agrave; entrambe i servizi.
+</p>
+
+<p>
+</p>
+
+
+<p>
+Il motivo guida &egrave; quello di evitare la presenza di SPoF
+e quindi sono stati considerati i seguenti casi:
+</p>
+
+<ul>
+  <li>duplicazione delle interfacce di rete: risolto utilizzando
+      il &quot;channel-bonding&quot; implementato dai pacchetti
+      <code>ifenslave</code> e dal modulo del kernel
+      <code>bonding.o</code>.</li>
+  <li>duplicazione delle interfacce seriali che connetterebbero un nodo
+      all'altro: questa opzione
+      serve per eliminare un SPoF sui driver di rete dei
+      nodi. Nel nostro caso virtuale
+      non abbiamo preso in esame questa configurazione.
+      Nel caso reale, dato il basso costo della soluzione,
+      ne consigliamo l'uso.</li>
+  <li>replicazione dei dati tra i nodi del cluster: risolto
+      utilizzando Distributed Replicated Block Device (DRBD) implementato
+      dai pacchetti <code>drbd0.7-utils</code> e da
+      <code>drbd0.7-module-source</code> (compilato diventa un
+      modulo del kernel).</li>
+</ul>
+
+<p>
+Gli strumenti per realizzare HA sono implementati da:
+</p>
+
+<ul>
+  <li><code>heartbeat</code> &egrave; un sottosistema base
+      per il controllo di Linux-HA. &Egrave; in grado di
+      eseguire script al momento della inizializzazione e
+      quando i nodi vengono accesi o spenti. La versione che
+      utilizziamo &egrave; in grado di operare anche il
+      cambio di IP address. &Egrave; preconfigurato per 2-nodi
+      ed &egrave; estensibile ad un numero superiore.</li>
+  <li><code>mon</code> &egrave; uno strumento per monitorare
+      la disponibilit&agrave; di servizi. Quando un servizio
+      diventa non pi&ugrave; disponibile mon pu&ograve;
+      comunicarlo utilizzando syslog, email o SNMP traps.</li>
+</ul>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="schema">Schema</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La rete descritta nella mappa
+(<a href="pdf/HA.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/HA.xml" title="file per Dia">xml</a>)
+&egrave; costituita principalmente da due nodi collegati
+in modalit&agrave; cluster High Availability (HA). Ogni nodo ha
+due schede di rete configurate in modalit&agrave; bonding e connesse all'altro
+nodo. Una terza scheda di rete rende disponibile la connettivit&agrave;
+dalla quale vengono erogati i servizi.
+Un terzo e ultimo nodo rappresenta il nodo client generico da dove
+possono essere provati i servizi o dal quale si amministra il cluster.
+</p>
+
+<p>
+Il bonding delle interfacce eth0 ed eth1 permette la tollerabilit&agrave;
+ai guasti della comunicazione &quot;interna&quot; tra i due nodi.
+In particolare scegliendo l'algoritmo di distribuzione di tipo
+round-robin il carico, in assenza di guasti, viene equamente
+suddiviso tra le interfacce slave.
+</p>
+
+<p>
+La configurazione di DRBD &egrave; stata pensata per offrire
+nei nodi due servizi totalmente indipendenti. Quindi ogni
+nodo ha la copia dei dati dell'altro nodo.<br>
+Il nodo <code>left</code> con apache ha un primo blocco drbd in modalit&agrave;
+primary e un secondo blocco drbd in modalit&agrave; slave.
+La radice del server apache utilizzer&agrave; il primo blocco.<br>
+Viceversa il nodo <code>right</code> con NFS ha un primo blocco drbd
+ in modalit&agrave; slave e un secondo blocco drbd in modalit&agrave; primary.
+La radice del server NFS utilizzer&agrave; il secondo blocco.<br>
+Il primo blocco del nodo left &egrave; in corrispondenza con il
+primo blocco del nodo right e
+il secondo blocco del nodo left &egrave; in corrispondenza con il
+secondo blocco del nodo right.
+</p>
+
+<p>
+Per come viene configurato DRBD ne segue che ogni nodo del
+cluster avr&agrave; delle copie esatte del contenuto degli altri
+nodi e quindi in presenza di un guasto pu&ograve; dare,
+con prestazioni degradate, l'intero insieme di servizi erogati
+in origine dal cluster.
+</p>
+
+<p>
+In seguito gli argomenti vengono esposti suddivisi
+nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li>configurazione del sistema (automagicamente ottenuta dallo
+      script <code>./lab start</code>) dal
+<a href="heartbeat.tgz" title="esperienza Netkit4TIC">tarball</a>.
+  <ul>
+     <li><a href="#pre"
+            title="riferimento interno">prerequisiti</a></li>
+     <li>configurazione <a href="#bonding"
+                           title="riferimento interno">bonding</a></li>
+     <li>configurazione <a href="#drbd"
+                           title="riferimento interno">DRBD</a></li>
+     <li>configurazione <a href="#pconsole"
+                           title="riferimento interno">pconsole</a></li>
+     <li>configurazione <a href="#heartbeat"
+                           title="riferimento interno">heartbeat</a></li>
+     <li>configurazione <a href="#mon"
+                           title="riferimento interno">mon</a></li>
+     <li>configurazione <a href="#cron"
+                           title="riferimento interno">cron</a></li>
+     <li>configurazione <a href="#drbdlinks"
+                           title="riferimento interno">drbdlinks</a></li>
+     <li>configurazione <a href="#apache"
+                           title="riferimento interno">apache</a></li>
+     <li>configurazione <a href="#nfs"
+                           title="riferimento interno">NFS</a></li>
+     <li>configurazione <a href="#nfs-client"
+                           title="riferimento interno">NFS lato client</a></li>
+  </ul></li>
+  <li>Sperimentazione <a href="#interattiva"
+                         title="riferimento interno">interattiva</a></li>
+</ul>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="pre">Prerequisiti</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+<span class="red">
+Per lo svolgimento di questa esercitazione serve una macchina con
+almeno 1 GB di RAM o in alternativa una macchina anche con 256 MB
+di RAM ma con un partizione temporanea di disco con almeno 581 MB liberi
+e ovviamente con permessi di scrittura.</span>
+</p>
+
+<p>
+Nel secondo caso occorre impostare la variabile d'ambiente:
+</p>
+
+<pre>
+export BACK_ST=/mnt/hdaX
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="bonding">Preparazione dell'ambiente bonding</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la configurazione della modalit&agrave; &quot;channel-bonding&quot;
+occorre caricare il modulo bonding, specificando al driver di
+utilizzare tutte le schede slave in modalit&agrave; round-robin
+(mode=0) e specificando di attivare la modalit&agrave; di monitoraggio
+sulle schede (miimon=100) espressa in millisecondi.<br>
+In seguito si configura l'interfaccia bond0 appena definita e poi
+si associano tutte le schede (slave) che si vogliono far partecipare
+al bonding (eth0 e eth1):
+</p>
+
+<pre>
+left# modprobe bonding mode=0 miimon=100 &amp;&amp; \
+      ifconfig bond0 192.168.0.1 up &amp;&amp; \
+      ifenslave bond0 eth0 eth1
+</pre>
+
+<p>
+Il pacchetto <code>ifenslave</code> &egrave; un "empty package" che si
+traduce in <code>ifenslave-2.4</code> o in
+<code>ifenslave-2.6</code> in dipendenza del kernel utilizzato.
+</p>
+
+<p>
+Nel caso della configurazione di un nodo reale
+per il caricamento di un modulo al boot consigliamo l'utilizzo di
+<code>modconf</code> (eventualmente <code>apt-get install modconf</code>)
+che permette tramite un comodo menu di selezionare il modulo desiderato e
+di specificare gli eventuali parametri.
+</p>
+
+<p>
+Nota bene che i comandi <code>lsmod|grep bonding</code>
+visualizzano un "Used by" pari a 0 ma se noi rimoviamo il modulo con
+<code>modprobe -r bonding</code> viene rilasciato bond0 e con esso
+tutti i suoi slaves.
+</p>
+
+<p>
+Per controllare il corretto funzionamento:
+</p>
+
+<pre>
+left# cat /proc/net/bonding/bond0 
+Ethernet Channel Bonding Driver: v2.6.1 (October 29, 2004)
+
+Bonding Mode: load balancing (round-robin)
+MII Status: up
+MII Polling Interval (ms): 100
+Up Delay (ms): 0
+Down Delay (ms): 0
+
+Slave Interface: eth0
+MII Status: up
+Link Failure Count: 0
+
+Slave Interface: eth1
+MII Status: up
+Link Failure Count: 0
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="drbd">Preparazione dell'ambiente DRBD</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la configurazione di DRBD occorre per prima cosa generare il
+modulo drbd.o fondamentale per la gestione dal lato kernel. Per il
+lato user space occorre aver installato <code>drbd0.7-utils</code>.<br>
+In seguito passiamo a configurare il file <code>/etc/drbd.conf</code>,
+uguale per entrambe i nodi,
+secondo le nostre necessit&agrave; che sono:
+</p>
+
+<ul>
+  <li>un blocco a disposizione per il nodo left (apache)</li>
+  <li>un blocco a disposizione per il nodo right (NFS)</li>
+</ul>
+
+<pre>
+# /etc/drbd.conf
+# primo device
+resource drbd0 {
+  protocol C;
+  startup {
+    # Wait for connection timeout.
+    # Default is 0, which means unlimited. Unit is seconds.
+    #
+    wfc-timeout  1;
+  }
+  net {
+  }
+  syncer {
+    rate 800K;
+    group 1;
+  }
+  on left {
+    device     /dev/drbd/0;
+    disk       /dev/ubd/1;
+    address    192.168.0.1:7788;
+    meta-disk  internal;
+  }
+  on right {
+    device     /dev/drbd/0;
+    disk       /dev/ubd/1;
+    address    192.168.0.2:7788;
+    meta-disk  internal;
+  }
+}
+######################################################
+# secondo device
+resource drbd1 {
+  protocol C;
+  startup {
+    # Wait for connection timeout.
+    # Default is 0, which means unlimited. Unit is seconds.
+    #
+    wfc-timeout  1;
+  }
+  net {
+  }
+  syncer {
+    rate 800K;
+    group 2;
+  }
+  on left {
+    device     /dev/drbd/1;
+    disk       /dev/ubd/2;
+    address    192.168.0.1:7789;
+    meta-disk  internal;
+  }
+  on right {
+    device     /dev/drbd/1;
+    disk       /dev/ubd/2;
+    address    192.168.0.2:7789;
+    meta-disk  internal;
+  }
+}
+</pre>
+
+<p>
+Nella precedente configurazione abbiamo specificato che i metadata
+vengono memorizzati all'interno dello stesso blocco. Lo spazio
+occupato dai metadata &egrave; 128MB indipendentemente
+dalla dimensione del device che pu&ograve; essere al pi&ugrave; 4TB.<br>
+Questo limite ci costringe quindi a fare delle prove su device
+di dimensione &gt; 128MB.
+Moltiplicando 128MB+nfsMB per due (blocchi) e il risultato per due (nodi)
+deriva l'alto consumo di spazio disco di questa esperienza (circa 700MB).<br>
+La definizione del gruppo serve nella fase di risincronizzazione
+a definire una sequenza di priorit&agrave;. Nel caso definissimo
+un unico gruppo allora tutte le risorse associate verrebbero
+sincronizzare simultaneamente e questo &egrave; utile quando
+le risorse sono su dischi separati.
+</p>
+
+<p>
+Per default il numero di risorse definibili sono due e se dovessimo
+averne in numero superiore occorre passarne il numero al modulo
+al momento del caricamento. Il nome del parametro &egrave;
+minor_count=#.
+</p>
+
+<p>
+Nel nodo <code>left</code> inizializziamo, una tantum, drbd
+e costruiamo il filesystem XFS nel primo blocco:
+</p>
+
+<pre>
+left# modprobe drbd &amp;&amp; \
+      drbdadm up all &amp;&amp; \
+      drbdadm -- --do-what-I-say primary drbd0 &amp;&amp; \
+      mkfs.xfs -q /dev/drbd/0
+</pre>
+
+<p>
+Operiamo le stesse operazioni nel nodo <code>right</code> questa
+volta sul secondo blocco:
+</p>
+
+<pre>
+right# modprobe drbd &amp;&amp; \
+       drbdadm up all &amp;&amp; \
+       drbdadm -- --do-what-I-say primary drbd1 &amp;&amp; \
+       mkfs.xfs -q /dev/drbd/1
+</pre>
+
+<p>
+In ogni nodo occorre dare disposizioni sul montaggio di questi blocchi:
+</p>
+
+<pre>
+# /etc/fstab
+[...]
+/dev/drbd/0      /var/www     xfs      noatime,<span class="yellow">noauto</span>  0 0
+/dev/drbd/1      /nfs         xfs      noatime,<span class="yellow">noauto</span>  0 0
+</pre>
+
+<p>
+La sequenza di startup dell'esperimento virtuale costruisce prima
+il nodo <code>left</code>, con l'inizializzazione del bonding e del
+drbd che non riuscendo a contattare il nodo <code>right</code>
+forza Primary il blocco 0 e lo formatta xfs in modalit&agrave; standalone
+(Wait For Connection [WFConnection]) e
+marca Secondary il secondo blocco.
+</p>
+
+<pre>
+left# cat /proc/drbd
+version: 0.7.10 (api:77/proto:74)
+SVN Revision: 1743 build by doros@picinin.dorogroup.com, 2005-08-01 06:57:56
+ 0: cs:<span class="yellow">WFConnection</span> st:<span class="yellow">Primary/Unknown</span> ld:<span class="yellow">Consistent</span>
+    ns:0 nr:0 dw:5250 dr:151 al:4 bm:2 lo:0 pe:0 ua:0 ap:0
+ 1: cs:<span class="yellow">WFConnection</span> st:<span class="yellow">Secondary/Unknown</span> ld:<span class="yellow">Inconsistent</span>
+    ns:0 nr:0 dw:0 dr:0 al:0 bm:2 lo:0 pe:0 ua:0 ap:0
+</pre>
+
+<p>
+Alla partenza il nodo <code>right</code> forza
+Primary il blocco 1 e lo formatta xfs in questo caso per&ograve;
+riesce a contattare il nodo <code>left</code> e quindi comanda
+il mirroring che viene fatto sia dal blocco 1 (right) verso il
+blocco 1 (left) che dal blocco 0 (left) verso il blocco 0 (right)
+rimasto pendente da prima.
+</p>
+
+<pre>
+left# cat /proc/drbd
+ version: 0.7.10 (api:77/proto:74)
+ SVN Revision: 1743 build by doros@picinin.dorogroup.com, 2005-08-01 06:57:56
+  0: cs:<span class="yellow">SyncSource</span> st:<span class="yellow">Primary/Secondary</span> ld:<span class="yellow">Consistent</span>
+     ns:1700 nr:0 dw:5250 dr:1851 al:4 bm:2 lo:0 pe:4 ua:0 ap:0
+         [=======&gt; sync'ed: 40.0% (15724/17408)K
+         finish: 0:00:47 speed: 280 (280) K/sec
+  1: cs:<span class="yellow">SyncTarget</span> st:<span class="yellow">Secondary/Primary</span> ld:<span class="yellow">Inconsistent</span>
+     ns:0 nr:1200 dw:1200 dr:0 al:0 bm:2 lo:9 pe:20 ua:9 ap:0
+         [=======&gt; sync'ed: 40.0% (16336/17408)K
+         finish: 0:00:54 speed: 268 (268) K/sec
+</pre>
+
+<p>
+In seguito terminate le operazioni di allineamento (sync) la situazione
+su entrambe i nodi sar&agrave; stabilizzata:
+</p>
+
+<pre>
+left# cat /proc/drbd
+version: 0.7.10 (api:77/proto:74)
+SVN Revision: 1743 build by doros@picinin.dorogroup.com, 2005-08-01 06:57:56
+ 0: cs:<span class="yellow">Connected</span> st:<span class="yellow">Primary/Secondary</span> ld:<span class="yellow">Consistent</span>
+    ns:17424 nr:0 dw:5250 dr:17575 al:4 bm:4 lo:0 pe:0 ua:0 ap:0
+ 1: cs:<span class="yellow">Connected</span> st:<span class="yellow">Secondary/Primary</span> ld:<span class="yellow">Consistent</span>
+    ns:0 nr:19440 dw:19440 dr:0 al:0 bm:4 lo:0 pe:0 ua:0 ap:0
+
+
+right# cat /proc/drbd
+version: 0.7.10 (api:77/proto:74)
+SVN Revision: 1743 build by doros@picinin.dorogroup.com, 2005-08-01 06:57:56
+ 0: cs:<span class="yellow">Connected</span> st:<span class="yellow">Secondary/Primary</span> ld:<span class="yellow">Consistent</span>
+    ns:0 nr:17412 dw:17412 dr:0 al:0 bm:4 lo:0 pe:0 ua:0 ap:0
+ 1: cs:<span class="yellow">Connected</span> st:<span class="yellow">Primary/Secondary</span> ld:<span class="yellow">Consistent</span>
+    ns:19440 nr:0 dw:4964 dr:17600 al:4 bm:4 lo:0 pe:0 ua:0 ap:0
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=pconsole></a>Preparazione ambiente pconsole</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Pconsole st&agrave; per parallel console. Questo pacchetto
+permette di metterci in contatto simultaneamente con ogni nodo di un
+cluster utilizzando SSH.
+Attraverso una shell specializzata si possono impartire
+comandi che vengono spediti a tutte le connessioni aperte. Pu&ograve;
+essere usata anche in modalit&agrave; non grafica. La sua installazione
+deve essere fatta solo sul nodo da cui si intende operare (nel nostro
+caso il nodo <code>client</code>). Nei nodi del cluster occorre invece
+attivare il servizio SSH e per una migliore usabilit&agrave;
+abilitiamo l'autorizzazione attraverso chiavi RSA.
+</p>
+
+<p>
+Per prima cosa costruiamo una chiave RSA attraverso la quale
+impostare una connessione ssh basata su
+&quot;RSA based authentication&quot;.
+</p>
+
+<pre>
+client# ssh-keygen -t dsa -b 1024 -N ''
+</pre>
+
+<p>
+e aggiungiamo la chiave publica appena generata nei rispettivi
+file <code>/root/.ssh/authorized_keys2</code> di ogni nodo del cluster.
+</p>
+
+<p>
+Prima di lanciare il comando impostiamo due variabili d'ambiente
+che servono per impostare il nome del comando per la connessione (ssh),
+le dimensioni delle windows (geometry):
+</p>
+
+<pre>
+client# export P_CONNECT_CMD=ssh &amp;&amp; \
+        export P_TERM_OPTIONS="-geometry 140x10 +sb"
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="heartbeat">Preparazione ambiente heartbeat</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per configurare Heartbeat occorrono tre file tutti residenti
+sulla directory <code>/etc/ha.d</code>. Essi sono:
+</p>
+
+<ul>
+  <li><code>ha.cf</code>: il file principale di configurazione</li>
+  <li><code>haresources</code>: per la definizione delle risorse</li>
+  <li><code>authkeys</code>: per la specifica dell'autenticazione</li>
+</ul>
+
+<pre>
+# /etc/ha.d/ha.cf
+[...]
+# What UDP port to use for communication?
+udpport        694
+
+# What interfaces to heartbeat over?
+bcast          bond0
+
+#
+auto_failback  on
+
+# Tell what machines are in the cluster
+node           left right
+</pre>
+
+
+<p>
+Il file haresources contiene la lista di risorse che vengono
+spostate da un nodo all'altro in dipendenza dello stato
+dei nodi stessi. La prima risorsa consiste dell'indirizzo
+IP 193.206.185.10, del blocco DRBD numero 0 montato in
+/var/www con filesystem xfs. Su tale risorsa viene
+attivato il servizio apache e abilitato il watch cluster-http.<br>
+La seconda risorsa  consiste dell'indirizzo IP 193.206.185.11,
+del blocco DRBD numero 1 montato in /mnt/nfs con filesystem xfs.
+Su tale risorsa vengono attivati i servizi
+NFS (nfs-common nfs-user-server) e abilitato il watch cluster-nfs:
+</p>
+
+<pre>
+# /etc/ha.d/haresources
+left 193.206.185.10 \
+  drbddisk::drbd0 \
+  Filesystem::/dev/drbd/0::/var/www::xfs \
+  drbdlinks-http apache mon-cluster-http
+
+right 193.206.185.11 \
+  drbddisk::drbd1 \
+  Filesystem::/dev/drbd/1::/nfs::xfs \
+  drbdlinks-nfs nfs-common nfs-user-server mon-cluster-nfs
+</pre>
+
+<p>
+Gli script <code>mon-cluster-*</code>, che verranno descritti in
+seguito assieme all'ambiente di mon, sono delle
+attivazioni di attivit&agrave; di monitoraggio dei relativi
+servizi http e nfs.
+</p>
+
+<p>
+Nel file authkeys viene specificato il metodo di autenticazione
+tra i nodi del cluster. Nel nostro caso avendo dei canali dedicati
+(crossover cable) abbiamo scelto di non cifrare la comunicazione:
+</p>
+
+<pre>
+# /etc/ha.d/authkeys
+auth 1
+1 crc
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="mon">Preparazione ambiente mon</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La strategia che vogliamo adottare per il monitoraggio di questa
+configurazione di cluster active-active deve funzionare ovviamente
+anche nel caso di failover cio&egrave; quando un unico nodo eroga
+tutti i servizi.
+</p>
+
+<p>
+Per questo motivo abbiamo pensato di attivare il servizio mon
+al boot di ogni nodo con tutti gli swatch disattivati attraverso
+l'uso dello switch <code>-l</code> e
+utilizzando il file di stato 
+<code>/var/state/mon/disabled</code> inizialmente riempito
+con l'elenco di tutti gli swatch:
+</p>
+
+<pre>
+disable watch cluster-nfs
+disable watch cluster-http
+</pre>
+
+<p>
+L'idea &egrave; quindi quella di utilizzare heartbeat in congiunzione
+con <code>moncmd</code> in modo che quando heartbeat attiva un servizio
+contemporaneamente abilita il corrisponden watch.
+Quando parte un servizio
+viene abilitato il watch relativo attraverso il comando
+<code>moncmd</code> contenuto negli script <code>mon-cluster-*</code>.
+Ad esempio il file mon-cluster-http ha questo contenuto:
+</p>
+
+<pre>
+#! /bin/sh
+# /etc/ha.d/resource.d/mon-cluster-http
+
+case "$1" in
+  start)
+    echo -n "Enabling cluster-http"
+
+cat &lt;&lt;EOF | moncmd -l mon -a
+PASS=mon
+
+enable watch cluster-http
+EOF
+
+    echo "."
+    ;;
+  stop)
+    echo -n "Disabling cluster-http"
+
+cat &lt;&lt;EOF | moncmd -l mon -a
+PASS=mon
+
+disable watch cluster-http
+EOF
+
+    echo "."
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+</pre>
+
+
+<p>
+Fortunatamente tutto si basa su un solo file di configurazione:
+</p>
+
+<pre>
+# /etc/mon/mon.cf, configuration file for mon
+#
+# global options
+#
+maxprocs    = 20
+histlength = 100
+randstart = 60s
+
+
+#
+# authentication types:
+#   getpwnam      standard Unix passwd, NOT for shadow passwords
+#   shadow        Unix shadow passwords (not implemented)
+#   userfile      "mon" user file
+#
+authtype = userfile
+userfile = /etc/mon/uf
+
+
+#
+# NB:  hostgroup and watch entries are terminated with a blank line (or
+# end of file).  Don't forget the blank lines between them or you lose.
+#
+
+#
+# group definitions (hostnames or IP addresses)
+#
+hostgroup cluster-http 193.206.185.10
+
+hostgroup cluster-nfs 193.206.185.11
+
+watch cluster-http
+  service http
+    description "check http service availability"
+    interval 1m
+    monitor http.monitor
+    period month {Jan-Dec}
+      alertafter 2
+      alert file.alert /var/www/alert.txt
+      alert apacheRestart.alert
+  service http-takeover
+    description "check http service availability for takeover"
+    interval 1m
+    monitor http.monitor
+    period month {Jan-Dec}
+      alertafter 3 10m
+      numalerts 1
+      alert file.alert /var/www/alert.txt
+      alert haStop.alert
+
+watch cluster-nfs
+  service nfs
+    description "check NFS service availability"
+    interval 1m
+    monitor rpc.monitor -r mountd -r nfs
+    period month {Jan-Dec}
+      alertafter 2
+      alert file.alert /nfs/alert.txt
+      alert nfsRestart.alert
+  service nfs-takeover
+    description "check NFS service availability for takeover"
+    interval 1m
+    monitor rpc.monitor -r mountd -r nfs
+    period month {Jan-Dec}
+      alertafter 3 10m
+      numalerts 1
+      alert file.alert /nfs/alert.txt
+      alert haStop.alert
+</pre>
+
+<p>
+Diamo una spiegazione dettagliata solo per watch cluster-http.
+&Egrave; composto da due service: il service http ha il compito
+di verificare il funzionamento del server apache e nel caso
+di fallimento cerca di farlo ripartire. Il service http-takeover
+ha il compito di verificare il funzionamento del server apache e nel caso
+di fallimento ripetuto ferma il servizio heartbeat facendo
+migrare il servizio http nel nodo superstite.
+</p>
+
+<p>
+Il terzo e ultimo file di configurazione 
+<code>/etc/mon/auth.cf</code> permette di controllare
+le autorizzazioni per l'esecuzione di <code>moncmd</code>. Nel nostro
+caso abbiamo utilizzato il file <code>/etc/mon/uf</code> per
+memorizzare l'elenco di coppie (user, password) che possono
+essere autorizzate all'uso di <code>moncmd</code>. Per la
+costruzione abbiamo inserito il solo utente <code>mon</code>
+con password <code>mon</code>. L'utility per impostare questi
+valori &egrave; <code>htpasswd</code>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="cron">Configurazione schedulazione attivit&agrave;</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In un ambiente cluster i vari jobs da eseguire periodicamente
+devono essere scritti in modo da tenere in considerazione
+quali sono i nodi dove sono attivi i servizi e solo in
+tali nodi attivare l'attivit&agrave; schedulata.
+</p>
+
+<p>
+Procediamo alla implementazione:
+in ogni nodo, tramite il comando <code>moncmd</code>, interroghiamo 
+il servizio mon per conoscere quali watch sono attivi
+in modo da conoscere indirettamente quali risorse sono
+attive. 
+</p>
+
+<p>
+Ad esempio se ci interessa eseguire una certa
+attivit&agrave; legata al servizio http occorre ricordarsi
+che in mon gli abbiamo associato un watch chiamato "cluster-http"
+e quindi &egrave; sufficiente scrivere un script del seguente tipo:
+</p>
+
+<pre>
+disabled=`moncmd -s 127.0.0.1 list disabled | grep cluster-http | wc -l`
+if [ $disabled -eq 0 ]; then
+
+   # Activity to be done (TBD)
+
+fi
+</pre>
+
+<p>
+Se l'attivit&agrave; deve essere svolta su base giornaliera baster&agrave;
+salvarlo ad esempio come <code>/etc/cron.daily/cluster-http</code>.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="drbdlinks">Preparazione ambiente drbdlinks</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il piccolo pacchetto drbdlinks non &egrave; ancora entrato
+in Debian Sarge ma lo abbiamo utilizzato lo stesso. &Egrave;
+una piccola serie di utility che serve per costruire allo
+startup un link simbolico al blocco configurato e per
+distruggere alla chiusura il medesimo link.
+</p>
+
+<p>
+L'aspetto del file di configurazione per nfs:
+</p>
+
+<pre>
+# /etc/drbdlinks-nfs.conf
+mountpoint('/nfs')
+link('/var/lib/nfs/')
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="apache">Preparazione ambiente apache</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la configurazione del servizio utilizziamo un file
+<code>/etc/apache/httpd.conf</code> standard. Per il test
+utilizziamo la pagina speciale <code>index.php</code>:
+</p>
+
+<pre>
+&lt;php
+phpinfo()
+?&gt;
+</pre>
+
+<p>
+Il servizio utilizza il  primo blocco drbd, &egrave;
+radicato sul <code>/var/www</code> e assegnato
+allo statup al nodo <code>left</code>. Il servizio
+non &egrave; gestito dallo startup del nodo ma da
+heartbeat:
+</p>
+
+<pre>
+left# update-rc.d -f apache remove
+right# update-rc.d -f apache remove
+</pre>
+
+<p>
+inoltre poich&egrave; un successivo eventuale fix di sicurezza
+rigenera la struttura /etc/rc?.d occorre mettere il pacchetto nello
+stato "hold":
+</p>
+
+
+<pre>
+left# echo apache hold | dpkg --set-selections
+right# echo apache hold | dpkg --set-selections
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="nfs">Preparazione ambiente NFS</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la configurazione del servizio basta impostare il file
+<code>/etc/exports</code>:
+</p>
+
+<pre>
+/nfs  193.206.185.0/255.255.255.0(rw,no_root_squash)
+</pre>
+
+<p>
+Il servizio utilizza il  secondo blocco drbd, &egrave; radicato
+in <code>/nfs</code> e assegnato
+allo statup al nodo <code>right</code>.
+Il servizio
+non &egrave; gestito dallo startup del nodo ma da
+heartbeat:
+</p>
+
+<pre>
+left# update-rc.d -f nfs-common remove &amp;&amp; \
+      update-rc.d -f nfs-user-server remove
+right# update-rc.d -f nfs-common remove &amp;&amp; \
+       update-rc.d -f nfs-user-server remove
+</pre>
+
+<p>
+inoltre poich&egrave; un successivo eventuale fix di sicurezza
+rigenera la struttura /etc/rc?.d occorre mettere il pacchetto nello
+stato "hold":
+</p>
+
+
+<pre>
+left# echo nfs-common hold | dpkg --set-selections; \
+      echo nfs-user-server hold | dpkg --set-selections
+right# echo nfs-common hold | dpkg --set-selections; \
+       echo nfs-user-server hold | dpkg --set-selections
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="nfs-client">Preparazione ambiente NFS lato client</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Dal momento che vogliamo testare il funzionamento del servizio
+NFS occorre configurare opportunamente il nodo <code>client</code>
+per poter montare il filesystem NFS. Per prima cosa
+occorre aggiungere un mount point, ad esempio
+<code>/mnt/nfs</code> e aggiungere una riga nel file
+<code>/etc/fstab</code> che indichi che l'IP 193.206.185.11
+(quello fluttuante)
+esporta <code>/nfs</code>:
+</p>
+
+<pre>
+# /etc/fstab
+193.206.185.11:/nfs      /mnt/nfs    nfs     noauto          0 0
+</pre>
+
+<p>
+Quindi per montare la partizione NFS (attualmente i moduli NFS
+del kernel non sono &quot;a bordo&quot; della vm e quindi li forniamo
+separatamente nel file <code>modules.tgz</code> e li precarichiamo) diamo il
+comando:
+</p>
+
+
+<pre>
+client# modprobe nfs lockd sunrpc
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="interattiva">Sperimentazione interattiva</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per prima vogliamo mostrare le potenzialit&agrave; di pconsole. Quindi
+abilitiamo il nodo <code>client</code> alla visualizzazione di
+applicazioni X sul desktop reale:
+</p>
+
+<pre>
+realHost$ xhost +192.168.77.2
+</pre>
+
+<p>
+inoltre occorre istruire i client grafici all'interno del
+nodo <code>client</code> di dirigere l'output verso il
+desktop reale:
+</p>
+
+<pre>
+client# export DISPLAY=192.168.77.1:0.0
+</pre>
+
+<p>
+e ora proviamo pconsole in connessione SSH simultanea con i due
+nodi del cluster:
+</p>
+
+<pre>
+client# /usr/share/doc/pconsole/examples/pconsole.sh left right
+</pre>
+
+<p>
+Nello
+<a href="HA-pconsole-01.png" title="immagine PNG">(screenshot)</a>
+possiamo vedere pconsole in azione utilizzata per visualizzare
+lo stato di drbd e lo stato dei watch.
+In seguito possiamo completare
+la sequenza di boot impartendo in pconsole il comando di start
+per heartbeat e controllando in seguito il file di log:
+</p>
+
+<pre>
+pconsole &gt; /etc/init.d/heartbeat start
+pconsole &gt; tail -f /var/log/ha-log
+</pre>
+
+<p>
+<a href="HA-pconsole-02.png" title="immagine PNG">(screenshot)</a>.
+Ora possiamo sperimentare la migrazione dei servizi. Andiamo ad
+esempio sul nodo <code>right</code> e impartiamo il comando takeover
+che implica la migrazione del servizio http dal nodo left al nodo
+right:
+</p>
+
+<pre>
+right# /usr/lib/heartbeat/hb_takeover
+</pre>
+
+<p>
+<a href="HA-pconsole-03.png" title="immagine PNG">(screenshot)</a> e
+la visualizzazione di drbd e dei watch disabilitati
+<a href="HA-pconsole-04.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+<p>
+Per testare il servizio NFS diamo i comandi:
+</p>
+
+<pre>
+client# mount /mnt/nfs &amp;&amp; \
+        df /mnt/nfs<span class="blue">
+Filesystem           1K-blocks      Used Available Use% Mounted on
+193.206.185.11:/nfs      11584        32     11552   1% /mnt/nfs</span>
+client# arp -n 193.206.185.11<span class="blue">
+Address                  HWtype  HWaddress           Flags Mask            Iface
+193.206.185.11           ether   FE:FD:C1:CE:B9:02   C                     eth1</span>
+</pre>
+
+<p>
+e dopo aver azionato il takeover sul nodo <code>left</code>
+rileviamo il cambio di MAC address:
+</p>
+
+
+<pre>
+client# df /mnt/nfs<span class="blue">
+Filesystem           1K-blocks      Used Available Use% Mounted on
+193.206.185.11:/nfs      11584        32     11552   1% /mnt/nfs</span>
+client# arp -n 193.206.185.11<span class="blue">
+Address                  HWtype  HWaddress           Flags Mask            Iface
+193.206.185.11           ether   FE:FD:C1:CE:B9:01   C                     eth1</span>
+</pre>
+
+
+
+<p>
+Per testare il servizio apache diamo il comando:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://193.206.185.10/index.php
+</pre>
+
+<p>
+riassunto nello 
+<a href="HA-mozilla-01.png" title="immagine PNG">(screenshot)</a>.
+In seguito al takeover sul nodo <code>right</code> il refresh sul browser
+riassunto nello
+<a href="HA-mozilla-02.png" title="immagine PNG">(screenshot)</a>
+differisce dal precedente per il nome dell'host.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="vt">Riferimenti ad altri sistemi di virtualizzazione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+   <ul>
+     <li>OpenVZ:
+       <a href="http://www.linuxtag.org/2006/fileadmin/linuxtag/dvd/12080-paper.pdf"
+          title="Riferimento esterno">High availability clustering of virtual machines</a>
+     </li>
+     <li>Xen:
+       <a href="http://people.redhat.com/pcaulfie/docs/xencluster.html"
+          title="Riferimento esterno">Running a Xen Cluster</a>
+     </li>
+     <li>Xen:
+       <a href="http://lists.xensource.com/archives/html/xen-users/2005-06/msg00215.html"
+          title="Riferimento esterno">Setup guide: Active/Passive Redundancy using Xen, DRBD and Heartbeat</a>
+     </li>
+     <li>Linux-Vserver:
+       <a href="http://oldwiki.linux-vserver.org/Vserver+DRBD"
+          title="Riferimento esterno">A Vserver guest mirrored by DRBD with heartbeat failover</a>
+     </li>
+     <li>WMware:
+       <a href="http://mysqldump.azundris.com/archives/56-A-quick-tour-of-DRBD.html"
+          title="Riferimento esterno">A quick tour of DRBD</a>
+     </li>
+   </ul>
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/">
+   <img alt="Creative Commons License"
+        src="80x15.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: 2009-02-14 10:10:28 $
+</span>
+</address>
+
+
+
+</body>
+</html>

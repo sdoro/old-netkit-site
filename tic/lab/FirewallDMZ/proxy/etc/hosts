@@ -1,0 +1,4 @@
+# /etc/hosts
+# $Id: hosts,v 1.2 2006/06/29 22:21:49 doros Exp $
+#
+127.0.0.1	localhost proxy

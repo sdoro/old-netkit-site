@@ -1,0 +1,18 @@
+$Id: INSTALL,v 1.2 2003/11/04 20:56:59 doros Exp $
+
+
+mkdir /var/www/nino
+
+pushd /var/www/nino
+tar zxf /root/nino315.tar.gz
+cp lib/NINOSNMP.pm /usr/share/perl/5.6.1/NINOSNMP.pm
+cp lib/BER.pm /usr/share/perl/5.6.1/BER.pm
+cp lib/SNMP_util.pm /usr/share/perl/5.6.1/SNMP_util.pm
+cp lib/SNMP.pm /usr/share/perl/5.6.1/Net/
+chmod a+rw mod_perl/snmp.ini
+chmod a+x mod_perl/status.pl
+chmod a+x mod_perl/traffic.pl
+chmod a+rw cgi-bin/nodes.txt mod_perl/nodes.txt htdocs/nodes
+cp $SCRIPTDIR/nino-cron /etc/cron.d/nino
+popd
+

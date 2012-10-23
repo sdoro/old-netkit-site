@@ -1,0 +1,36 @@
+#! /bin/sh
+# /etc/ha.d/resource.d/mon-cluster-http
+# $Id: mon-cluster-http,v 1.2 2005/11/06 13:14:49 doros Exp $
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+case "$1" in
+  start)
+    echo -n "Enabling cluster-http"
+
+cat <<EOF | moncmd -l mon -a
+PASS=mon
+
+enable watch cluster-http
+EOF
+
+    echo "."
+    ;;
+  stop)
+    echo -n "Disabling cluster-http"
+
+cat <<EOF | moncmd -l mon -a
+PASS=mon
+
+disable watch cluster-http
+EOF
+
+    echo "."
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

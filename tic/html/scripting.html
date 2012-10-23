@@ -1,0 +1,127 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: scripting.html,v 1.4 2006/09/29 16:10:49 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - Netkit scripting</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Netkit v-command scripting</h2>
+
+
+<p>
+Lo script per la costruzione di una esperienza virtuale
+&egrave; uno script shell che segue un prefissato template
+dove sono <span class="yellow">evidenziate</span> le parti
+che devono essere specializzate:
+</p>
+
+<pre>
+#!/bin/sh
+
+<span class="green">  </span> waitfinish() {
+<span class="green">  </span> }
+<span class="green">  </span>
+<span class="green">  </span> notifyfinish() {
+<span class="green">  </span> }
+<span class="green">  </span>
+<span class="green">  </span><span class="yellow">
+<span class="green">  </span> startvm() {
+<span class="green">  </span>   vstart vm1
+<span class="green">  </span>   waitfinish vm1
+<span class="green">  </span> }
+<span class="green">  </span></span>
+<span class="green">  </span>
+<span class="green">  </span><span class="yellow">
+<span class="green">  </span> crashvm() {
+<span class="green">  </span>   vcrash vm1
+<span class="green">  </span> }
+<span class="green">  </span></span>
+<span class="green">  </span>
+<span class="green">  </span> help_exit() {
+<span class="green">  </span> }
+
+<span class="red">  </span> case "$HOSTNAME" in
+<span class="red">  </span> 
+<span class="red">  </span> <span class="yellow">
+<span class="red">  </span>     vmX) # do something
+<span class="red">  </span>          # ...
+<span class="red">  </span>          notifyfinish vmX
+<span class="red">  </span>          ;;</span>
+<span class="red">  </span>
+<span class="red">  </span>     *)
+<span class="red">  </span>         echo internal error: $HOSTNAME
+<span class="red">  </span>         exit 1
+<span class="red">  </span> 
+<span class="red">  </span> esac
+</pre>
+
+<p>
+La <span class="green">barra verticale</span> indica la parte
+eseguita dal nodo host mentre la <span class="red">barra verticale</span>
+indica la parte eseguita dai nodi guest.
+</p>
+
+<p>
+Nella funzione <code>startvm</code> ci saranno tutti e soli
+i comandi di costruzione della macchine virtuali, completi dell'elenco
+delle interfacce di rete, della memoria RAM e degli eventuali
+parametri specifici.
+</p>
+
+<p>
+La funzione <code>crashvm</code> &egrave; chiamata quando vogliamo
+chiudere il nostro esperimento e quindi devono comparire i nomi
+di tutte le macchine che vogliamo distruggere.
+</p>
+
+
+<p>
+Nel <code>case</code> devono comparire tutti nomi delle macchine
+e nel corpo di ogni caso vengono scritti i comandi necessari per la
+configurazione della particolare macchina virtuale.
+</p>
+
+<p>
+Per ulteriori dettagli digitare <code>man vstart</code>.
+</p>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/09/29 16:10:49 $
+</span>
+</address>
+
+
+</body>
+
+</html>

@@ -1,0 +1,375 @@
+#!/bin/sh
+# $Id: lab,v 1.12 2005-10-19 12:46:24 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 5
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    vstart mngm --append="eth0=tuntap,tap0" --eth1=A  --mem=64 $X
+    waitfinish mngm
+
+    vstart sensor01 --eth0=B  --eth1=A --mem=64 $X
+    waitfinish sensor01
+
+    vstart sensor02 --eth0=C  --eth1=A --mem=64 $X
+    waitfinish sensor02
+
+    vstart b1 --eth0=B $X
+    waitfinish b1
+
+    vstart b2 --eth0=B $X
+    waitfinish b2
+
+    vstart c1 --eth0=C $X
+    waitfinish c1
+
+    vstart c2 --eth0=C $X
+    waitfinish c2
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started ***"
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash mngm
+    vcrash sensor01
+    vcrash sensor02
+    vcrash b1
+    vcrash b2
+    vcrash c1
+    vcrash c2
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+     if [ `grep tap0 /proc/net/dev|wc -l` = 0 ] ; then
+       echo "missing tap0 device"
+       exit 1
+     fi
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+	# and it is NEVER executed by in the host environment
+	#
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+    mngm)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        # configure syslog to accept remote log
+        cp $SCRIPTDIR/sysklogd /etc/init.d/sysklogd
+        /etc/init.d/sysklogd restart
+        # config IP for tap device
+        ifconfig eth0 192.168.77.2
+        route add default gw 192.168.77.1
+        # config IP for IDS network
+        ifconfig eth1 10.10.20.29 \
+          netmask 255.255.255.224 broadcast 10.10.20.31 up
+        # DNS file
+        cat $SCRIPTDIR/hosts >> /etc/hosts
+        # SHADOW
+        mkdir -p /LOG
+        # ssh access to sensor0X for shadow user
+        mkdir /home/SHADOW/.ssh
+        cp $SCRIPTDIR/known_hosts /home/SHADOW/.ssh/
+        cp $SCRIPTDIR/id_dsa* /home/SHADOW/.ssh/
+        chmod go= /home/SHADOW/.ssh/id_dsa
+        chown shadow:shadowids /home/SHADOW/.ssh /home/SHADOW/.ssh/*
+        # move SHADOW in home
+        mkdir -p /home/SHADOW/html
+        mkdir -p /home/SHADOW/html/tcpdump_results
+        cp $SCRIPTDIR/.htaccess /usr/local/SHADOW/httpd/home
+        pushd /usr/local/SHADOW/httpd/home
+          cp * /home/SHADOW/html
+          cp .htaccess /home/SHADOW/html
+          chown -R shadow:shadowids /home/SHADOW
+        popd
+        cp $SCRIPTDIR/shadow.conf /etc/shadow.conf
+        cp $SCRIPTDIR/httpd.conf /etc/apache/httpd.conf
+        cp $SCRIPTDIR/nmap_pwd /usr/local/SHADOW/httpd/cgi-bin/privileged/nmap_pwd
+        /etc/init.d/apache start
+        # set up cron.d
+        cp $SCRIPTDIR/mngm /etc/cron.d/mngm
+        /etc/init.d/cron start
+        #
+        mkdir -p /home/SHADOW/sensor01
+        mkdir -p /home/SHADOW/sensor02
+        mkdir -p /home/SHADOW/sensor03
+        mkdir -p /home/SHADOW/sensor04
+        mkdir -p /home/SHADOW/html/tcpdump_results/sensor01
+        mkdir -p /home/SHADOW/html/tcpdump_results/sensor02
+        mkdir -p /home/SHADOW/html/tcpdump_results/sensor03
+        mkdir -p /home/SHADOW/html/tcpdump_results/sensor04
+        chown -R shadow:shadowids /home/SHADOW/
+        mkdir -p /var/spool/SHADOW/Incidents-Reports
+        chown -R shadow:shadowids /var/spool/SHADOW/Incidents-Reports
+        mkdir /usr/local/SHADOW/filters/sensor01
+        mkdir /usr/local/SHADOW/filters/sensor02
+        mkdir /usr/local/SHADOW/filters/sensor03
+        mkdir /usr/local/SHADOW/filters/sensor04
+        cp $SCRIPTDIR/filter.getall /usr/local/SHADOW/filters/sensor01
+        cp $SCRIPTDIR/filter.getall /usr/local/SHADOW/filters/sensor02
+        cp $SCRIPTDIR/filter.getall /usr/local/SHADOW/filters/sensor03
+        cp $SCRIPTDIR/filter.getall /usr/local/SHADOW/filters/sensor04
+        cp $SCRIPTDIR/goodhost.filter /usr/local/SHADOW/filters/sensor01
+        cp $SCRIPTDIR/goodhost.filter /usr/local/SHADOW/filters/sensor02
+        cp $SCRIPTDIR/goodhost.filter /usr/local/SHADOW/filters/sensor03
+        cp $SCRIPTDIR/goodhost.filter /usr/local/SHADOW/filters/sensor04
+        cp $SCRIPTDIR/icmp.filter /usr/local/SHADOW/filters/sensor01
+        cp $SCRIPTDIR/icmp.filter /usr/local/SHADOW/filters/sensor02
+        cp $SCRIPTDIR/icmp.filter /usr/local/SHADOW/filters/sensor03
+        cp $SCRIPTDIR/icmp.filter /usr/local/SHADOW/filters/sensor04
+        cp $SCRIPTDIR/ip.filter /usr/local/SHADOW/filters/sensor01
+        cp $SCRIPTDIR/ip.filter /usr/local/SHADOW/filters/sensor02
+        cp $SCRIPTDIR/ip.filter /usr/local/SHADOW/filters/sensor03
+        cp $SCRIPTDIR/ip.filter /usr/local/SHADOW/filters/sensor04
+        cp $SCRIPTDIR/tcp.filter /usr/local/SHADOW/filters/sensor01
+        cp $SCRIPTDIR/tcp.filter /usr/local/SHADOW/filters/sensor02
+        cp $SCRIPTDIR/tcp.filter /usr/local/SHADOW/filters/sensor03
+        cp $SCRIPTDIR/tcp.filter /usr/local/SHADOW/filters/sensor04
+        cp $SCRIPTDIR/udp.filter /usr/local/SHADOW/filters/sensor01
+        cp $SCRIPTDIR/udp.filter /usr/local/SHADOW/filters/sensor02
+        cp $SCRIPTDIR/udp.filter /usr/local/SHADOW/filters/sensor03
+        cp $SCRIPTDIR/udp.filter /usr/local/SHADOW/filters/sensor04
+        chown -R shadow:shadowids /usr/local/SHADOW/
+        cp $SCRIPTDIR/Site1.ph /usr/local/SHADOW/sites/sensor01.ph
+        cp $SCRIPTDIR/Site2.ph /usr/local/SHADOW/sites/sensor02.ph
+        cp $SCRIPTDIR/Site3.ph /usr/local/SHADOW/sites/sensor03.ph
+        cp $SCRIPTDIR/Site4.ph /usr/local/SHADOW/sites/sensor04.ph
+        cp $SCRIPTDIR/sudoers /etc/sudoers
+        #
+        #
+        # ACID/mysql/Snort
+        # MySQL
+        cp $SCRIPTDIR/my.cnf /etc/mysql/my.cnf
+        /etc/init.d/mysql start
+        # Snort
+        mysql < mksnort.sql
+        gzip -d /usr/share/doc/snort-mysql/contrib/create_mysql.gz
+        mysql snort < /usr/share/doc/snort-mysql/contrib/create_mysql
+        # ACID
+        cp $SCRIPTDIR/acid_conf.php /etc/acidlab/acid_conf.php
+        cp $SCRIPTDIR/apache.conf /etc/acidlab/apache.conf
+        ln -s /usr/share/acidlab /home/SHADOW/html/acidlab
+        
+
+        notifyfinish mngm
+        ;;
+
+    sensor01)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        mkdir -p /LOG
+        chown shadow /LOG
+        # configure syslog to send remote log
+        cp $SCRIPTDIR/syslog.conf /etc/syslog.conf
+        /etc/init.d/sysklogd restart
+        # no config IP for the network
+        ifconfig eth0 up
+        # config IP for IDS network
+        ifconfig eth1 10.10.20.28 \
+          netmask 255.255.255.224 broadcast 10.10.20.31 up
+        route add default gw 10.10.20.29
+        # DNS file
+        cat $SCRIPTDIR/hosts >> /etc/hosts
+        # set up cron.d
+        cp $SCRIPTDIR/ids /etc/cron.d/ids
+        /etc/init.d/cron start
+        # SHADOW
+        # start sensor
+        /usr/local/SHADOW/sensor/sensor_init.sh start
+        # start sshd
+        rm -f /etc/ssh/sshd_not_to_be_run
+        mkdir /home/SHADOW/.ssh
+        cp $SCRIPTDIR/id_dsa.pub /home/SHADOW/.ssh/authorized_keys2
+        chown shadow /home/SHADOW/.ssh /home/SHADOW/.ssh/authorized_keys2
+        chmod go= /home/SHADOW/.ssh 
+        /etc/init.d/ssh start
+        #
+        # Snort
+        useradd snort
+        groupadd snort
+        mkdir /var/log/snort
+        chown snort:snort /var/log/snort
+        cp $SCRIPTDIR/snort.conf /etc/snort/snort.conf
+        cp $SCRIPTDIR/snort.debian.conf-01 /etc/snort/snort.debian.conf
+        /etc/init.d/snort start
+
+
+        notifyfinish sensor01
+        ;;
+
+    sensor02)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        # configure syslog to send remote log
+        cp $SCRIPTDIR/syslog.conf /etc/syslog.conf
+        /etc/init.d/sysklogd restart
+        # no config IP for the network
+        ifconfig eth0 up
+        # config IP for IDS network
+        ifconfig eth1 10.10.20.27 \
+          netmask 255.255.255.224 broadcast 10.10.20.31 up
+        route add default gw 10.10.20.29
+        # DNS file
+        cat $SCRIPTDIR/hosts >> /etc/hosts
+        # set up cron.d
+        cp $SCRIPTDIR/ids /etc/cron.d/ids
+        /etc/init.d/cron start
+        # SHADOW
+        mkdir -p /LOG
+        chown shadow /LOG
+        # start sensor
+        /usr/local/SHADOW/sensor/sensor_init.sh start
+        # start sshd
+        rm -f /etc/ssh/sshd_not_to_be_run
+        mkdir /home/SHADOW/.ssh
+        cp $SCRIPTDIR/id_dsa.pub /home/SHADOW/.ssh/authorized_keys2
+        chown shadow /home/SHADOW/.ssh /home/SHADOW/.ssh/authorized_keys2
+        chmod go= /home/SHADOW/.ssh 
+        /etc/init.d/ssh start
+        #
+        # Snort
+        useradd snort
+        groupadd snort
+        mkdir /var/log/snort
+        chown snort:snort /var/log/snort
+        cp $SCRIPTDIR/snort.conf /etc/snort/snort.conf
+        cp $SCRIPTDIR/snort.debian.conf-02 /etc/snort/snort.debian.conf
+        /etc/init.d/snort start
+
+
+        notifyfinish sensor02
+        ;;
+
+    b1)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        # config IP for IDS network
+        ifconfig eth0 192.168.0.217 \
+          netmask 255.255.255.248 broadcast 192.168.0.223 up
+
+
+        notifyfinish b1
+        ;;
+
+    b2)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        # config IP for IDS network
+        ifconfig eth0 192.168.0.218 \
+          netmask 255.255.255.248 broadcast 192.168.0.223 up
+
+
+        notifyfinish b2
+        ;;
+
+    c1)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        # config IP for IDS network
+        ifconfig eth0 10.10.10.65 \
+          netmask 255.255.255.240 broadcast 10.10.10.79 up
+
+
+        notifyfinish c1
+        ;;
+
+    c2)
+        # cleanup old e-mail
+        rm -f /var/spool/mqueue-client/*
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        # config IP for IDS network
+        ifconfig eth0 10.10.10.66 \
+          netmask 255.255.255.240 broadcast 10.10.10.79 up
+
+
+        notifyfinish c2
+        ;;
+
+
+    #
+    #
+    ################################################# end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

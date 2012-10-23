@@ -1,0 +1,21 @@
+# /etc/network/interfaces
+# $Id: interfaces,v 1.2 2007-02-03 17:19:39 doros Exp $
+
+auto lo eth0 eth1
+
+# The loopback interface
+iface lo inet loopback
+
+# net ZONE
+iface eth0 inet static
+     address 206.1.1.253
+     netmask 255.255.255.0
+     broadcast 206.1.1.255
+     gateway 206.1.1.254
+# loc ZONE
+iface eth1 inet static
+     address 192.168.1.254
+     netmask 255.255.255.0
+     broadcast 192.168.1.255
+#
+# bot

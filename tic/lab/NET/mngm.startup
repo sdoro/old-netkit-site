@@ -1,0 +1,9 @@
+# mngm.startup
+# $Id: mngm.startup,v 1.1 2006/06/29 14:01:30 doros Exp $
+#
+# Config IP address
+ifconfig eth0 10.10.20.29 \
+  netmask 255.255.255.224 broadcast 10.10.20.31 up
+route add default gw 10.10.20.30
+# starting postfix server
+/etc/init.d/postfix start

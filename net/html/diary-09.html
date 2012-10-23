@@ -1,0 +1,477 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: diary-09.html,v 1.9 2010-01-20 23:04:28 doros Exp $ -->
+
+
+<head>
+  <title>Progetto P-MAN - diario</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+
+<h1 class="center">Progetto P-MAN</h1>
+<h2 class="center">(GNU/Linux@Zuccante.it)</h2>
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico"> 2009
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail tutor/coordinatore del progetto" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+
+
+<p>
+<table class=layout> 
+  <tr>
+  <td class=content>
+  <h3><a id=diario></a>Diario 2009</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Costruzione di una macchina domU del GULZ per la gestione
+e la distribuzione degli IPv6. Riconfigurato l'indirizzo
+IPv6 del domU server web del GULZ.
+Messa in funzione di un domU per sostituire il server
+LDAP presente nella DMZ attualmente in funzione sul
+server "Serale". Fanno riferimento a tale servizio
+sia le piattaforme e-learning interne che quelle esterne
+come edave.it.
+La configurazione di questo server (Debian Lenny) prevede
+gia' il mail server e la gestione autofs su LDAP. Tutti
+i tentativi hanno dato esito positivo e ora e'
+alimentato dal server primario.  <br/>
+[Gennaio]
+</p>
+
+<p>
+Riconfigurati i servizi di posta interni: riconfigurati
+i due server talo e anteo e riconfigurati gli altri server
+la cui posta viene scaricata sui primi due server. Tale
+configurazione sara' poi la base per il futuro sistema
+di posta d'istituto. Il servizio di posta, come il
+servizio DNS e' stato configurato in modalita' Alta
+Affidabilita' (HA).
+Assistenza alla messa in funzione del laboratorio
+multimediale e al nuovo laboratorio GULZ e Robotica.
+Generate ancora un paio di password.
+Richiesta assistenza per cambio stampante in sala stampa biennio.
+[2-7 Febbrario]
+</p>
+
+<p>
+Continuata la messa a punto dei servizi della
+rete che notificano attraverso email.
+Ancora generazione passwd e stampanti in
+manutenzione.
+Aggiunto servizio di notifica email quando
+gli utenti sforano la loro quota di spazio disco.
+Risolto problema di mancata connettivita' IPv6
+dovuta ad un server DNS down.
+Riconfigurate le attivita' di schedulazione (cron)
+per il nodo che gestisce il servizio proxy in modo
+piu' funzionale e corretto (sia attivita' di
+backup mensile che controllo scratch card giornaliera).
+[9-14 Febbrario]
+</p>
+
+<p>
+Riallineati il contenuto dei server ldap:
+primario, secondario in DMZ e secondario al biennio.
+[16-21 Febbrario]
+</p>
+
+<p>
+Aggiornato tutte le macchine server con il
+fix di sicurezza sulla libreria GNUtls.
+Giovedi incontro con il nuovo commerciale
+(il terzo) telecomitalia. Rifatto il punto
+sulla situazione.
+Incontro GULZ per la definizione dei
+gruppi di lavoro.
+Contattato via e-mail il costruttore
+italiano dei due device nTap necessari
+per il monitoraggio di rete.
+Analizzato Knoppix 6.0.1 come sistema
+per la sperimentazione virtuale: impressione
+piu' che positiva.
+[23-28 Febbrario]
+</p>
+
+<p>
+Modificato la configurazione di logrotate
+per il servizio mail: salvataggio di 365 giorni.
+Eseguito l'ordine per i due device di tipo nTAP.
+Eseguito l'ordine per i due ALIX che in coppia
+con i due nTAP andranno a sostituire la vetusta
+coppia HA di PII per il monitoraggio della rete
+d'Istituto.
+[2-7 Marzo]
+</p>
+
+<p>
+Modificato la configurazione delle ACL
+del server sperimentale LDAP ldap3 in modo
+da permettere la replica proveniente dal master.
+Studiato e iniziato a configurare una
+box ALIX con Debian Lenny per farla lavorare
+in congiunta con nTap per il monitoraggio
+delle due reti. Verificato boot e qualche
+settaggio principale. 
+Aggiornato tutte le macchine server con il
+fix di sicurezza sulla libreria cups.
+[10-14 Marzo]
+</p>
+
+<p>
+Intervento mattiniero al biennio per
+riavviare il server kore che in maniera
+abbastanza inaspettata aveva corrotto
+la partizione a7 contenente la /var.
+Verificato con Agostino che la procedura
+di cambio password in Windows funziona
+basta che soddisfi la lunghezza e i vincoli.
+Generate le CF per le WRAP e le ALIX
+con la distribuzione Debian Sid.
+Installato un Alix+nTap e rimossi
+i due server PII che in 
+precedenza monitoravano il
+traffico di rete.
+Configurato il servizio ftp per
+mettere a disposizione della rete
+interna via ftp gli
+aggiornamenti dell'antivirus. Attivati
+alcuni laboratori con la nuova configurazione.
+Depositato sul sito lab.zuccante.it la documentazione
+con le istruzioni per il download, installazione
+e configurazione delle stazione della
+rete d'Istituto.
+Testata la configurazione "a doppia installazione"
+della ALIX che permette l'aggiornamento remoto
+del sistema.
+Aggiornati i 13 server con Debian Lenny con il
+nuovo kernel (troy, dragon, gea, urano,
+r6, xgulz, gulz, snort, xmonster, ldap3, radius, xmail, xntop)
+ed eseguito il reboot.
+Ricostruito per gea ed urano il modulo drbd8-2.6.26-1-686_8.0.14-2+2.6.26-13lenny2_i386.deb.
+[16-21 Marzo]
+</p>
+
+<p>
+Aggiornati i server con il fix di
+sicurezza libglib2.
+Incontro della rete in presidenza
+sul progetto "email".
+Incontro con ex studente per il progetto VoIP.
+Provate configurazioni imap.
+[23-28 Marzo]
+</p>
+
+<p>
+[1-8 Aprile]
+Aggiornati i server con il fix di
+sicurezza ssl e krb5.
+Provate le espressioni matematiche in Tex su Moodle.
+Modificato il terminal server della sede
+per provare NBD invece che NFS come sistema
+contenente il rootfs. Modificati i router
+di pianoTerra, LASA e LAM2.
+Progettato documento da presentare nella
+prossima riunione della rete.
+Costruito lo schema grafico della
+proposta per la nuova riorganizzazione della rete
+d'Istituto.
+</p>
+
+
+<p>
+[15-18 Aprile]
+Riparato e sostituito l'alimentatore
+di un vecchio server Sun. Rimesso e ripartito
+normalmente il server. Scritto il documento
+per la proposta  della riorganizzazione della rete
+d'Istituto.
+Aggiornati i server con il fix di
+sicurezza e i nuovi kernel.
+Completato il documento e consegnato all'ufficio protocollo.
+Rimosso Joomla dal server GULZ.
+</p>
+
+<p>
+[20-25 Aprile]
+Test e installazione su una Sun Blade 100
+di Debian Lenny.
+Modifica alla struttura della rete
+per permettere la navigazione ad una XboX.
+Breve consulenza sulla possibilita'
+di utilizzare la videoconferenza; conclusioni:
+errato dismettere le due linee ISDN senza
+modificare la connettivita' attuale per
+garantirsi banda!
+</p>
+
+<p>
+[27-30 Aprile]
+Configurazione e primi test RADIUS in
+combinazione con lo switch del LASA per
+la connessione 802.1X su rete cablata:
+esito positivo su Linux e Windows.
+</p>
+
+<p>
+[1 Maggio]
+Malfunzionamento del server proxy. E' stato
+attaccato da qualche pc interno ? Ho dovuto
+fare il reboot.
+</p>
+
+<p>
+[4-9 Maggio]
+Aumentato il server ldap con lo schema
+utilizzato dal prototipo di server mail.
+</p>
+
+
+<p>
+[11-16 Maggio]
+Configurazione del server radius con
+il database delle password su LDAP.
+Esito positivo di accesso fisico
+da client Windows XP e Linux.
+Abilitato e testato anche l'accounting.
+Acquistate le CF da 2GiB per i tre
+access point. Iniziata la costruzione
+delle immagini.
+</p>
+
+
+<p>
+[18-23 Maggio]
+Iniziata la configurazione di prova
+del server mail. Verificato il funzionamento
+dell'interfaccia web con gli account
+gia' esistenti su LDAP.
+Risultati positivi per la mail uscente.
+Test della configurazione degli Access Point
+in combinazione con il server RADIUS.
+Risultati positivi ma instabili.
+Chiesto prezzi a una ditta per espansione
+di RAM dei server HP, delle schede VoIP e
+dei futuri server-ini Atom based su rack 1U.
+</p>
+
+
+<p>
+[25-30 Maggio]
+Test di varie configurazione degli AP.
+Verificata la connettivit&agrave; WiFi
+con un iPhone Apple.
+</p>
+
+<p>
+[3-5 Giugno]
+Rimosse dagli AP le doppie schede WiFi.
+5 Giugno: incontro con il commerciale
+tecnico per la questione della bassa
+qualit&agrave; dei cavi. 
+Richiesto prezzi a una ditta per espansione
+di RAM dei server HP, delle schede VoIP e
+dei futuri server-ini Atom based su rack 1U.
+</p>
+
+<p>
+[12-17 Ottobre]
+Attivato il secondo Access Point (ap2.zuccante.it).
+</p>
+
+<p>
+[22 Ottobre]
+Rilevato incidente di sicurezza. Disattivato l'utente
+radius. Inserita la policy per la memorizzazione delle
+password in modo da evitare il rinnovare una password
+scaduta con la stessa password. Contrassegnate
+scadute le password usate in maniera irregolare.
+Avvisato il Preside.
+</p>
+
+<p>
+[2 Novembre]
+Sopralluogo al biennio assieme all'UT per rilevare lo stato
+del servizio LTSP in biblioteca. E' stata rimessa
+a posto una stazione che aveva la scheda di rete
+non posizionata correttamente. Intervista positiva
+con gli studenti utilizzatori del servizio.
+Si riparte con edave: configurate le classi d'iscrizione
+e iniziato a costruire i corsi "figli".
+</p>
+
+<p>
+[3-4 Novembre]
+Configurazione del servizio LTSP per l'uso delle
+penne USB. Telefonato all'assistenza Dell per
+i problemi di arresto di un server. Scambiati
+gli alimentatori per ricercare il guasto.
+Installato il secondo ntap (sonda passiva)
+per la prova in combinazione con nBox su una ALIX.
+
+<p>
+[5 Novembre]
+Trovato il guasto sul server: &egrave; certamente
+l'alimentatore. Telefonato all'assitenza Dell
+e richiesto preventivo per la sostituzione.
+Aggiunta statistiche di rete dell'area LAM2
+in modo da vedere il traffico LTSP.
+Scritto documento di presentazione sul
+progetto Nativi Digitali.
+</p>
+
+<p>
+[6 Novembre]
+Giornata passata a cercare di risolvere
+problemi di navigazione al biennio.
+Problema di configurazione del proxy.
+</p>
+
+
+<p>
+[12 Novembre]
+Sentito fornitore SHDSL/ADSL Tiscali per
+rimpiazzo per Natale della connettivit&agrave;
+interbusiness.
+Eseguito test positivo su laboratorio LTSP (LAM2)
+per togliere il collo di bottiglia: era la
+CPU del router. Rimpiazzato quindi una 
+WRAP con una ALIX.
+</p>
+
+
+<p>
+[13 Novembre]
+Valutato offerte di acquistinretepa per nuovo
+server centrale di controllo in rimpiazzo del
+vetusto PII oramai vecchio e "affaticato".
+</p>
+
+<p>
+[16-19 Novembre]
+Valutato e sentito offerte per nuova connettivit&agrave; ADSL.
+Chiesto preventivo per server VoIP del GULZ.
+Manutenzione fix di sicurezza su tutti i server
+riguardanti il protocollo SSL.
+</p>
+
+<p>
+[23-28 Novembre]
+Costruito documenti di ordine per il
+progetto VoIP: server, schede BRI, telefoni IP.
+Costruito documento di ordine per sei ALIX
+da utilizzare sia per il potenziamento della
+rete WiFi che per il monitoraggio traffico.
+Raccolto il materiale per iniziare a fare QoS
+tra le due sedi.
+Valutato acquisto telefoni VoIP Cisco.
+Valutata connettivit&agrave; AscoBT.
+</p>
+
+<p>
+[30 Novembre,1-4 Dicembre]
+Ordinate le apparecchiature per il WiFi
+di tipo Alix.
+Installati e configurati due
+bridge tipo "ZeroShell" uno per sede
+per dare priorit&agrave; diverse
+al traffico. In particolare il
+traffico "interno" che passa
+attraverso la VPN &egrave; stato
+privilegiato.
+Iniziati con esito positivo i primi test
+di LTSP con "fat client".
+</p>
+
+
+<p>
+[7-12 Dicembre]
+Riordinato l'assetto di monitoraggio
+del traffico dell'intera connettivit&agrave;
+inserendo un nBox in ascolto su un nTap.
+Seguito tutto l'iter per l'ordine dei
+due server per la telefonia.
+Incontro con la SGDA per definire
+una operativit&agrave; spicciola per l'acquisto
+del rimanente hardware per il progetto
+VoIP.
+Aggiunta la modalit&agrave; "grouping"
+al Moodle del Gulz in modo da poter
+distinguere le tre "anime" di cui
+&egrave; composto.
+</p>
+
+
+<p>
+[14-18 Dicembre]
+Comprato in Internet i materiali del progetto VoIP
+e fatta richiesta di rimborso alla SGDA.
+Iniziato a configurare LVM su DRBD del nuovo NAS.
+Il 17 visita dalle 9 alle 12 dell'Istituto 8 Marzo
+di Mirano.
+Aggiunto nello stack del filesystem del NAS l'lvm:
+la sequenza &egrave; ora: hw, raid, drbd, lvm.
+</p>
+
+
+
+
+<p>
+<table class=layout> 
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE CULTURE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2010-01-20 23:04:28 $
+</span>
+</address>
+
+
+</body>
+
+</html>

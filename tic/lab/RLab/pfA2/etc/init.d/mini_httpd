@@ -1,0 +1,36 @@
+#! /bin/sh
+# /etc/init.d/mini_httpd
+# $Id: mini_httpd,v 1.1 2005-10-16 20:29:55 doros Exp $
+#
+RCDLINKS="2,S85 3,S85 4,S85 5,S85 0,K15 1,K15 6,K16"
+
+test -x /usr/sbin/mini_httpd || exit 0
+#WWWDIR=/var/sh-www
+WWWDIR=/var/webconf/www
+
+case "$1" in
+  start)
+    echo -n "Starting mini httpd:"
+	cd $WWWDIR;start-stop-daemon --start --quiet --pidfile /var/run/mini_httpd.pid --exec /usr/sbin/mini_httpd -- -C /etc/mini_httpd.conf 2>/dev/null
+	echo "."
+	;;
+  stop)
+    echo -n "Stopping mini httpd:"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/mini_httpd.pid
+        echo "."
+	;;
+
+  restart)
+    echo -n "Restarting mini httpd"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/mini_httpd.pid
+	cd $WWWDIR;start-stop-daemon --start --quiet --pidfile /var/run/mini_httpd.pid --exec /usr/sbin/mini_httpd -- -C /etc/mini_httpd.conf 2>/dev/null
+	echo "."
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/mini_httpd {start|stop|restart}"
+	exit 1
+esac
+
+exit 0
+

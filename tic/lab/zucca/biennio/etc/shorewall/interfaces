@@ -1,0 +1,12 @@
+#
+# /etc/shorewall/interfaces
+# $Id:$
+#
+#ZONE	INTERFACE	BROADCAST	  OPTIONS
+#net	eth0            detect            dhcp,routefilter,norfc1918
+net	eth0            detect
+#net     eth0           85.46.70.135/255.255.255.248
+dmz	eth1            10.0.2.255
+loc	eth2            10.168.200.255
+vpn	ipsec+
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

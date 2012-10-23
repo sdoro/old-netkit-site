@@ -1,0 +1,34 @@
+$Id: README,v 1.1 2008-09-21 19:53:30 doros Exp $
+
+In this experience the virtual node "target" have network connectivity
+(tun module) with the real host. Before start the Netkit script you must create
+one tap devices as normal user:
+
+realHost$ sudo -u root tunctl -u knoppix
+
+and then set IP address (as root):
+
+realHost$ su
+realHost# ifconfig tap0 206.1.1.254; \
+          ifconfig tap1 203.1.1.254; \
+          echo "1" > /proc/sys/net/ipv4/ip_forward; \
+          exit
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+Then setup devilspie:
+
+realHost$ mkdir ~/.devilspie; \
+          cp netkit4tic.ds ~/.devilspie/ ; \
+          devilspie &
+
+
+Now:
+
+  fdisk /dev/sda  && fdisk /dev/sdb
+
+enjoy!
+
+

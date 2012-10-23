@@ -1,0 +1,8 @@
+-- $Id: query3a.sql,v 1.1 2005/01/21 09:12:11 doros Exp $
+
+use fgt;
+
+select N_PAGAMENTO, P.N_GIOCATORE, IMPORTO, COGNOME, INIZIALI
+from PENALITA as P, GIOCATORI as G
+where P.N_GIOCATORE = G.N_GIOCATORE;
+

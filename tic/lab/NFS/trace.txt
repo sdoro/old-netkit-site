@@ -1,0 +1,33 @@
+
+############################################ ibm ####################
+
+client5
+
+client5:~# cd /net/dir1
+client5:/net/dir1# ls
+nfs1.txt
+client5:/net/dir1# cd /net/dir2/dir21/dir212
+client5:/net/dir2/dir21/dir212# ls
+nfs3.txt
+
+
+client1
+
+client1:~# cd /net/dir1
+client1:/net/dir1# ls
+nfs1.txt
+client1:/net/dir1# cd ../dir2/dir21/dir212
+client1:/net/dir2/dir21/dir212# ls
+nfs3.txt
+
+############################################ school ####################
+# cd /root
+# /etc/init.d/autofs restart
+# cp /etc/auto.net.school /etc/auto.net
+# cd /net/headquates/staff
+client1:/net/headquates/staff# ls
+nfs1.txt
+client1:/net/headquates/staff# cd /net/branch/student
+client1:/net/branch/student# ls
+nfs4.txt
+

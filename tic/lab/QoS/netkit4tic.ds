@@ -1,0 +1,28 @@
+;; $Id: netkit4tic.ds,v 1.3 2007-02-10 16:03:53 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "aclntExt")
+  (begin
+      (geometry "484x316+536+27")
+    )
+  )
+
+(if (contains (application_name) "fw")
+  (begin
+      (geometry "744x199+536+394")
+    )
+  )
+
+(if (contains (application_name) "rrd")
+  (begin
+      (geometry "484x186+37+259")
+    )
+  )
+
+(if (contains (application_name) "aclntInt")
+  (begin
+      (geometry "484x186+36+493")
+    )
+  )
+
+)

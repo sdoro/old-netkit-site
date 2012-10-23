@@ -1,0 +1,15 @@
+# brctl show
+bridge name   bridge id            STP enabled   interfaces
+brNoVLAN      8000.000000010000    no            eth0
+                                                 eth1
+brVLAN3       8000.000000010000    no            eth0.3
+                                                 eth1.3
+
+
+# ebtables -t broute -L
+Bridge table: broute
+
+Bridge chain: BROUTING, entries: 2, policy: ACCEPT
+-p 802_1Q -i eth0 --logical-in brNoVLAN --vlan-id 3 -j DROP
+-p 802_1Q -i eth1 --logical-in brNoVLAN --vlan-id 3 -j DROP
+

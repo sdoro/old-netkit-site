@@ -1,0 +1,319 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-NetEx4.html,v 1.4 2006/10/08 10:00:19 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-NetEx4</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 10 - Pratica sulle reti</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esercizio sulle tabelle di routing</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetEx2.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetEx5.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+
+<p>
+Per questa prova ci riferiremo all'esercizio che ho trovato
+in un esame di "Impianti di Elaborazione" di cui non riesco
+pi&ugrave; a trovare l'URL e di cui ho solo copia cartacea:
+</p>
+
+<p>
+<cite class="border">
+"La mappa 
+(<a href="pdf/badRoute.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/badRoute.xml" title="file per Dia">xml</a>)
+della rete proposta contiene un errore nella tabella di
+routing di uno dei cinque router.<br>
+  Identificare l'errore
+ed indicare la sequenza di comandi <code>route</code> per
+correggere il malfunzionamento.<br>
+
+Indicare l'output del
+comando <code>pc1# traceroute pc2</code>.
+</cite>
+
+<p>
+Le tabelle di routing sono le seguenti:
+</p>
+
+<table>
+<tr>
+<td>
+<table>
+  <tr>
+  <td colspan="2" class="yellow"> r1 </td>
+  </tr>
+
+  <tr>
+  <th>Destination</th>
+  <th>Gateway</th>
+  </tr>
+
+  <tr>
+  <td>default</td>
+  <td>10.0.2.2</td>
+  </tr>
+</table>
+</td>
+
+<td>
+<table>
+  <tr>
+  <td colspan="2" class="yellow"> r2 </td>
+  </tr>
+
+  <tr>
+  <th>Destination</th>
+  <th>Gateway</th>
+  </tr>
+
+  <tr>
+  <td>10.0.1.0</td>
+  <td>10.0.2.1</td>
+  </tr>
+
+  <tr>
+  <td>10.0.4.0</td>
+  <td>10.0.6.5</td>
+  </tr>
+
+  <tr>
+  <td>10.0.5.0</td>
+  <td>10.0.3.3</td>
+  </tr>
+
+  <tr>
+  <td>10.0.8.0</td>
+  <td>10.0.7.4</td>
+  </tr>
+
+  <tr>
+  <td>10.0.9.0</td>
+  <td>10.0.7.4</td>
+  </tr>
+</table>
+</td>
+
+<td>
+<table>
+  <tr>
+  <td colspan="2" class="yellow"> r3 </td>
+  </tr>
+
+  <tr>
+  <th>Destination</th>
+  <th>Gateway</th>
+  </tr>
+
+  <tr>
+  <td>default</td>
+  <td>10.0.3.2</td>
+  </tr>
+</table>
+</td>
+
+</tr>
+
+
+<tr>
+<td>
+<table>
+  <tr>
+  <td colspan="2" class="yellow"> r4 </td>
+  </tr>
+
+  <tr>
+  <th>Destination</th>
+  <th>Gateway</th>
+  </tr>
+
+  <tr>
+  <td>default</td>
+  <td>10.0.7.2</td>
+  </tr>
+</table>
+</td>
+
+<td>
+<table>
+  <tr>
+  <td colspan="2" class="yellow"> r5 </td>
+  </tr>
+
+  <tr>
+  <th>Destination</th>
+  <th>Gateway</th>
+  </tr>
+
+  <tr>
+  <td>10.0.4.0</td>
+  <td>10.0.9.4</td>
+  </tr>
+
+  <tr>
+  <td>default</td>
+  <td>10.0.6.2<td>
+  </tr>
+</table>
+</td>
+
+</tr>
+</table>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Soluzione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Fai partire l'esperienza virtuale con il comando:
+</p>
+
+<pre>
+realHost$ lstart -d exercise-04
+</pre>
+
+<p>
+in modo da costruire
+la rete dell'esercizio proposto composta da 2 host, 5 router e
+9 hub per un totale di 18 NIC.
+</p>
+
+
+<p>
+Se andiamo ad eseguire il comando suggerito scopriamo un loop
+infinito:
+</p>
+
+<pre>
+pc1# traceroute pc2<span class="blue">
+traceroute to pc2 (10.0.4.254), 64 hops max, 40 byte packets
+ 1  10.0.1.1 (10.0.1.1)  4 ms  6 ms  4 ms
+ 2  <span class="yellow">10.0.2.2</span> (10.0.2.2)  8 ms  6 ms  6 ms
+ 3  10.0.6.5 (10.0.6.5)  5 ms  8 ms  7 ms
+ 4  10.0.7.4 (10.0.7.4)  8 ms  6 ms  6 ms
+ 5  <span class="yellow">10.0.2.2</span> (10.0.2.2)  9 ms  10 ms 5 ms
+ 6  10.0.6.5 (10.0.6.5)  10 ms  11 ms  6 ms
+ 7  10.0.7.4 (10.0.7.4)  7 ms  10 ms  9 ms
+ 8  <span class="yellow">10.0.2.2</span> (10.0.2.2)  9 ms *  408 ms
+ 9  10.0.6.5 (10.0.6.5)  528 ms  15 ms  10 ms
+10  10.0.7.4 (10.0.7.4)  16 ms  11 ms  12 ms
+[...]</span>
+</pre>
+
+<p>
+Il settaggio della tabella di routing di r2 &egrave; errata
+per la destinazione 10.0.4.0/24 in quanto trasferisce i pacchetti
+per questa destinazione verso r5 il quale trasferisce verso
+r4 che per default trasferisce su r2 costruendo quindi un ciclo
+senza fine. Una possibile sequenza di comandi per risolvere
+questo problema pu&ograve; essere:
+</p>
+
+<pre>
+r2# route del -net 10.0.4.0 netmask 255.255.255.0 gw 10.0.6.5
+r2# route add -net 10.0.4.0 netmask 255.255.255.0 gw 10.0.3.3
+</pre>
+
+
+<p>
+infatti la situazione &egrave; risolta:
+</p>
+
+<pre>
+pc1# traceroute pc2<span class="blue">
+traceroute to 10.0.4.254 (10.0.4.254), 64 hops max, 40 byte packets
+ 1  (10.0.1.1)  2 ms  2 ms  2 ms
+ 2  (10.0.2.2)  4 ms  3 ms  4 ms
+ 3  (10.0.3.3)  4 ms  4 ms  5 ms
+ 4  pc2 (10.0.4.254)  7 ms  5 ms  5 ms</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/08 10:00:19 $
+</span>
+</address>
+
+
+</body>
+
+</html>

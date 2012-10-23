@@ -1,0 +1,77 @@
+#!/bin/bash
+# $Id: netkit-phase2,v 1.3 2006/01/13 21:16:21 doros Exp $
+
+# ANSI color escape sequences
+COLOR_BLUE=$'\E[34;2m'
+COLOR_NORMAL=$'\E[37;0m'
+
+case "$1" in
+	start) 
+		echo -n $COLOR_BLUE
+		echo "--- Starting Netkit phase 2 startup script"
+
+		COMMAND=$(cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}')
+		TEST=$(cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="test") print $1}')
+
+		if [ -f /hostlab/shared.startup ]; then
+			echo
+			echo "Starting shared startup script ..."
+			/bin/sh -c 'source /hostlab/shared.startup'
+		fi
+
+		if [ -f /hostlab/$HOSTNAME.startup ]; then
+			echo
+			echo "Starting $HOSTNAME specific startup script ..."
+			/bin/sh -c 'source /hostlab/$HOSTNAME.startup'
+		fi
+
+		if [ -x "$COMMAND" ]; then
+			echo
+			echo "Executing: $COMMAND ..."
+			$COMMAND
+		fi
+
+		echo
+		echo "Virtual host $HOSTNAME ready."
+		[ -d /hostwd ] && touch /hostwd/$HOSTNAME.ready
+
+		if [ ! -z "$TEST" ]; then
+			echo 
+			echo "Executing test...."
+			/etc/init.d/netkit-test-phase
+		fi
+		
+
+		echo
+		echo "--- Netkit phase 2 init script terminated"
+		echo -n $COLOR_NORMAL
+		;;
+
+	stop)
+		echo -n $COLOR_BLUE
+		echo "--- Starting Netkit phase 2 shutdown script"
+
+		if [ -f /hostlab/$HOSTNAME.shutdown ]; then
+			echo
+			echo "Starting $HOSTNAME specific shutdown script ..."
+			/bin/sh -c 'source /hostlab/$HOSTNAME.shutdown'
+		fi
+
+		if [ -f /hostlab/shared.shutdown ]; then
+			echo
+			echo "Starting shared shutdown script ..."
+			/bin/sh -c 'source /hostlab/shared.shutdown'
+		fi
+
+		
+		echo
+		echo "--- Netkit phase 2 shutdown script terminated"
+		echo -n $COLOR_NORMAL
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+
+esac

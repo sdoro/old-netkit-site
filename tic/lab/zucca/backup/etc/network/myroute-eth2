@@ -1,0 +1,49 @@
+# /etc/network/myroute-eth2
+# $Id:$
+
+# OEN1
+#route add -net 192.168.65.0 netmask 255.255.255.0 gw 192.168.100.129
+ip route add 192.168.65.0/24 via 192.168.100.129
+
+# LASA
+#route add -net 192.168.66.0 netmask 255.255.255.0 gw 192.168.100.130
+ip route add 192.168.66.0/24 via 192.168.100.130
+
+# ZETA
+#route add -net 192.168.56.0 netmask 255.255.255.0 gw 192.168.100.139
+ip route add 192.168.56.0/24 via 192.168.100.139
+
+# LAS
+#route add -net 192.168.63.0 netmask 255.255.255.0 gw 192.168.100.132
+ip route add 192.168.63.0/24 via 192.168.100.132
+
+# LAMS
+#route add -net 192.168.62.0 netmask 255.255.255.0 gw 192.168.100.133
+ip route add 192.168.62.0/24 via 192.168.100.133
+
+# PTER
+#route add -net 192.168.53.0 netmask 255.255.255.0 gw 192.168.100.142
+ip route add 192.168.53.0/24 via 192.168.100.142
+
+# AINSV
+#route add -net 192.168.58.0 netmask 255.255.255.0 gw 192.168.100.137
+ip route add 192.168.58.0/24 via 192.168.100.137
+
+# BIBL (2007-05-15)
+#route add -net 192.168.54.0 netmask 255.255.255.0 gw 192.168.100.141
+ip route add 192.168.54.0/24 via 192.168.100.141
+
+# LEN3
+ip route add 192.168.61.0/24 via 192.168.100.134
+
+# LEN4
+ip route add 192.168.60.0/24 via 192.168.100.135
+
+# LEN5
+ip route add 192.168.59.0/24 via 192.168.100.136
+
+# PROVA
+#route add -net 192.168.51.0 netmask 255.255.255.0 gw 192.168.100.144
+ip route add 192.168.51.0/24 via 192.168.100.144
+
+# bot

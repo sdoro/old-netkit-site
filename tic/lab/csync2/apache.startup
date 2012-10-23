@@ -1,0 +1,4 @@
+# $Id: apache.startup,v 1.1 2008-01-04 16:15:49 doros Exp $
+ifconfig eth0 192.168.100.4 up
+# start apache server
+/etc/init.d/apache start

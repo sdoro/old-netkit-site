@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: http,v 1.1 2004-11-11 22:34:28 doros Exp $
+# iperf/http
+if [ IPERF -ne "" ] ; then
+  exit 1;
+else
+  iperf -c 80.204.240.254 -w 8K -f K $IPERF -p 80 > /dev/null
+fi

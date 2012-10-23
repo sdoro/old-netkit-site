@@ -1,0 +1,2 @@
+dir21 -fstype=autofs file:/etc/auto.dir21
+dir22 -fstype=nfs nfs2.istituto.it:/dir22

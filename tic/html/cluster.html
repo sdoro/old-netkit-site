@@ -1,0 +1,121 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: cluster.html,v 1.16 2006/02/20 16:25:27 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - cluster</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 7</h1>
+<h2 class="center">Sistemi ad alta disponibilit&agrave;/affidabilit&agrave;: i cluster</h2>
+
+<p>
+Un cluster &egrave; caratterizzato da:
+</p>
+
+<ul>
+	<li>un insieme di computer interconnessi</li>
+	<li>appaiono all'utente come una singola risorsa</li>
+	<li>i cui elementi sono risorse dedicate al funzionamento della struttura.</li>
+</ul>
+
+<p>
+Vantaggi:
+</p>
+
+<ul>
+	<li>scalabilit&agrave;: si pu&ograve; facilmente incrementare il
+	numero dei componenti del cluster</li>
+	
+	<li>distribuzione del carico: una richiesta di calcolo non
+	rimane confinata ad un singolo sistema</li>
+	
+	<li>disponibilit&agrave;: il crash di un singolo sistema dovrebbe
+	riguardare solo un ristretto numero di utenti.</li>
+</ul>
+
+<p>
+Svantaggi:
+</p>
+
+<ul>
+	<li>l'amministrazione di un gruppo di sistemi &egrave; pi&ugrave;
+	complessa</li>
+	
+	<li>la gestione della sicurezza si f&agrave pi&ugrave difficile
+	con vari sistemi che un cracker pu&ograve; utilizzare per ottenere
+	l'accesso</li>
+	
+	<li>le risorse sono condivise in rete e quindi risulta pi&ugrave;
+	difficile gestirle</li>
+</ul>
+
+<p>
+I due progetti Open Source che sono utilizzati tra l'altro dalla Redhat per costruire
+<a href="http://www.redhat.com/software/rhel/as/" title="link esterno"><b>RedHat Enterprise Linux</b></a> sono:
+</p>
+
+<ul>
+	<li><a href="http://oss.missioncriticallinux.com/projects/kimberlite/" title="link esterno">kimberlite</a></li>
+	
+	<li><a href="http://www.LinuxVirtualServer.org/" title="link esterno">Linux Virtual Server (LVS)</a></li>
+	
+</ul>
+
+<p>
+Un cluster abbastanza grosso che usa Debian lo puoi trovare a
+<a href="http://www.dcsc.sdu.dk/overview.php" title="link esterno">dcsc</a>.
+</p>
+
+<p>
+Le tipologie di cluster per cui abbiamo costruito una esperienza virtuale sono:
+</p>
+
+<ul>
+  <li>Cluster firewall: tipicamente usati assieme al protocollo
+      VRRP per mantenere attivi i "default gateway"</li>
+  <li>Cluster HA di tipo active-active per mantenere
+      sempre on servizi particolarmente importanti</li>
+</ul>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<!-- little spam-fighting trick found at
+     http://philringnalda.com/blog/2002/06/accessible_spamproofing.php
+-->
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/02/20 16:25:27 $
+</span>
+</address>
+
+</body>
+
+</html>

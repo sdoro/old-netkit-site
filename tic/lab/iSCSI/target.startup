@@ -1,0 +1,14 @@
+# target.startup
+# configure IP
+ifconfig lo 127.0.0.1
+ifconfig eth0 192.168.0.151
+ifconfig eth1 192.168.1.1
+# load module
+modprobe sd_mod
+modprobe sg
+modprobe scsi_transport_iscsi
+modprobe iscsi_tcp
+# creata backing store
+dd if=/dev/zero of=/tmp/target_file bs=1M count=60
+# start target
+/etc/init.d/iscsi-target start

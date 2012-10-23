@@ -1,0 +1,10 @@
+# /etc/ppp/options
+# $Id: options,v 1.1 2006/08/09 14:31:46 doros Exp $
+
+38400
+lock
+noauth
+nobsdcomp
+nodeflate
+
+# bot

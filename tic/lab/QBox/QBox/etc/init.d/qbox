@@ -1,0 +1,57 @@
+#! /bin/bash
+# Copyright (c) 2000 Uwe Böhme.  All rights reserved.
+#
+# Author: Uwe Böhme <uwe@bnhof.de>, 2000
+# Modified by Ron Senykoff - HarrisLogic for Redhat 9 / Shrike
+#
+# /sbin/init.d/bridge
+# chkconfig: 345 25 75
+# description: bridge configuration script for HLI
+
+# . /etc/rc.config
+
+RCDLINKS="0,K89 1,K89 2,S11 3,S11 4,S11 5,S11 6,K89"
+
+return=$rc_done
+
+case "$1" in
+
+    start)
+        echo "Q*Box Starting Shaper"
+	echo "Q*Box: ip route flush cache"
+	ip route flush cache
+	echo "Q*Box ip route add default via $GATEWAY"
+	ip route add default via $GATEWAY
+	
+	echo "executing shaping script..."
+	bash /sbin/qbox.shape.sh
+	echo "shaping script complete"
+	
+        echo -e "$return"
+        ;;
+
+    stop)
+        echo "Q*Box - Removing Queues from NICs"
+	/sbin/tc qdisc del root dev eth0
+	/sbin/tc qdisc del root dev eth1
+
+        echo -e "$return"
+        ;;
+
+    status)
+	tc -s qdisc show
+	#ifconfig $BRIDGENAME
+        #brctl showbr $BRIDGENAME
+	;;
+
+    restart)
+        $0 stop && $0 start || return=$rc_failed
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
+
+test "$return" = "$rc_done" || exit 1
+exit 0

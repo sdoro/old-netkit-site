@@ -1,0 +1,531 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-email.html,v 1.11 2007-02-10 08:05:46 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - e-mail</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 17 - Internet Server</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su DNS ed eMail</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-dns.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-LTSP.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p> 
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+Scarica il <a href="lab-email.tgz" title="esperienza Netkit4TIC">tarball</a> (5KB) contenente
+lo script <code>lab</code> che genera l'intera esercitazione.
+</p>
+
+<p>
+Questa esercitazione ripercorre gli stessi passi di quella presente
+nel sito
+<a href="http:///www.netkit.org/software/netkit_labs/applicationlevel/lab-email/netkit-email.pdf"
+   title="link esterno">www.netkit.org</a>
+ma con le seguenti differenze:
+</p>
+
+<ul>
+  <li> DNS: bind9 (al posto di bind)<br>
+       sono configurati i seguenti domini: <code>ROOT</code>,
+       <code>org</code>, <code>net</code>,
+       <code>lugroma3.org</code> e
+       <code>nanoinside.net</code></li>
+  <li> MTA: Postfix (al posto di Sendmail)<br>
+       sono configurate le due macchine che gestiscono
+       il dominio <code>lugroma3.org</code> e <code>nanoinside.net</code>
+       e sono configurati i due client <code>pc1</code> e <code>pc2</code>
+       in versione semplificata</li>
+  <li> MUA: Mutt (al posto di Pine)<br>
+       sono configurate le due macchine client
+       <code>pc1</code> e <code>pc2</code></li>
+  <li> MUA: Outlook Express (Opzionale)<br>
+       &egrave; configurata una macchina client
+       <code>xp</code></li>
+</ul>
+
+<p>
+In aggiunta utilizzeremo anche i seguenti servizi "postali":
+</p>
+
+<ul>
+  <li> IMAP (Interactive Mail Access Protocol) &egrave; il servizio
+       che permette di accedere alle mail remotamente, cio&egrave;
+       da un utente collegato da una macchina differente da quella
+       in cui risiedono le e-mail. Tra i pacchetti che mettono a
+       disposizione questa funzionalit&agrave; abbiamo scelto
+       <code>uw-imapd</code> che viene fornito con il supporto SSL
+       e il supporto Kerberos abilitati.</li>
+  <li> POP (Post Office Protocol) &egrave; analogo al servizio
+       IMAP ma meno flessibile in quanto non mantiene lo stato
+       di "letto" e "non letto" sul server. Da questo segue che
+       tipicamente chi usa questo protocollo scarica in locale
+       tutta la mail trovata nel server. Vista la scelta fatta
+       per il precedente pacchetto abbiamo continuato a scegliere
+       software prodotto dalla stessa universit&agrave; (Washington)
+       e cio&egrave; <code>ipopd</code> che ha il il supporto SSL e
+       il supporto Kerberos abilitati.</li>
+</ul>
+
+<p>
+Entrambe questi due servizi sono stati configurati attraverso
+<code>xinetd</code> il successore di <code>inetd</code>
+(l'Internet super-server).
+Questo servizio viene attivato al boot, ad esempio dallo script
+<code>/etc/rc.local</code> e si mette in ascolto di connessioni su
+alcune porte. Quando arriva una connessione cede il controllo al
+programma associato nella configurazione presente
+nel file <code>/etc/xinetd.conf</code>.
+</p>
+
+<p>
+Vogliamo ricostruire la situazione descritta nelle slide proposte
+dal sito <code>www.netkit.org</code> in cui esistono due mail
+server che gestiscono rispettivamente il dominio <code>lugroma3.org</code>
+e il dominio <code>nanoinside.net</code>. Il server smtp (MTA) utilizzato
+sar&agrave; Postfix, inoltre in questi due nodi
+&egrave; configurato <code>xinetd</code> per accettare connessioni IMAP
+o POP e lanciare i relativi servizi.
+</p>
+
+<p>
+Per completare il quadro utilizzeremo due pc che simuleranno
+rispettivamente la postazione di un utente di un dominio. Il client
+di posta utilizzato (MUA) sar&agrave; Mutt (non abbiamo utilizzato
+Pine per la sua licenza che lo esclude dalla Debian). Poich&egrave;
+Mutt ha bisogno di un MTA abbiamo installato nei due client anche
+Postfix come sistema "null client".
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=server></a>Configurazione del lato server</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La configurazione di Postfix si pu&ograve; dedurre con facilt&agrave;
+dal documento presente sul sito stesso dove sono raccolte i "template"
+per le varie tipologie di installazione. Nel nostro caso la tipologia
+&egrave; quella denominata "Postfix on a local network".<br>
+Per quanto riguarda ad esempio il nodo <code>lugroma3.org</code>:
+</p>
+
+<pre>
+# /etc/postfix/main.cf
+myorigin = lugroma3.org
+mynetworks = 192.168.0.0/24
+relayhost =
+myhostname = mail.lugroma3.org
+mydestination = localhost, lugroma3.org
+masquerade_domains = $mydomain
+</pre>
+
+<p>
+Solo a scopo di studio, disabilitiamo l'uso di default della comunicazione
+cifrata attraverso TLS costruendo il file <code>/etc/c-client.cf</code> con
+il seguente contenuto:
+</p>
+
+<pre>
+# /etc/c-client.cf
+I accept the risk
+set disable-plaintext nil
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Configurazione del lato client</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questo caso la tipologia
+&egrave; quella denominata "Postfix null client".
+Per quanto riguarda ad esempio il nodo <code>pc1.lugroma3.org</code>:
+</p>
+
+<pre>
+# /etc/postfix/main.cf
+myorigin = lugroma3.org
+relayhost = smtp.lugroma3.org
+inet_interfaces = 127.0.0.1
+local_transport = error:local delivery is disabled
+masquerade_domains = $mydomain
+</pre>
+
+<p>
+Modifichiamo anche il comportamento del client Mutt perch&egrave; non
+tenti di cifrare la comunicazione attraverso una opzione nel suo
+file di configurazione <code>~/.muttrc</code>:
+</p>
+
+<pre>
+# ~/.muttrc
+set ssl_starttls=no
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Sperimentazione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per prima cosa verifichiamo la corretta configurazione dei
+servizio di risoluzione dei nomi e dei record MX che denotano
+i mail server:
+</p>
+
+<pre>
+pc2# host -t mx nanoinside.net<span class="blue">
+nanoinside.net mail is handled by 5 mail.nanoinside.net.</span>
+pc2# host -t mx lugroma3.org  <span class="blue">
+lugroma3.org mail is handled by 5 mail.lugroma3.org.</span>
+</pre>
+
+<p>
+Il comando <code>dig</code> &egrave; pi&ugrave; completo:
+</p>
+
+<pre>
+pc2# dig nanoinside.net mx +nostats +nocmd +noquestion +nocomment<span class="blue">
+nanoinside.net.          60000  IN      MX      5 mail.nanoinside.net.
+nanoinside.net.          60000  IN      NS      dns-nano.nanoinside.net.
+dns-nano.nanoinside.net. 60000  IN      A       192.168.0.22</span>
+</pre>
+
+<p>
+Tenendo presente che sono gi&agrave; costruiti nei loro
+rispettivi domini sia l'utente
+<code>caio@lugroma3.org</code> che l'utente
+<code>tizio@nanoinside.net</code> entrambi con 
+password <code>not24get</code>,
+possiamo provare un reciproco scambio di e-mail.
+Allo scopo sono stati preimpostati i corrispondenti
+campi "From:" sia su pc1 (la postazione di Caio)
+che su pc2 (la postazione di Tizio).
+Procediamo simulando Caio che dal nodo pc1 si connette al suo gateway
+(o mail hub) utilizzando il protocollo IMAP:
+</p>
+
+<pre>
+pc1# mutt -f imap://caio@imap.lugroma3.org/
+</pre>
+
+<p>
+e analogamente simuliamo Tizio che dal nodo pc2 si connette al suo gateway
+(o mail hub) utilizzando il protocollo POP3 (tanto per variare):
+</p>
+
+
+<pre>
+pc2# mutt -f pop://tizio@pop.nanoinside.net/
+</pre>
+
+
+<p>
+La connessione avviene in modalit&agrave; "in chiaro" e dopo aver immesso
+le rispettive password entrambe i due MUA sono pronti. Caio pu&ograve;
+provare a spedire una mail a <code>tizio@nanoinside.net</code>
+e quando Tizio la riceve pu&ograve; spedire un reply. Per forzare
+la rilettura (fetch) della mailbox in modalit&agrave; 
+imap occorre premere il tasto <code>Z</code>.
+</p>
+
+<p>
+Abbiamo registrato la cattura
+completa
+dell'intero traffico
+<a href="../capture/email-all.acp"
+   title="file per Ethereal">(File ACP)</a>,
+il traffico smtp
+<a href="../capture/email-smtp.acp"
+   title="file per Ethereal">(File ACP)</a>, il traffico imap
+<a href="../capture/email-imap.acp"
+   title="file per Ethereal">(File ACP)</a>
+e il traffico pop
+<a href="../capture/email-pop.acp"
+   title="file per Ethereal">(File ACP)</a>.
+</p>
+
+<p>
+&Egrave; possibile testare il servizio POP3 con il comando telnet:
+</p>
+
+<pre>
+pc2# telnet pop.nanoinside.net pop3<span class="blue">
+Trying 192.168.0.22...
+Connected to pop.nanoinside.net (192.168.0.22).
+Escape character is '^]'.
++OK POP3 dns-nano.nanoinside.net v2003.83 server ready</span>
+USER tizio<span class="blue">
++OK User name accepted, password please</span>
+PASS not24get<span class="blue">
++OK Mailbox open, 1 messages</span>
+LIST<span class="blue">
++OK Mailbox scan listing follows
+1 923
+.</span>
+RETR 1<span class="blue">
++OK 923 octets
+Return-Path: &lt;root@lugroma3.org&gt;
+X-Original-To: tizio@nanoinside.net
+Delivered-To: tizio@nanoinside.net
+Received: from mail.lugroma3.org (dns-lug.lugroma3.org [192.168.0.11])
+        by mail.nanoinside.net (Postfix) with ESMTP id D018E1342B
+        for &lt;tizio@nanoinside.net&gt; Tue,  5 Apr 2005 10:17:10 +0200 (CEST)
+Received: from pc1.lugroma3.org (pc1.lugroma3.org [192.168.0.111])
+        by mail.lugroma3.org (Postfix) with ESMTP id 7C8F61342B
+        for &lt;tizio@nanoinside.net&gt; Tue,  5 Apr 2005 10:17:08 +0200 (CEST)
+Received: by pc1.lugroma3.org (Postfix, from userid 0)
+        id E03F51342B; Tue,  5 Apr 2005 10:17:05 +0200 (CEST)
+Date: Tue, 5 Apr 2005 10:17:05 +0200
+From: Caio &lt;caio@lugroma3.org&gt;
+To: tizio@nanoinside.net
+Subject: test
+Message-ID: &lt;20050405081704.GA345@localhost&gt;
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.6+20040907i
+Status: RO
+
+Hi Tizio!
+.</span>
+QUIT<span class="blue">
++OK Sayonara
+Connection closed by foreign host.</span>
+</pre>
+
+<p>
+Riportiamo un
+<a href="uml-email.png"
+   title="screenshoot">screenshot</a>.
+
+
+<p>
+&Egrave; possibile anche testare il servizio SMTP con il comando telnet:
+</p>
+
+<pre>
+pc2# telnet smtp.nanoinside.net smtp<span class="blue">
+Trying 192.168.0.22...
+Connected to smtp.nanoinside.net (192.168.0.22).
+Escape character is '^]'.
+220 mail.nanoinside.net ESMTP Postfix (Debian/GNU)</span>
+HELO nanoinside.net<span class="blue">
+250 mail.nanoinside.net</span>
+MAIL FROM: &lt;tizio@nanoinside.net&gt;<span class="blue">
+250 Ok</span>
+RCPT TO: &lt;caio@lugroma3.org&gt; <span class="blue">
+250 Ok</span>
+DATA<span class="blue">
+354 End data with &lt;CR&gt;&lt;LF&gt;&lt;CR&gt;&lt;LF&gt;</span>
+Questo e' un messaggio composta da una sola riga a scopo di test
+.<span class="blue">
+250 Ok: queued as EC27F1342B</span>
+QUIT<span class="blue">
+221 Bye
+Connection closed by foreign host.</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Sperimentazione client Microsoft (Opzionale)</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La sperimentazione con il nodo Microsoft XP Pro SP2 viene
+realizzata attraverso il sistema di virtualizzazione QEMU.
+Rimandiamo alla pagina
+<a href="qemu.html" title="setup">QEMU setup</a>
+per i dettagli di come settare l'ambiente.
+Per caricarlo:
+</p>
+  
+  
+<pre>
+realHost$ sudo modprobe kqemu
+</pre>
+  
+
+
+<p>
+Di seguito supponiamo di averci costruito o di avere a disposizione
+una immagine <code>XPPSP2.img</code> e dalla quale deriviamo un
+"delta" che rappresenta la nostra "sandbox":
+</p>
+
+<pre>
+realHost$ ifname=`sudo tunctl -b -u knoppix`; \
+          qemu-img create -b XPPSP2.img -f qcow <span class="yellow">delta-XPPSP2.img</span>; \
+          export QEMU_SW="-usb -usbdevice tablet -kernel-kqemu"; \
+          export QEMU_NET="-net nic -net tap,ifname=$ifname"; \
+          qemu -m 140 -hda <span class="yellow">delta-XPPSP2.img</span> $QEMU_SW $QEMU_NET
+</pre>
+
+<p>
+Per questa sperimentazione utilizziamo
+il client (MUA) presente su ogni installazione Microsoft: Outlook Express.
+La mappa dei due ambienti virtualizzanti &egrave; 
+(<a href="pdf/email.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/email.xml" title="file per Dia">xml</a>).
+
+Per prima cosa configuriamo XP per usare il DNS
+di lugroma3.org (192.168.0.11)
+<a href="uml-email-XP-01.png"
+   title="screenshoot">screenshot</a>.
+Ora passiamo alla configurazione di Outlook Express.
+
+Configuriamo l'utente <code>Bill Porta</code>
+<a href="uml-email-XP-02.png"
+   title="screenshoot">screenshot</a>,
+l'indirizzo di posta elettronica <code>bill@lugroma3.org</code>
+<a href="uml-email-XP-03.png"
+   title="screenshoot">screenshot</a>,
+definiamo il server per la ricezione e l'invio
+<a href="uml-email-XP-04.png"
+   title="screenshoot">screenshot</a>,
+inseriamo l'account definito nel server remoto
+<a href="uml-email-XP-05.png"
+   title="screenshoot">screenshot</a>,
+e abbiamo terminato
+<a href="uml-email-XP-06.png"
+   title="screenshoot">screenshot</a>.
+Al primo accesso ci viene chiesta la password
+<a href="uml-email-XP-07.png"
+   title="screenshoot">screenshot</a>.
+</p>
+
+<p>
+Ora passiamo alla sperimentazione: attraverso il MUA mutt
+presente su pc2 ci accreditiamo presso il dominio 
+<code>nanoinside.net</code> con l'account <code>tizio</code> e
+spediamo un messaggio email all'utente
+<code>bill@lugroma3.org</code>:
+</p>
+
+<pre>
+pc2# mutt -f pop://tizio@pop.nanoinside.net/
+[...]
+</pre>
+
+
+<p>
+In seguito dal client
+Microsoft accediamo al server <code>imap.lugroma3.org</code>
+e verifichiamo la ricezione del messaggio
+<a href="uml-email-XP-08.png"
+   title="screenshoot">screenshot</a>.
+</p>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-10 08:05:46 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

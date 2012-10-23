@@ -1,0 +1,133 @@
+#!/bin/sh
+# $Id: lab,v 1.5 2005/10/19 12:42:34 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 2
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    vstart pc1 --new  --eth0=A --mem=32 $X
+    waitfinish pc1
+
+    vstart pc2 --new  --eth0=A --mem=32 $X
+    waitfinish pc2
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started ***"
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash pc1
+    vcrash pc2
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+	# and it is NEVER executed by in the host environment
+	#
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+
+    pc1)
+        # config IP
+        ifconfig eth0 192.168.100.1
+        # copy java source
+        cp $SCRIPTDIR/*.java /root
+        # copy C source
+        cp $SCRIPTDIR/client.c /root
+
+        notifyfinish pc1
+        ;;
+
+    pc2)
+        # config IP
+        ifconfig eth0 192.168.100.2
+        # copy java source
+        cp $SCRIPTDIR/*.java /root
+        # copy C source
+        cp $SCRIPTDIR/server.c /root
+
+        notifyfinish pc2
+        ;;
+
+    #
+    #
+    ################################################# end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

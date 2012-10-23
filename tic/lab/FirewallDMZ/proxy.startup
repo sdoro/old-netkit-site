@@ -1,0 +1,15 @@
+# $Id: proxy.startup,v 1.1 2007-01-31 16:39:11 doros Exp $
+# configure IP address
+ifconfig eth0 192.168.77.2 up
+ifconfig eth1 192.168.2.222 up
+route add default gw 192.168.2.254
+# starting crond
+/etc/init.d/cron start
+# staring squid
+/etc/init.d/squid start
+# starting Dansguardian
+/etc/init.d/dansguardian start
+# starting Apache
+/etc/init.d/apache start
+#
+# EOF

@@ -1,0 +1,697 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-Samba.html,v 1.51 2005/11/26 13:43:34 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-samba</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-LDAP.html">
+  <link rel="Next" title="Next" href="uml-EntSamba.html">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Amministrazione, gestione e autenticazione in rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Samba (SMB)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-LDAP.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-EntSamba.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+La rete descritta dalla mappa
+(<a href="pdf/Samba.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/Samba.xml" title="file per Dia">xml</a>)
+&egrave; costituita da tre nodi collegati
+allo stesso dominio di collisione 192.168.50.0/24.
+Il nodo <code>ldap</code> (192.168.50.1) fornisce il servizio
+DNS per il dominio <code>istituto.it</code>
+e il servizio database di back-end per il servizio Samba. Il nodo
+<code>SRV</code> (192.168.50.10) fornisce il servizio Samba.
+Il nodo <code>CLNT</code> (192.168.50.11) infine viene utilizzato
+come macchina client per il test.
+Faremo riferiremo alla release di Samba del tipo 3.0.x
+presente nella distribuzione Debian Sarge.
+<br>
+Il server <code>ldap</code> &egrave; connesso
+alla rete reale ed &egrave; quindi gateway per tutte le macchine
+della rete virtuale. Per la raggiungibilit&agrave; della macchina
+reale con le macchine della rete virtuale occorre aggiungere questa
+regola di routing:
+</p>
+ 
+<pre>
+root@realHost# route add -net 192.168.50.0/29 gw 192.168.77.2
+</pre>
+ 
+
+<p>
+La documentazione di eccellente qualit&agrave; si pu&ograve; ottenere
+installando il pacchetto <code>samba-doc</code> che mette a disposizione
+<code>Samba-HOWTO-Collection</code>,
+<code>Samba-Guide</code> e 
+<code>Samba-Developers-Guide</code> parzialmente consultabili anche
+all'interno di <code>swat</code>.
+</p>
+
+
+<p>
+Scarica il file <a href="Samba.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente tutto il necessario e scompattalo in una sottodirectory della
+<code>HOME</code> dell'utente.
+Dopo aver settato correttamente l'ambiente Netkit
+lancia lo script:
+</p>
+
+<pre>
+user@realhost$ ./lab start
+</pre>
+
+
+<p>
+Questa sperimentazione si divide nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li><a href="#ldap">Integrazione di Samba e LDAP</a></li>
+  <li><a href="#tools">Configurazione e uso di smbldap-tools</a></li>
+  <li><a href="#smbfs">Condivisione di file attraverso filesystem Samba</a></li>
+  <li><a href="#autosmbfs">Automagico mount di share SMB</a></li>
+  <li><a href="#wins">Risoluzione dei nomi con Samba</a></li>
+</ul>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="ldap">Integrazione di Samba e LDAP</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Questa configurazione viene gestita automaticamente dallo script
+e quindi al termine dello stesso tutti i passaggi sono gi&agrave;
+stati eseguiti. Noi li ripercorriamo solo per poterli commentare.<br>
+Per prima cosa occorre avere un sistema LDAP specializzato per dare
+&quot;supporto&quot; a Samba. In pratica specializziamo il master
+server dell'<a href="uml-LDAP.html"
+               title="esperienza Netkit4TIC">esperienza su LDAP</a>
+con lo schema specializzato <code>samba.schema</code> presente
+nel pacchetto samba-doc o presso la home page:
+</p>
+<pre>
+root@ldap# export help=/usr/share/doc/samba-doc/examples
+root@ldap# gzip -dc $help/LDAP/samba.schema.gz &gt; \
+                /etc/ldap/schema/samba.schema
+root@ldap# chown root:root /etc/ldap/schema/samba.schema
+root@ldap# chmod 440 /etc/ldap/schema/samba.schema
+</pre>
+
+<p>
+In seguito occorre fare due modifiche al file <code>slapd.conf</code>:
+</p>
+
+<ul>
+  <li>Aggiungere lo schema specifico per Samba:
+  <pre>
+# /etc/ldap/slapd.conf
+[...]
+include /etc/ldap/schema/samba.schema
+[...]
+  </pre></li>
+  <li>Modificare le ACL per includere le password di Samba:
+  <pre>
+access to attribute=userPassword, sambaLMPassword, sambaNTPassword
+  by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+  </pre>
+  Per separare meglio l'amministrazione degli utenti samba abbiamo
+  definito un utente <code>cn=samba,ou=DSA,dc=istituto,dc=it</code>
+  (con password samba) con delle particolari ACL. La prima delle
+  quali:
+  <pre>
+access to attribute=userPassword, sambaLMPassword, sambaNTPassword
+  by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+  </pre>
+  </li>
+</ul>
+
+<p>
+Passiamo ora al server Samba:
+prima di
+far partire samba occorre configurarlo.
+Per chi preferisce farlo attraverso la modifica del
+file di testo deve procedere editando il file <code>/etc/samba/smb.conf</code>.
+Per chi preferisce uno strumento grafico WEB esiste swat che &egrave;
+parte integrante della suite di Samba e che pu&ograve; essere usato dal
+momento che &egrave; configurata la
+connettivit&agrave;
+alla rete virtuale attraverso il nodo <code>SRV</code>.
+<br>
+Per attivare il browser che mostrer&agrave; il men&ugrave;
+principale di Swat occorre specificare il seguente URL
+(swat lavora sulla porta 901/tcp) come segue:
+</p>
+
+<pre>
+user@realHost$ firefox http://192.168.50.10:901/
+</pre>
+
+<p>
+specificando utente <code>root</code> e password <code>root</code>
+<a href="Samba-desktop-swat.png" title="immagine PNG">(screenshot)</a>.
+<span class="red">Noi non sceglieremo mai questo metodo</span>.
+</p>
+
+<p>
+Dal momento che abbiamo configurato Samba per utilizzare LDAP
+occorre passargli la password che autorizzer&agrave; Samba allo
+scorrimento e alla modifica dell'albero LDAP. Tale informazione viene
+memorizzata nel file <code>/var/lib/samba/secrets.tdb</code>.
+Mostriamo un metodo per compiere questa operazione evitando
+che rimanga traccia della password nella history della shell:
+</p>
+
+<pre>
+root@SRV# read -s -p "Digita la password di samba " LDAP_BINDPW
+root@SRV# smbpasswd -w $LDAP_BINDPW<span class="blue">
+Setting stored password for "cn=samba,ou=DSA,dc=istituto,dc=it" in secrets.tdb</span>
+</pre>
+
+<p>
+In seguito per generare il Windows Security Identifier (SID),
+che varr&agrave; memorizzato nel file <code>secrets.tdb</code> basta
+far partire samba e poco dopo lanciare i comandi:
+</p>
+
+<pre>
+root@SRV# /etc/init.d/samba start; sleep 5
+
+root@SRV# smbclient -L localhost -U%
+root@SRV# net getlocalsid<span class="blue">
+SID for domain SRV is: S-1-5-21-3840722988-1065274203-713729200</span>
+root@CLNT# net rpc getsid netkitwg<span class="blue">
+Storing SID S-1-5-21-3840722988-1065274203-713729200 for Domain NETKITWG in secrets.tdb</span>
+</pre>
+
+
+<p>
+Esiste anche il comando di set, utile nel nostro laboratorio, per
+assegnare un predefinito SID:
+</p>
+
+<pre>
+root@SRV# net setlocalsid 'S-1-5-21-3840722988-1065274203-713729200'
+</pre>
+
+<p>
+Con la partenza di samba si attivano i due &quot;daemon&quot; smbd e nmbd. Il
+file di configurazione usato &egrave;
+<a href="../lab/Samba/smb.conf" title="file di configurazione">smb.conf</a>.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="tools">Configurazione e uso di smbldap-tools</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Anche per questa sezione lo script ha spianato la strada: avviseremo
+quando occorrer&agrave; intervenire per configurare a mano.<br>
+La release dei smbldap-tools utilizzata &egrave; quella della
+distribuzione Debian Sarge che nel caso reale si installa
+con il comando
+<code>apt-get install smbldap-tools</code>. La documentazione si
+trova in <code>/usr/share/doc/smbldap-tools/html/index.html</code>.
+Per la configurazione occorre modificare i seguenti file nella
+directory <code>/etc/smbldap-tools/</code>:
+</p>
+
+<ul>
+  <li><a href="../lab/Samba/smbldap.conf"
+         title="file di configurazione"><code>smbldap.conf</code></a>:
+      pemette di configurare parametri globali che sono accessibili a
+      chiunque;</li>
+  <li><a href="../lab/Samba/smbldap_bind.conf"
+         title="file di configurazione"><code>smbldap_bind.conf</code></a>:
+      definisce due utenze amministrative per connettersi ai server ldap
+      slave e master. Questo file deve essere leggibili solo dall'utente
+      <code>root</code>.
+</ul>
+
+<p>
+Dopo aver configurato i smbldap-tools possiamo popolare il database LDAP:
+</p>
+
+<pre>
+root@SRV# smbldap-populate
+</pre>
+
+<p>
+Per controllare il risultato in termini di gruppi costruiti:
+</p>
+
+<pre>
+root@SRV# net rpc group -l -U Administrator%not24get -S SRV<span class="blue">
+
+Group name            Comment
+-----------------------------
+Domain Admins         Netbios Domain Administrators                     
+Domain Users          Netbios Domain Users                              
+Domain Guests         Netbios Domain Guests Users                       
+Domain Computers      Netbios Domain Computers accounts                 
+Administrators        Netbios Domain Members can fully administer the computer/sambaDomainName
+Print Operators       Netbios Domain Print Operators                    
+Backup Operators      Netbios Domain Members can bypass file security to back up files
+Replicators           Netbios Domain Supports file replication in a sambaDomainName</span>
+</pre>
+
+
+<p>
+Ora si cambia la password di Administrator (not24get) e poi &egrave;
+possibile il fare il join al dominio di entrambe le macchine:
+</p>
+
+<pre>
+root@SRV# smbldap-passwd Administrator
+root@SRV# net rpc join netkitwg -U Administrator%not24get<span class="blue">
+Joined domain NETKITWG.</span>
+root@CLNT# net rpc join netkitwg -U Administrator%not24get<span class="blue">
+Joined domain NETKITWG.</span>
+</pre>
+
+<p>
+A questo punto controlliamo gli account nella forma come dovrebbero
+essere visibili se fossero memorizzati nel file <code>smbpasswd</code>:
+</p>
+
+<pre>
+root@SRV# pdbedit -Lw<span class="blue">
+<span class="yellow">Administrator</span>:998:84B0D8E14D158FF8417EAF50CFAC29C3:
+  AF6DD3FD4E2EA8BDE1695A3F05EFBF52:[U          ]:LCT-42B064A9:
+<span class="yellow">nobody</span>:65534:NO PASSWORDXXXXXXXXXXXXXXXXXXXXX:
+  NO PASSWORDXXXXXXXXXXXXXXXXXXXXX:[NU         ]:LCT-00000000:
+<span class="yellow">srv$</span>:1000:6CAD4C79FB00B66C2E82CC1D3441B8D2:
+  4C00C837D1BBFB3DC60785CA85F4B8CB:[S          ]:LCT-42B064B0:
+<span class="yellow">clnt$</span>:1001:6597264A7989423B3FD32363B4BA19FE:
+  403EDF405CF421B6E826E3381C0D98A0:[S          ]:LCT-42B064E4:</span>
+</pre>
+
+<p>
+Da questo momento inizia l'attivit&agrave; aggiuntiva allo script.
+Supponiamo ora di costruire un nuovo utente di nome <code>user_admin</code>
+con le seguenti caratteristiche:
+</p>
+
+<ul>
+  <li>&egrave; un utente windows</li>
+  <li>appartiene al gid=512 ('Domain Admins' group)</li>
+  <li>non ha home directory</li>
+  <li>non ha login shell</li>
+  <li>non ha roaming profile</li>
+  <li>e per il quale forniamo la password</li>
+</ul>
+
+<p>
+il comando &egrave;:
+</p>
+
+<pre>
+root@SRV# smbldap-useradd -a -g 512 -m -s /bin/false \
+            -d /dev/null -F "" -P user_admin
+</pre>
+
+<p>
+Verifichiamo la situazione del database 
+<a href="gq-Samba.png" title="immagine PNG">visualizzando</a> l'albero LDAP
+con il programma <code>gq</code> di cui forniamo 
+il file di inizializzazione
+<a href="../lab/Samba/.gq"
+   title="file init per gq">.gq</a> da copiare 
+nella <code>HOME</code> directory. Attenzione che l'accesso
+avviene come <code>cn=samba,ou=DSA,dc=istituto,dc=it</code>
+e quindi con password <code>samba</code>.
+</p>
+
+
+<p>
+Per testare l'account Samba appena creato basta digitare:
+</p>
+
+<pre>
+root@CLNT# smbclient  //SRV/public -Uuser_admin%not24get<span class="blue">
+Domain=[NETKITWG] OS=[Unix] Server=[Samba 3.0.14a-Debian]
+smb: \></span>
+</pre>
+
+<p>
+o anche:
+</p>
+
+<pre>
+root@SRV# pdbedit -Lv user_admin<span class="blue">
+Unix username:        user_admin
+NT username:          user_admin
+Account Flags:        [U          ]
+User SID:             S-1-5-21-3840722988-1065274203-713729200-3004
+Primary Group SID:    S-1-5-21-3840722988-1065274203-713729200-512
+Full Name:            System User
+Home Directory:       \\SRV\home\user_admin
+HomeDir Drive:        K:
+Logon Script:         user_admin.cmd
+Profile Path:         
+Domain:               NETKITWG
+Account desc:         System User
+Workstations:         
+Munged dial:          
+Logon time:           0
+Logoff time:          Fri, 13 Dec 1901 21:45:51 GMT
+Kickoff time:         Fri, 13 Dec 1901 21:45:51 GMT
+Password last set:    Sun, 10 Oct 2004 23:05:09 GMT
+Password can change:  0
+Password must change: Mon, 17 Jan 2005 22:05:09 GMT
+Last bad password   : 0
+Bad password count  : 0</span>
+</pre>
+
+<p>
+questo comando pu&ograve; essere dato sul ogni macchina client
+dove sia stata settata la password di cn=samba,ou=DSA,dc=istituto,dc=it con
+il comando <code>smbpasswd -w</code>.
+</p>
+
+<p>
+Data la recente normativa sulla policy dobbiamo cambiare le policy
+sull'history, sulla age e sulla lunghezza:
+</p>
+
+<pre>
+root@SRV# pdbedit -P "password history" -C 5<span class="blue">
+account policy value for password history was 0
+account policy value for password history is now 5</span>
+root@SRV# pdbedit -P "maximum password age" -C 180<span class="blue">
+account policy value for maximum password age was 4294967295
+account policy value for maximum password age is now 180</span>
+root@SRV# pdbedit -P "min password length" -C 6<span class="blue">
+account policy value for min password length was 5
+account policy value for min password length is now 6</span>
+</pre>
+
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="smbfs">Condivisione di file attraverso filesystem Samba</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+La prova di mount sar&agrave; realizzata attraverso una 
+funzionalit&agrave; implementata in parte dal lato
+&quot;kernel space&quot; da un modulo che appunto si chiama smbfs e
+in parte dal lato &quot;user space&quot; dal pacchetto che si chiama
+ancora smbfs. Il kernel che usiamo ha gi&agrave; all'interno il
+modulo per smb ma nel caso dovessimo caricare il modulo nel kernel
+sarebbe necessario dare il comando:
+</p>
+
+<pre>
+root@CLNT# modprobe smbfs
+</pre>
+
+<p>Anche per quanto riguarda il pacchetto smbfs vale la stessa cosa: &egrave;
+gi&agrave; installato ma nel caso non lo fosse occorrerebbe dare il comando:
+</p>
+
+<pre>
+root@CLNT# apt-get install smbfs
+</pre>
+
+<p>
+Ora proviamo a montare come utente user_adm lo share <code>public</code>
+sulla directory <code>/mnt/smb</code>:
+</p>
+
+<pre>
+root@CLNT# smbmount //SRV/public /mnt/smb -o username=user_admin
+</pre>
+
+<p>
+Al termine per liberare lo share il comando &egrave;:
+</p>
+
+<pre>
+root@CLNT# umount /mnt/smb
+</pre>
+
+<p>Abbiamo tracciato sia l'attivit&agrave di rete di questo comando
+<a href="../capture/samba-mount.acp"
+   title="file per Ethereal">(File ACP)</a> che
+quella generata dal comando <code>ls</code> sulla directory
+<a href="../capture/samba-ls.acp"
+   title="file per Ethereal">(File ACP)</a> che quella
+generata dal comando <code>umount</code>.
+<a href="../capture/samba-umount.acp"
+   title="file per Ethereal">(File ACP)</a>.
+Abbiamo notato delle differenze nei tempi di esecuzione in
+dipendenza da come ci si riferisce al server. Questa &egrave; la
+traccia nel caso in cui si usa un nome non conosciuto a livello di DNS
+<a href="../capture/samba-mount-nohost.acp"
+   title="file per Ethereal">(File ACP)</a> e questa &egrave; la traccia nel
+caso si usi direttamente l'indirizzo IP
+<a href="../capture/samba-mount-IP.acp"
+   title="file per Ethereal">(File ACP).</a>
+.</p>
+
+<p>Una configurazione come quella descritta &egrave; stata sperimentata
+nell'A.S. 2002/2003 nel laboratorio di sistemi abacus per permettere
+agli studenti che sperimentavano Linux di accedere alle
+loro cartelle nel server M$.
+</p>
+
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="autosmbfs">Automagico mount di share SMB</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Ora vogliamo provare dal nodo <code>CLNT</code>
+ad accedere ad uno share SMB senza dover dare il
+comando di <code>mount</code> che &egrave; un comando utilizzabile
+solo da <code>root</code>. Il pacchetto che contiene il software
+&egrave; <code>autofs</code>. Per impostarlo occorre configurare
+il file:
+</p>
+
+<pre>
+# /etc/auto.master
+/auto /etc/auto.smb
+</pre>
+
+<p>
+e quindi il file:
+</p>
+
+<pre>
+# /etc/auto.smb
+smb    -fstype=smbfs,rw,guest    ://SRV/public
+</pre>
+
+<p>
+Ora basta far partire il autofs o farlo ripartire:
+</p>
+
+<pre>
+root@CLNT# /etc/init.d/autofs start
+</pre>
+
+
+<p>
+Il test si effettua cercando, ad esempio, di posizionarsi sulla
+cartella <code>/auto/smb</code> e attendere qualche attimo che il
+mount dello share <code>public</code> avvenga nel mount point
+specificato.
+</p>
+
+<pre>
+root@CLNT# cd /auto/smb<span class="blue">
+root@CLNT:/auto/smb#</span> mount | grep public<span class="blue">
+//SRV/public on /auto/smb type smbfs (rw)
+root@CLNT:/auto/smb#</span> cd<span class="blue">
+CLNT:/#</span> umount /auto/smb
+</pre>
+
+<p>
+<a href="Samba-desktop.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="wins">Risoluzione dei nomi con Samba</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Prima che esistesse il NetBIOS Name Server (NBNS), la risoluzione dei nomi
+era affidata completamente al broadcast. Quando si voleva conoscere
+l'indirizzo di una macchina bastava mandare in broadcast sulla rete
+il suo nome e la macchina stessa rispondeva. Questo approccio &egrave;
+ancora possibile.
+</p>
+
+<p>
+Comunque il broadcast non passa facilmente tra subnet e inoltre occupa
+una certa parte della banda della rete. Per risolvere questo problema
+M$ ha ideato il Windows Internet Naming Service (WINS) che risulta essere
+un NBNS che attraversa le subnet e che &egrave; implementato anche da
+Samba. L'amministratore quindi decide che una certa macchina agisce
+come WINS server e quindi tutta la rete M$ richiede direttamente la
+registrazione e la risoluzione a tale macchina.
+</p>
+
+<p>
+Per configurare Samba come WINS server basta valorizzare due opzioni
+della parte <code>global</code>:
+</p>
+
+<pre>
+[global]
+    wins support = yes
+    name resolve order = wins lmhosts hosts bcast
+</pre>
+
+<p>
+Questo &egrave; tutto. Se proviamo a inserire le righe appena citate
+sulla configurazione di Samba del paragrafo precedente possiamo
+testarne il funzionamento. Il comando per chiedere la risoluzione
+di un nome ad un WINS server di nome <code>SRV</code> &egrave;
+<code>nmblookup -U SRV</code> ed ecco il comando e il risultato:
+
+<pre>
+root@CLNT# nmblookup -U 192.168.50.10 -R srv<span class="blue">
+querying srv on 192.168.50.10
+192.168.77.2 srv&lt;00&gt;</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/11/26 13:43:34 $
+</span>
+</address>
+
+
+</body>
+</html>

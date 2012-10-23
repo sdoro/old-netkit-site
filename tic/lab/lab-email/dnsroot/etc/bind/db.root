@@ -1,0 +1,16 @@
+; $Id: db.root,v 1.2 2007-01-19 08:44:26 doros Exp $
+$TTL   60000
+@               IN      SOA     ROOT-SERVER.    root.ROOT-SERVER. (
+                        2002102801 ; serial
+                        28800 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+
+@               IN      NS      ROOT-SERVER.
+ROOT-SERVER.	IN	A	192.168.0.5
+org.		IN 	NS	dnsorg.org.
+dnsorg.org.	IN 	A	192.168.0.1
+net.		IN	NS	dnsnet.net.
+dnsnet.net.	IN	A	192.168.0.2

@@ -1,0 +1,9 @@
+! /etc/zebra/zebra.conf
+! $Id: Cisco2503c-zebra,v 1.1 2005/04/22 21:13:02 doros Exp $
+!
+hostname Cisco2503a
+password zebra
+enable password zebra
+!
+log file /var/log/zebra/zebra.log
+!

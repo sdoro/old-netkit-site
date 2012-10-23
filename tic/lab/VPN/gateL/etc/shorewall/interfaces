@@ -1,0 +1,10 @@
+#
+# /etc/shorewall/interfaces
+# $Id: interfaces,v 1.2 2006/06/30 06:42:51 doros Exp $
+#
+#ZONE	INTERFACE	BROADCAST	OPTIONS
+#net	eth0            detect          dhcp,routefilter,norfc1918
+net	eth0            212.1.1.255
+loc	eth1            10.10.10.255
+vpn	ipsec0
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

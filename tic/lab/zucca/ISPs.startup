@@ -1,0 +1,7 @@
+# $Id:$
+#
+ifconfig eth0   88.36.248.225 up
+ifconfig eth1   85.46.70.129 up
+ifconfig eth0:1 88.51.209.1 up
+#
+echo "1" > /proc/sys/net/ipv4/ip_forward

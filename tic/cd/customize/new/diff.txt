@@ -1,0 +1,22 @@
+116a117
+> ii  ddd                                   1:3.3.12-2                          The Data Display Debugger, a graphical debugger frontend
+127a129
+> ii  devilspie                             0.22-1                              find windows and perform actions on them
+193a196,197
+> ii  gdb                                   7.0.1-2+b1                          The GNU Debugger
+> ii  gdbserver                             7.0.1-2+b1                          The GNU Debugger (remote server)
+216a221
+> ii  gq                                    1.3.4-1                             GTK-based LDAP client
+352a358
+> ii  libc-ares2                            1.7.3-1                             library for asyncronous name resolves
+365a372
+> ii  libcap2-bin                           1:2.19-3                            basic utility programs for using capabilities
+747a755
+> ii  libsmi2ldbl                           0.4.8+dfsg2-3                       library to access SMI MIB information
+935a944
+> ii  nasm                                  2.08.01-1                           General-purpose x86 assembler
+1042a1052
+> ii  recordmydesktop                       0.3.8.1+svn602-1+b1                 Captures audio-video data of a Linux desktop session
+1148a1159,1160
+> ii  wireshark                             1.2.11-6                            network traffic analyzer - GTK+ version
+> ii  wireshark-common                      1.2.11-6                            network traffic analyzer - common files

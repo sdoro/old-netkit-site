@@ -1,0 +1,7 @@
+# $Id: pc1.startup,v 1.1 2006/10/07 09:36:46 doros Exp $
+# configure IP address
+ifconfig eth0 192.200.96.1 up \
+         netmask 255.255.255.192 \
+         broadcast 192.200.96.63 up
+# configure the router as next hop
+route add default gw 192.200.96.62

@@ -1,0 +1,27 @@
+
+http://tinyurl.com/d8fb52
+
+
+
+Then I have included in the joined tar a char driver that
+connects 2 machines through char drivers, it is a very
+instructive module, it uses kernel udp sockets to carry
+data from one driver char of one machine to the char driver
+of the second machine.
+To try it, run the cloonix_net "double" demo, then upload
+the chardev in both with scp, then open low.h file of the ONE,
+comment the INADDR_SEND ... 0x7f000001, uncomment the
+INADDR_SEND 0x02020202, then open the low.h file of the
+TWO, comment INADDR_SEND ... 0x7f000001, uncomment
+INADDR_SEND 0x02020201.
+Then run ./cmd on both, it should compile your module and create
+your /dev/chardev node and insert the module.
+
+Then on machine TWO, do "cat /dev/chardev" and on
+machine ONE do "echo tutu > /dev/chardev".
+
+This should help you for your first char driver on UML.
+
+Regards
+Vincent Perrier
+

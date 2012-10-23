@@ -1,0 +1,305 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-RAID.html,v 1.5 2009-10-03 09:37:26 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - AUTOFS </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-quotaACL.html">
+  <link rel="Next" title="Next" href="uml-csync2.html">  
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Using autofs for NFS namespace</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-quotaACL.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-csync2.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>)
+in modo da utilizzare un browser LDAP grafico.</span>
+</p>
+
+
+<p> 
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Scarica il <a href="raid.tgz" title="esperienza Netkit4TIC">tarball</a>
+con la configurazione dell'esercitazione.
+</p>
+
+
+<p>
+I nodi client utilizzeranno il modulo kernel autofs che
+non &egrave; presente nel kernel netkit standard e quindi
+&egrave; necessario
+<a href="tic/iso/kernle.tgz"
+   title="kernel con autos abilitato">scaricarlo</a>
+uno che abbiamo predisposto con la struttura compatibile netkit.
+</p>
+
+<p>
+bla bla bla
+</p>
+
+<pre>
+CONFIG_AUTOFS_FS=m
+CONFIG_AUTOFS4_FS=m
+</pre>
+
+<p>
+Tra i documenti da leggere ci sono (IBM)
+<a href="http://www.ibm.com/developerworks/aix/library/au-namespace/"
+   title="link esterno">Create uniform namespace using autofs with NFS Version 3 clients and servers</a>.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Preparazione dell'ambiente</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Serve un browser LDAP; abbiamo scelto gq.
+Serve connettivity; abbiamo un tap device e abbiamo gerato routing
+Opzionale server un gestore finestre; abbiamo scelto devilspie.
+</p>
+
+<pre>
+tunctl
+route
+</pre>
+
+<p>
+I passi precedentemente elencati vengono fatti automaticamente
+dal lancio del comando:
+</p>
+
+<pre>
+realHost$ lstart -f gate server nfs1 nfs2 nfs3 nfs4
+realHost$ lstart -f client1 client5
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="quota">Sperimentazione RAID 1</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Iniziamo costruendo il RAID 1 e supponiamo di non aver ancora
+disponibile il device spare:
+</p>
+
+<pre>
+vHost# modprobe md
+vHost# modprobe raid1
+vHost# mdadm --create /dev/md0 --level 1 -n 2 -x 1 \
+  /dev/ubd/1 /dev/ubd/2 missing<span class="blue">
+md: md0: raid array is not clean -- starting background reconstruction
+mdadm: array /dev/md0 started.</span>
+</pre>
+
+<p>
+costruiamo il filesystem XFS:
+</p>
+
+<pre>
+vHost# mkfs.xfs -qf /dev/md0
+</pre>
+
+<p>
+In seguito costruiamo un punto di montaggio dove
+inserire il filesystem XFS e dove costruiamo un file dati
+fittizio:
+</p>
+
+<pre>
+vHost# mkdir /mnt/raid
+vHost# modprobe xfs
+vHost# mount -t xfs -o usrquota,grpquota /dev/md0 /mnt/raid
+vHost# dd if=/dev/zero of=/mnt/raid/file bs=1M count=35
+</pre>
+
+<p>
+Allo scopo di testare il funzionamento del RAID appena avviato
+potremmo controllare lo stato:
+</p>
+
+<pre>
+vHost# cat /proc/mdstat | head -n 4<span class="blue">
+Personalities : [raid1]
+read_ahead 1024 sectors
+md0 : active raid1 ubd/disc2/disc[1] ubd/disc1/disc[0]
+      51136 blocks [2/2] [UU]</span>
+</pre>
+
+<p>
+Ora aggiungiamo il disco spare e ne controlliamo lo stato:
+</p>
+
+<pre>
+vHost# mdadm /dev/md0 -a /dev/ubd/3<span class="blue">
+mdadm: hot added /dev/ubd/3</span>
+vHost# cat /proc/mdstat | head -n 4<span class="blue">
+Personalities : [raid1]
+read_ahead 1024 sectors
+md0 : active raid1 ubd/disc3/disc[2] ubd/disc2/disc[1] ubd/disc1/disc[0]
+      51136 blocks [2/2] [UU]</span>
+vHost# mdadm -D /dev/md0 | tail -n 5<span class="blue">
+    Number   Major   Minor   RaidDevice State
+       0      98       16        0      active sync   /dev/ubd/1
+       1      98       32        1      active sync   /dev/ubd/2
+
+       2      98       48        2      spare   /dev/ubd/3</span>
+</pre>
+
+
+<p>
+&Egrave; utile salvare la configurazione di mdadm con i comandi:
+</p>
+
+
+<pre>
+vHost# echo "DEVICE partitions" &gt; /etc/mdadm/mdadm.conf
+vHost# mdadm --examine --scan &gt;&gt; /etc/mdadm/mdadm.conf
+</pre>
+
+
+<p>
+Supponiamo che il device ubd2 entri in fault e quindi lo rimuoviamo:
+</p>
+
+<pre>
+vHost# mdadm /dev/md/0 -f /dev/ubd/2<span class="blue">
+raid1: Disk failure on ubd/disc2/disc, disabling device. 
+mdadm: set /dev/ubd/2 faulty in /dev/md/0</span>
+vHost# mdadm /dev/md/0 -r /dev/ubd/2<span class="blue">
+mdadm: hot removed /dev/ubd/2</span>
+</pre>
+
+
+<p>
+e controlliamo l'attivit&agrave; di recovery:
+</p>
+
+<pre>
+vHost# mdadm -D /dev/md0 | tail -n 5<span class="blue">
+    Number   Major   Minor   RaidDevice State
+       0      98       16        0      active sync   /dev/ubd/1
+       1       0        0        1      faulty removed
+
+       2      98       48        2      spare rebuilding   /dev/ubd/3</span>
+</pre>
+
+<p>
+dopo qualche attimo l'attivit&agrave; di rebuilding termina e la
+situazione &egrave; la seguente:
+</p>
+
+<pre>
+vHost# mdadm -D /dev/md0 | tail -n 3<span class="blue">
+    Number   Major   Minor   RaidDevice State
+       0      98       16        0      active sync   /dev/ubd/1
+       1      98       48        1      active sync   /dev/ubd/3</span>
+</pre>
+
+
+<p>
+Supponiamo che anche il device ubd1 entry in fault (e quindi venga
+rimosso):
+</p>
+
+<pre>
+vHost# mdadm /dev/md/0 -f /dev/ubd/1
+vHost# mdadm /dev/md/0 -r /dev/ubd/1
+</pre>
+
+<p>
+La situazione di errore &egrave; riassunta ed evidenziata in
+<span class="red">colore</span>:
+</p>
+
+<pre>
+vHost# cat /proc/mdstat | head -n 4<span class="blu">
+Personalities : [linear] [raid0] [raid1] [raid5] [multipath] 
+read_ahead 1024 sectors
+md0 : active raid1 ubd/disc3/disc[1]
+      51136 blocks [2/1] [<span class="red">_</span>U]</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/">
+   <img alt="Creative Commons License"
+        src="80x15.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: 2009-10-03 09:37:26 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

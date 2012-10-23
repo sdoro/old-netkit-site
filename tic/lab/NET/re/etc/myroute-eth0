@@ -1,0 +1,7 @@
+# /etc/myroute-eth0
+# $Id: myroute-eth0,v 1.2 2004/09/13 19:31:17 doros Exp $
+
+#ifconfig eth0 hw ether 00:00:00:00:00:0A
+ip link set eth0 address 00:00:00:00:00:0A
+
+# bot

@@ -1,0 +1,7 @@
+# This file will normally include the debconf template but you can disable
+# that and use this file only.
+
+. /var/lib/ntop/init.cfg
+#GETOPT=""
+#GETOPT="-M -u root"
+GETOPT="-M"

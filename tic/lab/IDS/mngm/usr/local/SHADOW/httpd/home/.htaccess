@@ -1,0 +1,11 @@
+# $HOME/.htaccess
+# $Id: .htaccess,v 1.1 2003-10-01 12:51:37 doros Exp $
+
+# 
+# Limit access to SHADOW home directory
+#
+order deny,allow
+deny from all
+allow from 10.10.20
+allow from 192.168
+#allow from .tic.fdns.net

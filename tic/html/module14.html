@@ -1,0 +1,129 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3c.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module14.html,v 1.16 2005/03/26 07:31:30 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 14</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="module13.html">
+  <link rel="Next" title="Next" href="module15.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 14</h1>
+<h2 class="center">Componenti multimediali per il Web</h2>
+
+<p>
+Per questo modulo dobbiamo abbandonare la strada sicura
+delle distribuzioni con tutti i pacchetti gi&agrave; preconfezionati
+e muoverci verso l'incerto percorso della ricerca con
+<a href="http://www.google.com/" title="">Google</a> di pacchetti forniti da terze parti,
+a volte solo in formato sorgente o peggio solo in formato
+binario. Colgo l'occasione di indicare una utile
+<a href="http://digilander.libero.it/tailchaser/Video-manipulation-HOWTO.html"
+title="link esterno">guida</a>
+in italiano dove appunto si avvisa il lettore che ci si deve armare
+dei classici ambienti di sviluppo dove compaiono quindi
+il compilatore gcc(++), l'assembler e accessori vari quali make ecc.
+Nel caso non siamo tanto esigenti e lavoriamo con la distribuzione
+Red Hat ecco un
+<a href="video-rpm.txt" title="elenco pacchetti rpm">elenco</a>
+che ho sperimentato funzionante nella versione 9. L'installazione di
+<a href="http://www.videolan.org/" title="link esterno">Video Lan Client</a> ha portato
+l'installazione della seguente
+<a href="vlc-rpm.txt" title="elenco pacchetti rpm">lista</a>. Per la Debian e in particolare
+per la sarge basta dare il comando <code>apt-get install vlc</code>.
+</p>
+
+<p>
+Per quanto riguarda l'accessibilit&agrave; dopo l'approvazione della 
+<a href="http://www.italica.rai.it/principali/multimedia/futurama/leggestanca.htm"
+   title="link esterno">Legge Stanca</a> 
+&quot;Disposizioni per favorire l'accesso dei soggetti disabili agli strumenti informatici&quot; l'argomento
+accessibilit&agrave; e usabilit&agrave; diventa molto &quot;caldo&quot;.
+Voglio cogliere l'occasione di una e-mail che mi &egrave; arrivata
+nel mese di febbraio dalla ditta di torino
+<a href="http://www.htp.it/centroscuole" title="link esterno">
+HTP tecnology srl</a> per analizzare
+la sua analisi dei bisogni informatici della scuola per
+trovare degli utili suggerimenti. 
+L'argomento &egrave; materia di un certo numero di dissertazioni
+anche all'universit&agrave;. A titolo di esempio &egrave; utile leggere
+alcune monografie sull'argomento:
+</p>
+<ul>
+ <li><a href="http://elite.polito.it/tesista.php?id=47"
+   title="link esterno">Valutazione di accessibilit&agrave; di siti Internet attraverso ausili per disabili</a></li>
+  <li><a href="http://elite.polito.it/tesista.php?id=8"
+   title="link esterno">Accessibilit&agrave; dei siti Internet: Analisi, tecniche di progetto e riparazione</a></li>
+    <li><a href="http://elite.polito.it/tesista.php?id=44"
+   title="link esterno">Accessibilit&agrave; di siti web mediante fogli di stile CSS: tecniche</a></li>
+    <li><a href="http://elite.polito.it/tesista.php?id=27"
+   title="link esterno">Principi e strumenti per l'accessibilit&agrave; di siti Web</a></li>
+    <li><a href="http://elite.polito.it/tesista.php?id=28"
+   title="link esterno">Accessibilit&agrave; di siti Web di interesse pubblico</a></li>
+    <li><a href="http://elite.polito.it/tesista.php?id=31"
+   title="link esterno">Accessibilit&agrave; di siti web mediante fogli di stile CSS: metodologie</a></li>
+</ul>
+
+<p>
+Per chi vuole provare anche localmente un validatore di pagine HTML lo
+pu&ograve; installare sulla Debian con il comando:
+</p>
+
+<pre>
+# apt-get install w3c-markup-validator
+</pre>
+
+<p>
+e poi provare con il browser sul proprio web server:
+</p>
+
+<pre>
+$ firefox http://localhost/wdg-html-validator/
+</pre>
+
+<p>
+Purtroppo non &egrave; un test che si pu&ograve; fare off-line perch&egrave;
+il validatore cerca su http://www.w3.org/ il document type definition (DTD).
+Il problema &egrave; superabile con uno script che una volta scaricato il
+DTD di interesse sostituisca, solo per il momento della validazione,
+ogni riferimento ad esso con la copia locale.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/03/26 07:31:30 $
+</span>
+</address>
+
+
+</body>
+
+</html>

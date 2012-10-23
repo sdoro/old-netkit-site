@@ -1,0 +1,82 @@
+#!/bin/sh
+# $Id: netkit-test-phase-ub,v 1.1 2006/06/27 20:03:17 doros Exp $
+
+RCDLINKS=""
+
+HOSTLAB="/hostlab"
+TESTD="_test"
+RESULTSD="results"
+DEST="$HOSTLAB/$TESTD/$RESULTSD"
+HOSTLABMOUNTED=`mount |grep hostlab`
+
+HOSTLAB_HOST=$(cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="hostlab") print $2}')
+
+#check if hostlab is mounted
+if [  -z "$HOSTLABMOUNTED" ]; then
+    echo "[WARNING] $HOSTLAB is not mounted properly..."
+    echo "[WARNING] ...maybe writing only on local filesystem"
+fi
+
+#TEST=$(cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="test") print $1}')
+
+[ ! -d "$DEST" ] &&  mkdir -p "$DEST"
+
+#generate test
+DEFAULTOUTPUT="$DEST/$HOSTNAME.default"
+USEROUTPUT="$DEST/$HOSTNAME.user"
+
+touch $DEFAULTOUTPUT
+
+echo
+echo "Writing default test results on: $HOSTLAB_HOST/$TESTD/$RESULTSD/$HOSTNAME.default ..."
+
+#redirect stdout in OUTPUT
+exec 6>&1
+
+exec >$DEFAULTOUTPUT
+
+#START OF DEFAULT TEST
+#you can modify this section to change the default test
+
+echo '[INTERFACES]' 
+echo
+ip addr |grep -v RX |grep -v TX|grep -v collision|grep -v Interrupt
+echo
+echo '[ROUTE]'
+echo
+netstat -r
+echo
+echo '[LISTENING PORTS]'
+echo
+netstat -lantu
+echo
+echo '[PROCESSES]'
+echo
+/bin/ps -e -o uid,command
+
+#END OF DEFAULT TEST
+
+#restore stdout and close fd 6
+exec 1>&6 6>&-
+
+echo "done."
+echo
+echo "Waiting for virtual machines to start..."
+    while [ ! -e "$HOSTLAB/readyfor.test" ]; do
+    sleep 1 
+    done
+echo "All virtual machines are ready."
+
+
+
+echo
+#user test
+if [ -x "$HOSTLAB/$TESTD/$HOSTNAME.test" ] && [ -s "$HOSTLAB/$TESTD/$HOSTNAME.test" ]; then
+    echo "Writing user test results on: $HOSTLAB_HOST/$TESTD/$RESULTSD/$HOSTNAME.user ..."
+    touch $USEROUTPUT
+    exec 6>&1
+    exec >$USEROUTPUT
+    "$HOSTLAB/$TESTD/$HOSTNAME.test"
+    exec 1>&6 6>&-
+    echo done
+fi

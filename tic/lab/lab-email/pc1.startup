@@ -1,0 +1,6 @@
+# $Id: pc1.startup,v 1.1 2007-01-19 08:47:10 doros Exp $
+/sbin/ifconfig eth0 192.168.0.111 up
+# config/start Postfix
+/etc/init.d/postfix start
+#
+# EOF

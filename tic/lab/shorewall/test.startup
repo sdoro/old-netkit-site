@@ -1,0 +1,18 @@
+# remove old shorewall
+dpkg -P shorewall-common shorewall-shell
+# install new shorewall
+mkdir s
+cd s
+tar zxf /hostlab/sh-4.2.4.6.tgz
+cd Shorewall-perl
+./install.sh
+cd ../Shorewall-common
+./install.sh
+cd ../Shorewall-shell/
+./install.sh
+cd ../Shorewall-perl/
+./install.sh
+cd ../Shorewall6
+./install.sh
+#
+# bot

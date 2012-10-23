@@ -1,0 +1,42 @@
+firewall:~# apt-get install snort-mysql
+
+firewall:~# pico /etc/snort/snort.conf
+	-->
+	...
+	var HOME_NET 192.168.1.0/24
+	...
+	var EXTERNAL_NET !$HOME_NET
+	...
+	output database: log, mysql, user=snort password=150590 dbname=snort host=192.168.0.3
+
+firewall:~# rm /etc/snort/db-pending-config
+
+firewall:~# touch  /etc/snort/snort.eth0.conf
+
+installare lamp su un altro pc
+
+nami:~# mysql -u root -p
+mysql> create database snort;
+mysql> SET PASSWORD FOR snort@localhost=PASSWORD('password');
+mysql> grant all privileges on snort.* to 'snort'@'%' identified by 'pass';    
+mysql> flush privileges;
+mysql> exit;
+
+copiamo il file /usr/share/doc/snort-mysql/create_mysql.gz dal router al server
+
+nami:~# cat create_mysql.gz | mysql -u snort -h localhost -p snort
+
+firewall:~# /etc/init.d/snort start
+firewall:~# /etc/init.d/snort status
+
+nami:~# apt-get install php-pear php-adodb libphp-adodb
+nami:~# pear install Image_Color
+nami:~# pear install Image_Canvas-alpha
+nami:~# pear install Image_Graph-alpha
+nami:~# cd /var/www
+nami:~# wget http://mesh.dl.sourceforge.net/sourceforge/secureideas/base-1.4.0.tar.gz
+nami:~# tar zxvf base-1.4.0.tar.gz
+aprire il browser e configurare il tutto
+
+firewall:~# snort -c /etc/snort/snort.conf
+------------->non deve dare errori

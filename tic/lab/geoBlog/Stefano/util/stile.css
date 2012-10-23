@@ -1,0 +1,380 @@
+body {
+	margin:0px;
+	padding:0px;
+	background:#FFFFFF;
+	position:absolute;
+	top:0px;
+	left:50%;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+img, form, link{
+	margin:0px;
+	padding:0px;
+	border:0px;
+}
+
+#main{
+	position:absolute;
+	background-color:#F2F2F9;
+	top:0px;
+	left:-492.5px;
+	height:600px;
+}
+
+#moeca{
+	
+}
+
+#div_path{
+	margin:0px;
+	padding:0px;
+	border-top:1px solid #8E8E8E;
+	border-bottom:1px solid #8E8E8E;
+	width:985px;
+	height:19px;
+	background:url(../img/sfondopath.jpg);
+	text-align:right;
+}
+
+.div_link_path{
+	margin:0px;
+}
+
+.link_path{
+	color:#000000;
+	font-size:14px;
+	font-weight:bold;
+	text-decoration:none;
+	margin:0px 51px 0px 0px;
+}
+.link_path:hover{
+	color:#6666FF;
+}
+#aiuto{
+	color:#FF0000;
+}
+#aiuto:hover{
+	color:#6666FF;
+}
+
+.btn_menu_sx{
+	margin:0px;
+	padding:0px;
+	background:url(../img/sfondob_small_rosso.jpg);
+	cursor:pointer;
+	color:#FFFFFF;
+	font-size:14px;
+	font-weight:bold;
+	text-transform:uppercase;
+	width:192px;
+	height:37px;
+}
+/*---------------- PAGINA CONSULTAZIONE GEOBLOG ---------------*/
+
+#div_menu_sx{
+	position:absolute;
+	top:88px;
+	left:4px;
+}
+
+.scelte_menu_sx{
+	background:#e8eaf6;
+	border:1px solid #8E8E8E;
+	width:190px;
+}
+
+.scelta_menu_sx{
+	color:#333333;
+	margin:0px 0px 0px 3px;
+	padding:0px;
+	display: block;
+	text-decoration:none;
+	font-size:14px;
+	text-transform:uppercase;
+}
+.scelta_menu_sx:hover{
+	color:#000000;
+	font-weight:bold;
+}
+.titolo_menu_sx{
+	color:#333333;
+	font-weight:bold;
+	margin:3px 0px 0px 14px;
+	font-size:14.5px;
+	text-decoration:none;
+}
+
+#mappa{
+	position:absolute;
+	top:88px;
+	left:200px;
+	width:785px;
+	height:510px;
+}
+
+#div_ins_commento{
+	position:absolute;
+	top:338px;
+	left:-282.5px;
+	width:520px;  /*risultato di: width della tabella + margine della tabella*/
+	border:1px solid #8E8E8E;
+	background:#FFFFFF;
+	visibility:hidden;
+	display:none;
+	
+	padding:0px;
+	margin:0px;
+	z-index:5;
+}
+
+#tab_ins_comm{
+	background-color:#F2F2F9;
+	border:0px;
+	margin:10px;
+	padding:5px;
+	font-size:14px;
+}
+
+#tab_ins_comm td{
+	padding:4px;
+}
+
+.tab_ins_comm_label{
+	background:#ccd2ea;
+/*	border:1px solid #8E8E8E;*/
+	
+}
+
+#btn_submit_comm{
+	margin:0px;
+	padding:0px;
+	background:url(../img/sfondob_nuovo_commento.jpg);
+	cursor:pointer;
+	color:#FFFFFF;
+	font-size:10px;
+	font-weight:bold;
+	width:110px;
+	height:24px;
+}
+
+.chiudi_comm{
+	position:absolute;
+	top:10px;
+	right:10px;
+	padding:0px;
+	margin:0px;
+	cursor:pointer;
+}
+
+.div_help{
+	position:absolute;
+	margin:0px;
+	padding:0px;
+	top:88px;
+	left:-292.5px;
+	background-color:#FFFFFF;
+	border:2px solid #C72426;
+	width:763px;
+	z-index:10;
+	font-size:14px;
+	visibility:hidden;
+	display:none;
+}
+
+#div_tab_help_temi{
+	overflow:auto;
+	width:753px;
+	height:400px;
+	margin:5px 0px 5px 5px;
+	background-color:#F2F2F9;
+}
+
+#tab_help_temi{
+	background-color:transparent;
+	width:731px;
+	margin-left:5px;
+	padding:0px;
+}
+
+.chiudi_help{
+	position:absolute;
+	top:10px;
+	right:10px;
+	padding:0px;
+	margin:0px;
+	cursor:pointer;
+}
+
+.div_spiega_help{
+	margin:10px 0px 10px 32px;
+	padding:0px;
+	width:699px;
+}
+/*---------------- PAGINA INSERIMENTO NUOVO MESSAGGIO/SEGNALINO ---------------*/
+
+#div_tab_campi{
+	border:0px;
+	padding:0px;
+	margin:8px 0px 0px 4px;
+	color:#000000;
+	z-index:0;
+}
+
+.nome_campi_form{
+	padding-left:8px;
+	border-top:1px solid #8E8E8E;
+	border-bottom:1px solid #8E8E8E;
+	border-left:1px solid #8E8E8E;
+	background:#ccd2ea;
+	text-transform:uppercase;
+	font-size:13px;
+}
+
+.cella_help{
+	border-top:1px solid #8E8E8E;
+	border-bottom:1px solid #8E8E8E;
+	background:#ccd2ea;
+}
+
+.campi_form{
+	padding-left:8px;
+	border-top:1px solid #8E8E8E;
+	border-bottom:1px solid #8E8E8E;
+	border-left:1px solid #8E8E8E;
+	z-index:2;
+}
+
+.campi_form_doppi{
+	padding-left:8px;
+	border:1px solid #8E8E8E;
+	z-index:2;
+	font-size:13px;
+}
+
+.spiega_campi_form{
+	padding-left:8px;
+	border-top:1px solid #8E8E8E;
+	border-right:1px solid #8E8E8E;
+	border-bottom:1px solid #8E8E8E;
+	font-size:11px;
+}
+
+.tab_riga_vuota{
+	background:none;
+	font-size:6px;
+	border:0px;
+}
+
+.btn_form{
+	margin:0px 30px 0px 0px;
+	padding:0px;
+	background:url(../img/sfondob_small_rosso.jpg);
+	cursor:pointer;
+	color:#FFFFFF;
+	font-size:12px;
+	font-weight:bold;
+	text-transform:uppercase;
+	width:310px;
+	height:37px;
+	vertical-align:middle;
+}
+#btn_form_back{
+	margin:0px 0px 0px 30px;
+	background:url(../img/sfondob_small_blu.jpg);
+	width:150px;
+}
+
+#formNew input{
+	width:160px;
+}
+
+#formNew select{
+	width:164px;
+}
+
+.dati_menu_sx_ins{
+	color:#333333;
+	margin:0px 0px 0px 4px;
+	padding:0px;
+	display: block;
+	text-decoration:none;
+	font-size:14px;
+}
+
+.titolo_menu_sx_ins{
+	color:#333333;
+	font-weight:bold;
+	margin:3px 0px 0px 14px;
+	font-size:14.5px;
+	text-decoration:none;
+}
+
+.ins_simbolo_TC{
+	border:0px;
+	margin-left:8px;
+	vertical-align:middle;
+}
+
+#btn_ins_back{
+	background:url(../img/sfondob_small_blu.jpg);
+}
+
+.div_help_ins{
+	position:absolute;
+	margin:0px;
+	padding:0px;
+	top:133px;
+	left:-146px;
+	width:631px;
+	background-color:#FFFFFF;
+	border:2px solid #C72426;
+	z-index:10;
+	font-size:14px;
+	visibility:hidden;
+	display:none;
+}
+
+#tab_help_temi_ins{
+	width:595px;
+	margin-left:5px;
+	padding:0px;
+	z-index:12;
+	background-color:#FFFFFF;
+}
+
+#div_tab_help_temi_ins{
+	overflow:auto;
+	width:617px;
+	height:310px;
+	margin:5px 0px 5px 5px;
+	background-color:#FFFFFF;
+	z-index:11;
+}
+
+.div_spiega_help_ins{
+	margin:10px 0px 10px 15px;
+	padding:0px;
+	width:573px;
+}
+
+#help_luoghi_ins{
+	top:271px;
+}
+
+#help_contenuti_ins{
+	top:271px;
+}
+
+#help_conferma_ins{
+	top:460px;
+}
+
+.chiudi_help_ins{
+	position:absolute;
+	top:10px;
+	right:25px;
+	padding:0px;
+	margin:0px;
+	cursor:pointer;
+}

@@ -1,0 +1,17 @@
+; $Id: db.org.lugroma3,v 1.2 2007-01-19 08:45:46 doros Exp $
+$TTL    60000
+@               IN      SOA     dnslug.lugroma3.org.    root.dnslug.lugroma3.org. (
+                        2002102801 ; serial
+                        28 ; refresh
+                        14 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@               IN      NS      dnslug.lugroma3.org.
+@               IN      MX 5    mail.lugroma3.org.
+dnslug          IN      A       192.168.0.11
+pc1             IN      A       192.168.0.111
+mail            IN      CNAME   dnslug.lugroma3.org.
+smtp            IN      CNAME   dnslug.lugroma3.org.
+pop             IN      CNAME   dnslug.lugroma3.org.
+imap            IN      CNAME   dnslug.lugroma3.org.

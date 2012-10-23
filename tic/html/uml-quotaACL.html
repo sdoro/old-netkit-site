@@ -1,0 +1,474 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-quotaACL.html,v 1.18 2007-10-31 16:24:21 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - quota ed ACL</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su quota e ACL su filesystem XFS</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-perms.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-RAID.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p> 
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Scarica il <a href="quotaACL.tgz" title="esperienza Netkit4TIC">tarball</a> (5KB) contenente
+lo script <code>lab</code> che genera l'esercitazione.
+</p>
+
+
+<p>
+In questa sezione faremo riferimento al filesystem <code>XFS</code>
+ma diciamo che, con piccole variazioni, potremmo fare riferimento al
+filesystem <code>ext3</code>.
+E&grave; disponibile in internet un interessante corso per
+<a href="http://oss.sgi.com/projects/xfs/training/index.html"
+   title="link esterno">XFS Overview &amp; Internals</a>
+dove ci sono anche dei "labs" che possono essere usati
+per estendere questa stessa esperienza.<br \>
+XFS  &egrave; un filesystem completamente a 64 bits (contatori/indirizzi).
+La dimensione teorica del
+filesystem raggiungono i 18 millioni di terabyte
+(invece per ext3 con blocchi da 4KiB si raggiungono i
+<a href="http://en.wikipedia.org/wiki/Ext3#Size_limits"
+   title="link esterno wikipedia">2TiB</a>).
+Maggiori informazioni
+si possono trovare consultando la
+<a href="http://oss.sgi.com/projects/xfs/"
+   title="link esterno">XFS/Linux homepage</a>. Le caratteristiche
+che ci hanno fatto decidere per questo filesystem sono: stabilit&agrave;
+del codice, ottime prestazioni con grandi volumi di I/O e infine ottimo
+supporto per ACL.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Preparazione dell'ambiente</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per effettuare l'esperienza occorre avere nella vm una
+partizione da usare come filesystem XFS.
+Ricordando che i device a blocchi di UML sono normalmente
+associati ad un file sull'host,
+prepariamo su quest'ultimo
+una backing store di 20M come "sparse file" (XFS ed ext3
+lo supportano):
+</p>
+
+<pre>
+realHost$ dd if=/dev/zero of=/tmp/xfs.fs bs=1M seek=20 count=1
+</pre>
+
+<p>
+e la passiamo alla nascente vm come secondo ubd device (ubd1):
+</p>
+
+<pre>
+realHost$ vstart test-xfs --mem=128 --append="ubd1=/tmp/xfs.fs"
+</pre>
+
+<p>
+All'interno della vm costruiamo un filesystem XFS sul
+device <code>/dev/ubd/1</code>:
+</p>
+
+<pre>
+test-xfs# mkfs.xfs -f /dev/ubd/1<span class="blue">
+meta-data=/dev/ubd/1             isize=256    agcount=1, agsize=4096 blks
+         =                       sectsz=512  
+data     =                       bsize=4096   blocks=4096, imaxpct=25
+         =                       sunit=0      swidth=0 blks, unwritten=1
+naming   =version 2              bsize=4096  
+log      =internal log           bsize=4096   blocks=1200, version=1
+         =                       sectsz=512   sunit=0 blks
+realtime =none                   extsz=65536  blocks=0, rtextents=0</span>
+</pre>
+
+<p>
+In seguito occorrer&agrave; costruire un punto di montaggio dove
+inseriremo il filesystem XFS:
+</p>
+
+<pre>
+test-xfs# mkdir /mnt/xfs
+</pre>
+
+<p>
+poi modifichiamo il file <code>/etc/fstab</code> aggiungendo la riga:
+</p>
+
+<pre>
+/dev/ubd/1   /mnt/xfs   xfs   rw,usrquota,grpquota 0 1
+</pre>
+
+<p>
+Abbiamo specificato il tipo di filesystem (xfs),
+la modalit&agrave; di accesso (rw), l'attivazione di quota
+(usrquota e grpquota).<br>
+Ora montiamo il filesystem:
+</p>
+
+<pre>
+test-xfs# mount /mnt/xfs
+</pre>
+
+<p>
+Nel caso invece di filesystem ext3 occorrerebbe costruire
+solo per una volta i files che contengono le informazioni di
+quota per utente e per gruppo
+(<code>aquota.group</code> e <code>aquota.user</code>) con il comando
+</p>
+
+<pre>
+test-xfs# quotacheck -cug /mnt/xfs
+</pre>
+
+<p>
+e in seguito abilitare il quota:
+</p>
+
+<pre>
+test-xfs# quotaon /mnt/xfs
+</pre>
+
+
+<p>
+Proseguiamo con la costruzione di due utenti di prova con la home directory
+nel filesystem XFS:
+</p>
+
+<pre>
+test-xfs# chmod a+rwx /mnt/xfs; \
+               useradd -m -d /mnt/xfs/nane nane; \
+               useradd -m -d /mnt/xfs/toni toni
+</pre>
+
+<p>
+Ora &egrave; venuto il momento di settare i limiti per l'occupazione
+di memoria. Il pacchetto che fornisce l'implementazione del
+sistema per il quota disk &egrave; <code>quota</code>.
+Decidiamo che l'utente <code>nane</code> possa raggiungere
+una massimo
+di 6.2 MB e quando supera il valore 5 MB  cominci ad essere avvisato dal
+sistema attraverso una mail che il suo spazio su disco st&agrave;
+iniziando ad esaurirsi. Per l'utente <code>toni</code> poniamo i due valori a
+3.2 MB e a 2 MB (vengono settati anche gli i-node a 10 e 11):
+</p>
+
+<pre>
+test-xfs# setquota -u nane 5000 6200 10 11 /dev/ubd/1; \
+          setquota -u toni 2000 3200 10 11 /dev/ubd/1
+</pre>
+
+<p>
+Tutti i passi precedentemente illustrati vengono fatti automaticamente
+con il lancio del comando:
+</p>
+
+<pre>
+realHost$ ./lab start
+</pre>
+
+<p>
+e quindi si possono verificare nel codice dello script.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="quota">Sperimentazione interattiva del Quota</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per disabilitare il quota:
+</p>
+
+<pre>
+test-xfs# quotaoff  -v /mnt/xfs<span class="blue">
+Disabling group quota enforcement on /dev/ubd/1
+/dev/ubd/1: group quotas turned off
+Disabling user quota enforcement on /dev/ubd/1</span>
+</pre>
+
+<p>
+e per riabilitarlo occorre smontare e poi rimontare la partizione.
+</p>
+
+<pre>
+test-xfs# umount /mnt/xfs; \
+          mount /mnt/xfs
+</pre>
+
+
+<p>
+Allo scopo di simulare una occupazione di disco da parte degli
+utenti lo script genera un file fittizio di 5MB per l'utente <code>nane</code>
+e un file di 2MB per l'utente <code>toni</code>.<br>
+Per riassumere la situazione usiamo il comando <code>repquota</code>:
+</p>
+
+<pre>
+test-xfs# repquota /mnt/xfs<span class="blue">
+*** Report for user quotas on device /dev/ubd/1
+Block grace time: 7days; Inode grace time: 7days
+                        Block limits                File limits
+User            used    soft    hard  grace    used  soft  hard  grace
+----------------------------------------------------------------------
+root      --       0       0       0              3     0     0       
+nane      +-    5132    5000    6200  7days       5    10    11       
+toni      +-    2060    2000    3200  7days       5    10    11</span>
+</pre>
+
+<p>
+Per verificare che la limitazione configurata esista e funzioni,
+simuliamo che l'utente <code>nane</code> generi un file di 2M e osserviamo
+le reazioni del sistema:
+</p>
+
+<pre>
+test-xfs# su - nane
+test-xfs$ dd if=/dev/zero of=big bs=2M count=1<span class="blue">
+dd: writing `big': Disk quota exceeded
+1+0 records in
+0+0 records out
+1048576 bytes transferred in 0.035859 seconds (29241714 bytes/sec)</span>
+</pre>
+
+<p>
+Possimo evidenziare come sia comparso un avviso del superamento
+dello spazio assegnato e che quello che &egrave; stato possibile scrivere
+effettivamente su disco sia all'incirca l'hard limit.
+</p>
+
+<p>
+Un utile comando &egrave;
+<code>warnquota</code> che serve per controllare la quota
+per ogni filesystem montato. Nel caso di superamento della quota
+spedisce una e-mail di warning per tutti
+gli utenti ai quali si st&agrave; esaurendo lo spazio su disco.
+Il programma &egrave; parte del pacchetto <code>quota</code>.
+Normalmente la sua esecuzione avviene di notte e la partenza viene
+configurata utilizzando il demone <code>crond</code>.
+</p>
+
+<p>
+Nella nostra esperienza virtuale non aspettiamo la notte e lo lanciamo a mano:
+</p>
+
+<pre>
+test-xfs# warnquota -u
+</pre>
+
+<p>
+possiamo andare a vedere il testo della e-mail di notifica all'utente
+toni con il comando:
+</p>
+
+
+<pre>
+test-xfs# mutt -f /var/spool/mail/toni
+</pre>
+
+<p>
+(<a href="uml-quota.png"
+    title="screenshot">screenshot</a>).
+</p>
+
+<p>
+Per operare una scansione del filesystem per il ricalcolo
+della percentuale di disco utilizzato &egrave; utile il
+comando <code>quotacheck</code> (a volte anche con il flag -m)
+ma non &egrave; necessario per XFS.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="acl">Sperimentazione interattiva delle ACL</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Le ACL (acronimo di Access Control Lists) sono un sistema
+per definire dei permessi pi&ugrave; dettagliati per l'accesso a file e
+directory.
+Ci sono due tipi di ACL:
+<ul>
+  <li>access ACL: associata ad ogni oggetto ne definisce la discrezionalit&agrave;</li>
+  <li>default ACL: per ogni directory definisce la discrezionalit&agrave; di ogni
+      oggetto creato all'interno</li>
+</ul>
+
+<p>
+Una ACL consiste in una o pi&ugrave; righe dette entry.
+</p>
+
+<p>
+Le ACL a cui faremo riferimento sono quelle delle specifiche rilasciate da
+<a href="http://www.guug.de/~winni/posix.1e/download.html"
+   title="link esterno">IEEE 1003.1e draft 17 ("POSIX.1e").</a>
+<br>
+Per reperire le informazioni riguardanti le ACL si pu&ograve; attivare una
+macchina virtuale e da questa dare il comando:
+</p>
+
+<pre>
+virtualHost# man acl
+</pre>
+
+<p>
+e poi continuare sfogliando con il <code>man</code> tutti i "SEE ALSO" incontrati.
+</p>
+
+<p>
+Ci sono molti documenti che descrivono le ACL e tra quelli in lingua
+italiano il migliore &egrave; sicuramente
+il capitolo "ACL POSIX con i sistemi GNU/Linux" in
+<a href="http://a2.pluto.it/acl_posix_con_i_sistemi_gnu_linux.html">Appunti di Informatica Libera</a>
+di Daniele Giacomini. Riportiamo alcuni comandi modificati
+(il pacchetto che contiene i programmi come <code>setfacl/getfacl</code>
+&egrave; <code>acl</code>):
+</p>
+
+<pre>
+test-xfs# su - nane
+test-xfs$ touch primo
+test-xfs$ ls -la primo<span class="blue">
+-rw-r--r--  1 nane users 0 Oct  1 23:02 primo</span>
+test-xfs$ getfacl primo<span class="blue">
+# file: primo
+# owner: nane
+# group: users
+user::rw-
+group::r--
+other::r--</span>
+test-xfs$ setfacl -m user:toni:rw- primo
+test-xfs$ getfacl primo<span class="blue">
+# file: primo
+# owner: nane
+# group: users
+user::rw-
+user:toni:rw-
+group::r--
+mask::rw-
+other::r--</span>
+test-xfs:~$ ls -l primo<span class="blue">
+-rw-rw-r--+ 1 nane users 0 Oct  1 23:02 primo</span>
+</pre>
+
+<p>
+si lascia al lettore la prova dell'intera sequenza di comandi
+compresa l'esplorazione della eredit&agrave;.
+</p>
+
+
+<p>
+Altre letture consigliate:
+</p>
+
+
+<ul>
+  <li><a href="http://acl.bestbits.at/about.html"
+         title="link esterno">http://acl.bestbits.at/</a></li>
+  <li><a href="http://www.suse.de/~agruen/acl/chapter/fs_acl-en.pdf"
+         title="link esterno">Access Control Lists in Linux (SuSe)</a></li>
+  <li><a href="http://security.linux.com/security/04/07/28/1746258.shtml?tid=23&amp;tid=35"
+         title="link esterno">POSIX ACLs in Linux</a></li>
+</ul>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-10-31 16:24:21 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

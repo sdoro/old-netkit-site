@@ -1,0 +1,18 @@
+; reverse lookup database
+; $Id: db.216.57.5,v 1.5 2004/08/04 22:31:32 doros Exp $
+$TTL    1
+@               IN      SOA     5.57.216.in-addr.arpa.    nobody.nowere. (
+                        2002102801 ; serial
+                        28 ; refresh
+                        14 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@                          IN      NS      ns.net
+ns.net.                    IN      A       216.57.5.213
+
+213 PTR        .
+214 PTR        ns.net.
+215 PTR        ns.fdns.net.
+
+; bot

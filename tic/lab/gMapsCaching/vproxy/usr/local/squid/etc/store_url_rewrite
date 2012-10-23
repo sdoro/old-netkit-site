@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+# $Id;$
+
+$| = 1;
+
+while (<>) {
+        chomp;
+        # print STDERR $_ . "\n";
+        if (m/kh(.*?)\.google\.com(.*?)\/(.*?) /) {
+                print "http://keyhole-srv.google.com" . $2 . ".SQUIDINTERNAL/" . $3 . "\n";
+                # print STDERR "KEYHOLE\n";
+        } elsif (m/mt(.*?)\.google\.com(.*?)\/(.*?) /) {
+                print "http://map-srv.google.com" . $2 . ".SQUIDINTERNAL/" . $3 . "\n";
+                # print STDERR "MAPSRV\n";
+        } elsif (m/^http:\/\/([A-Za-z]*?)-(.*?)\.(.*)\.youtube\.com\/get_video\?video_id=(.*) /) {
+                # http://lax-v290.lax.youtube.com/get_video?video_id=jqx1ZmzX0k0
+                print "http://video-srv.youtube.com.SQUIDINTERNAL/get_video?video_id=" . $4 . "\n";
+        } else {
+                print $_ . "\n";
+        }
+}

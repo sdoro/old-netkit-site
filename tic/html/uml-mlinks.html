@@ -1,0 +1,203 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-mlinks.html,v 1.4 2007-02-04 10:58:56 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-mlinks</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 8 - Reti di reti</h2>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Load sharing over multiple interfaces</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-VPN.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-rip.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<p>
+Il documento "Linux Advanced Routing &amp; Traffic Control HOWTO"
+contiene una sezione "Loading sharing over multiple interfaces" che
+ci ha incuriosito e quindi abbiamo voluto sperimentare la
+configurazione proposta nella documentazione.
+</p>
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+Scarica il <a href="multiple-link.tgz" title="esperienza Netkit4TIC">tarball</a> (100KB)
+contenente la configurazione e lo script <code>lab</code> per la
+costruzione dell'esperienza.
+</p>
+
+
+<p>
+La mappa
+(<a href="pdf/mlinks.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/mlinks.xml" title="file per Dia">xml</a>)
+rappresenta esattamente la configurazione proposta nel documento
+originale.
+</p>
+
+<p>
+In seguito gli argomenti vengono esposti suddivisi
+nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li><a href="#config">configurazione</a>
+      del sistema (automagicamente ottenuta dal comando <code>lstart</code>).</li>
+  <li>sperimentazione <a href="#interattiva"
+                         title="riferimento interno">interattiva</a></li>
+</ul>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="config">Configurazione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La distribuzione del traffico avviene utilizzando il 'TEQL'
+device:
+</p>
+
+<pre>
+rA# tc qdisc add dev eth1 root teql0
+rA# tc qdisc add dev eth2 root teql0
+rA# ip link set dev teql0 up
+</pre>
+
+<p>
+Assegniamo gli ip:
+</p>
+
+<pre>
+rA# ip addr add dev eth1 10.0.0.0/31
+rA# ip addr add dev eth2 10.0.0.2/31
+rA# ip addr add dev teql0 10.0.0.4/31
+</pre>
+
+<p>
+Attiviamo le interfacce:
+</p>
+
+<pre>
+rA# ip link set dev eth1 up
+rA# ip link set dev eth2 up
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id="interattiva">Sperimentazione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il router <code>rA</code> &egrave; in grado di eseguire il comando
+ping su 10.0.0.1, 10.0.0.3 e 10.0.0.5 utilizzando i 2 link reali
+e 1 link equalizzato:
+</p>
+
+<pre>
+rA# ping -c 1 10.0.0.1; ping -c 1 10.0.0.3; ping -c 1 10.0.0.5
+</pre>
+
+<p>
+Analogamente il router <code>rB</code> &egrave; in grado di eseguire il comando
+di ping su 10.0.0.0, 10.0.0.2 e 10.0.0.4 utilizzando i 2 link reali
+e 1 link equalizzato:
+</p>
+
+<pre>
+rA# ping -c 1 10.0.0.0; ping -c 1 10.0.0.2; ping -c 1 10.0.0.4
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-04 10:58:56 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

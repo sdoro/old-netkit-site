@@ -1,0 +1,13 @@
+
+# echo "1" > /proc/sys/net/ipv6/conf/all/forwarding
+# tunctl -u doros
+# ifconfig tap0 hw ether 0:0:0:f:f:f
+# ifconfig tap0 0.0.0.0 up
+# /etc/init.d/radvd start
+
+Per la raggiungib. di www occorre:
+
+# V_NEXT_HOP=2001:5c0:1101:f700:200:ff:fe00:1
+# route -A inet6 add 2001:5c0:1101:f701::/64 gw $V_NEXT_HOP dev tap0
+
+

@@ -1,0 +1,2 @@
+headquarters  -fstype=autofs file:/etc/auto.headquarters
+branch        -fstype=autofs file:/etc/auto.branch

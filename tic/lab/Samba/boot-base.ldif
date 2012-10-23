@@ -1,0 +1,46 @@
+# $Id: boot-base.ldif,v 1.3 2004/10/18 15:16:54 doros Exp $
+
+dn: dc=istituto,dc=it
+objectClass: dcObject
+objectClass: organization
+o: R&D
+dc: istituto
+
+dn: ou=DSA,dc=istituto,dc=it
+objectClass: top
+objectClass: organizationalUnit
+ou: DSA
+description: security accounts for LDAP clients
+
+dn: cn=admin,ou=DSA,dc=istituto,dc=it
+objectClass: organizationalRole
+objectClass: top
+objectClass: simpleSecurityObject
+cn: admin
+description: LDAP administrator
+userPassword: {CRYPT}LN.zRtScjQqeQ
+
+dn: cn=replicator,ou=DSA,dc=istituto,dc=it
+objectClass: organizationalRole
+objectClass: top
+objectClass: simpleSecurityObject
+cn: replicator
+description: LDAP replicator
+userPassword: {CRYPT}0a7ETQ7iXE70c
+
+dn: cn=nssuser,ou=DSA,dc=istituto,dc=it
+objectClass: organizationalRole
+objectClass: top
+objectClass: simpleSecurityObject
+cn: nssuser
+description: LDAP NSS user for user-lookups
+userPassword: {CRYPT}gmoN/rxaH5nBw
+
+dn: cn=samba,ou=DSA,dc=istituto,dc=it
+objectClass: organizationalRole
+objectClass: top
+objectClass: simpleSecurityObject
+cn: samba
+description: Samba administrator
+userPassword: {CRYPT}1Ko8nTA.81o7Y
+

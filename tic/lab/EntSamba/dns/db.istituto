@@ -1,0 +1,49 @@
+; /etc/bind/db.istituto
+; $Id: db.istituto,v 1.1 2004/10/16 05:41:10 doros Exp $
+;
+$TTL   60000
+@               IN  SOA     istituto.it.    root.istituto.it. (
+                        2004102804 ; serial
+                             28800 ; refresh
+                             14400 ; retry
+                           3600000 ; expire
+                                 0 ; default_ttl
+                        )
+
+@               IN  NS      ns.istituto.it.
+
+; Kerberos principals
+_kerberos             IN TXT "ISTITUTO.IT"
+_kerberos-master._udp IN SRV 0 0  88 kdc
+_kerberos-adm._tcp    IN SRV 0 0 749 kdc
+_kpasswd._udp         IN SRV 0 0 565 kdc
+_kerberos._udp        IN SRV 0 0  88 kdc
+_ldap._tcp            IN SRV 0 0 389 ldap
+
+; Aliase
+kdc             IN CNAME ns.istituto.it.
+ldap            IN CNAME ns.istituto.it.
+ldapa1          IN CNAME ldap.istituto.it.
+www             IN CNAME ns.istituto.it.
+mail            IN CNAME ns.istituto.it.
+time            IN CNAME ns.istituto.it.
+
+; Real IP
+ROOT-SERVER.    IN  A  192.168.10.4
+ns              IN  A  192.168.10.4
+
+istituto-PDC    IN  A  192.168.10.1
+ACLNT-A1        IN  A  192.168.10.2
+R               IN  A  192.168.10.3
+
+istituto-BDC-A2 IN  A  192.168.20.1
+ACLNT-A2        IN  A  192.168.20.2
+R               IN  A  192.168.20.3
+ldapa2          IN  A  192.168.20.4
+
+istituto-BDC-A3 IN  A  192.168.30.1
+ACLNT-A3        IN  A  192.168.30.2
+ldapa3          IN  A  192.168.30.4
+
+;
+;; bot

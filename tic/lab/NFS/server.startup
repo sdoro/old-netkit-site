@@ -1,0 +1,35 @@
+# $Id: server.startup,v 1.6 2010-06-01 12:11:48 doros Exp $
+
+#
+# configure IP address
+ifconfig eth0 192.168.50.10 up
+route add default gw 192.168.50.254
+# start bind service
+/etc/init.d/bind9 start
+# LDAP boot
+/etc/init.d/slapd stop
+rm -f /var/lib/ldap/*
+mv /etc/ldap/slapd.conf /etc/ldap/slapd.conf.org
+ln -f -s /etc/ldap/boot-slapd.conf /etc/ldap/slapd.conf
+chmod u+rw,g=r,o= /etc/ldap/boot-slapd.conf
+chown root:openldap /etc/ldap/boot-slapd.conf
+/etc/init.d/slapd start 
+sleep 2
+#
+ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,dc=istituto,dc=it" -w not24get -f /root/ldif/boot-base.ldif
+#
+/etc/init.d/slapd stop
+ln -s -f /etc/ldap/slapd.conf-master /etc/ldap/slapd.conf
+chmod 0400 /etc/ldap.secret
+#
+su openldap slapindex
+/etc/init.d/slapd start
+sleep 2
+# populate from ldif
+ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,ou=DSA,dc=istituto,dc=it" -w netkit -f /root/ldif/base.ldif
+ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,ou=DSA,dc=istituto,dc=it" -w netkit -f /root/ldif/group.ldif
+ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,ou=DSA,dc=istituto,dc=it" -w netkit -f /root/ldif/hosts.ldif
+ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,ou=DSA,dc=istituto,dc=it" -w netkit -f /root/ldif/passwd.ldif
+ldapadd -x -H ldap://127.0.0.1 -D"cn=admin,ou=DSA,dc=istituto,dc=it" -w netkit -f /root/ldif/autofs.ldif
+#
+# bot

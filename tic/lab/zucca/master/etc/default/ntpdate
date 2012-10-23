@@ -1,0 +1,6 @@
+# /etc/default/ntp-servers
+# $Id:$
+NTPSERVERS="ntp.ien.it"
+
+#
+# bot

@@ -1,0 +1,23 @@
+;; $Id: netkit4tic.ds,v 1.1 2006/06/29 22:57:30 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "net")
+  (begin
+      (geometry "484x199+1+8")
+    )
+  )
+
+(if (contains (application_name) "fw")
+  (begin
+      (geometry "484x199+1+246")
+    )
+  )
+
+(if (contains (application_name) "loc")
+  (begin
+      (geometry "484x199+1+484")
+    )
+  )
+
+
+)

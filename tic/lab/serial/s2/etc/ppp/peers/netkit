@@ -1,0 +1,3 @@
+connect "chat -v -f /etc/ppp/ch"
+/dev/ttyS0
+file /etc/ppp/options

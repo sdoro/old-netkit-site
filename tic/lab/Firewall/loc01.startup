@@ -1,0 +1,6 @@
+ifconfig eth0 10.10.10.65 \
+    netmask 255.255.255.240 broadcast 10.10.10.79 up
+ifconfig eth0 hw ether 00:00:00:00:00:65
+route add default gw 10.10.10.78
+mv /var/www/index.html /var/www/index-org.html
+/etc/init.d/apache start

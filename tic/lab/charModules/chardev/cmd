@@ -1,0 +1,9 @@
+#!/bin/bash
+HERE=`pwd`
+rmmod chardev.ko 2>/dev/null
+rm -f /dev/chardev
+mknod /dev/chardev c 10 71
+make clean
+make ARCH=um
+insmod chardev.ko
+lsmod

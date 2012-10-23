@@ -1,0 +1,30 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.3 2007-02-19 13:21:48 doros Exp $
+#
+#ACTION         SOURCE    DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+# Redirect from Proxy
+#
+Web/ACCEPT      loc:10.10.10.77 net
+#
+SMTP/ACCEPT     fw        net
+SMTP/ACCEPT     loc       net
+DNS/ACCEPT      fw        net
+DNS/ACCEPT      loc       net
+SSH/ACCEPT      loc       fw
+SSH/ACCEPT      net       fw
+Ping/ACCEPT     loc       fw
+Ping/ACCEPT     net       fw
+Ping/ACCEPT     fw        loc
+Ping/ACCEPT     fw        net
+#
+# Forward the http connection request to internal private network
+#
+Web/DNAT        net       loc:10.10.10.65
+#
+# To manage fw from loc network
+#
+SNMP/ACCEPT     loc       fw
+Web/ACCEPT      loc       fw
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

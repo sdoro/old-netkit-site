@@ -1,0 +1,31 @@
+# /etc/network/interfaces
+# $Id: interfaces,v 1.3 2004/09/13 19:32:07 doros Exp $
+
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# 
+auto eth0
+iface eth0 inet static
+     address 10.10.10.78
+     netmask 255.255.255.240
+     broadcast 10.10.10.79
+     gateway 10.10.10.67
+     up /etc/myroute-eth0
+#
+auto eth1
+iface eth1 inet static
+     address 10.10.10.62
+     netmask 255.255.255.192
+     broadcast 10.10.10.63
+     up /etc/myroute-eth1
+#
+auto eth2
+iface eth2 inet static
+     address 10.10.20.30
+     netmask 255.255.255.224
+     broadcast 10.10.20.31
+     up /etc/myroute-eth2
+#
+# bot

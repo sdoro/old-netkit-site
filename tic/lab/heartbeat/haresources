@@ -1,0 +1,9 @@
+# /etc/ha.d/haresources
+# $Id: haresources,v 1.2 2005/11/01 20:16:56 doros Exp $
+
+left 193.206.185.10 drbddisk::drbd0 Filesystem::/dev/drbd/0::/var/www::xfs drbdlinks-http apache mon-cluster-http
+
+right 193.206.185.11 drbddisk::drbd1 Filesystem::/dev/drbd/1::/nfs::xfs drbdlinks-nfs nfs-common nfs-user-server mon-cluster-nfs
+
+#
+# bot

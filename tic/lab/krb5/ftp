@@ -1,0 +1,10 @@
+# /etc/xinetd.d/ftp
+# $Id: ftp,v 1.2 2004/10/26 10:08:08 doros Exp $
+service ftp
+{
+        socket_type         = stream
+        wait                = no
+        nice                = 10
+        user                = root
+        server              = /usr/sbin/ftpd
+}                                                                               

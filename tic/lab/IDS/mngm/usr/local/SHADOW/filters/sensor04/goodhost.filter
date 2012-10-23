@@ -1,0 +1,58 @@
+ip and (not src net 172.21)
+   and
+(
+   (dst host 172.22.185.1 or dst host 172.21.38.2
+   and
+      (
+          (tcp and (
+                    (tcp[13] & 0x17 < 0x10)
+                    and
+                    (not dst port 80)
+                    )
+           )
+           or
+          (icmp and (icmp[0] != 8) and (icmp[0] != 0)
+                and (icmp[0] != 3) and (icmp[0] != 11))
+           or
+          (not (tcp or udp or icmp))
+       )
+   )
+or
+   ((dst host 172.21.254.3 or host 172.21.245.4) and
+   (
+       (tcp
+       and
+           (tcp[13] & 0x17 < 0x10)
+            and
+           (not dst port 53)
+       )
+       or
+       (udp
+            and not dst port 53
+            and not src port 53
+            and not dst port 137
+       )
+       or
+       (icmp and (icmp[0] != 8) and (icmp[0] != 0)
+             and (icmp[0] != 3) and (icmp[0] != 11))
+        or
+       (not (tcp or udp or icmp))
+    ))
+or
+   (
+    (
+     dst host 172.21.254.7 or dst host 172.21.207.8 or dst host 172.21.254.9
+    ) and
+   (
+       (tcp and (tcp[13] & 0x17 < 0x10)
+                 and (not port 25)
+                 and (not port 113))
+        or
+       (udp and not dst port 137)
+        or
+       (icmp and (icmp[0] != 8) and (icmp[0] != 0)
+             and (icmp[0] != 3) and (icmp[0] != 11))
+        or
+       (not (tcp or udp or icmp))
+    ))
+)

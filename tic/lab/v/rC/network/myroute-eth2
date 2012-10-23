@@ -1,0 +1,8 @@
+# /etc/network/myroute-eth2
+# $Id:$
+
+# AREA1
+#route add -net 192.168.64.0 netmask 255.255.255.0 gw 192.168.200.129
+ip route add 192.168.64.0/24 via 192.168.200.129
+
+# bot

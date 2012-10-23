@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<link title="new" rel="stylesheet" href="main.css" type="text/css">
+<title>
+    Printable Linux 
+    Documentation
+    -- 
+    Guida alla rimasterizzazione di Netkit4TIC</title>
+</head>
+<body style="margin-left:0px;margin-top:0px;" bgcolor="#ffffff"><table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td width="99%" class="content" valign="top" align="left">
+<br><p class="dochead">Guida alla rimasterizzazione di Netkit4TIC</p>
+<form name="contents" action="http://www.gentoo.org">
+<b>Contents</b>:
+    <select name="url" size="1" OnChange="location.href=form.url.options[form.url.selectedIndex].value" style="font-family:Arial,Helvetica, sans-serif; font-size:10"><option value="#doc_chap1">1. Preliminari</option>
+<option value="#doc_chap2">2. Estrazione dai sorgenti</option>
+<option value="#doc_chap3">3. Manipolazione</option>
+<option value="#doc_chap4">4. Costruzione immagine iso</option></select>
+</form>
+<p class="chaphead">
+<span class="chapnum"><a name="doc_chap1">1. </a></span>Preliminari</p>
+<p>
+Per masterizzare Knoppix è consigliabile una partizione di swap
+di  almeno 512MB e una RAM altrettanto grande. Per lo
+spazio su disco sono necessari dai 2 ai 3 Gb.
+Se il vostro swap e' insufficiente potete creare un file di swap
+e attivarlo in aggiunta allo spazio gia' definito. Se ad esempio
+vogliamo creare un file di swap aggiuntivo di 500MB dobbiamo
+per prima cosa costruirlo, poi inizializzarlo e alla file attivarlo:
+</p>
+<a name="doc_chap1_pre1"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 1.1</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# <span class="input">dd if=/dev/zero of=/swapfile bs=1024 count=500k</span>
+# <span class="input">mkswap /swapfile</span>
+# <span class="input">swapon /swapfile</span>
+</pre></td></tr>
+</table>
+
+<p>
+Per disattivare e rimuoverla:
+</p>
+<a name="doc_chap1_pre2"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 1.2</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# <span class="input">swapoff /swapfile</span>
+# <span class="input">rm /swapfile</span>
+</pre></td></tr>
+</table>
+
+
+<p>
+Per la personalizzazione di Knoppix abbiamo usato una macchina con
+Debian Woody. Per fornire il supporto al cloop è
+stato installato:</p>
+<ul>
+  <li>cloop-utils</li>
+</ul>
+<p>
+che fornisce le utility <span class="code">create_compressed_fs</span> e
+<span class="code">extract_compressed_fs</span>
+per creare ed estrarre filesystem compressi direttamente dai file.
+</p>
+
+<p>
+Nel seguito si farà riferimento alla seguente struttura
+di directory:
+<a name="doc_chap1_pre3"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 1.3</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+/kno
+  |__uncompressed
+  |__release
+  |__source
+  |__cdrom
+  |__tmp
+</pre></td></tr>
+</table>
+</p>
+
+
+<p class="chaphead">
+<span class="chapnum"><a name="doc_chap2">2. </a></span>Estrazione dai sorgenti</p>
+<p>
+Tutto il filesystem di Knoppix si trova nel file compresso presente nel
+CD in /KNOPPIX/KNOPPIX. Occupa circa 600 MB e una volta
+decompresso richiede 1.7GB circa. La procedura
+descritta di seguito mostra come:
+<ul>
+  <li>montare il live CD o l'iso</li>
+  <li>estrarre il file KNOPPIX dal CD decomprimendolo in una
+      directory temporanea</li>
+  <li>montare l'immagine estratta e copiarla nella directory
+      source per la personalizzazione</li>
+</ul>
+</p>
+
+<p>
+Per chi ha problemi di spazio si può risparmiare qualcosa copiando
+il filesystem direttamente dopo aver bootato il LiveCD come descritto in
+<a href="http://www.knoppix.net/docs/index.php/KnoppixRemasteringHowto"> HowTo</a> .</p>
+
+<p>
+Montiamo il CD:
+<a name="doc_chap2_pre1"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 2.1</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# mount /cdrom
+</pre></td></tr>
+</table>
+se nel cd abbiamo un iso:
+<a name="doc_chap2_pre2"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 2.2</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# mount -o loop /cdrom/knx.iso /kno/cdrom
+</pre></td></tr>
+</table>
+
+se invece nel CD è presente il live CD di Knoppix sostituiamo
+nelle istruzioni di seguito /kno/cdrom con
+/cdrom.
+Estraiamo il filesystem compresso dal file KNOPPIX in una directory temporanea
+(con il mio PC PIII 800 con 128MB RAM: 20 minuti):</p>
+
+<a name="doc_chap2_pre3"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 2.3</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# extract_compressed_fs /kno/cdrom/KNOPPIX/KNOPPIX &gt; \
+                        /kno/uncompressed/KNOPPIX_UNCOMPRESSED
+</pre></td></tr>
+</table>
+Montiamo il filesystem in una directory temporanea:
+
+<a name="doc_chap2_pre4"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 2.4</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# mount -o loop /kno/uncompressed/KNOPPIX_UNCOMPRESSD /kno/tmp
+</pre></td></tr>
+</table>
+Copiamo tutto il filesystem decompresso in /kno/source per
+la personalizzazione:
+
+<a name="doc_chap2_pre5"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 2.5</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# cp -Rupv /kno/tmp/* /kno/source/
+</pre></td></tr>
+</table>
+
+<p class="chaphead">
+<span class="chapnum"><a name="doc_chap3">3. </a></span>Manipolazione</p>
+
+<p>
+Con chroot ci spostiamo virtualmente nella root del
+filesystem di Knoppix. Knoppix è derivato da Debian unstable
+(sid?) e le operazioni
+sui pacchetti e la loro configurazione può essere effettuata con
+apt e/o
+dpkg. Rimandiamo alla lettura di
+<a href="http://www.debian.org/doc/manuals/apt-howto/index.en.html">
+     apt-howto</a> per la manualistica.
+Per modificare le impostazioni degli utenti modificare i file in
+/etc/skel,
+il file usato come background è
+background.gif.
+Ci sono delle buone indicazioni per personalizzare le impostazioni
+degli utenti o per usare X nell'ambiente chrootato in
+<a href="http://www.stirnimann.com/mystuff/doc/knoppix.txt">
+     stirnimann</a> e in
+<a href="http://osdn.dl.sourceforge.net/sourceforge/morphix/custommorphix.pdf">
+     sourceforge</a>.
+
+Facciamo chroot in source:
+<a name="doc_chap3_pre1"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 3.1</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# chroot /kno/source
+# mount -t proc /proc proc
+</pre></td></tr>
+</table>
+
+In ogni caso usando la shell ottenuta  dal comando chroot sono utili i
+seguenti  comandi, utilizzando una connessione internet e/o il set
+della Debian stable e testing.
+
+Per uscire:
+<a name="doc_chap3_pre2"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 3.2</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# umount /proc
+# exit
+</pre></td></tr>
+</table>
+</p>
+
+<p class="chaphead">
+<span class="chapnum"><a name="doc_chap4">4. </a></span>Costruzione immagine iso</p>
+
+
+Nella directory /kno/release copiamo tutto il contenuto di /kno/cdrom
+(o /cdrom) ad eccezione del file /kno/cdrom/KNOPPIX/KNOPPIX (circa 600 MB)
+che andremo a sostituire con il nuovo KNOPPIX ottenuto comprimendo /kno/source.
+Anche il file boot.cat va eliminato in quanto viene creato automaticamente.
+Nella directory release si trovano i file per il caricamento automatico della
+pagina index.html qualora il CD non venga usato per il boot. Nel file KNOPPIX/boot.img
+si possono invece configurare opzioni relative al boot e trovi un
+approfondimento su
+<a href="http://am.xs4all.nl/phpwiki/index.php/AddingDefaultBootoptions">
+     wiki:BootOptions</a>.
+
+
+<a name="doc_chap4_pre1"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 4.1</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# cp -R /cdrom /kno/release
+(questo pero' copia anche il file da 600MB, sicuramente si può fare meglio)
+# rm /kno/release/KNOPPIX/KNOPPIX
+(se e' il caso)
+</pre></td></tr>
+</table>
+Crea il filesystem iso9660 e lo comprime con un utilità che usa
+cloop,  il tutto costituisce il file KNOPPIX:
+<a name="doc_chap4_pre2"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 4.2</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+$ mkisofs -R -l -V &quot;KNOPPIX iso9660 filesystem&quot; -hide-rr-moved \
+          -v /kno/source/ | \
+          create_compressed_fs - 65536 &gt; /kno/release/KNOPPIX/KNOPPIX
+</pre></td></tr>
+</table>
+Crea l'immagine iso da usare per masterizzare il live CD:
+<a name="doc_chap4_pre3"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 4.3</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# mkisofs -l -r -J -V &quot;KNOPPIX&quot; -hide-rr-moved -v \
+          -b KNOPPIX/boot.img -c KNOPPIX/boot.cat \
+          -o /kno/NUOVO_KNOPPIX.iso
+</pre></td></tr>
+</table>
+Non resta che bruciare un cd con l'iso NUOVO_KNOPPIX.iso
+ottenuta:
+<a name="doc_chap4_pre4"></a><table class="ntable" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td class="infohead" bgcolor="#7a5ada"><p class="caption">
+            Code listing 4.4</p></td></tr>
+<tr><td bgcolor="#ddddff"><pre>
+# cdrecord dev=0,0,0 speed=8 /kno/NUOVO_KNOPPIX.iso
+</pre></td></tr>
+</table>
+<br><br><br>
+</td></tr></table></body>
+</html>

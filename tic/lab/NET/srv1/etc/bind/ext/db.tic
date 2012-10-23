@@ -1,0 +1,52 @@
+; $Id: db.tic,v 1.6 2005/01/19 08:27:38 doros Exp $
+;
+; ##############################################################
+; Start of Authority (Inverse Address Arpa) for tic.fdns.net
+; ##############################################################
+@ 604800 IN SOA ns.tic.fdns.net. root.ns.tic.fdns.net. (
+        2003061901 ; serial
+        10800 ; refresh (3 hour)
+        3600 ; retry (1 hour)
+        604800 ; expire (7 days)
+        86400 ) ; minimum (1 day)
+
+; ##############################################################
+; Specify Name Servers for all Reverse Lookups (IN-ADDR.ARPA)
+; ##############################################################
+@  604800       IN NS  ns1.tic.fdns.net.
+@  604800       IN NS  ns2.tic.fdns.net.
+@  604800       IN MX  0 smtp.tic.fdns.net.
+@  604800       IN MX  20 smtp2.tic.fdns.net.
+
+; define localhost
+;localhost 604800 IN A 127.0.0.1
+
+; Define the hosts in this zone
+ns1       604800 IN A 217.57.5.219
+dns       604800 IN CNAME ns1.tic.fdns.net.
+dns1      604800 IN CNAME ns1.tic.fdns.net.
+srv1      604800 IN CNAME ns1.tic.fdns.net.
+mail      604800 IN CNAME ns1.tic.fdns.net.
+smtp      604800 IN CNAME ns1.tic.fdns.net.
+mail1     604800 IN CNAME ns1.tic.fdns.net.
+www       604800 IN CNAME ns1.tic.fdns.net.
+ldap      604800 IN CNAME ns1.tic.fdns.net.
+ldap1     604800 IN CNAME ns1.tic.fdns.net.
+pop       604800 IN CNAME ns1.tic.fdns.net.
+imap      604800 IN CNAME ns1.tic.fdns.net.
+
+ns2       604800 IN A 217.57.5.220
+srv2      604800 IN CNAME ns2.tic.fdns.net.
+mail2     604800 IN CNAME ns2.tic.fdns.net.
+smtp2     604800 IN CNAME ns2.tic.fdns.net.
+ldap2     604800 IN CNAME ns2.tic.fdns.net.
+
+
+; ###############################################################
+; Current Aliases for tic.fdns.net (CNAME)
+; ###############################################################
+tic.fdns.net.   604800 IN A 217.57.5.219
+
+
+;
+; bot

@@ -1,0 +1,17 @@
+# $Id: www.startup,v 1.1 2006/11/18 21:26:29 doros Exp $
+#/etc/init.d/klogd start
+#/etc/init.d/sysklogd start
+# IP address
+ifconfig eth0 192.168.0.3
+route add default gw 192.168.0.1
+#
+# install mysql-server
+dpkg -i /hostlab/www/deb/*.deb
+# start mysql server
+/etc/init.d/mysql start
+#
+mysql < /hostlab/init.sql
+mysql  snort < /hostlab/create_mysql
+#rm -f /etc/snort/db-pending-config
+# start WEB server 
+#/etc/init.d/apache start

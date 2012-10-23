@@ -1,0 +1,37 @@
+# /etc/ldap/slapd.access
+# $Id: slapd.access,v 1.1 2005/08/20 17:28:13 doros Exp $
+
+# Mapping Authentication Identities (SASL + GSSAPI case)
+sasl-regexp
+        uid=(.*),cn=istituto.it,cn=gssapi,cn=auth
+        cn=$1,ou=People,dc=istituto,dc=it
+
+# Some things should be editable by the owner, and viewable by anyone...
+#access to attr=cn,givenName,sn,krbName,krb5PrincipalName,gecos
+access to attr=cn,givenName,sn,krb5RealmName,krb5PrincipalName,gecos
+        by dn="cn=ldapadm,ou=People,dc=istituto,dc=it" write
+        by self write
+        by * read
+
+
+access to attr=loginShell,gecos
+        by dn="cn=ldapadm,ou=People,dc=istituto,dc=it" write
+        by self write
+        by * read
+
+# Since we're using {KERBEROS}<PRINCIPAL>, we can't allow the user
+# to change the password. They have to use the Kerberos 'kpasswd' to
+# do this... But the ldapadm can change (if need be).
+# Please see krb5 userPassword attribute
+access to attr=userPassword
+        by dn="cn=ldapadm,ou=People,dc=istituto,dc=it" write
+        by anonymous auth
+        by * none
+
+# The ldapadm dn has full write access
+access to *
+        by dn="cn=ldapadm,ou=People,dc=istituto,dc=it" write
+        by * read
+
+#
+# bot

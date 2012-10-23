@@ -1,0 +1,8 @@
+# /etc/shorewall/interfaces
+# $Id: interfaces,v 1.2 2006/06/30 05:35:55 doros Exp $
+#
+#ZONE    INTERFACE    BROADCAST  OPTIONS
+net      eth0         detect     norfc1918
+loc      eth1         detect          
+dmz      eth2         detect          
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

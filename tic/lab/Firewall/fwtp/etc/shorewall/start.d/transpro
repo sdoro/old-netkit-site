@@ -1,0 +1,8 @@
+# /etc/shorewall/start.d/transpro
+# $Id: transpro,v 1.1 2005/10/31 11:54:21 doros Exp $
+
+iptables -t mangle -A PREROUTING -i eth1 -s ! 10.10.10.77 \
+  -p tcp --dport 80 -j MARK --set-mark 202  
+
+#
+# bot

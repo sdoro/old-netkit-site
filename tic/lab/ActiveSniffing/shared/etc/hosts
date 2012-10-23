@@ -1,0 +1,12 @@
+#
+# /etc/hosts
+# $Id: hosts,v 1.1 2008-01-03 16:31:04 doros Exp $
+
+127.0.0.1      localhost
+
+192.168.1.1    net
+192.168.0.100  SystemA
+192.168.0.200  SystemB
+192.168.0.137  Attacker
+#
+# bot

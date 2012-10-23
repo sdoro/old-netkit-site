@@ -1,0 +1,25 @@
+
+One time (download linux source):
+apt-get install linux-source-2.6.26
+
+
+mkdir /tmp/lenny
+cd /tmp/lenny
+apt-get source user-mode-linux
+
+apt-get build-dep user-mode-linux
+cd user-mode-linux-2.6.26-1um
+
+
+insert netkit patches
+
+
+rm -f unpack-stamp              ; eventualmente
+fakeroot debian/rules unpack    ; unpack kernel
+fakeroot debian/rules patch     ; apply the patches
+
+mv config.i386 config.i386.org
+cp $repository/config config.i386
+
+fakeroot debian/rules binary
+

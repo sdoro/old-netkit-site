@@ -1,0 +1,620 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: bering.html,v 1.38 2007-02-10 08:06:10 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - Bering uClibc</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 6</h1>
+<h2 class="center">Hardware di rete</h2>
+
+
+
+<h3>La distribuzione (su floppy/CompactFlash) Bering uClibc</h3>
+
+<p>
+       In questo pagine non proponiamo l'acquisto e
+       lo studio di un particolare
+       <a href="http://en.wikipedia.org/wiki/Firewall"
+          title="Wikipedia">firewall</a>/<a href="http://en.wikipedia.org/wiki/Router"
+          title="Wikipedia">router</a>
+       ma anzi ci proponiamo di autocostruirlo
+       riutilizzando hardware dismesso.<br>
+       Facciamo riferimento a pc con CPU
+       <a href="http://en.wikipedia.org/wiki/Intel_80486"
+          title="Wikipedia">486</a>
+       compatibile
+       e ad una distribuzione Linux specializzata
+       per sistemi embedded: la
+       <a href="http://leaf.sourceforge.net/bering-uclibc/"
+          title="link esterno">Bering uClibc</a> derivata dal progetto
+	   <a href="http://leaf.sourceforge.net/"
+          title="link esterno">LEAF/Bering</a> derivata a sua volta dal progetto
+       <a id=lrp href="http://en.wikipedia.org/wiki/The_Linux_Router_Project"
+          title="Wikipedia">Linux Router Project</a> (ormai defunto nel 2003).
+       Consiste in un kernel Linux 2.4 e un
+       insieme di pachetti minimali per le funzionalit&agrave; di base;
+	   il tutto entro un floppy da 1.44M.
+       Le richieste hardware sono molto limitate, ma dipendono da cosa si
+       vuol fare. Comunque la configurazione minima &egrave; CPU i486 con 12MB di memoria,
+       unit&agrave; floppy, due schede di rete e una tastiera (il monitor, dopo la fase di
+       test pu&ograve; essere tolto e ci si pu&ograve; eventualmente collegare al sistema
+       attraverso una seriale).
+</p>
+
+<p>
+Un firewall di questo tipo &egrave; stato messo in
+opera negli Anni Scolastici 2002/03 e 2003/04
+su hardware EPSON Endeavor 4DX2/66L con 12MB di RAM, due schede di
+rete 3COM 3c509 senza disco fisso risultando estremamente
+affidabile (7x24) con zero problemi di manutenzione.
+</p>
+
+<p>
+Attualmente utilizziamo hardware ad hoc e in particolare
+<a href="http://www.pcengines.ch/" title="link esterno">PC-engines</a>
+con processore 266 MHz AMD Geode SC1100 (fast 486 core),
+128 MB SDRAM e 64/128 MB di CompactFlash, tre schede di rete National DP93916 e
+una porta seriale.
+</p>
+
+
+<h4>Ipotesi di lavoro</h4>
+
+<p>
+Per l'attivit&agrave; descritta occorrono un pc dismesso 486 
+e una stazione di lavoro da dove attiveremo il live-{CD,USB} Netkit4TIC.
+Il pc catorcio &egrave; la macchina target dove installeremo e proveremo
+il firewall mentre l'altro ci serve per scaricare
+i file da Internet e per costruire e personalizzare il floppy.
+</p>
+
+
+
+<h4>Le schede di rete</h4>
+
+<p>
+Per i problemi legati strettamente all'hardware e in particolare
+alle schede di rete ci viene in aiuto il sito
+<a href="http://pigtail.net/LRP/"
+   title="link esterno">http://pigtail.net/LRP/</a>. Nel sito
+ci sono molte informazioni che vi potrebbero anche far
+perdere l'orientamento. Per semplicit&agrave; in seguito ho
+riportato i quattro (4) link pi&ugrave; importanti.
+</p>
+
+<p>
+Installare 2 o pi&ugrave; schede di rete pu&ograve; risultare
+un'operazione difficile specialmente quando
+le schede di rete, non autoconfiguranti, vanno
+in collisione (IRQ) tra di loro.
+In questo caso serve avere qualcosa di pi&ugrave; del semplice
+driver: serve una utility fornita normalmente dal costruttore della scheda
+con la quale si pu&ograve;/deve cambiare il numero di interrupt (IRQ)
+e/o l'address base.
+Pi&ugrave; la scheda &egrave; economica e pi&ugrave; si fatica a trovare
+l'utility. Quindi non risparmiate sull'acquisto delle schede di rete!.
+</p>
+
+<p>
+Il sito citato precedentemente mette a disposizione per il download una raccolta
+di queste utility per le schede di rete pi&ugrave; conosciute.
+Il formato dei file da scaricare sono immagini boot compresse per
+floppy da 1.44M con dentro un
+<a href="http://en.wikipedia.org/wiki/DR-DOS"
+   title="Wikipedia">DR-DOS</a> freeware:
+<ul>
+	   <li> <a href="http://pigtail.net/LRP/netcard.html"
+               title="link esterno">netcard</a></li>
+	   <li> <a href="http://pigtail.net/LRP/ezstart.html"
+               title="link esterno">ezstart</a></li>
+	   <li> <a href="http://pigtail.net/LRP/softset.html"
+               title="link esterno">softset2</a></li>
+	   <li> <a href="http://pigtail.net/LRP/de220.html"
+               title="link esterno">de220</a></li>
+</ul>
+
+<p>
+Attenzione che i file *.imz sono in realt&agrave; dei file compressi 
+in formato
+<a href="http://en.wikipedia.org/wiki/ZIP_%28file_format%29"
+   title="Wikipedia">ZIP</a>.
+Ad esempio per le schede 3C509 ci serve l'immagine
+netcard.imz e per decomprimerla useremo:
+</p>
+
+<pre>
+# unzip netcard.imz<span class="blue">
+Archive:  netcard.imz
+  inflating: NETCARD.IMA</span>
+</pre>
+
+<p>
+Il file risultante &egrave; una immagine per floppy disk.
+Per trasferirlo sul supporto fisico prima lo formattiamo e poi
+lo copiamo con il comando
+<a href="http://en.wikipedia.org/wiki/Dd_%28Unix%29"
+   title="Wikipedia">dd</a> (low level copy):
+</p>
+
+<pre>
+# superformat /dev/fd0<span class="blue">
+[...]</span>
+# dd if=NETCARD.IMA of=/dev/fd0 bs=1474560<span class="blue">
+1+0 records in
+1+0 records out
+1474560 bytes transferred in 64.156201 seconds (22984 bytes/sec)</span>
+</pre>
+
+<p>
+&Egrave; ora il momento di accendere il nostro vecchio catorcio
+con il floppy ancora caldo inserito nel drive. Alla comparsa del
+prompt con il comando <code>dir</code> possiamo ottenere la
+lista dei file. Dopo aver individuato l'eseguibile per la nostra/e
+schede di rete lo lanciamo in esecuzione (nel nostro caso
+<code>3C509.exe</code>. Normalmente l'utility
+ci permette di cambiare
+<a href="http://en.wikipedia.org/wiki/Interrupt_request"
+   title="Wikipedia">IRQ</a>
+o
+l'<a href="http://en.wikipedia.org/wiki/IO_address"
+   title="Wikipedia">IO address</a>
+in modo da evitare sovrapposizioni tra le due schede. Un
+trucco che a volte funziona &egrave; quello di spostare
+semplicemente di slot PCI la/e schede.
+</p>
+
+<p>
+A questo punto il nostro sistema hardware &egrave; pronto. 
+</p>
+
+<h4>IL floppy</h4>
+
+<p>
+Per formattare un
+<a href="http://en.wikipedia.org/wiki/Floppy_disk"
+   title="Wikipedia">floppy disk</a>
+da 1440KB in modo da contenere 1680KB,
+con un primo step di formattazione
+"low-level" ed un secondo step di formattazione "MSDOS filesystem",
+utilizziamo il seguente comando:
+</p>
+
+<pre>
+# superformat /dev/fd0 1680/1440
+</pre>
+
+<p>
+(i possibili parametri si trovano su <code>/etc/mediaprm</code>).
+</p>
+
+
+
+<h4>Syslinux il bootloader</h4>
+  
+<p>     
+  Il
+<a href="http://en.wikipedia.org/wiki/Bootloader"
+   title="Wikipedia">bootloader</a>
+utilizzato &egrave;
+  <a href="http://en.wikipedia.org/wiki/Syslinux"
+     title="Wikipedia">syslinux</a> e 
+  necessita un approfondimento a parte.
+</p>
+
+<p>
+Dal momento che noi utilizzeremo una immagine del floppy
+non dobbiamo installare il bootloader nel floppy
+perch&egrave; &egrave; gi&agrave; presente nell'immagine. Nel caso ci
+costruissimo una immagine da zero occorrerebbe installarlo:
+</p>
+
+<pre>
+# syslinux -s /dev/fd0
+</pre>
+
+
+
+<h4>Download Bering-uClibc</h4>
+
+<p>
+Passiamo allo scaricamento del floppy base. Esiste nella
+versione in formato *.exe autoscompattante in un floppy
+e nella versione per sistemi Linux e utilizzabile dal
+comando <code>dd</code>.
+Seguite il prossimo riferimento di
+<a href="http://sourceforge.net/project/showfiles.php?group_id=13751&amp;package_id=67534"
+   title="link esterno">download</a> e scegliete la versione
+stabile pi&ugrave; recente. Poi con il comando <code>dd</code>
+la trasferite su un floppy:
+</p>
+
+<pre>
+# dd if=Bering-uClibc_*_img_bering-uclibc-1680.bin \
+     of=/dev/fd0 bs=1720320
+</pre>
+
+<p>
+Se inseriamo il floppy nel pc catorcio e lo accendiamo
+osserveremo il boot del firewall.
+Al login specifichiamo come user <code>root</code> e
+avremo a disposizione il menu di configurazione. Il
+sistema non &egrave; per&ograve; funzionante in quanto
+sar&agrave; improbabile che i moduli caricati siano
+proprio quelli giusti per l'hardware che abbiamo a disposizione.
+</p>
+
+<p>
+Per una verifica del corretto funzionamento del floppy
+possiamo utilizzare QEMU dalla stessa stazione di lavoro:
+</p>
+
+<pre>
+$ qemu -boot a -fda /dev/fd0
+</pre>
+
+<p>
+ma non potremo testare il caricamento dei moduli delle schede.
+</p>
+
+
+
+
+
+<h4>La configurazione delle schede di rete (anche per VMware e QEMU)</h4>
+
+<p>
+Per far funzionare la nostra Bering box con le
+particolari schede di rete in nostro possesso
+occorre probabilmente modificare il package <code>modules.lrp</code>.
+Editeremo il file <code>/etc/modules</code> per inserire
+il nome del
+<a href="http://en.wikipedia.org/wiki/Loadable_Kernel_Module"
+   title="Wikipedia">modulo</a>
+per la nostra scheda di rete. Inoltre
+nella directory <code>/lib/modules</code> 
+inseriremo il file contenente il modulo vero e proprio.<br>
+L'archivio contenente tutti i moduli precompilati si trova
+nella stessa area di download e tipicamente ha
+nome <code>Bering-uClibc_modules_*.tar.gz</code>.
+</p>
+
+<p>
+Accendiamo questa volta il pc che funger&agrave; da stazione di lavoro
+con inserito nel drive CD-ROM il live-CD Netkit4TIC (oppure il
+live-USB).
+Nel caso di un pc
+con hardware un po' lento possiamo specificare al boot la
+stringa <code>knoppix single</code> che istruisce il sistema
+a non attivare l'interfaccia grafica (in questo caso non la
+utilizziamo).
+</p>
+
+<p>
+Definiamo una variabile d'ambiente che rappresenta il
+numero della versione e una seconda variabile che
+rappresenta la corrispondente versione del kernel:
+</p>
+
+<pre>
+# export VER=3.0                ## Bering uClibc version ##
+# export KVER=2.4.33            ## Linux Kernel version  ##
+</pre>
+
+<p>
+Definiamo un variabile d'ambiente di nome <code>DownLoad</code>
+che viene valorizzata al path assoluto dove sono stati
+scaricati i file (magari su supporto USB):
+</p>
+
+<ul>
+  <li>Bering-uClibc_<span class="red">$VER</span>_img_bering-uclibc-1680.bin</li>
+  <li>Bering-uClibc_modules_<span class="red">$KVER</span>.tar.gz</li>
+</ul>
+
+<pre>
+# export DownLoad=<span class="yellow">$RemovibleDevice</span>/downloaded
+</pre>
+
+<p>
+Per trovare il modulo per la nostra particolare scheda di rete
+occorre controllare la lista dei nomi nel file
+<code>Bering-uClibc_modules_<span class="red">$KVER</span>.tar.gz</code>. Per esempio
+cerchiamo quello con nome "pcnet32" (case insensive):
+</p>
+
+<pre>
+# tar ztf $DownLoad/Bering-uClibc_modules_<span class="red">$KVER</span>.tar.gz | \
+    grep -i pcnet32<span class="blue">
+$KVER/kernel/drivers/net/pcnet32.o</span>
+</pre>
+
+<p>
+In seguito non opereremo direttamente sul floppy poich&egrave;
+le continue riscritture ne possono compromettere il corretto funzionamento.
+&Egrave; molto meglio operare sul file immagine che montiamo
+utilizzando il loop device (<code>man&nbsp;mount</code>).<br>
+(Suggerimento: prima di iniziare &egrave; saggio fare una copia del file
+immagine originariamente scaricato da Internet e magari abbrevviare il nome
+in <code>uB3.0</code>!).
+</p>
+
+<pre>
+# export L=/tmp/loop
+# mkdir -p $L
+# mount -o loop $DownLoad/Bering-uClibc_<span class="red">$VER</span>_img_bering-uclibc-1680.bin $L
+# rm -f $L/ppp*                           ## make room inside floppy          ##
+</pre>
+
+
+<p>
+Estraiamo file <code>modules.lrp</code> dal floppy e facciamo
+le modifiche necessarie (aggiunta del modulo e modifica alla
+lista moduli). Attenzione che il modulo <code>pcnet32</code> necessita
+del modulo <code>mii</code> e del modulo <code>crc32</code>:
+</p>
+
+<pre>
+# export TMP=/tmp/workArea
+# mkdir -p $TMP
+# cd $TMP
+# tar zxf $L/modules.lrp                  ## extract gzipped modules.lrp      ##
+# tar zxOf $DownLoad/Bering-uClibc_modules_<span class="red">$KVER</span>.tar.gz \
+     $KVER/kernel/drivers/net/pcnet32.o &gt; \
+     lib/modules/pcnet32.o                ## extract and copy pcnet32.o       ##
+# tar zxOf $DownLoad/Bering-uClibc_modules_<span class="red">$KVER</span>.tar.gz \
+     $KVER/kernel/lib/crc32.o &gt; \
+     lib/modules/crc32.o                  ## extract and copy crc32.o         ##
+# tar zxOf $DownLoad/Bering-uClibc_modules_<span class="red">$KVER</span>.tar.gz \
+     $KVER/kernel/drivers/net/mii.o &gt; \
+     lib/modules/mii.o                    ## extract and copy mii.o           ##
+# nano -w etc/modules                     ## add crc32, mii and pcnet32
+                                          ## to autoload list                 ##
+# tar czf $L/modules.lrp *                ## re-create a new archive          ##
+</pre>
+
+<p>
+Riportiamo le modifiche sul supporto fisico:
+</p>
+
+<pre>
+# umount $L
+# dd if=$DownLoad/Bering-uClibc_<span class="red">$VER</span>_img_bering-uclibc-1680.bin \
+     of=/dev/fd0 bs=1720320
+</pre>
+
+<p>
+Attenzione che
+l'utilizzo dell'utenza <code>root</code> (segnalata dal promp "#")
+garantisce che non
+vengano modificate le permission dei file coinvolti nelle
+precedenti operazioni.
+</p>
+
+<p>
+Ora abbiamo un floppy allineato con l'hardware. Lo inseriamo
+su vetusto pc, diamo corrente e guardiamo con soddisfazione
+la sua attivazione.
+</p>
+
+<p>
+Nota 1: l'esempio della scheda pcnet32 non &egrave; stato casuale:
+nel caso delle macchine virtuali realizzate dal
+<a href="http://en.wikipedia.org/wiki/Vmware#VMware_Player"
+   title="Wikipedia">VMware&nbsp;Player</a>
+siamo esattamente in questo caso: la macchina virtuale
+(simile alla nostra macchina hardware) emula la scheda pcnet32
+(AMD Am79C970A - PCnet LANCE PCI Ethernet Controller)
+e quindi noi dobbiamo caricare il relativo modulo con tutti
+i moduli dipendenti. Per completezza riportiamo che l'emulazione
+di VMware comprende anche la scheda Intel E1000 e la scheda
+VMXNET - VMware PCI Ethernet Adapter.
+</p>
+
+<p>
+Nota 2: l'esempio precedente,
+nel caso delle macchine virtuali realizzate da
+<a href="http://en.wikipedia.org/wiki/QEMU"
+   title="Wikipedia">QEMU</a>,
+deve essere modificato per la scheda "NE2000 PCI network adapters".
+Nel floppy sono gi&agrave; presenti i moduli
+<code>crc32</code>, <code>8390</code> e <code>ne2k-pci</code>
+e quindi basta solo modificare la lista moduli: <code>/etc/modules</code>.
+</p>
+
+<h4>La configurazione base</h4>
+
+<p>
+La configurazione pu&ograve; essere fatta seguendo la modalit&agrave;
+off-line esattamente come abbiamo fatto per la modifica del file
+<code>modules.lrp</code> o in-line attraverso il menu di
+configurazione. Nel secondo caso &egrave; bene ricordarsi che
+tutte le modifiche vanno riportate nel floppy e questo viene
+fatto attivando la funzione di backup.
+</p>
+
+<p>
+Abbiamo scelto la modalit&agrave; di lavoro off-line e quindi opereremo
+modificando l'immagine utilizzando un computer linux e al termine
+rigenerando completamente il floppy.
+</p>
+
+
+<p>
+Passiamo ora alla vera e propria configurazione del firewall.
+I file pi&ugrave; importanti sono nel package <code>etc.lrp</code>:
+</p>
+
+<ul>
+  <li><code>/etc/network/interfaces</code>: per la configurazione delle NIC;</li>
+  <li><code>/etc/hosts</code>: per alcune associazioni (IP, nome);</li>
+  <li><code>/etc/hostname</code>: per il nome dell'host;</li>
+  <li><code>/etc/hosts.allow</code>: host ACL (abilitazioni);</li>
+  <li><code>/etc/hosts.deny</code>: host ACL (negati).</li>
+</ul>
+
+<p>
+Gli ultimi due file sono legati a
+<a href="http://en.wikipedia.org/wiki/TCP_Wrappers"
+   title="Wikipedia">TCP_Wrappers</a> che serve per filtrare
+l'accesso ai servizi del firewall.
+</p>
+
+
+
+
+<h4>La configurazione di TZ</h4>
+
+<p>
+L'
+<a href="http://www.ien.it/tf/time/ora_legale.html"
+   title="link esterno">Ora legale italiana dal 1916</a>
+ci indica per ogni anno quali sono esattamente i giorni
+in cui ci sono le variazioni dovute all'
+<a href="http://it.wikipedia.org/wiki/Ora_legale"
+   title="link esterno">ora legale</a>. Riassumendo
+per il 2006 nei giorni (25 Marzo, 29 Ottobre) e per il 2007 nei
+giorni (30 Marzo, 28 Ottobre). Tali giorni
+sono dei lunedi (primo [0] giorno della settimana [0-6]). In particolare
+sono nella quarta e nella quinta settimana del mese.
+Un documento dove viene spiegato quali valori assegnare
+alla variabile <code>TZ</code>:
+<a href="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html"
+   title="link esterno">Environment Variables</a>. Quindi per
+noi:
+</p>
+
+<pre>
+# cat /etc/TZ<span class="blue">
+MET-1METDST-2,M3.4.0/02:00:00,M10.5.0/03:00:00</span>
+</pre>
+
+
+
+
+
+
+<h4>La configurazione di Shorewall</h4>
+
+
+	   
+	   
+	   
+       <p>Per costruire il firewall viene usata una descrizione di regole di filtraggio ad alto
+       livello di nome
+       <a href="http://en.wikipedia.org/wiki/Shorewall"
+          title="Wikipedia">Shorewall</a>
+       le quali sono successivamente tradotte a basso livello in
+       <a href="http://en.wikipedia.org/wiki/Netfilter"
+          title="Wikipedia">Netfilter</a>
+       (<a href="http://en.wikipedia.org/wiki/Iptables"
+           title="Wikipedia">iptables</a>).
+	   <br>Esistono gi&agrave; pronti dei
+	   <a href="http://www1.shorewall.net/pub/shorewall/Samples/"
+          title="Sample two/three interface examples">template di pre-configurazioni</a>
+       per varie versioni di shorewall adatte al caso in cui
+       si abbiano 2 o 3 NIC.
+       Copia i file in <code>/etc/shorewall</code> e personalizzali
+       secondo le tue necessit&agrave;.
+       In particolare i file pi&ugrave; importanti sono (package shorwall.lrp):</p>
+	   <ul>
+         <li><code>/etc/shorewall/zones</code>:
+             descrive il partizionamento della rete in zone;</li>
+         <li><code>/etc/shorewall/policy</code>:
+             lista di regole di default per la gestione della sicurezza
+             a livello del firewall;</li>
+         <li><code>/etc/shorewall/rules</code>:
+             lista di regole che infrangono le regole espresse nella
+             policy;</li>
+         <li><code>/etc/shorewall/interfaces</code>:
+             elenco delle interfacce fisiche;</li>
+         <li><code>/etc/shorewall/tunnels</code>: per la configurazione di tunnel;</li>
+         <li><code>/etc/shorewall/masq</code>:
+             per configurare il mascheramento.<br>
+             Ricordiamo che nel
+             caso si usassero pi&ugrave; sottoreti private
+             andrebbero aggiunte tante righe quante fossero le reti
+             da mascherare. Ad esempio nel caso delle tre
+             sottoreti 192.168.1.0/24, 192.168.2.0/24 e 192.168.3.0/24:
+             <pre>
+# /etc/shorewall/masq
+#INTERFACE    SUBNET
+eth0          192.168.1.0/24
+eth0          192.168.2.0/24
+eth0          192.168.3.0/24
+             </pre>
+             </li>
+       </ul>
+
+
+
+
+<h4>La security policy</h4>
+<p> Il traffico, visto in termini di insieme di
+       singoli pacchetti, pu&ograve; in generale essere definito dalle seguenti
+	   caratteristiche:</p>
+	   <ul>
+	    <li>Protocollo (TC, UDP, ICMP, ...);</li>
+		<li>Sorgente (indirizzo IP ed eventualmente porta);</li>
+		<li>Destinazione (indirizzo IP ed eventualmente porta);</li>
+		<li>Direzione e interfaccie interessate</li>
+		<li>stato delle connessioni</li>
+	   </ul>
+	   <p>Possiamo ora stabilire una semplice politica di sicurezza d'esempio:</p>
+	   
+	   
+	   <blockquote>
+	   <p><span class="yellow">
+	   Rifiutare tutte le connessioni iniziate dalla rete pubblica
+	   verso il firewall e verso la LAN da lui protetta, tranne quelle dirette
+	   alla porta 22/tcp per l'amministrazione remota e quelle dirette verso
+	   la porta 80/tcp che verranno redirette su 10.10.10.65 stessa porta.
+	   Il traffico in uscita
+	   dal firewall e dalla LAN protetta &egrave; invece permesso, ma solo
+	   per i protocolli DNS, SSH, HTTP/HTTPS, SMTP.
+	   </span></p>
+	   </blockquote>
+
+
+
+
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-10 08:06:10 $
+</span>
+</address>
+
+
+</body>
+
+</html>

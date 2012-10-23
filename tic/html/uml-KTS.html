@@ -1,0 +1,327 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-KTS.html,v 1.4 2007-02-10 08:07:29 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-KTS</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico" width="15"> 2003, 2004, 2005, 2006
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail tutor/coordinatore del progetto" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Knoppix Terminal Server</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-LTSP.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-LDAP.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network"
+   title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span><br>
+I materiali necessari sono due pc di cui uno
+funger&agrave; da server e l'altro da client.
+Quest'ultimo pu&ograve;
+essere una macchina economica anche senza lettore CD.<br>
+La connessione minimale delle due macchine pu&ograve;
+evitare l'uso di un hub utilizzando un cavo "incrociato" che collega
+le due schede (l'utilizzo del Terminal Server su una rete locale &egrave;
+stata testato con esito positivo con l'utilizzo del server DHCP locale
+ma con il vincolo che non sia presente un server PXE).<br>
+Questa esperienza ha lo scopo di illustrare le potenzialit&agrave; del
+meccanismo Terminal Server mostrando come, a partire da 
+un computer avviato con il live-{CD,USB} Netkit4TIC, sia possibile eseguire
+rapidamente il boot di altri pc che si 
+autoconfigurano come clone della macchina server.<br>
+L'esperienza viene completata attraverso la verifica di connettivit&agrave;
+di due macchine virtuali residenti su Terminal differenti.
+</p>
+
+
+<p>
+Ecco la mappa
+(<a href="pdf/KTS.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/KTS.xml" title="file per Dia">xml</a>)
+della rete 
+dell'esercizio con il relativo schema di numerazione. 
+Scarica il <a href="KTS.tgz" title="esperienza Netkit4TIC">tarball</a>
+(2KB) contenente lo script <code>lab</code> che genera la vm nell'host
+TerminalServer e lo script <code>lab-c</code> che genera la vm nell'host
+TerminalClient.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=ts-server></a>Configurazione TerminalServer server</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il live-{CD,USB} contiene una configurazione di Terminal Server attivabile
+seguendo TUX menu icon &gt; Servizi &gt; Start KNOPPIX Terminal Server (
+<a href="kts-menu-01.png" title="screenshot">01</a>,
+<a href="kts-menu-02.png" title="screenshot">02</a>,
+<a href="kts-menu-03.png" title="screenshot">03</a>,
+<a href="kts-menu-04.png" title="screenshot">04</a>,
+<a href="kts-menu-05.png" title="screenshot">05</a>,
+<a href="kts-menu-06.png" title="screenshot">06</a>,
+<a href="kts-menu-07.png" title="screenshot">07</a>,
+<a href="kts-menu-08.png" title="screenshot">08</a>,
+<a href="kts-menu-09.png" title="screenshot">09</a>,
+<a href="kts-menu-10.png" title="screenshot">10</a>,
+<a href="kts-menu-11.png" title="screenshot">11</a>,
+<a href="kts-menu-12.png" title="screenshot">12</a>,
+<a href="kts-menu-13.png" title="screenshot">13</a>,
+<a href="kts-menu-14.png" title="screenshot">14</a>,
+<a href="kts-menu-15.png" title="screenshot">15</a>,
+<a href="kts-menu-16.png" title="screenshot">16</a>
+).
+Per la configurazione occorre decidere se usare il servizio DHCP
+della rete in cui siamo (eventualmente) ospitati o attivarlo sul nostro
+nodo (io ho scelto la seconda ipotesi).<br>
+Dopo aver risposto a tutte le domande 
+con <code>OK</code> tranne che per il servizio DHCP e spuntando
+le selezioni di sicurezza nel pannello 14, la procedura
+termina con il lancio dei servizi TFTP, DHCP e NFS esattamente come
+nell'esperienza virtuale
+<a href="uml-LTSP.html" title="esperienza Netkit4TIC">LTSP</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=ts-client></a>Configurazione TerminalServer client</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Dal lato client possiamo usare
+lo stesso metodo usato per l'esperienza virtuale
+<a href="uml-LTSP.html" title="esperienza Netkit4TIC">LTSP</a>
+e cio&egrave; un Etherboot boot floppy con la ROM scaricata da
+<code>www.rom-o-matic.net</code>. Quindi punta il tuo browser sull'URL:
+</p>
+
+<pre>
+user@TerminalServer$ firefox http://www.rom-o-matic.net/5.2.6/
+</pre>
+
+<p>
+e seleziona la scheda di rete appropriata, poi
+premi &quot;Get ROM&quot; e costruisci il dischetto di boot
+per il Terminal Client:
+</p>
+
+<pre>
+root@TerminalServer# cat eb-5.2.6-tuaScheda.zdsk &gt; /dev/fd0
+</pre>
+
+<p>
+Ora puoi inserire il floppy nel vecchio pc e accenderlo. Dopo
+poco vedrai il messaggio:
+</p>
+ 
+<pre>
+KNOPPIX Terminalserver Client started, booting in 30 seconds.
+</pre>
+
+<p>
+e dando invio parte la sequenza di boot.
+Poco dopo vedremo
+il leasing dell'IP address, poi il trasferimento
+attraverso tftp, il download del kernel e il suo caricamento in memoria.
+In seguito, dopo aver identificato la scheda di rete
+lo script di inizializzazione compier&agrave; una seconda
+richiesta di leasing dhcp.<br>
+Come ultimo passo verr&agrave; montato via NFS una parte del filesystem
+situato nel CDROM e lo startup del display manager.
+</p>
+
+<p>
+Ecco uno
+<a href="KTS-desktop.png" title="screen-shot">screenshot</a>
+del desktop del Terminal Server
+dove nel lato destro ci sono le applicazioni che
+risiedono nel Terminal Server e nel lato sinistro le corrispondenti
+applicazioni in esecuzione sul Terminal Client (visualizzate
+nel dekstop del Terminal Server tramite l'impostazione
+della variabile <code>DISPLAY</code> e l'uso del comando
+<code>xhost</code>).
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=esperienza></a>Comunicazione tra vm</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Ora mostriamo la capacit&agrave; di connessione delle macchine virtuali.
+Attiviamo l'esperienza nel Terminal Server:
+</p>
+
+<pre>
+terminalServer$ sudo tunctl -u knoppix
+terminalServer# ifconfig tap0 192.168.77.1; \
+                echo "1" &gt; /proc/sys/net/ipv4/ip_forward; \
+                route add -net 192.168.88.0/25 gw 192.168.0.250
+terminalServer$ ./lab start
+</pre>
+
+<p>
+Per attivare l'esperienza nel Terminal Client dobbiamo averne una copia
+in locale e allo scopo sfruttiamo il gi&agrave; attivo
+servizio <code>tftp</code>:
+</p>
+
+<pre>
+knoppix@terminalServer$ cp KTS.tgz /tftpboot
+knoppix@terminalClient$ tfpt 192.168.0.1
+tftp&gt; binary
+tftp&gt; get KTS.tgz
+tftp&gt; quit
+knoppix@terminalClient$ tar zxf KTS.tgz
+knoppix@terminalClient$ cd KTS
+</pre>
+
+<p>
+Attiviamo l'esperienza nel Terminal Client:
+</p>
+
+<pre>
+terminalServer$ sudo tunctl -u knoppix
+terminalServer# ifconfig tap0 192.168.88.1; \
+                echo "1" &gt; /proc/sys/net/ipv4/ip_forward; \
+                route add -net 192.168.77.0/25 gw 192.168.0.1
+terminalServer$ ./lab-c start
+</pre>
+
+<p>
+Ora possiamo provare la connettivit&agrave; tra le due macchine
+virtuali residenti su Terminal diversi:
+</p>
+
+<pre>
+root@vm-s# ping 192.168.88.2
+</pre>
+
+<p>
+con la
+<a href="../capture/KTS-icmp.acp" title="file per Ethereal">cattura</a>
+del traffico effettuata sulla <code>eth0</code> del TerminalServer.
+</p>
+
+
+<p>
+<table class=layout> 
+  <tr>
+  <td class=content>
+  <h3><a id=ts-nx></a>Configurazione di NX</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Se vuoi provare NX client/server segui le
+<a href="http://www.tinyapps.org/freenx/" title="link esterno">istruzioni</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-10 08:07:29 $
+</span>
+</address>
+
+
+</body>
+
+</html>

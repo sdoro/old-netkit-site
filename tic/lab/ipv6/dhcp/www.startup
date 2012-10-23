@@ -1,0 +1,10 @@
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#
+ifconfig eth0 hw ether 00:00:00:00:00:03
+ifconfig eth0 0.0.0.0 up
+#
+dpkg -i /hostlab/dibbler-client_0.7.1-2_i386.deb
+#
+# bot

@@ -1,0 +1,5 @@
+;
+; $Id: db.root,v 1.4 2006/06/29 14:09:43 doros Exp $
+.             3600000      IN  NS    ROOT-SERVER.
+ROOT-SERVER.  3600000      IN  A     216.57.5.213
+

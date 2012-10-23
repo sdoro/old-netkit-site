@@ -1,0 +1,20 @@
+# $Id:$
+ifconfig eth0 192.168.77.2
+route add default gw 192.168.77.1
+# install missing packages
+# apt-get install postgresql postgresql-contrib
+dpkg -i /root/deb/*deb
+cp /root/pg_hba.conf /etc/postgresql/8.3/main/pg_hba.conf
+cp /root/postgresql.conf /etc/postgresql/8.3/main/postgresql.conf
+/etc/init.d/postgresql-8.3 restart
+#
+# To install the language plpgsql into the database template1:
+### createlang plpgsql template1
+#
+# createuser -DRS g1
+# psql template1
+## ALTER USER gq PASSWORD 'no24get';
+## \q
+# createdb -O g1 dbg1
+#
+# bot

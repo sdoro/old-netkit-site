@@ -1,0 +1,5 @@
+ifconfig eth0 217.57.5.218 \
+    netmask 255.255.255.252 broadcast 217.57.5.219 up
+route add default gw 217.57.5.217
+mv /var/www/index.html /var/www/index-org.html
+/etc/init.d/apache start

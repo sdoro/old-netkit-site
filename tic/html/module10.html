@@ -1,0 +1,230 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module10.html,v 1.30 2005/10/23 13:41:04 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 10</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="module9.html">
+  <link rel="Next" title="Next" href="module11.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 10</h1>
+<h2 class="center">Progetto di rete</h2>
+
+
+<p>
+Per la sperimentazione di quanto studiato nei moduli riguardandi la rete
+ho pensato di proporre una rete &quot;tipo&quot; del tutto
+simile ad una rete aziendale.
+</p>
+
+
+<p>
+Questo &egrave; lo schema
+(<a href="pdf/tic.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/tic.xml" title="file per Dia">xml</a>)
+ della rete. L'ho &quot;disegnato&quot; usando
+<a href="http://www.lysator.liu.se/~alla/dia/dia.html" title="link esterno">dia</a> un
+tool di diagrammazione Open Source.
+Ipotizziamo l'acquisto di quattro IP pubblici nella
+rete 217.57.5.16/29 e di organizzare tutte le unit&agrave; operative
+scolastiche come sottoreti il cui template &egrave; la rete di
+laboratorio. Un elenco di queste sottoreti potrebbe essere:
+Access Point, Segreteria, Aula Docenti, Auditorium e ovviamente
+i vari laboratori e aula audiovisivi.
+</p>
+
+
+<p>
+Il piano di indirizzamento &egrave; abbastanza semplice. Ho pensato comunque di non &quot;sprecare&quot;
+mai indirizzi. Ho utilizzato netmask di varie grandezze
+dimensionando la rete interna e le reti dei vari laboratori
+per un utilizzo reale. Il piano ottimizzato &egrave;:
+</p>
+
+<ul>
+<li>rete perimetrale esterna: 217.57.5.216/29 (8 host max)</li>
+<li>rete perimetrale interna: 10.10.10.64/28 (16 host max)</li>
+<li>rete interna (backbone): 10.10.10.0/26 (64 host max)</li>
+<li>rete di managment: 10.10.20.0/27 (32 host max)</li>
+<li>ogni rete di laboratorio potrebbe dividersi una classe C seguendo
+    lo schema valido per i primi 4 laboratori:
+  <ul>
+    <li>10.10.30.0/26 (64 host max)</li>
+	<li>10.10.30.64/26 (64 host max)</li>
+	<li>10.10.30.128/26 (64 host max)</li>
+	<li>10.10.30.192/26 (64 host max)</li>
+  </ul>
+  </li>
+</ul>
+
+<p>
+Assegnazione degli IP alle interfacce degli host:
+</p>
+
+<ul>
+  <li>Router esterno: 216.57.5.221/24, 217.57.5.217/29</li>
+  <li>Server primario: 217.57.5.219/29, 10.10.10.65/29</li>
+  <li>Server secondario: 217.57.5.220/29, 10.10.10.66/29</li>
+  <li>Firewall: 217.57.5.218/29, 10.10.10.77/28</li>
+  <li>Router interno: 10.10.10.78/28, 10.10.10.62/26, 10.10.20.30/27</li>
+  <li>Server managment: 10.10.20.29/27</li>
+  <li>Packet filter (lab. 1): 10.10.10.62/26, 10.10.30.62/26</li>
+</ul>
+
+<p>
+Il diagramma della rete &egrave; <a href="pdf/pnum.pdf">qu&igrave;</a>.
+Gli IP non allocati sono:
+</p>
+
+<ul>
+<li>rete perimetrale esterna: 217.57.5.221-222</li>
+<li>rete perimetrale interna: 10.10.10.67-76</li>
+<li>rete interna: 10.10.10.1-60</li>
+<li>rete management: 10.10.20.1-28</li>
+<li>rete del lab. 1: 10.10.30.1-61</li>
+</ul>
+
+<p>
+Per il routing IP statico useremo la tabella di progetto, dove
+ogni riga &egrave; una network e ogni colonna un router.
+</p>
+
+<table border=1>
+<tr>
+  <td></td>
+  <td>Router esterno</td>
+  <td>Firewall</td>
+  <td>Router interno</td>
+  <td>Packet Filter</td>
+</tr>
+
+<tr>
+ <td>217.57.5.216/29</td>
+ <td>-</td>
+ <td>-</td>
+ <td>firewall</td>
+ <td>Router interno</td>
+</tr>
+
+<tr>
+ <td>10.10.10.64/28</td>
+ <td>firewall</td>
+ <td>-</td>
+ <td>-</td>
+ <td>Router interno</td>
+</tr>
+
+<tr>
+ <td>10.10.10.0/26</td>
+ <td>firewall</td>
+ <td>Router interno</td>
+ <td>-</td>
+ <td>Router interno</td>
+</tr>
+
+<tr>
+ <td>10.10.20.0/27</td>
+ <td>firewall</td>
+ <td>Router interno</td>
+ <td>-</td>
+ <td>-</td>
+</tr>
+
+<tr>
+ <td>10.10.30.0/26</td>
+ <td>firewall</td>
+ <td>Router interno</td>
+ <td>Packet Filter</td>
+ <td>-</td>
+</tr>
+
+</table>
+
+
+<p>
+Non ci sono alcune regole addizionali per il router esterno.
+</p>
+
+<p>
+Comandi di instradamento firewall:
+</p>
+
+<pre>
+fw# route add -net 10.10.10.0 \
+          netmask 255.255.255.192 gw 10.10.10.78
+fw# route add -net 10.10.20.0 \
+          netmask 255.255.255.224 gw 10.10.10.78
+fw# route add -net 10.10.30.0 \
+          netmask 255.255.255.192 gw 10.10.10.78
+fw# route add default gw 217.57.5.217
+</pre>
+
+
+<p>
+Comandi di instradamento router interno:
+</p>
+
+<pre>
+ri# route add -net 10.10.30.0 \
+          netmask 255.255.255.192 gw 10.10.10.61
+ri# route add default gw 10.10.10.67
+</pre>
+
+<p>
+Comandi di instradamento packet filter:
+</p>
+
+<pre>
+pfX# route add -net 10.10.10.64 \
+           netmask 255.255.255.248 gw 10.10.10.62
+pfX# route add -net 10.10.10.0 \
+           netmask 255.255.255.192 gw 10.10.10.62
+pfX# route add default gw 10.10.10.62
+</pre>
+
+
+<p>
+Per poter accumulare esperienza sulla rete appena descritta passiamo
+&quot;la palla&quot; al
+<a href="uml-NET.html" title="esperienza Netkit4TIC">laboratorio virtuale</a>.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/10/23 13:41:04 $
+</span>
+</address>
+
+
+</body>
+
+</html>

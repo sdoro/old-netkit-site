@@ -1,0 +1,244 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-sockets.html,v 1.2 2005/01/21 09:15:59 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-vlan</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="lab.html">
+  <link rel="Prev" title="Previous" href="uml-php.html">
+  <link rel="Next" title="Next" href="uml-PKI.html">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 11 - Struttura e organizzazione di Internet</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza sulla API sockets con il linguaggio C</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-php.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-PKI.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+
+
+
+<p>
+Tra la marea di slide sui socket abbiamo scelto una fonte italiana
+<a href="http://www.di.unito.it/~matteo/DIDATTICA/aa03/RdE/SOCKET.pdf"
+   title="link esterno">socket</a>
+di Laboratorio di Reti tenuto da Matteo Sereno. Abbiamo realizzato
+la coppia client/server per il servizio <code>daytime</code>.
+I sorgenti del
+<a href="../lab/socket/client.c" title="codice C">client</a>
+e del
+<a href="../lab/socket/server.c" title="codice C">server</a> sono
+usati nella esperienza virtuale
+<a href="socket.tgz" title="esperienza Netkit4TIC">Sockets</a>.
+</p>
+
+<p>
+La rete che useremo (192.168.100.0/24) ha due nodi:
+</p>
+
+<ul>
+ <li>pc1 (client) con indirizzo 192.168.100.1</li>
+ <li>pc2 (server) con indirizzo 192.168.100.2</li>
+</ul>
+
+<p>
+Lo script che costruisce i due host e il relativo hub:
+</p>
+
+<pre>
+user@realhost$ ./lab start
+</pre>
+
+<p>
+configura ogni nodo con il suo programma sorgente ed eseguibile.
+Ricordiamo che per la compilazione ad esempio di un programma di
+nome <code>client.c</code> occorre dare il comando:
+</p>
+
+<pre>
+root@pc1# gcc client.c -o client
+</pre>
+
+<p>
+dove il flag o indica al compilatore il nome da dare al programma
+eseguibile (che altrimenti si chiama <code>a.out</code>). Alternativamente
+si pu&ograve; anche dare il comando:
+</p>
+
+<pre>
+root@virtualHost# make client
+</pre>
+
+<p>
+Per sperimentare una comunicazione client/server basta dare i comandi:
+</p>
+
+<pre>
+root@pc2# ./server
+root@pc1# ./client
+</pre>
+
+<p>
+Se in uno dei nodi si lancia una cattura di traffico, la richiesta
+del client genera la seguente
+<a href="../capture/sock-datetime.acp"
+   title="file per Ethereal">(File ACP)</a>
+sequenza di pacchetti.
+</p>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza sulla API sockets con il linguaggio Java</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Nel filesystem della macchina virtuale non &egrave; installato
+il jre della Sun vista la sua licenza e ci appoggiamo al compilatore
+gcc che nella sua variante gcj riesce a compilare anche programmi
+java. Per il debugging il gdb ed eventualmente il ddd completerebbero
+l'elenco degli strumenti a disposizione.
+</p>
+
+<p>
+Per la compilazione di un programma Java, ad esempio il classico
+"Hello World", supponendo che sia scritto su un file Hello.java e che
+quindi sia definita una classe Hello con un metodo main all'interno,
+il comando &egrave; il seguente:
+</p>
+
+<pre>
+root@virtualHost# gcj --main=Hello Hello.java -o Hello
+</pre>
+
+<p>
+In modo assolutamente diverso dalla versione Sun, viene prodotto un
+eseguibile:
+</p>
+
+<pre>
+root@virtualHost# file Hello<span class="blue">
+Hello: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
+ for GNU/Linux 2.2.0, dynamically linked (uses shared libs), not stripped</span>
+</pre>
+
+<p>
+Nella home directory dell'utente root si possono trovare alcuni esempi
+di applicazioni Java per networking. Ad esempio possiamo provare
+l'esempio del server http la cui spiegazione si pu&ograve; leggere in
+<a href="http://www.brics.dk/~amoeller/WWW/Javaweb/server.html"
+   title="link esterno">A Web Server in 150 Lines</a>.
+Compiliamo ed eseguiamo sul nodo <code>pc2</code> designato come
+server:
+</p>
+
+<pre>
+root@pc2# gcj --main=FileServer FileServer.java -o FileServer
+root@pc2# ./FileServer 2000 .<span class="blue">
+FileServer accepting connections on port 2000
+</span>
+</pre>
+
+<p>
+e ora ci connettiamo dal nodo client <code>pc1</code>:
+</p>
+
+<pre>
+root@pc1# telnet 192.168.3.2 2000<span class="blue">
+Connected to 192.168.100.2 (192.168.100.2).
+Escape character is '^]'.</span>
+GET /FileServer.java HTTP/1.0<span class="blue">
+[...]
+[...]</span>
+Connection closed by foreign host.
+</pre>
+
+<p>
+Lo stesso risultato lo possiamo ottenere con il comando:
+</p>
+
+<pre>
+root@pc1# wget http://192.168.100.2:2000/FileServer.java
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2005/01/21 09:15:59 $
+</span>
+</address>
+
+
+</body>
+
+</html>

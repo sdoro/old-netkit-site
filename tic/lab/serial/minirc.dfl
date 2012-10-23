@@ -1,0 +1,13 @@
+# /etc/minicom/minirc.dfl
+#
+# $Id: minirc.dfl,v 1.1 2006/09/30 09:53:17 doros Exp $
+#
+# use "minicom -s" to change parameters.
+pu port             /dev/ttyp0
+pu baudrate         38400
+pu bits             8
+pu parity           N
+pu stopbits         1
+pu scriptprog       
+pu minit            
+pu mreset

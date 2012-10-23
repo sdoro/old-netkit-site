@@ -1,0 +1,172 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-IDS.html,v 1.30 2007-06-27 19:41:33 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-IDS</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Progetto di una rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza sul rilevamento delle intrusioni</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-NET.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-Nino.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo il
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+Scarica il <a href="IDS.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente lo script.
+Inizialmente (nel 2003) questa esperienza si basava sul capitolo 8 del libro
+<b>Attacchi non rilevati</b>, Tim Crothers, Mc-Graw-Hill ma alla
+data di oggi SHADOW e ACID non sono stati pi&ugrave; aggiornati.
+Abbiamo aggiornato l'esperienza sostituendo il defunto ACID con
+<a href="http://sourceforge.net/projects/secureideas"
+   title="link esterno">BASE</a> il suo diretto successore.
+Abbiamo in programma l'utilizzo di 
+<a href="http://sguil.sourceforge.net/"
+   title="link esterno">sguil</a>.
+Tra i pacchetti principali vanno sicuramente citati
+<a href="http://www.perl.org/" title="link esterno">perl</a>,
+<a href="http://www.bastille-linux.org/" title="link esterno">bastille</a>,
+<a href="http://www.mysql.com/" title="link esterno">mysql</a>,
+<a href="http://www.snort.org/" title="link esterno">snort</a>,
+<a href="http://httpd.apache.org/" title="link esterno">apache</a>,
+<a href="http://www.php.net/" title="link esterno">php</a>,
+<a href="http://secureideas.sourceforge.net/" title="link esterno">acidbase</a>.
+<br>
+Il documento da seguire per l'installazione &egrave; 
+<a href="http://www.snort.org/docs/setup_guides/deb-snort-howto.pdf"
+   title="link esterno">11 step guide to build a Debian based IDS</a>.
+Per 
+<a href="http://www.nswc.navy.mil/ISSEC/CID/" title="link esterno">SHADOW</a>
+abbiamo usato la versione 1.8.
+La documentazione
+&egrave; risultata precisa e corretta mentre le indicazioni riportate
+dal libro sono risultate introduttive e non del tutto corrette.
+Consigliamo vivamente di leggersi
+<a href="http://www.nswc.navy.mil/ISSEC/CID/SHADOW-1.8-Install.pdf" title="link esterno; documento pdf">SHADOW-1.8-Install.pdf</a>!<br>
+
+Lo script genera una parte dell mappa della rete "generale"
+(<a href="pdf/uml-pnum.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/uml-pnum.xml" title="file per Dia">xml</a>) 
+e in particolare quella etichettata "Virtual security space":
+a partire dall'alto il sensore 1 sar&agrave; posizionato
+sulla rete 217.57.5.216/29, il sensore 2 sulla rete 10.10.10.64/28,
+il sensore 3 sulla rete 10.10.10.0/26, il sensore 4
+sulla rete (lab1/Area1) 192.168.1.0/24 e il sensore 5
+sulla rete (lab2/Area2) 192.168.2.0/24
+(<a href="ids-desktop.png" title="Netkit4TIC screenshot">screenshot</a>).
+L'host che raccoglie
+tutte le informazioni (<code>mngm.tic.fdns.net</code>) &egrave;
+collegato ai sensori attraverso una rete dedicata.
+Per dare
+connettivit&agrave; all'host di management 
+attraverso interfaccia web, tale host ha un &quot;gateway&quot; con
+il mondo reale in modo da poter usare un browser nel mondo reale per
+configurare e/o visionare lo stato della raccolta dei dati da parte
+dei sensori.
+Dalla macchina reale o da una macchina della rete della macchina
+reale (ma con definita una regola di routing aggiuntiva) &egrave;
+possibile accedere alla console di SHADOW immettendo nel browser
+l'URL seguente:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://10.10.20.29/shadow.html
+</pre>
+
+<p>
+e alla console di BASE con:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://10.10.20.29/base
+</pre>
+
+<p>
+Nel caso in cui Shadow visualizzi &quot;Forbidden [..]&quot; devi modificare
+le permissions definite nel file <code>/home/SHADOW/html/.htaccess</code> o
+nel file <code>/etc/apache/httpd.conf</code>
+aggiungendo tra gli indirizzi validi quelli della tua rete.
+</p>
+
+<p>
+Per la creazione e manutenzione delle signature di
+Snort esiste un utile strumento per piattaforma Windows/XP gratuito di nome
+<a href="http://www.activeworx.org/" title="link esterno">IDS Policy Manager</a>.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-06-27 19:41:33 $
+</span>
+</address>
+
+</body>
+
+</html>

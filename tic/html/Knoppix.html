@@ -1,0 +1,276 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: Knoppix.html,v 1.25 2009-10-03 09:37:26 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica -- Knoppix</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <link rel="Start" title="Start" href="index.html">
+  <link rel="Prev" title="Previous" href="module6.html">
+  <link rel="Next" title="Next" href="module8.html">
+</head>
+
+<body>
+<h1 class="center">Modulo 7</h1>
+<h2 class="center">Sistemi operativi di rete: Knoppix</h2>
+
+
+<h4>Istruzioni per rimasterizzare Knoppix per Netkit utilizzando Knoppix</h4>
+
+
+<p>
+Per masterizzare un DVD di Knoppix &egrave; consigliabile una partizione di
+swap di almeno 5GiB, una RAM di almeno 4GiB e una partizione libera
+di 15GiB.<br>
+Puoi ampliare l'area di swap anche con un file. Se ad esempio
+vogliamo creare un file di swap di 750MB dobbiamo
+per prima cosa costruirlo, poi inizializzarlo e quindi attivarci la swap:
+</p>
+
+<pre>
+# dd if=/dev/zero of=/swapfile bs=1M count=750
+# mkswap /swapfile
+# swapon /swapfile
+</pre>
+
+<p>
+Per disattivare e rimuoverlo:
+</p>
+
+<pre>
+# swapoff /swapfile
+# rm /swapfile
+</pre>
+
+
+<p>
+Nel seguito si far&agrave; riferimento alla seguente struttura
+di directory radicata nella partizione libera:
+</p>
+
+<pre>
+$KNO
+  |
+  +--master
+  |
+  +--source
+</pre>
+
+<p>
+dove la variabile d'ambiente <code>KNO</code> viene inizializzata come segue:
+</p>
+
+<pre>
+# export REL=64
+# export PART=/media/removible
+# export KNO=$PART/kno$REL
+</pre>
+     
+<h4>Estrazione del filesystem compresso</h4>
+
+<p>
+Copia tutto i due filesystem decompressi in <code>$KNO/source</code> per
+la personalizzazione:
+</p>
+
+<pre>
+# cp -Rp /KNOPPIX/* $KNO/source/
+</pre>
+
+<p>
+e nel caso di DVD anche:
+</p>
+
+<pre>
+# cp -Rp /KNOPPIX2/* $KNO/source/
+</pre>
+
+<p>
+e prenditi una pausa caff&egrave;.
+</p>
+
+<p>
+Nella directory <code>$KNO/master</code> copiamo tutto il contenuto del
+ad eccezzione del file
+<code>/mnt-system/KNOPPIX/KNOPPIX</code> che verr&agrave; rigenerato
+da noi stessi pi&ugrave; tardi.
+</p>
+
+<pre>
+# (cd /mnt-system; \
+   find . -size -15000k -type f \
+        -exec cp -p --parents {} $KNO/master/ \; )
+</pre>
+
+
+
+<h4>Personalizzazione di Knoppix</h4>
+
+<p>
+Knoppix &egrave; derivato da Debian e quindi le operazioni
+sui pacchetti e la loro configurazione sono effettuate con
+<code>apt</code> e/o <code>dpkg</code>.
+Per modificare le impostazioni degli utenti basta modificare i files
+all'interno di <code>/etc/skel</code> mentre per cambiare lo sfondo basta
+sostitutire il file <code>background.jpg</code>.
+</p>
+
+<p>
+Facciamo chroot in source:
+</p>
+
+<pre>
+# mount --bind /dev $KNO/source/dev
+# mount --bind /proc $KNO/source/proc
+# chroot $KNO/source
+</pre>
+
+
+<p>
+Nel repository del questo progetto c'&egrave; un file
+che contiene tutti i package che vengono rimossi.
+Vista la criticit&agrave; dell'intera installazione,
+suggeriamo di cambiare il meno possibile. In particolare per
+installare altri pacchetti 
+consigliamo di usare moderatamente e *solamente* <code>dpkg</code>.
+</p>
+
+<p>
+Per uscire dall'ambiente <code>chroot</code>:
+</p>
+
+<pre>
+# exit
+# umount $KNO/source/proc
+# umount $KNO/source/dev
+</pre>
+
+
+<h4>Personalizzazione di Netkit</h4>
+
+<p>
+L'ambiente Netkit &egrave; installato nella directory
+<code>/usr/local/netkit</code>. Variazioni al kernel o al filesytem
+delle macchine virtuali devono riferirsi quindi alle sottodirectory
+<code>kernel</code> o <code>fs</code> rispettivamente.
+Anche in questo caso per le modifiche al filesystem della
+macchina virtuale si usa chroot:
+</p>
+
+<pre>
+# mkdir /mnt/Netkit
+# mount -o loop /usr/local/netkit/fs/Netkit.fs /mnt/Netkit
+# mount --bind /dev /mnt/Netkit/dev
+# mount --bind /proc /mnt/Netkit/proc
+# chroot /mnt/Netkit
+</pre>
+
+<p>
+Per uscire dall'ambiente <code>chroot</code>:
+</p>
+
+<pre>
+# exit
+# umount /mnt/Netkit/dev
+# umount /mnt/Netkit/proc
+</pre>
+
+
+
+
+<h4>Preparazione del live CD</h4>
+
+
+<p>
+Crea il file <code>KNOPPIX</code> come filesystem compresso
+(il comando create_compressed_fs appartiene a cloop-utils):
+</p>
+
+<pre>
+# mkisofs -R -U -V "Netkit 2.8-K2.8-F5.2" \
+    -publisher "IT Zuccante" -hide-rr-moved \
+    -cache-inodes -no-bak -pad $KNO/source/ | \
+    nice -n 5 create_compressed_fs -m -B 65536 -  $KNO/master/KNOPPIX/KNOPPIX
+</pre>
+
+<p>
+Crea il file con i codici sha1sum dei file del CD:
+</p>
+
+<pre>
+# (cd $KNO/master/; find -type f \
+    -not -name sha1sums -not -name boot.cat -not -name isolinux.bin \
+    -exec sha1sum {} \; &gt; $KNO/master/KNOPPIX/sha1sums)
+</pre>
+
+<p>
+Crea l'immagine iso da usare per masterizzare il live DVD:
+</p>
+
+<pre>
+# mkisofs -pad -l -r -J -v -V "Netkit 2.8-K2.8-F5.2" -hide-rr-moved -v \
+          -b boot/isolinux/isolinux.bin -c boot/isolinux/boot.cat \
+          -no-emul-boot -boot-load-size 4 -boot-info-table \
+          -o $KNO/Netkit-2.8-K2.8-F5.2.iso $KNO/master/
+</pre>
+
+<p>
+Possiamo ora testare l'immagine appena costruita:
+</p>
+
+<pre>
+$ qemu -m 256 -cdrom Netkit.iso
+</pre>
+
+<p>
+e se vogliamo utilizzare una finestra 800x600 baster&agrave; specificare
+al prompt <code>fb800x600 screen=800x600</code>
+(<a href="boot-Netkit4TIC.png" title="qemu screenshot">screenshot</a>)
+e la termine
+possiamo anche realizzare una piccola esperienza
+virtuale di due host connessi allo stesso dominio di collisione di
+cui riportiamo uno
+<a href="qemu.png" title="qemu screenshot">screenshot</a> ottenuto
+sul mio buon vecchio PII 400 con 500MB di RAM (pace all'anima sua).
+</p>
+
+<p>
+Ora non resta che verificare che il supporto fisico sia di dimensione
+sufficiente a contenere <code>Netkit.iso</code> e
+alla fine bruciare un dvd inserendolo nel
+device <code>$DEVICE</code>:
+</p>
+
+<pre>
+# cdrecord -v dev=$DEVICE speed=4 -dao driveropts=burnfree -eject \
+    -data $KNO/Netkit.iso
+</pre>
+
+<p>
+In seguito per verificare il corretto funzionamento dell'operazione
+confrontiamo il risultato dei comandi:
+</p>
+
+<pre>
+# cat $DEVICE | md5sum
+# md5sum $KNO/Netkit.iso
+</pre>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+   <img alt="Creative Commons License"
+        src="88x31.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: $
+</span>
+</address>
+
+
+
+</body>
+</html>

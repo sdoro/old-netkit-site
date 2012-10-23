@@ -1,0 +1,2 @@
+server|cn=admin,ou=DSA,dc=istituto,dc=it|Xserver|192.168.50.1|N|dc=istituto,dc=it||
+rserver|cn=admin,ou=DSA,dc=istituto,dc=it|Xserver|192.168.50.2|N|dc=istituto,dc=it||

@@ -1,0 +1,9 @@
+# /etc/cron.d/nino
+# $Id: nino-cron,v 1.1 2003/11/01 22:15:36 doros Exp $
+#
+DIR=/var/www/nino
+#
+0-59/2 * * * * root $DIR/mod_perl/status.pl $DIR/mod_perl/snmp.ini
+0-59/2 * * * * root $DIR/mod_perl/traffic.pl $DIR/mod_perl/snmp.ini 
+10    00 * * * root $DIR/mod_perl/trend.pl $DIR/mod_perl/snmp.ini 
+20    00 * * * root $DIR/mod_perl/report.pl $DIR/mod_perl/snmp.ini 

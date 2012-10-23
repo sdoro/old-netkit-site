@@ -1,0 +1,5 @@
+# $Id: stazione1.startup,v 1.1 2006/10/15 11:17:33 doros Exp $
+# configure IP address and MAC address
+ifconfig eth0 10.0.0.1 up hw ether 08:00:2B:16:50:A0
+# remove IPv6 address
+ifconfig eth0 del fe80::fcfd:aff:fe00:1/64

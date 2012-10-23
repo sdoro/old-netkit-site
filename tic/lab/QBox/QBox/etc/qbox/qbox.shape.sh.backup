@@ -1,0 +1,203 @@
+#!/bin/bash
+#
+# Q*Box Script
+# Ron Senykoff - rsenykoff < -- at -- > gmail < -- d o t -- > com
+# Thanks to http://lartc.org and http://leaf.sourceforge.net
+
+#####################################
+####### Grab the VARIABLES ##########
+#                                   #
+BOTTOMPORTS=`/etc/qbox/bottomPorts.sh`
+MIDPORTS=`/etc/qbox/midPorts.sh`
+TOPPORTS=`/etc/qbox/topPorts.sh`
+BOTTOMIPS=`/etc/qbox/bottomIPs.sh`
+MIDIPS=`/etc/qbox/midIPs.sh`
+TOPIPS=`/etc/qbox/topIPs.sh`
+
+DOWNLOADS=(`/etc/qbox/download.sh`)
+UPLOADS=(`/etc/qbox/upload.sh`)
+
+downmax=${DOWNLOADS[0]}
+downinteractive=${DOWNLOADS[1]}
+downmid=${DOWNLOADS[2]}
+downdefault=${DOWNLOADS[3]}
+downlow=${DOWNLOADS[4]}
+
+upmax=${UPLOADS[0]}
+upinteractive=${UPLOADS[1]}
+upmid=${UPLOADS[2]}
+updefault=${UPLOADS[3]}
+uplow=${UPLOADS[4]}
+
+
+##### Set up static variables #######
+
+ethInbound=eth0
+ethOutbound=eth1
+
+#                                   #
+#####################################
+#####################################
+
+# clear out any existing queues attached to NICs
+tc qdisc del root dev $ethInbound
+tc qdisc del root dev $ethOutbound
+
+#####################################
+######### Attach Queues #############
+#                                   #
+
+# root qdisc /  qdisc = queueing discipline #
+tc qdisc add dev $ethInbound root handle 1:0 cbq bandwidth 100Mbit avpkt 1000 cell 8
+tc qdisc add dev $ethOutbound root handle 1:0 cbq bandwidth 100Mbit avpkt 1000 cell 8
+
+# now we throttle the root overall
+#tc class add dev $ethInbound parent 1:0 classid 1:1 cbq bandwidth 100Mbit rate ${downmax}kbit weight $[$downmax/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 bounded
+tc class add dev $ethInbound parent 1:0 classid 1:1 cbq bandwidth 100Mbit rate 1.5Mbit weight 0.15Mbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 bounded
+
+#tc class add dev $ethOutbound parent 1:0 classid 1:1 cbq bandwidth 100Mbit rate ${upmax}kbit weight $[$upmax/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 bounded
+tc class add dev $ethOutbound parent 1:0 classid 1:1 cbq bandwidth 100Mbit rate .7Mbit weight 0.07Mbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 bounded
+echo downmax=${downmax}
+
+# child qdiscs (like child nodes on a tree kind of) #
+
+# interactive
+tc class add dev $ethInbound parent 1:1 classid 1:3 cbq bandwidth 100Mbit rate ${downinteractive}kbit weight $[$downinteractive/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 
+#tc class add dev $ethInbound parent 1:1 classid 1:3 cbq bandwidth 100Mbit rate 10Mbit weight 1Mbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 
+tc qdisc add dev $ethInbound parent 1:3 handle 30: pfifo limit 200
+
+tc class add dev $ethOutbound parent 1:1 classid 1:3 cbq bandwidth 100Mbit rate ${upinteractive}kbit weight $[$upinteractive/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 
+tc qdisc add dev $ethOutbound parent 1:3 handle 30: pfifo limit 200
+
+echo Interactive set to ${downinteractive} down/${upinteractive} up kbps 
+
+# mid
+tc class add dev $ethInbound parent 1:1 classid 1:5 cbq bandwidth 100Mbit rate ${downmid}kbit weight $[$downmid/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000
+tc qdisc add dev $ethInbound parent 1:5 handle 50: sfq perturb 10
+tc class add dev $ethOutbound parent 1:1 classid 1:5 cbq bandwidth 100Mbit rate ${upmid}kbit weight $[$upmid/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000
+tc qdisc add dev $ethOutbound parent 1:5 handle 50: sfq perturb 10
+echo Mid set to ${downmid} down/${upmid} up kbps 
+
+# default
+tc class add dev $ethInbound parent 1:1 classid 1:6 cbq bandwidth 100Mbit rate ${downdefault}kbit weight $[$downdefault/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000
+tc qdisc add dev $ethInbound parent 1:6 handle 60: pfifo limit 40
+tc class add dev $ethOutbound parent 1:1 classid 1:6 cbq bandwidth 100Mbit rate ${updefault}kbit weight $[$updefault/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000
+tc qdisc add dev $ethOutbound parent 1:6 handle 60: pfifo limit 40
+echo Default set to ${downdefault} down/${updefault} up kbps 
+
+# low / bulk
+tc class add dev $ethInbound parent 1:1 classid 1:9 cbq bandwidth 100Mbit rate ${downlow}kbit weight $[$downlow/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 
+tc qdisc add dev $ethInbound parent 1:9 handle 90: sfq perturb 20
+tc class add dev $ethOutbound parent 1:1 classid 1:9 cbq bandwidth 100Mbit rate ${uplow}kbit weight $[$uplow/10]kbit prio 8 allot 1514 cell 8 maxburst 20 avpkt 1000 
+tc qdisc add dev $ethOutbound parent 1:9 handle 90: sfq perturb 20
+echo Low Bulk set to ${downlow} down/${uplow} up kbps 
+
+#                                   #
+######## End Attach Queues ##########
+#####################################
+
+###################################################
+############## Create Filters #####################
+##                                               ##
+
+FILTERADDIN="tc filter add dev $ethInbound protocol ip parent"
+FILTERADDOUT="tc filter add dev $ethOutbound protocol ip parent"
+
+#####################################
+########### Interactive #############
+#                                   #
+
+#for i in $TOPPORTS;  do
+#	echo ${i} added to interactive port list
+#	#source port
+#	$FILTERADDIN 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:3
+#	echo $FILTERADDIN 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:3
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:3
+#	#destination port
+#	$FILTERADDIN 1:0 prio 1 u32 match ip dport ${i} 0xffff flowid 1:3
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip dport ${i} 0xffff flowid 1:3
+#done
+
+#for i in $TOPIPS;  do
+#	echo ${i} added to interactive IP list
+#	#source IP 
+#	$FILTERADDIN 1:0 prio 1 u32 match ip src ${i}/32 flowid 1:3
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip src ${i}/32 flowid 1:3
+#	#destination IP 
+#	$FILTERADDIN 1:0 prio 1 u32 match ip dst ${i}/32 flowid 1:3
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip dst ${i}/32 flowid 1:3
+#done
+
+#                                   #
+########## End Interactive ##########
+#####################################
+
+#####################################
+############# Mid  ##################
+#                                   #
+
+#for i in $MIDPORTS;  do
+#	echo ${i} added to middle port list
+#	#source port
+#	$FILTERADDIN 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:5
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:5
+#	#destination port
+#	$FILTERADDIN 1:0 prio 1 u32 match ip dport ${i} 0xffff flowid 1:5
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip dport ${i} 0xffff flowid 1:5
+#done
+
+#for i in $MIDIPS;  do
+#	echo ${i} added to middle IP list
+#	#source IP 
+#	$FILTERADDIN 1:0 prio 1 u32 match ip src ${i}/32 flowid 1:5
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip src ${i}/32 flowid 1:5
+#	#destination IP 
+#	$FILTERADDIN 1:0 prio 1 u32 match ip dst ${i}/32 flowid 1:5
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip dst ${i}/32 flowid 1:5
+#done
+
+#                                   #
+############ End Mid ################
+#####################################
+
+#####################################
+########### Low / Bulk ##############
+#                                   #
+## if it's matched here, it is banished to the netherqueue...
+
+#for i in $BOTTOMPORTS;  do
+#	echo ${i} added to bottom / bulk port list
+#	#source port
+#	$FILTERADDIN 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:9
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip sport ${i} 0xffff flowid 1:9
+#	#destination port
+#	$FILTERADDIN 1:0 prio 1 u32 match ip dport ${i} 0xffff flowid 1:9
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip dport ${i} 0xffff flowid 1:9
+#done
+
+#for i in $BOTTOMIPS;  do
+#	echo ${i} added to bottom / bulk IP list
+#	#source IP 
+#	$FILTERADDIN 1:0 prio 1 u32 match ip src ${i}/32 flowid 1:9
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip src ${i}/32 flowid 1:9
+#	#destination IP 
+#	$FILTERADDIN 1:0 prio 1 u32 match ip dst ${i}/32 flowid 1:9
+#	$FILTERADDOUT 1:0 prio 1 u32 match ip dst ${i}/32 flowid 1:9
+#done
+
+
+
+#####################################
+############ Default ################
+#                                   #
+
+$FILTERADDIN 1:0 prio 1 u32 match ip src 0.0.0.0/0 flowid 1:6
+$FILTERADDOUT 1:0 prio 1 u32 match ip src 0.0.0.0/0 flowid 1:6
+$FILTERADDIN 1:0 prio 1 u32 match ip dst 0.0.0.0/0 flowid 1:6
+$FILTERADDOUT 1:0 prio 1 u32 match ip dst 0.0.0.0/0 flowid 1:6
+
+#                                   #
+########## End Default ##############
+#####################################
+
+

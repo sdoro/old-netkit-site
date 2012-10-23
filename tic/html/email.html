@@ -1,0 +1,257 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: email.html,v 1.15 2007-01-15 08:30:00 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - sendmail</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 17</h1>
+<h2 class="center">Internet Server</h2>
+
+<h3>e-mail</h3>
+
+<p>
+La posta elettronica &egrave; nata dal paradigma dei
+&quot;bigliettini pro-memoria&quot; e quindi come documento
+esclusivamente di testo completo della indicazione del mittente
+e il destinatario. Affinch&egrave; sia possibile ricevere
+una mail &egrave; necessario che in precedenza sia stata
+definita la <code>mailbox</code> che consiste generalmente
+in uno spazio privato dedicato all'utente associato.
+</p>
+
+<p>
+Un indirizzo di e-mail consiste di due parti separate dal
+carattere @. La prima parte indica la mailbox e la seconda
+il computer su cui essa risiede.
+</p>
+
+<p>
+Il messaggio &egrave; rigorosamente testo ASCII ed &egrave; diviso
+in due parti separate da una riga vuota. Nella prima parte ci sono
+informazioni (header) riguardanti il messaggio stesso e nella
+seconda parte &egrave; contenuto il messaggio vero e proprio.
+</p>
+
+<p>
+Per superare la limitazione di usare solo testo &egrave; stata
+aggiunta la capacit&agrave; di inviare qualsiasi contenuto anche
+binario attraverso un'estensione chiamata MIME (Multipurpose
+Internet Mail Extension). In pratica MIME non specifica un ben
+determinato sistema di codifica e decodifica ma permette che
+il mittente e il destinatario si accordino. Un messaggio MIME
+include quindi informazioni addizionali che il destinatario usa
+per decodificare il messaggio.
+</p>
+
+<p>
+Quando un utente compone un messaggio, questo viene dapprima
+accodato in una coda di servizio del computer da cui l'utente
+st&agrave; operando. In seguito il messaggio viene prelevato
+dalla coda di servizio e inviato al computer che gestisce la
+mailbox destinazione. Infine dal computer destinazione viene
+spostato alla mailbox destinazione pronto per essere letto.
+Questi tre passi vengono eseguiti da tre attori ben precisi:
+</p>
+
+<ul>
+  <li>Mail User Agent o MUA (per esempio <code>mutt</code>)</li>
+  <li>Mail Transfer Agent o MTA (per esempio <code>Postfix/Sendmail</code>)</li>
+  <li>Mail Delivery Agent o MDA (per esempio <code>procmail</code>)</li>
+</ul>
+
+<p>
+Affinch&egrave; un MTA sia visibile in Internet come server SMTP
+di un dominio occorre che il server DNS autoritativo per quel
+dominio abbia un record di tipo MX che indichi appunto l'host
+su cui gira l'MTA. Nel caso in cui sia presente un secondo server
+MTA di backup per il caso in cui il primario sia guasto, occorre
+aggiungere nel server DNS un secondo record di tipo MX. Per
+vedere quali domini hanno server SMTP di backup basta
+interrogare i server DNS con l'utility <code>dig</code>
+che ad esempio per il dominio <code>rai.it</code> visualizza:
+</p>
+
+<pre>
+$ dig -t mx rai.it +nostats +nocmd +noquestion
+
+;; ANSWER SECTION:
+rai.it.                 21552   IN      MX      20 relay2.rai.it.
+rai.it.                 21552   IN      MX      30 relay.rai.it.
+
+;; AUTHORITY SECTION:
+rai.it.                 372015  IN      NS      ns2.rai.it.
+rai.it.                 372015  IN      NS      dns2.nic.it.
+rai.it.                 372015  IN      NS      ns.rai.it.
+rai.it.                 372015  IN      NS      ns.iunet.it.
+
+;; ADDITIONAL SECTION:
+relay2.rai.it.          21552   IN      A       212.162.66.33
+relay.rai.it.           21552   IN      A       212.162.66.32
+ns.rai.it.              26661   IN      A       212.162.66.62
+ns.iunet.it.            100871  IN      A       192.106.1.1
+ns2.rai.it.             9055    IN      A       212.162.66.63
+dns2.nic.it.            20584   IN      A       193.205.245.8
+
+
+</pre>
+
+<h3>Postfix</h3>
+
+<p>
+Postfix si st&agrave; affermando come il sostituto di Sendmail grazie
+alla sua facile configurazione. Nel sito <code>www.postfix.org</code>
+c'&egrave; molta documentazione e molto ben fatta. Per quanto riguarda
+la configurazione dalla home page possiamo trovare un collegamento
+a un documento che illustra con degli esempi le varie configurazioni
+standard. Non abbiamo intenzione di ripetere quello che gi&agrave;
+&egrave; descritto e quindi ricapitoliamo solo per rinforzare
+il ricordo.
+</p>
+
+<p>
+La directory che contiene i file di configurazione &egrave;
+<code>/etc/postfix</code>. Il file di configurazione pi&ugrave;
+importante &egrave; <code>/etc/postfix/main.cf</code>.
+</p>
+
+
+<pre>
+
+# Configurazione "Local Network"
+# /etc/postfix/main.cf
+myorigin = $mydomain
+mynetworks = 127.0.0.0/8  10.0.0.0/24
+relay_domains =
+</pre>
+
+<pre>
+
+# Configurazione "null client"
+# /etc/postfix/main.cf
+myorigin = $mydomain
+relayhost = $mydomain
+inet_interfaces = 127.0.0.1
+local_transport = error:local delivery is disabled
+</pre>
+
+
+
+<h3>Sendmail</h3>
+
+<p>
+Sendmail &egrave; uno dei pi&ugrave; noti MTA tra i quali
+citiamo qmail e postfix che non avremo per&ograve; 
+il tempo di descrivere.
+</p>
+
+<p>
+Le modalit&agrave; di installazione possono essere numerosissime
+e se vogliamo ragrupparle in due categorie otteniamo:
+</p>
+<ul>
+  <li>installato in ogni macchina che usa posta elettronica;</li>
+  <li>installato solo nell'hub centrale, eventualmente affiancato da
+      un server di backup, acceduto attraverso servizi <code>POP</code>,
+      <code>IMAP</code> e <code>WebMail</code>.</li>
+</ul>
+
+<p>
+La seconda soluzione &egrave; quella che andremo a descrivere e che
+consigliamo caldamente soprattutto per problemi di gestione e
+manutenzione.
+La documentazione in lingua inglese fornita nell'installazione la puoi
+trovare	nella directory <code>/usr/share/doc/sendmail-doc/</code>.
+</p>
+
+<p>
+La directory che contiene i file di configurazione &egrave;
+<code>/etc/mail</code>. Il file di configurazione &egrave;
+<code>sendmail.mc</code> ma il file che viene realmente usato
+dal programma &egrave; <code>sendmail.cf</code> che possiamo
+quindi pensare come ad un programma compilato pronto per essere
+eseguito mentre il file <code>sendmail.mc</code> come al programma in forma
+sorgente. Questa archittettura &egrave; dovuta al fatto che
+quando nacque sendmail i computer erano molto limitati ed era
+vantaggioso precompilare. Il parser <code>m4</code> prende come input
+il file sendmail.mc e produce in output il file sendmail.cf.
+</p>
+
+<p>
+Nel caso in cui non
+si abbiano necessit&agrave; particolari &egrave; possibile usare
+la configurazione Debian che si ottiene accettando
+(rispondendo con <code>ENTER</code>) tutte le opzioni di default della fase
+di configurazione. Nel caso si voglia cambiare qualcosa, si edita
+il file <code>sendmail.mc</code> e poi si lancia <code>make</code>.
+</p>
+
+<p>
+Vediamo ora singolarmente i pi&ugrave; importanti file dati 
+usati nel file <code>sendmail.mc</code>:
+</p>
+
+<ul>
+  <li><code>aliases</code>: a volte &egrave; vantaggioso avere un indirizzo
+      e-mail publico generico che viene poi trasformato in quello di un ben
+      preciso account.
+      Questo file deve essere trasformato nel BerkDB format.</li>
+  <li><code>access</code>: in questo file &egrave; possibile definire
+      politiche di accesso per macchine o domini; ad esempio si pu&ograve;
+      negare il servizio da un host da cui arrivano molti tentativi di
+      spam.</li>
+  <li><code>generictable</code>: questo file mette in corrispondenza
+      gli utenti effettivi con gli utenti virtuali.
+      Questo file deve essere trasformato nel BerkDB format.</li>
+  <li><code>mailertable</code>: in questo file vengono messe le
+      informazioni per redirigire la posta.
+      Questo file deve essere trasformato nel BerkDB format.</li>
+  <li><code>relay-domains</code>: in questo file ci sono i nomi 
+      degli host per cui sendmail accetta il RELAY.</li>
+  <li><code>virtusertable</code>: questo file mette in corrispondenza
+      gli utenti virtuali con gli utenti effettivi.
+      Questo file deve essere trasformato nel BerkDB format.</li>
+  <li><code>local-host-names</code>: questo file contiene la lista
+      dei domini per i quali &egrave; gestito l'inoltro della mail.</li>
+</ul>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-01-15 08:30:00 $
+</span>
+</address>
+
+
+</body>
+
+</html>

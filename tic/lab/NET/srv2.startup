@@ -1,0 +1,24 @@
+# srv2.startup
+# $Id: srv2.startup,v 1.2 2007-05-12 19:04:16 doros Exp $
+#
+# no ip_forward
+echo "0" > /proc/sys/net/ipv4/ip_forward
+# Config IP address
+ifconfig eth0 217.57.5.220 \
+  netmask 255.255.255.248 broadcast 217.57.5.223 up
+route add default gw 217.57.5.217
+ifconfig eth1 10.10.10.66 \
+  netmask 255.255.255.240 broadcast 10.10.10.79 up
+route add -net 10.10.10.0/26 gw 10.10.10.78
+route add -net 10.10.20.0/27 gw 10.10.10.78
+route add -net 10.10.30.0/26 gw 10.10.10.78
+# adjust permissions
+> /var/log/bind-xfer.log
+> /var/log/named.log
+chown bind /var/log/bind-xfer.log /var/log/named.log
+# starting bind server
+/etc/init.d/bind9 start
+# starting postfix server
+/etc/init.d/postfix start
+# starting xinetd server
+/etc/init.d/xinetd start

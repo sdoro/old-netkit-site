@@ -1,0 +1,10 @@
+# /etc/hosts
+# $Id: hosts,v 1.4 2006/06/30 06:15:22 doros Exp $
+
+# backbone:
+192.168.0.254  www
+192.168.0.201  pf-a1
+192.168.0.202  pf-a2
+
+#
+# bot

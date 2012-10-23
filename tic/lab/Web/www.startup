@@ -1,0 +1,13 @@
+# $Id: www.startup,v 1.1 2006/11/18 21:24:23 doros Exp $
+# config IP for tap device
+ifconfig eth0 192.168.77.2
+route add default gw 192.168.77.1
+# startup apache
+/etc/init.d/apache start
+# set execution flags
+chmod a+x /usr/local/lib/cgi-bin/date.sh
+chmod a+x /usr/local/lib/cgi-bin/ipaddr.sh
+chmod a+x /usr/local/lib/cgi-bin/counter.sh
+# create an empty temporary file
+touch /tmp/ipaddr
+chown www-data /tmp/ipaddr

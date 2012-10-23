@@ -1,0 +1,13 @@
+# /etc/ldap/slapd.index
+# $Id: slapd.index,v 1.1 2008-12-09 15:50:06 doros Exp $
+
+# Indexing options
+index  objectClass   eq
+index  cn            eq,sub
+index  gecos         pres
+index  memberUid     eq
+index  uid           eq
+
+
+#
+# bot

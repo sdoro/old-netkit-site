@@ -1,0 +1,2 @@
+staff   -fstype=nfs nfs1.istituto.it:/staff
+student -fstype=nfs nfs2.istituto.it:/student

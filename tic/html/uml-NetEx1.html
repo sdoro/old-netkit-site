@@ -1,0 +1,482 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-NetEx1.html,v 1.5 2006/10/10 15:01:03 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-NetEx1</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p> 
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 10 - Pratica sulle reti</h2>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Definizione piano di indirizzamento per tre LAN</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetPractice.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-NetEx2.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+
+
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>.
+</p>
+
+<p>
+L'esercitazione che andremo a sviluppare &egrave; presa da un esercizio
+proposto nel
+<a href="http://puntoeduft.indire.it/materialic/Modulo10/modulo_10_i_1_35_C2.html"
+   title="link esterno">modulo 10</a> dei materiali ministeriali 
+dei corsi UMTS/TIC C2 descritta nella
+<a href="http://puntoeduft.indire.it/materialic/Modulo10/img/intro20.jpg"
+   title="link esterno">mappa</a>
+(<a href="intro20.jpg"
+   title="map">copia locale della mappa</a>).
+</p>
+
+<p>
+<cite  class="border">
+Definire un piano di indirizzamento <b>ottimizzato</b> per tre
+reti pubbliche S1, S2, S3 (LAN) connesse attraverso i rispettivi router
+a formare una MAN. La rete S1 &egrave; formata da 50 host, la rete S2 da
+48 host e la rete S3 da 20 host. I router sono collegati tra di loro
+in modo che ogni router ha due collegamenti con reti minimali (parte
+rete di 30 bit) con gli altri due.
+</cite>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Soluzione</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Riportiamo di seguito la tabella di una possibile assegnazione:
+</p>
+
+
+<table border="1" width="100%" cellspacing="0" cellpadding="4">
+ <tr>
+   <td colspan="3">
+   Logical IP Subnet (LIS) e Netmask</td>
+   <td rowspan="2">Tipi di impiego</td>
+ </tr>
+ <tr>
+   <td valign="middle">Label</td>
+   <td valign="middle">
+     Notazione binaria
+   </td>
+   <td valign="top">
+     Notazione<br> decimale puntata
+   </td>
+ </tr>
+
+ <tr>
+   <td valign="middle">A</td>
+   <td class=binary>1100 0000 . 1100 1000 . 0110 0000 . 0000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 11</b>00 0000</td>
+   <td>192.200.96.0<br>
+   255.255.255.192</td>
+   <td >Rete S1 con al pi&ugrave<br>62 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">B</td>
+   <td class=binary>1100 0000 . 1100 1000 . 0110 0000 . 0100 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 11</b>00 0000</td>
+   <td>192.200.96.64<br>
+   255.255.255.192</td>
+   <td>Rete S2 con al pi&ugrave<br>62 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">C</td>
+   <td class=binary>1100 0000 . 1100 1000 . 0110 0000 . 1000 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 111</b>0 0000</td>
+   <td>192.200.96.128<br>
+   255.255.255.224</td>
+   <td>Rete S3 con al pi&ugrave<br>30 hosts</td>
+ </tr>
+
+ <tr>
+   <td valign="middle">D</td>
+   <td class=binary>1100 0000 . 1100 1000 . 0110 0000 . 1010 0000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1111 11</b>00</td>
+   <td>192.200.96.160<br>
+   255.255.255.252</td>
+   <td rowspan="3" >Reti minimali con<br>
+   2 hosts</td>
+ </tr>
+ <tr>
+   <td valign="middle">E</td>
+   <td class=binary>1100 0000 . 1100 1000 . 0110 0000 . 1010 0100<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1111 11</b>00</td>
+   <td>192.200.96.164<br>
+   255.255.255.252</td>
+ </tr>
+ <tr>
+   <td valign="middle">F</td>
+   <td class=binary>1100 0000 . 1100 1000 . 0110 0000 . 1010 1000<br>
+   <b>1111 1111 . 1111 1111 . 1111 1111 . 1111 11</b>00</td>
+   <td>192.200.96.168<br>
+   255.255.255.252</td>
+ </tr>
+
+</table>
+
+
+
+<p>
+La tabella del range degli indirizzi &egrave; la seguente:
+</p>
+
+<table border="1" cellspacing="0" cellpadding="4">
+ <tr>
+   <td rowspan="2" valign="middle">Rete</td>
+   <td colspan="2" >Range indirizzi</td>
+ </tr>
+ <tr>
+   <td>HostMin</td>
+   <td>HostMax</td>
+ </tr>
+ <tr>
+   <td valign="middle">S1</td>
+   <td>192.200.96.1</td>
+   <td>192.200.96.62</td>
+ </tr>
+ <tr>
+   <td valign="middle">S2</td>
+   <td>192.200.96.65</td>
+   <td>192.200.96.126</td>
+ </tr>
+ <tr>
+   <td valign="middle">S3</td>
+   <td>192.200.96.129</td>
+   <td>192.200.96.158</td>
+ </tr>
+</table>
+
+
+
+<p>
+Assegniamo gli indirizzi alle interfacce:
+</p>
+
+
+<table border="1" cellspacing="0" cellpadding="4">
+ <tr>
+   <td valign="middle">Host</td>
+   <td valign="middle">Interfaccia</td>
+   <td valign="middle">IP</td>
+   <td valign="middle">Netmask</td>
+   <td valign="middle">broadcast</td>
+ </tr>
+ <tr>
+   <td valign="middle">pc1</td>
+   <td>eth0</td>
+   <td>192.200.96.1</td>
+   <td>255.255.255.192</td>
+   <td>192.200.96.63</td>
+ </tr>
+ <tr>
+   <td rowspan="3" valign="middle">r1</td>
+   <td>eth0</td>
+   <td>192.200.96.62</td>
+   <td>255.255.255.192</td>
+   <td>192.200.96.63</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>192.200.96.161</td>
+   <td>255.255.255.252</td>
+   <td>192.200.96.163</td>
+ </tr>
+ <tr>
+   <td>eth2</td>
+   <td>192.200.96.165</td>
+   <td>255.255.255.252</td>
+   <td>192.200.96.167</td>
+ </tr>
+ <tr>
+   <td valign="middle">pc2</td>
+   <td>eth0</td>
+   <td>192.200.96.65</td>
+   <td>255.255.255.192</td>
+   <td>192.200.96.127</td>
+ </tr>
+ <tr>
+   <td rowspan="3" valign="middle">r2</td>
+   <td>eth0</td>
+   <td>192.200.96.126</td>
+   <td>255.255.255.192</td>
+   <td>192.200.96.127</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>192.200.96.162</td>
+   <td>255.255.255.252</td>
+   <td>192.200.96.163</td>
+ </tr>
+ <tr>
+   <td>eth2</td>
+   <td>192.200.96.169</td>
+   <td>255.255.255.252</td>
+   <td>192.200.96.171</td>
+ </tr>
+ <tr>
+   <td valign="middle">pc3</td>
+   <td>eth0</td>
+   <td>192.200.96.129</td>
+   <td>255.255.255.224</td>
+   <td>192.200.96.159</td>
+ </tr>
+ <tr>
+   <td rowspan="3" valign="middle">r3</td>
+   <td>eth0</td>
+   <td>192.200.96.158</td>
+   <td>255.255.255.224</td>
+   <td>192.200.96.159</td>
+ </tr>
+ <tr>
+   <td>eth1</td>
+   <td>192.200.96.166</td>
+   <td>255.255.255.252</td>
+   <td>192.200.96.167</td>
+ </tr>
+ <tr>
+   <td>eth2</td>
+   <td>192.200.96.170</td>
+   <td>255.255.255.252</td>
+   <td>192.200.96.171</td>
+ </tr>
+
+</table>
+
+
+
+<p>
+Tutti gli host delle reti sono stati preconfigurati con il
+default gateway verso il corrispondente router:
+</p>
+
+
+<pre>
+pc1# route add default gw 192.200.96.62
+pc2# route add default gw 192.200.96.126
+pc3# route add default gw 192.200.96.158
+</pre>
+
+
+<p>
+Per costruire la rete virtuale cos&igrave; come &egrave; stata
+descritta con 3 host, 3 router e 6 hub basta dare il comando:
+</p>
+
+<pre>
+realHost$ lstart -d exercise-01
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Routing statico</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Ora &egrave; possibile completare l'esperienza configurando
+staticamente le tabelle di routing.
+I comandi sono:
+</p>
+
+
+<pre>
+r1# route add -net 192.200.96.128 netmask 255.255.255.224 \
+          gw 192.200.96.166; \
+    route add -net 192.200.96.64 netmask 255.255.255.192 \
+          gw 192.200.96.162
+
+r2# route add -net 192.200.96.128 netmask 255.255.255.224 \
+          gw 192.200.96.170; \
+    route add -net 192.200.96.0 netmask 255.255.255.192 \
+          gw 192.200.96.161
+
+r3# route add -net 192.200.96.0 netmask 255.255.255.192 \
+          gw 192.200.96.165; \
+    route add -net 192.200.96.64 netmask 255.255.255.192 \
+          gw 192.200.96.169
+</pre>
+
+<p>
+Per testare la raggiungibilit&agrave; possiamo usare il comando
+<code>ping</code> e per verificare il percorso fatto dai pacchetti
+il comando <code>traceroute</code>. Per semplicit&agrave; &egrave;
+configurato la risoluzione dei nomi <code>pc1</code>, 
+<code>pc2</code>,  <code>pc3</code> a livello di file 
+<code>/etc/hosts</code>.
+</p>
+
+
+<pre>
+pc1# ping -c 1 pc3<span class="blue">
+PING pc3 (192.200.96.129): 56 data bytes
+64 bytes from 192.200.96.129: icmp_seq=0 ttl=62 time=7.7 ms
+[...]</span>
+
+pc1# ping -c 1 pc2<span class="blue">
+PING pc2 (192.200.96.65): 56 data bytes
+64 bytes from 192.200.96.65: icmp_seq=0 ttl=62 time=7.3 ms
+[...]</span>
+
+pc1# traceroute pc2<span class="blue">
+traceroute to pc2 (192.200.96.65), 64 hops max, 40 byte packets
+ 1  r1-eth0 (192.200.96.62)  6 ms  8 ms  2 ms
+ 2  r2-eth1 (192.200.96.162)  15 ms  5 ms  3 ms
+ 3  pc2 (192.200.96.65)  12 ms  6 ms  4 ms</span>
+
+pc1# traceroute pc3<span class="blue">
+traceroute to pc3 (192.200.96.129), 64 hops max, 40 byte packets
+ 1  r1-eth0 (192.200.96.62)  3 ms  2 ms  2 ms
+ 2  r3-eth1 (192.200.96.166)  12 ms  5 ms  7 ms
+ 3  pc3 (192.200.96.129)  12 ms  4 ms  6 ms</span>
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Routing dinamico</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per attivare invece il protocollo di routing RIP non occorre
+impostare alcuna regola di routing che invece sar&agrave;
+determinata da <code>zebra</code>
+che implementa il protocollo RIP (e altri) in ogni router rX:
+</p>
+
+<pre>
+rX# /etc/init.d/zebra start
+</pre>
+
+<p>
+Vediamo se ha calcolato le stesse route che avevamo impostato 
+staticamente in precedenza:
+</p>
+
+<pre>
+r3# telnet localhost zebra<span class="blue">
+Password:</span> root<span class="blue">
+[...]
+zebrad&gt;</span> show ip route<span class="blue">
+Codes: K - kernel route, C - connected, S - static, <span class="yellow">R - RIP</span>, O - OSPF,
+       B - BGP, &gt; - selected route, * - FIB route
+
+C&gt; 127.0.0.0/8 is directly connected, lo
+<span class="yellow">R&gt; 192.200.96.0/26 [120/2] via 192.200.96.165, eth1, 00:00:21</span>
+<span class="yellow">R&gt; 192.200.96.64/26 [120/2] via 192.200.96.169, eth2, 00:00:17</span>
+C&gt; 192.200.96.128/27 is directly connected, eth0
+<span class="yellow">R&gt; 192.200.96.160/30 [120/2] via 192.200.96.165, eth1, 00:00:21</span>
+C&gt; 192.200.96.164/30 is directly connected, eth1
+C&gt; 192.200.96.168/30 is directly connected, eth2
+zebrad&gt;</span> quit
+</pre>
+
+<p>
+Possiamo notare che il RIP determina, almeno per il router r3,
+tre regole di routing contro le nostre due poich&egrave; individua
+la presenza della rete 192.200.96.160 che per la verit&agrave;
+esiste ma &egrave; completamente controllata dai router r1 ed r2.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/10 15:01:03 $
+</span>
+</address>
+
+
+</body>
+
+</html>

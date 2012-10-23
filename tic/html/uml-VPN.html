@@ -1,0 +1,529 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-VPN.html,v 1.44 2008-11-18 15:02:00 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-VPN</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+  <META http-equiv="Content-Script-Type" content="type">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 8 - Reti di reti</h2>
+
+<h3 class="center"><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" src="88x31.png"></a> 
+            <a name=tutor href="mailto:sandro.doro@istruzione.it" title="e-mail tutor">Sandro Doro</a></h3>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Virtual Private Network (VPN)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-RLab.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-mlinks.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network"
+   title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+
+<p>
+Riportiamo di seguito la mappa
+(<a href="pdf/hw-02.pdf" title="documento pdf">pdf</a>)
+della rete 
+dell'esercizio con il relativo schema di numerazione. 
+Lo script di nome <code>lab.conf</code> che genera i sei host virtuali
+con le configurazioni dei gate{L,R}, le immagini dei custom floppy
+per gateL e per gateR &egrave; contenuto nel
+<a href="VPN.tgz" title="esperienza Netkit4TIC">tarball</a>.
+
+Valgono tutte le considerazioni fatte in
+<a href="uml-bering.html">Bering uClibc</a> che quindi non ripetiamo.
+Il package che abbiamo deciso di utilizzare per costruire la
+VPN &egrave; <code>ipsec.lrp</code> che implementa
+<a href="http://www.openswan.org" title="link esterno">Openswan IPSEC</a>.
+Richiede l'installazione dei pacchetti
+<code>libm.lrp</code>, <code>mawk.lrp</code> e <code>lpthread.lrp</code>
+e del modulo <code>ipsec.o</code> nel caso di kernel modulare.
+Nell'ultimo paragrafo vedremo la costruzione della N2N VPN.
+</p>
+
+<p>
+Dopo aver settato correttamente l'ambiente Netkit
+lancia lo script:
+</p>
+
+<pre>
+realHost$ lstart
+</pre>
+
+<p>
+<a href="vpn-desktop.png" title="immagine PNG">(screenshot)</a>
+</p>
+
+<p>
+La policy che abbiamo adottato su entrambe i gateway &egrave; la
+seguente:
+</p>
+
+<pre>
+# /etc/shorewall/policy
+#SOURCE        DEST        POLICY
+# If you want open access to the vpn from your local net,
+# uncomment the following line
+#loc           vpn         ACCEPT        info
+#vpn           loc         ACCEPT        info
+#
+loc            net         ACCEPT
+net            all         DROP
+all            all         REJECT
+</pre>
+
+<p>
+Le eccezioni alla policy per il gateL sono:
+</p>
+
+<pre>
+# /etc/shorewall/rules
+#ACTION         SOURCE    DEST     PROTO    DEST
+# Incoming icmp request
+Ping/ACCEPT     vpn       loc
+# Incoming ssh request
+SSH/ACCEPT      vpn       loc
+</pre>
+
+<p>
+Le eccezioni alla policy per il gateR sono:
+</p>
+
+<pre>
+# /etc/shorewall/rules
+#ACTION         SOURCE    DEST     PROTO    DEST
+# Outgoing icmp request
+Ping/ACCEPT     loc       vpn
+# Outgoing ssh request
+SSH/ACCEPT      loc       vpn
+</pre>
+
+
+<p>
+Attiviamo il tcpdump su pcL e su R:
+</p>
+
+<pre>
+pcL# tcpdump -i eth0 -n
+R# tcpdump -i any -n
+</pre>
+
+<p>
+ora eseguiamo un ping da pcR verso pcL e un ping da pcR verso gateL (eth0):
+</p>
+
+<pre>
+ <span class="yellow">(gateL)</span>  212.1.1.1 -- 212.1.1.2 -- 212.1.2.2 -- 212.1.2.1   <span class="yellow">(gateR)</span>
+              |                                      |
+          10.10.10.0/24                          10.10.20.0/24
+              |                                      |
+  <span class="yellow">(pcL)</span>   10.10.10.1                             10.10.20.4   <span class="yellow">(pcR)</span>
+
+
+pcR# ping -c 1 10.10.10.1; \
+     ping -c 1 212.1.1.1
+</pre>
+
+<p>
+Il traffico osservato dall'host R generato dal ping
+verso pcL passa cifrato,
+come pacchetti ESP, e invece quello generato dal ping verso gateL passa in chiaro
+(<a href="../capture/vpn-icmp-esp.acp" title="file per Ethereal">File ACP</a>).
+Il traffico osservato dall'host pcL &egrave; ovviamente in chiaro
+(<a href="../capture/vpn-icmp-clear.acp" title="file per Ethereal">File ACP</a>).
+</p>
+
+
+<p>
+Il file <code>/var/log/auth.log</code> del gateL contiene:
+</p>
+
+
+<pre>
+ipsec__plutorun: Starting Pluto subsystem...
+pluto[N]: Starting Pluto (Openswan Version 2.4.4 X.509-1.5.4 PLUTO_SENDS_VENDORID \
+                          PLUTO_USES_KEYRR; Vendor ID OEz}FFFfgr_e)
+pluto[N]: Setting NAT-Traversal port-4500 floating to off
+pluto[N]:    port floating activation criteria nat_t=0/port_fload=1
+pluto[N]:   including NAT-Traversal patch (Version 0.6c) [disabled]
+pluto[N]: ike_alg_register_enc(): Activating OAKLEY_AES_CBC: Ok (ret=0)
+pluto[N]: starting up 1 cryptographic helpers
+pluto[N]: started helper pid=643 (fd:6)
+pluto[N]: Using KLIPS IPsec interface code on 2.4.32-bs3
+pluto[N]: Changing to directory '/etc/ipsec.d/cacerts'
+pluto[N]: Changing to directory '/etc/ipsec.d/aacerts'
+pluto[N]: Changing to directory '/etc/ipsec.d/ocspcerts'
+pluto[N]: Changing to directory '/etc/ipsec.d/crls'
+pluto[N]:   Warning: empty directory
+pluto[N]: added connection description "netkit"
+pluto[N]: listening for IKE messages
+pluto[N]: adding interface ipsec0/eth0 212.1.1.1:500
+pluto[N]: loading secrets from "/etc/ipsec.secrets"
+pluto[N]: "netkit" #1: initiating Main Mode
+<span class="yellow">pluto[N]: ERROR: "netkit" #1: sendto on eth0 to 212.1.2.1:500 \
+          failed in main_outI1. Errno 1: Operation not permitted
+pluto[N]: packet from 212.1.2.1:500: received Vendor ID payload [Openswan \
+          (this version) 2.4.4  X.509-1.5.4 PLUTO_SENDS_VENDORID PLUTO_USES_KEYRR]
+pluto[N]: packet from 212.1.2.1:500: received Vendor ID payload [Dead Peer Detection]</span>
+pluto[N]: "netkit" #2: responding to Main Mode
+pluto[N]: "netkit" #2: transition from state STATE_MAIN_R0 to state STATE_MAIN_R1
+pluto[N]: "netkit" #2: STATE_MAIN_R1: sent MR1, expecting MI2
+pluto[N]: "netkit" #2: transition from state STATE_MAIN_R1 to state STATE_MAIN_R2
+pluto[N]: "netkit" #2: STATE_MAIN_R2: sent MR2, expecting MI3
+pluto[N]: "netkit" #2: Main mode peer ID is ID_IPV4_ADDR: '212.1.2.1'
+pluto[N]: "netkit" #2: I did not send a certificate because I do not have one.
+pluto[N]: "netkit" #2: transition from state STATE_MAIN_R2 to state STATE_MAIN_R3
+pluto[N]: "netkit" #2: STATE_MAIN_R3: sent MR3, ISAKMP SA established \
+          {auth=OAKLEY_RSA_SIG cipher=oakley_3des_cbc_192 prf=oakley_md5 group=modp1536}
+pluto[N]: "netkit" #3: responding to Quick Mode {msgid:43276e4f}
+pluto[N]: "netkit" #3: transition from state STATE_QUICK_R0 to state STATE_QUICK_R1
+pluto[N]: "netkit" #3: STATE_QUICK_R1: sent QR1, inbound IPsec SA installed, expecting QI2
+pluto[N]: "netkit" #3: transition from state STATE_QUICK_R1 to state STATE_QUICK_R2
+pluto[N]: "netkit" #3: STATE_QUICK_R2: IPsec SA established \
+          {ESP=&gt;0x494dff3a &lt;0x5e4bcfb6 xfrm=AES_0-HMAC_SHA1 NATD=none DPD=none}
+pluto[N]: "netkit" #1: received Vendor ID payload [Openswan (this version) 2.4.4  \
+           X.509-1.5.4 PLUTO_SENDS_VENDORID PLUTO_USES_KEYRR]
+pluto[N]: "netkit" #1: received Vendor ID payload [Dead Peer Detection]
+pluto[N]: "netkit" #1: transition from state STATE_MAIN_I1 to state STATE_MAIN_I2
+pluto[N]: "netkit" #1: STATE_MAIN_I2: sent MI2, expecting MR2
+pluto[N]: "netkit" #1: I did not send a certificate because I do not have one.
+pluto[N]: "netkit" #1: transition from state STATE_MAIN_I2 to state STATE_MAIN_I3
+pluto[N]: "netkit" #1: STATE_MAIN_I3: sent MI3, expecting MR3
+pluto[N]: "netkit" #1: Main mode peer ID is ID_IPV4_ADDR: '212.1.2.1'
+pluto[N]: "netkit" #1: transition from state STATE_MAIN_I3 to state STATE_MAIN_I4
+pluto[N]: "netkit" #1: STATE_MAIN_I4: ISAKMP SA established \
+          {auth=OAKLEY_RSA_SIG cipher=oakley_3des_cbc_192 prf=oakley_md5 group=modp1536}
+pluto[N]: "netkit" #4: initiating Quick Mode RSASIG+ENCRYPT+TUNNEL+PFS+UP {using isakmp#1}
+pluto[N]: "netkit" #4: transition from state STATE_QUICK_I1 to state STATE_QUICK_I2
+pluto[N]: "netkit" #4: STATE_QUICK_I2: sent QI2, <span class="red">IPsec SA established</span> \
+          {ESP=&gt;0x494dff3b &lt;0x5e4bcfb7 xfrm=AES_0-HMAC_SHA1 NATD=none DPD=none}
+</pre>
+
+
+<p>
+e quello del gateR contiene:
+</p>
+
+<pre>
+ipsec__plutorun: Starting Pluto subsystem...
+pluto[N]: Starting Pluto (Openswan Version 2.4.4 X.509-1.5.4 PLUTO_SENDS_VENDORID \
+                          PLUTO_USES_KEYRR; Vendor ID OEz}FFFfgr_e)
+pluto[N]: Setting NAT-Traversal port-4500 floating to off
+pluto[N]:    port floating activation criteria nat_t=0/port_fload=1
+pluto[N]:   including NAT-Traversal patch (Version 0.6c) [disabled]
+pluto[N]: ike_alg_register_enc(): Activating OAKLEY_AES_CBC: Ok (ret=0)
+pluto[N]: starting up 1 cryptographic helpers
+pluto[N]: started helper pid=677 (fd:6)
+pluto[N]: Using KLIPS IPsec interface code on 2.4.32-bs3
+pluto[N]: Changing to directory '/etc/ipsec.d/cacerts'
+pluto[N]: Changing to directory '/etc/ipsec.d/aacerts'
+pluto[N]: Changing to directory '/etc/ipsec.d/ocspcerts'
+pluto[N]: Changing to directory '/etc/ipsec.d/crls'
+pluto[N]:   Warning: empty directory
+pluto[N]: added connection description "netkit"
+pluto[N]: listening for IKE messages
+pluto[N]: adding interface ipsec0/eth0 212.1.2.1:500
+pluto[N]: loading secrets from "/etc/ipsec.secrets"
+pluto[N]: "netkit" #1: initiating Main Mode
+pluto[N]: "netkit" #1: received Vendor ID payload [Dead Peer Detection]
+pluto[N]: "netkit" #1: transition from state STATE_MAIN_I1 to state STATE_MAIN_I2
+pluto[N]: "netkit" #1: STATE_MAIN_I2: sent MI2, expecting MR2
+pluto[N]: "netkit" #1: I did not send a certificate because I do not have one.
+pluto[N]: "netkit" #1: transition from state STATE_MAIN_I2 to state STATE_MAIN_I3
+pluto[N]: "netkit" #1: STATE_MAIN_I3: sent MI3, expecting MR3
+pluto[N]: "netkit" #1: Main mode peer ID is ID_IPV4_ADDR: '212.1.1.1'
+pluto[N]: "netkit" #1: transition from state STATE_MAIN_I3 to state STATE_MAIN_I4
+pluto[N]: "netkit" #1: STATE_MAIN_I4: ISAKMP SA established \
+          {auth=OAKLEY_RSA_SIG cipher=oakley_3des_cbc_192 prf=oakley_md5 group=modp1536}
+pluto[N]: "netkit" #2: initiating Quick Mode RSASIG+ENCRYPT+TUNNEL+PFS+UP {using isakmp#1}
+pluto[N]: "netkit" #2: transition from state STATE_QUICK_I1 to state STATE_QUICK_I2
+pluto[N]: "netkit" #2: STATE_QUICK_I2: sent QI2, IPsec SA established \
+          {ESP=&gt;0x5e4bcfb6 &lt;0x494dff3a xfrm=AES_0-HMAC_SHA1 NATD=none DPD=none}
+pluto[N]: packet from 212.1.1.1:500: received Vendor ID payload [Openswan \
+          (this version) 2.4.4  X.509-1.5.4 PLUTO_SENDS_VENDORID PLUTO_USES_KEYRR]
+pluto[N]: packet from 212.1.1.1:500: received Vendor ID payload [Dead Peer Detection]
+pluto[N]: "netkit" #3: responding to Main Mode
+pluto[N]: "netkit" #3: transition from state STATE_MAIN_R0 to state STATE_MAIN_R1
+pluto[N]: "netkit" #3: STATE_MAIN_R1: sent MR1, expecting MI2
+pluto[N]: "netkit" #3: transition from state STATE_MAIN_R1 to state STATE_MAIN_R2
+pluto[N]: "netkit" #3: STATE_MAIN_R2: sent MR2, expecting MI3
+pluto[N]: "netkit" #3: Main mode peer ID is ID_IPV4_ADDR: '212.1.1.1'
+pluto[N]: "netkit" #3: I did not send a certificate because I do not have one.
+pluto[N]: "netkit" #3: transition from state STATE_MAIN_R2 to state STATE_MAIN_R3
+pluto[N]: "netkit" #3: STATE_MAIN_R3: sent MR3, ISAKMP SA established \
+          {auth=OAKLEY_RSA_SIG cipher=oakley_3des_cbc_192 prf=oakley_md5 group=modp1536}
+pluto[N]: "netkit" #4: responding to Quick Mode {msgid:e8707608}
+pluto[N]: "netkit" #4: transition from state STATE_QUICK_R0 to state STATE_QUICK_R1
+pluto[N]: "netkit" #4: STATE_QUICK_R1: sent QR1, inbound IPsec SA installed, expecting QI2
+pluto[N]: "netkit" #4: transition from state STATE_QUICK_R1 to state STATE_QUICK_R2
+pluto[N]: "netkit" #4: STATE_QUICK_R2: <span class="red">IPsec SA established</span> \
+          {ESP=&gt;0x5e4bcfb7 &lt;0x494dff3b xfrm=AES_0-HMAC_SHA1 NATD=none DPD=none}
+</pre>
+
+<p>
+dove abbiamo evidenziato in <span class="yellow">colore</span>
+l'attesa del gateR da parte del gateL e in <span class="red">colore</span>
+la corretta apertura del canale cifrato.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr> 
+  <td class=content>
+  <h3><a id=keys>Generazione delle chiavi</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la generazione delle chiavi abbiamo usato il pacchetto
+<code>openswan</code> installato su una Debian. I comandi:
+</p>
+
+<pre>
+# ipsec newhostkey --hostname gateL --output ipsec.secrets.L --bits 4096
+# ipsec newhostkey --hostname gateR --output ipsec.secrets.R --bits 4096
+</pre>
+
+<p>
+Poi dal file <code>ipsec.secrets.L</code> 
+abbiamo estratto la stringa alla destra
+di <code>#pubkey=</code> e l'abbiamo riportata sul file
+<code>ipsec.conf</code> alla destra del simbolo <code>leftrsasigkey=</code>.
+Analogamente dal file <code>ipsec.secrets.R</code>
+abbiamo estratto la stringa alla destra
+di <code>#pubkey=</code> e l'abbiamo riportata sul file
+<code>ipsec.conf</code> alla destra del simbolo
+<code>rightrsasigkey=</code>.<br>
+In seguito i file <code>ipsec.secrets.{L,R}</code> sono diventati
+<code>ipsec.secrets</code> nei rispettivi host.
+</p>
+
+
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr> 
+  <td class=content>
+  <h3><a id=dns>Configurare IPSec nel DNS</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il termine &quot;opportunistic encryption&quot; indica la
+possibilit&agrave; di attivare una cifratura anche se non precedentemente
+configurata con lo scambio delle chiavi. Naturalmente
+entrambi i gateway devono essere configurati in modo da attivare
+questa particolare modalit&agrave;.
+</p>
+
+<p>
+Per generare la chiave pubblica nel formato opportunistic-encryption
+per i record DNS TXT e KEY:
+</p>
+
+<pre>
+gateL# ipsec showhostkey --file /etc/ipsec.secrets \
+                         --txt @L.istituto.it<span class="blue">
+# RSA 4096 bits   gateL   Sun May 22 00:40:36 2005
+        IN      TXT     "X-IPsec-Server(10)=@L.istituto.it" " AQNk...Hww=="</span>
+gateL# ipsec showhostkey --file /etc/ipsec.secrets \
+                         --key @L.istituto.it<span class="blue">
+# RSA 4096 bits   gateR   Sun May 22 00:44:09 2005
+        IN      KEY     0x4200 4 1 AQOX...0Q=="</span>
+</pre>
+
+<p>
+analogamente per il gateR.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr> 
+  <td class=content>
+  <h3><a id=n2n>N2N: a Layer Two Peer-to-peer VPN</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+From the theory
+<a href="http://alfonsofuggetta.org/mambo/images/stories/Documents/Papers/TheNetIsFlat.pdf"
+   title="external link">"The NET is flat"</a>
+by Alfonso Fuggetta,
+in
+<a href="http://listgateway.unipi.it/pipermail/ntop/2008-March/013347.html"
+   title="external link">March 2008</a>,
+Luca Deri announced a
+<a href="http://www.ntop.org/n2n/"
+   title="external link">n2n</a>
+(Open Source project):
+</p>
+
+<p>
+"Dear all,
+this is to announce you the first release of n2n (network-to-network),  
+a layer-two peer-to-peer (p2p) VPN. Available for Linux, OSX and  
+Win32, n2n allows users to create their personal, secure Internet, by  
+creating a network overlay on top of the Internet. Contrary to most  
+p2p protocols, n2n allows users to run their own edge and supernodes,  
+in order to maximize security and performance. All communications are  
+encrypted by keys specified in edge nodes, without delegating security  
+to third parties. n2n allows to cross firewalls, so that you can  
+create your network regardless of location, connection type, and  
+configuration. Nodes can have either dynamic or static IP address, so  
+that you can always find your ntop PC, regardless of your current  
+network address."
+</p>
+
+
+<p>
+"n2n is a layer-two peer-to-peer virtual private network (VPN) which allows users to exploit features typical of P2P applications at network instead of application level. This means that users can gain native IP visibility (e.g. two PCs belonging to the same n2n network can ping each other) and be reachable with the same network IP address regardless of the network where they currently belong. In a nutshell, as OpenVPN moved SSL from application (e.g. used to implement the https protocol) to network protocol, n2n moves P2P from application to network level."
+</p>
+
+<p>
+To demonstrate the features' of n2n we built an experiment
+using a virtual lab with two LAN connected with Openswan VPN
+<a href="vpn-desktop-n2n.png" title="immagine PNG">(screenshot)</a>.
+The changes are limited to adding an "Internet node" that is
+running <code>supernode</code> while nodes in the internal LAN
+we added running <code>edge</code>.
+As n2n claimed the nodes in each LAN skip any previous limitation.
+</p>
+
+<p>
+Configure it:
+</p>
+
+<pre>
+supernode# supernode -l 7654<span class="blue">
+16/Nov/2008 08:41:30 [supernode.c: 474] Supernode ready: listening on port 7654 [TCP/UDP] </span>
+
+pcL# edge -d edge0 -m 00:00:00:00:00:01  -a 192.168.1.1 \
+          -c netkit -k netkitkey -l 212.1.3.1:7654 -f<span class="blue">
+16/Nov/2008 08:42:58 [tuntap_linux.c:  38] Interface edge0 has MAC 00:00:00:00:00:01
+16/Nov/2008 08:42:58 [     edge.c:1290] Using supernode 212.1.3.1:7654 </span>
+
+pcR# edge -d edge0 -m 00:00:00:00:00:02  -a 192.168.1.2 \
+          -c netkit -k netkitkey -l 212.1.3.1:7654 -f<span class="blue">
+16/Nov/2008 08:43:56 [tuntap_linux.c:  38] Interface edge0 has MAC 00:00:00:00:00:02
+16/Nov/2008 08:43:56 [     edge.c:1290] Using supernode 212.1.3.1:7654 </span>
+</pre>
+
+<p>
+Test it:
+</p>
+
+<pre>
+pcL# ping -c 1 192.168.1.2<span class="blue">
+PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=86.7 ms
+
+--- 192.168.1.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 86.776/86.776/86.776/0.000 ms </span>
+pcL# arp -n<span class="blue">
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.1.2              ether   00:00:00:00:00:02   C                     edge0
+10.10.10.2               ether   fe:fd:0a:0a:0a:02   C                     eth0 </span>
+</pre>
+
+<p>
+Demostrate it:
+</p>
+
+<pre>
+pcR# /etc/init.d/ssh start
+pcL# ssh 10.10.20.4<span class="blue">
+ssh: connect to host 10.10.20.4 port 22: Connection refused</span>
+pcL# ssh 192.168.1.2<span class="blue">
+root@192.168.1.2's password: </span>
+</pre>
+
+<p>
+Very interesting package ! Thanks Luca Deri !!
+
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by-nc-sa/2.5/">
+   <img alt="Creative Commons License"
+        src="80x15.png"></a>
+<span class="copyright">
+Sandro Doro (sandro.doro @ istruzione.it)<br>
+Ultima modifica: $Date: 2008-11-18 15:02:00 $
+</span>
+</address>
+
+
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+$Id: README,v 1.2 2006/11/18 17:44:24 doros Exp $
+
+This experience is the *same* of the www.netkit.org with little changes
+due to use of bind9 instead of bind. We added also a X geometry parameter
+to position xterm in screen as in DNS hierarchy.
+
+

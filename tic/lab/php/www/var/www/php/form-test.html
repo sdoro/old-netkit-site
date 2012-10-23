@@ -1,0 +1,26 @@
+<html>
+  <!-- $Id: form-test.html,v 1.1 2004/12/06 16:42:31 doros Exp $ -->
+  <head>
+    <title> Esempio di form HTML con validazione campi inseriti </title>
+  </head>
+  <body>
+
+  <ul>
+    <li>Il campo Nome &egrave; obbligatorio</li>
+    <li>Il campo Email &egrave; obbligatorio</li>
+    <li>Nel campo Email deve comparire il simbolo @</li>
+    <li>Nel campo Email deve comparire il dominio it</li>
+    <li>Il campo Email deve iniziare con le lettere sa</li>
+    <li>Nel campo Email deve comparire la sequenza abc</li>
+  </ul>
+
+
+  <form action="action-test.php" method="POST">
+    Nome: <input type="text" name="name" /><br>
+    Email: <input type="text" name="email" /><br>
+    <input type="submit" name="submit" value="imposta!">
+  </form>
+
+
+  </body>
+</html>

@@ -1,0 +1,12 @@
+#
+# /etc/pam.d/common-auth - authentication settings common to all services
+# $Id: common-auth,v 1.1 2005/08/20 16:43:40 doros Exp $
+
+# This file is included from other service-specific PAM config files,
+# and should contain a list of the authentication modules that define
+# the central authentication scheme for use on the system
+# (e.g., /etc/shadow, LDAP, Kerberos, etc.).  The default is to use the
+# traditional Unix authentication mechanisms.
+#
+auth	sufficient	pam_krb5.so nullok_secure forwardable
+auth	required	pam_unix.so nullok_secure use_first_pass

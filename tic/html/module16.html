@@ -1,0 +1,124 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: module16.html,v 1.11 2007-04-08 10:34:42 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - modulo 16</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 16</h1>
+<h2 class="center">Creazione e mantenimento di un sito Web</h2>
+
+
+<h3>Public Key Infrastucture (PKI)</h3>
+
+<p>
+Nei
+<a href="http://puntoeduft.indire.it/materialic/Modulo16/profilo_16_C2.html"
+   title="sito MIUR">documenti del MIUR</a> di questo modulo
+viene trattato l'argomento PKI e visto che &egrave; un argomento
+di attualit&agrave; cercheremo di approfondirlo anche nell'esperienza
+<a href="uml-PKI.html">virtuale</a>.
+</p>
+
+<p>
+I documenti che si riferiscono a queste tematiche nel
+mondo Open Source sono molti tra i quali ne cito i principali:
+</p>
+
+<ul>
+  <li><a href="http://www.openca.org/openca/docs/"
+         title="link esterno">OpenCA</a></li>
+  <li><a href="http://ospkibook.sourceforge.net/"
+         title="link esterno">Open-source PKI Book</a></li>
+  <li><a href="http://www.alw.nih.gov/pki/docs/AMG-Oct97-PKI/index.htm"
+         title="link esterno">PKI Overview</a></li>
+  <li><a href="http://www.pki-page.org/"
+         title="link esterno">The PKI page</a></li>
+</ul>
+
+<p>
+A livello europeo esite l'infrastruttura della gerarchia
+<a href="http://www.europki.org/"
+   title="link esterno">EuroPKI</a> la cui missione &egrave; la
+fornitura di servizi di certificazione di chiavi pubbliche per la
+comunit&agrave; europea a scopo di identificazione di individui,
+di nodi di rete (per esempio IPSec) e di servizi di rete (come
+ad esempio Web server). Consiglio la lettura delle
+<a href="http://www.europki.org/europki/faqtroubl/"
+   title="link esterno">FAQ</a>. Due esempi italiani all'interno della
+EuroPKI che si possono consultare sono:
+</p>
+
+<ul>
+  <li><a href="http://pki.unimo.it/"
+         title="link esterno">Universit&agrave; di Modena e Reggio Emilia</a></li>
+  <li><a href="http://ca.unito.it"
+         title="link esterno">Universit&agrave; di Torino</a></li>
+</ul>
+
+<p>
+Queste due realizzazioni italiane, con il loro corredo di documenti
+e policy, possono essere un utile spunto nel caso in cui
+avessimo l'incarico di organizzare una PKI.
+</p>
+
+
+<p>
+La mia personale opinione &egrave; che tali infrastrutture non siano
+realizzabili all'interno della scuola soprattutto per problemi legati
+alla carenza di personale amministrativo. Inoltro lo sforzo per
+educare gli utenti (personale interno, docenti e famiglie) sarebbe
+notevole.<br>
+In ogni caso non avrei dubbi sulla scelta
+Open Source poich&egrave; riduce i costi per il software a zero e risulta
+una soluzione &quot;alla pari&quot; con le soluzioni commerciali.
+</p>
+
+
+<p>
+La soluzione che proveremo sar&agrave; quella di usare OpenSSL
+per generare certificati per le macchine server, per qualche macchina
+client e qualche utente.
+Comunque verr&agrave; usata anche la lista
+dei certificati revocati in modo da poter sperimentare anche questa
+modalit&agrave;.
+</p>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-04-08 10:34:42 $
+</span>
+</address>
+
+
+</body>
+
+</html>

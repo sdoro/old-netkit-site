@@ -1,0 +1,13 @@
+#
+# /etc/shorewall/policy
+# $Id: policy,v 1.2 2007-02-16 17:07:30 doros Exp $
+#
+#SOURCE    DEST       POLICY        LOG LEVEL    LIMIT:BURST
+loc        net        ACCEPT
+net        all        DROP          ULOG
+#
+# If you want open access to the internet from your firewall, uncomment the
+# following line
+fw         loc        ACCEPT        ULOG
+all        all        REJECT        ULOG
+#LAST LINE -- ADD YOUR ENTRIES ABOVE THIS LINE -- DO NOT REMOTE

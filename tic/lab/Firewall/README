@@ -1,0 +1,21 @@
+$Id: README,v 1.11 2007-02-09 16:44:53 doros Exp $
+
+In this experience the node "proxy" has network connectivity with the
+real host. Before start the Netkit script you must create a tap device
+as normal user:
+
+realHost$ ifname=`sudo tunctl -b -u knoppix`
+
+and then set IP address:
+
+realHost$ sudo ifconfig $ifname 192.168.77.1
+
+as described in:
+
+http://www.tic.fdns.net/tic/html/lab-setting.html#network
+
+Now you must add a routing rule:
+
+realHost# echo "1" > /proc/sys/net/ipv4/ip_forward; \
+          route add -net 10.10.10.64/28 gw 192.168.77.2
+

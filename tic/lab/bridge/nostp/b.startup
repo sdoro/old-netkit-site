@@ -1,0 +1,19 @@
+# $Id: b.startup,v 1.1 2006/10/15 11:16:53 doros Exp $
+# configure IP address and MAC address
+ifconfig eth0 up hw ether 00:00:00:00:00:01
+# remove IPv6 address
+ifconfig eth0 del fe80::fcfd:ff:fe00:0/64
+ifconfig eth1 up hw ether 00:00:00:00:00:02
+# remove IPv6 address
+ifconfig eth1 del fe80::fcfd:ff:fe00:0/64
+ifconfig eth2 up hw ether 00:00:00:00:00:03
+# remove IPv6 address
+ifconfig eth2 del fe80::fcfd:ff:fe00:0/64
+# configure bridge
+brctl addbr br0
+brctl addif br0 eth0
+brctl addif br0 eth1
+brctl addif br0 eth2
+# turn stp off
+brctl stp br0 off
+ifconfig br0 up

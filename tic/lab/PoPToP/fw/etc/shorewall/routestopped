@@ -1,0 +1,6 @@
+# /etc/shorewall/routestopped
+# $Id: routestopped,v 1.2 2007-02-03 17:22:36 doros Exp $
+#
+#INTERFACE	HOST(S)
+eth1		-
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

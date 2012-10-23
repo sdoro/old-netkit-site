@@ -1,0 +1,816 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-dualSamba.html,v 1.20 2007-10-31 16:22:10 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-dualSamba</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 9 - Amministrazione, gestione e autenticazione in rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Samba in multipla istanza</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-EntSamba.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-krb.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+La rete descritta dalla mappa
+(<a href="pdf/dualSamba.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/dualSamba.xml" title="file per Dia">xml</a>)
+&egrave; costituita dall'unione di una rete virtuale (192.168.50.0/24)
+realizzata tramite UML con una rete virtuale (192.168.76.0/24)
+realizzata tramite QEMU e con il nodo reale con funzione di routing
+tra le due.
+</p>
+
+<p>
+L'esercitazione prende lo spunto da un caso di configurazione
+di un HA-cluster di tipo active-active dove uno dei due
+nodi fornisce autenticazione Samba (Domain Control) e l'altro fornisce
+filesystem Samba (Domain Member). Nel caso di fault di un nodo quello
+superstite deve prendersi incarico del servizio fornito
+dal nodo guasto e quindi in tale circostanza nel superstite sarebbero
+in esecuzione due specifiche e distinte istanze di Samba.<br>
+I componenti sono:
+</p>
+
+<ul>
+  <li>
+  Il nodo <code>ldap</code> (192.168.50.1) fornisce il servizio
+  DNS per il dominio <code>istituto.it</code>
+  e il servizio LDAP database di back-end per il servizio Samba.<br>
+  Il server <code>ldap</code> &egrave; connesso
+  alla rete reale ed &egrave; quindi gateway per tutte le macchine
+  della rete virtuale 192.168.50.0/24.
+  Per la raggiungibilit&agrave; della macchina
+  reale con le macchine della rete virtuale occorre aggiungere questa
+  regola di routing:<br>
+ 
+<pre>
+realHost# route add -net 192.168.50.0/29 gw 192.168.77.2
+</pre>
+  </li>
+
+  <li>
+  Uno o due nodi in funzione della richiesta allo startup: se non
+  vengono passato parametri la chiamata verr&agrave; interpretata come la
+  richiesta di generare un singolo
+  nodo <code>dualSamba</code> (192.168.50.101 e 192.168.50.102)
+  con installati i due specifici
+  servizi Samba (in simulazione di fault di un nodo del cluster);
+  nel caso in cui invece venga specificato
+  il parametro <span class="yellow">nofault</span> vengono generati
+  due distinti nodi <code>Core</code>
+  (192.168.50.101) e <code>Home</code> (192.168.50.102) con ognuno
+  lo specifico servizio Samba
+  (in simulazione di assenza di guasti nel cluster).
+  </li>
+ 
+  <li>
+  Il nodo client &egrave; un sistema Microsoft Windows XP Professional SP2
+  in esecuzione utilizzando
+  <a href="http://fabrice.bellard.free.fr/qemu/">QEMU</a>
+  presente nel live-{CD,USB}.
+  </li>
+
+</ul>
+
+<p>
+Scarica il file <a href="dualSamba.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente tutto il necessario e scompattalo in una sottodirectory della
+<code>HOME</code> dell'utente.
+Dopo aver settato correttamente l'ambiente Netkit
+lancia lo script:
+</p>
+
+<pre>
+realHost$ ./lab start <span class="yellow">[nofault]</span>
+</pre>
+
+<p>
+ricordati che anche lo stop accetta un parametro opzionale:
+</p>
+
+<pre>
+realHost$ ./lab crash <span class="yellow">[nofault]</span>
+</pre>
+
+<p>
+Questa sperimentazione si divide nelle seguenti sezioni:
+</p>
+
+<ul>
+  <li><a href="#dev">Ricompilazione Samba</a></li>
+  <li><a href="#samba">Configurazione del Domain Controller e del Domain Member</a></li>
+  <li><a href="#qemu">Configurazione QEMU</a></li>
+  <li><a href="#xp">Configurazione XP</a></li>
+  <li><a href="#browsing">browsing</a></li>
+  <li><a href="#XPjoin">Join al dominio del client XP</a></li>
+</ul>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="dev">Ricompilazione Samba</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per far coesistere due istanze dello stesso servizio sullo
+stesso nodo occorre che i "data base" dei due servizi
+siano distinti. Poich&egrave; non esiste nel file di configurazione
+<code>smb.conf</code> un metodo per controllarlo completamente
+occorre passare per una ricompilazione modificando "a mano"
+i path dei vari "data base".<br>
+Adottiamo quindi la strategia che
+l'istanza che controlla l'autenticazione sia quella immmutata
+proveniente dalla distribuzione Debian Sarge mentre l'istanza
+che gestisce lo spazio su disco sia quella modificata. Anzi
+cogliamo l'occasione per evidenziare che questa istanza potrebbe
+essere ancor pi&ugrave; customizzata in modo da includere,
+ad esempio, il controllo autivirus.
+</p>
+
+<p>
+Si scaricano i sorgenti (eventualmente anche con wget)
+aggiungendo anche le locazioni per i fix di sicurezza:
+</p>
+
+<pre>
+# /etc/apt/sources.list
+[...]
+deb-src http://security.debian.org/ stable/updates main contrib
+</pre>
+
+<pre>
+vm# mkdir /tmp/samba; \
+    cd /tmp/samba; \
+    apt-get update; \
+    apt-get --download-only source samba<span class="blue">
+Reading Package Lists... Done
+Building Dependency Tree... Done
+Need to get 15.7MB of source archives.
+Get:1 http://ftp.de.debian.org stable/main samba 3.0.14a-3 (dsc) [1069B]
+Get:2 http://ftp.de.debian.org stable/main samba 3.0.14a-3 (tar) [15.6MB]
+Get:3 http://ftp.de.debian.org stable/main samba 3.0.14a-3 (diff) [113kB]
+Fetched 15.7MB in 1m56s (135kB/s)
+Download complete and in download only mode</span>
+vm# ls -l<span class="blue">
+total 15416
+-rw-r--r--  1 root root   112894 May 27 15:17 samba_3.0.14a-3.diff.gz
+-rw-r--r--  1 root root     1069 May 27 15:17 samba_3.0.14a-3.dsc
+-rw-r--r--  1 root root 15605851 Apr 19  2005 samba_3.0.14a.orig.tar.gz</span>
+</pre>
+
+
+<p>
+Scompattiamo i sorgenti "alla Debian":
+</p>
+
+<pre>
+vm# dpkg-source -x samba_3.0.14a-3.dsc
+</pre>
+
+<p>
+Applichiamo la nostra customizzazione per sostituire
+alla parola <code>samba</code> la parola <code>sambaHome</code>
+sulla <code>debian/patches/fhs.patch</code>:
+</p>
+
+<pre>
+vm# cd samba-3.0.14a/
+vm# cp <a href="../lab/dualSamba/debian/fhs.patch" title="patch">fhs.patch</a> debian/patches/fhs.patch
+</pre>
+
+<p>
+Compiliamo:
+</p>
+
+<pre>
+vm# fakeroot dpkg-buildpackage -b -uc
+</pre>
+
+<p>
+al termine, anche se in presenza di errori,
+nella directory <code>source/bin</code> troveremo
+i file binari.<br>
+Di questi sono di nostro interesse solo
+<code>nmbd</code>,
+<code>smbd</code>,
+<code>winbindd</code>,
+<code>net</code>,
+<code>pdbedit</code>,
+<code>smbpasswd</code>,
+<code>wbinfo</code>
+che provvediamo a rinominare in
+<code>nmbdHome</code>,
+<code>smbdHome</code>,
+<code>winbinddHome</code>,
+<code>netHome</code>,
+<code>pdbeditHome</code>,
+<code>wbinfoHome</code>,
+<code>smbpasswdHome</code>. Spostiamo nella directory
+<code>/usr/sbin</code> i primi tre e nella directory
+<code>/usr/bin</code> i restanti.
+</p>
+
+<p>
+Discorso a parte occorre fare per la directory dove vengono
+mantenuti i pid dei processi in esecuzione. La radice &egrave;
+<code>/var/run</code> a cui si postpone <code>/samba</code>
+per il pacchetto originale e a cui postponiamo <code>/sambaHome</code>
+per il pacchetto modificato. Ne segue che anche gli script
+<code>/etc/init.d/sambaHome</code> e <code>/etc/init.d/winbindHome</code> 
+debbano essere variati per adattarsi a tali modifiche.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="samba">Configurazione del Domain Controller e del Domain Member</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il documento che abbiamo seguito per la realizzazione di questa esperienza
+&egrave; "Samba-3 by Example" di John H. Terpstra. In particolare i capitoli
+"Making Users Happy", "A Distributed 2000-User Network" e
+"Adding UNIX/Linux Servers and Clients".<br>
+Diffido il lettore dalla lettura "senza pinze" della enorme quantit&agrave;
+di documentazione
+sull'argomento in quanto l'autore della citata opera ha speso molto
+tempo per riportare tutti i particolari
+per una precisa e corretta configurazione.
+Un esempio per
+tutti &egrave; il join al dominio di una macchina Microsoft XP:
+non occorre pi&ugrave; alcuna modifica con <code>regedit</code> e
+potete trovare in rete cosa ne pensa lo stesso John H. Terpstra.<br>
+Inoltre &egrave; stato essenziale l'aiuto fornito dalla mailing list
+italiana <code>Samba-it@xsec.it</code> dedicata a samba e in particolare 
+da Simo Sorce che cogliamo l'occasione di ringraziare ancora.
+</p>
+
+<p>
+La configurazione del Domain Controller non &egrave; dissimile
+alla classica configurazione di Samba con backend su LDAP.
+</p>
+
+<pre>
+# /etc/samba/smb-Core.conf
+[global]
+
+   workgroup = NetkitWG
+   netbios name = Core
+   server string = CoreServerString
+
+   domain logons = Yes
+   os level = 65
+   preferred master = Yes
+   domain master = Yes
+
+   bind interfaces only = yes
+   interfaces = 192.168.50.101, 127.0.0.1
+
+[...]
+
+   passdb backend = ldapsam:ldap://ldap/
+   ldap admin dn = cn=samba,ou=DSA,dc=istituto,dc=it
+   ldap suffix = dc=istituto,dc=it
+   ldap group suffix = ou=Groups
+   ldap user suffix = ou=Users
+   ldap machine suffix = ou=Computers
+
+[...]
+</pre>
+
+
+<p>
+Il Domain Member che fornisce il servizio di filesystem si appoggia
+al domain controller per le autorizzazioni e in particolare
+abbiamo fatto uso di <code>winbind</code> per la traduzione
+dei SID in uid/gid
+<a href="XP-dualSamba-12.png" title="immagine PNG">(eccone gli effetti)</a>.
+</p>
+
+<pre>
+# /etc/samba/smb-Home.conf
+[global]
+
+   workgroup = NetkitWG
+   netbios name = Home
+   server string = HomeServerString
+
+   bind interfaces only = yes
+   interfaces = 192.168.50.102
+
+   admin users = Administrator
+   security = domain
+
+[...]
+</pre>
+
+<p>
+Per la risoluzione
+dei nomi delle entit&agrave; amministrative entrambi si appoggiano
+al Name Service Switch (NSS).<br>
+Non abbiamo usato i roaming profiles.
+</p>
+
+
+<p>
+Personalizziamo la popolazione del database con uid non
+inferiori a 2000 e gid non inferiori a 1500 in modo da non
+avere collisioni con il database su file (passwd, group):
+</p>
+
+<pre>
+core# smbldap-populate -u 2000 -g 1500
+</pre>
+
+
+<p>
+Per il test costruiamo il gruppo <code>gtest</code>
+</p>
+
+<pre>
+core# smbldap-groupadd -a gtest
+</pre>
+
+<p>
+e un utente <code>utest</code> (passwd: secret):
+</p>
+
+<pre>
+core# smbldap-useradd -a -G gtest -c "Test user" -B 1 -m -P utest
+</pre>
+
+<p>
+Per verificare proviamo:
+</p>
+
+<pre>
+core# id utest<span class="blue">
+uid=2001(utest) gid=513(Domain Users) groups=513(Domain Users),1500(gtest)</span>
+</pre>
+
+
+<p>
+Testiamo le ACL attive:
+</p>
+
+<pre>
+ldap# smbcacls //home/Administrator file-inHome -U administrator%not24get<span class="blue">
+REVISION:1
+OWNER:NETKITWG\Administrator
+GROUP:NETKITWG\Domain Admins
+ACL:NETKITWG\Administrator:ALLOWED/0/RW
+ACL:NETKITWG\Domain Admins:ALLOWED/0/R
+ACL:\Everyone:ALLOWED/0/R</span>
+ldap# smbcacls //core/Administrator file-inCore -U administrator%not24get<span class="blue">
+REVISION:1
+OWNER:NETKITWG\Administrator
+GROUP:NETKITWG\Domain Admins
+ACL:NETKITWG\Administrator:ALLOWED/0/RW
+ACL:NETKITWG\Domain Admins:ALLOWED/0/R
+ACL:\Everyone:ALLOWED/0/R</span>
+sambaCore# getfacl /home/Administrator/file-inCore<span class="blue">
+# owner: Administrator
+# group: Domain Admins
+user::rw-
+group::r--
+other::r--</span>
+</pre>
+
+<p>
+Verifichiamo il join al dominio dei due servizi:
+</p>
+
+<pre>
+sambaCore# net rpc testjoin<span class="blue">
+Join to 'NETKITWG' is OK</span>
+sambaHome# netHome -s /etc/samba/smbHome.conf rpc testjoin<span class="blue">
+Join to 'NETKITWG' is OK</span>
+</pre>
+
+<p>
+Listiamo le risorse nel dominio:
+</p>
+
+
+<pre>
+ldap# smbtree -U administrator%not24get<span class="blue">
+NETKITWG
+        \\HOME                          HomeServerString
+                \\HOME\ADMIN$           IPC Service (HomeServerString)
+                \\HOME\IPC$             IPC Service (HomeServerString)
+                \\HOME\profdata         Profile Data Share
+                \\HOME\profiles         Profile Share
+                \\HOME\netlogon         Network Logon Service
+        \\CORE                          CoreServerString
+                \\CORE\ADMIN$           IPC Service (CoreServerString)
+                \\CORE\IPC$             IPC Service (CoreServerString)
+                \\CORE\profiles         Profile Share
+                \\CORE\netlogon         Network Logon Service</span>
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="qemu">Configurazione QEMU</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il live-{CD,USB} (versione &ge; v2.1) contiene una versione di
+QEMU con abilitato il supporto per il modulo
+acceleratore.
+Per l'uso di QEMU rimandiamo al sito stesso e al nostro
+<a href="qemu.html" title="link interno">approfondimento</a>.
+</p>
+
+<p>
+Per caricarlo:
+</p>
+
+
+<pre>
+realHost$ sudo modprobe kqemu
+</pre>
+
+
+<p>
+A partire da un CD contenente una installazione per XP Pro SP2
+regolarmente licenziato &egrave; possibile costruire una immagine per
+QEMU. Questa immagine vi verr&agrave; fornita durante il corso
+tramite NFS. A partire da questa immagine <code>XPPSP2.img</code>,
+rigorosamente in read-only, ci costruiamo un "delta":
+</p>
+
+<pre>
+realHost$ qemu-img create -b XPPSP2.img -f qcow delta-XPPSP2.img
+</pre>
+
+<p>
+che avr&agrave; dimensioni proporzionali al numero di variazioni
+fatte a partire dalla immagine iniziale XPPSP2.img (infatti all'inizio
+&egrave; di 8 KB).<br>
+Siamo ora pronti a far partire Microsoft XP Pro SP2:
+</p>
+
+
+<pre>
+realHost$ sudo modprobe kqemu
+realHost$ ifname=`sudo tunctl -b -u knoppix`; \
+          export QEMU_SW="-usb -usbdevice tablet -kernel-kqemu"; \
+          export QEMU_NET="-net nic -net tap,ifname=$ifname"; \
+          qemu -m 140 -hda <span class="yellow">delta-XPPSP2.img</span> $QEMU_SW $QEMU_NET
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="xp">Configurazione XP</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+In questa sezione faremo riferimento al prodotto Microsoft 
+Windows XP Professional versione 2002 Service Pack 2.
+</p>
+
+
+<p>
+Configuriamo per prima cosa la connessione alla rete
+<a href="XP-dualSamba-01.png" title="immagine PNG">(screenshot)</a>
+inserendo l'IP address, il default gateway e il DNS
+<a href="XP-dualSamba-02.png" title="immagine PNG">(screenshot)</a>.
+In seguito configuriamo il server WINS e abilitiamo il
+NetBIOS su TCP/IP
+<a href="XP-dualSamba-03.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+<p>
+Un'altra cosa da fare per non incontrare messaggi che
+segnalano in maniera intermittente l'indisponibilit&agrave; del
+dominio &egrave; quella di inserire l'IP address e il nome
+del controllore di dominio nel file
+C:\\WINDOWS\\system32\\drivers\\etc\\hosts.
+</p>
+
+<p>
+In seguito &egrave; meglio configurare il browser della macchina host
+che allo startup mostri la pagina vuota e non utilizzi il server proxy.
+</p>
+
+<p>
+Disabilitiamo il firewall andando nella sezione servizi e cambiamo
+il metodo di attivazione del firewall da "automatico" in "manuale".
+</p>
+
+<p>
+Carichiamo uno sfondo omogeneo (grigio per esempio) e disabilitiamo
+il save screen.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="browsing">Browsing</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+&Egrave; interessante notare come funziona il browsing
+della rete. Se ad esempio, dal nodo <code>ldap</code>
+chiediamo la risoluzione del nome <code>qemu-XP</code>
+con il broadcast:
+</p>
+
+<pre>
+ldap# nmblookup qemu-xp<span class="blue">
+querying qemu-xp on 192.168.50.255
+name_query failed to find name qemu-xp</span>
+</pre>
+
+<p>
+se invece utilizziamo il WINS server (e
+indifferentemente dall'uso del DNS) si utilizza l'unicast
+e il nome viene risolto:
+</p>
+
+<pre>
+ldap# nmblookup -U core -R qemu-xp<span class="blue">
+querying qemu-xp on 192.168.50.101
+192.168.76.2 qemu-xp&lt;00&gt;</span>
+
+ldap# nmblookup -U 192.168.50.101 -R qemu-xp<span class="blue">
+querying qemu-xp on 192.168.50.101
+192.168.76.2 qemu-xp&lt;00&gt;</span>
+</pre>
+
+<p>
+Interessante anche la query:
+</p>
+
+<pre>
+ldap# nmblookup netkitwg#1c<span class="blue">
+querying netkitwg on 192.168.50.255
+192.168.50.101 netkitwg&lt;1c&gt;</span>
+</pre>
+
+
+<p>
+All'interno della macchina XP le cose sono analoghe. Avendo
+impostato il WINS server il comando:
+</p>
+
+<pre>
+XP C:&gt; nbtstat -n<span class="blue">
+Connessione alla rete locale (LAN):
+Indirizzo IP nodo: [192.168.76.2] ID ambito: []
+
+                Tabella nomi locali NetBIOS
+
+       Nome               Tipo         Stato
+    ---------------------------------------------
+    QEMU-XP        &lt;00&gt;  UNICO       Registrato
+    NETKITWG       &lt;00&gt;  GRUPPO      Registrato
+    QEMU-XP        &lt;20&gt;  UNICO       Registrato
+    NETKITWG       &lt;1E&gt;  GRUPPO      Registrato
+    NETKITWG       &lt;1D&gt;  UNICO       Registrato
+    ..__MSBROWSE__.&lt;01&gt;  GRUPPO      Registrato</span>
+</pre>
+
+
+<p>
+Per avere i nomi nella cache:
+</p>
+
+
+<pre>
+XP C:&gt; nbtstat -c<span class="blue">
+Connessione alla rete locale (LAN):
+Indirizzo IP nodo: [192.168.76.2] ID ambito: []
+
+                  Tabella nomi cache remota NetBIOS
+
+        Nome              Tipo       Indirizzo host    Durata [sec]
+    -------------------------------------------------------------------
+    NETKITWG       &lt;1C&gt;  GRUPPO          192.168.50.101      227
+    NETKITWG       &lt;1B&gt;  UNICO           192.168.50.101      25
+    CORE           &lt;20&gt;  UNICO           192.168.50.101      227
+    HOME           &lt;20&gt;  UNICO           192.168.50.102      37
+    HOME           &lt;00&gt;  UNICO           192.168.50.102      25</span>
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="XPjoin">Join al dominio del client XP</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il join di una macchina al dominio avviene attraverso la
+rinomina della macchina
+<a href="XP-dualSamba-04.png" title="immagine PNG">(screenshot)</a>
+scegliendo di aggiungerlo ad un dominio
+<a href="XP-dualSamba-05.png" title="immagine PNG">(screenshot)</a>
+seguito dall'inserimento delle credenziali
+<a href="XP-dualSamba-06.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+<p>
+Per motivi a noi sconosciuti il join al dominio non si conclude
+sempre positivamente a meno che non lo facciamo precedere
+da un accesso ad una share del server di autentica
+(seguito dalla disconessione).
+Solo in questo caso avviene sempre al primo tentativo.
+</p>
+
+<p>
+Per simulare un contesto pi&ugrave; reale abbiamo costruito 
+l'utente <code>jadmin</code> specializzato per l'aggiunta di
+macchine al dominio
+(aggiungere <code>enable privileges = Yes</code> in smb.conf):
+</p>
+
+<pre>
+sambaCore# smbldap-useradd -a -g 512 -c "Join Administrator" \
+             -B 1 -m -P jadmin
+</pre>
+
+<p>
+e poi abbiamo impostato Samba in modo da aggiungere l'autorizzazione
+in questione:
+</p>
+
+<pre>
+sambaCore# net rpc rights grant 'Netkitwg\jadmin' \
+  SeMachineAccountPrivilege -S CORE -U Administrator%not24get<span class="blue">
+Successfully granted rights.</span>
+</pre>
+
+<p>
+verifichiamo:
+</p>
+
+<pre>
+sambaCore# net rpc rights list 'Netkitwg\jadmin' \
+  -S CORE -U Administrator%not24get<span class="blue">
+SeMachineAccountPrivilege</span>
+</pre>
+
+<p>
+Mostriamo una sequenza di screenshot dell'intero desktop:
+<a href="XP-dualSamba-07.png" title="immagine PNG">(screenshot)</a>,
+<a href="XP-dualSamba-08.png" title="immagine PNG">(screenshot)</a>,
+<a href="XP-dualSamba-09.png" title="immagine PNG">(screenshot)</a>.
+Al successivo login il dominio <code>NetkitWG</code>
+risulta selezionabile
+<a href="XP-dualSamba-10.png" title="immagine PNG">(screenshot)</a>.
+Non sempre il dominio risulta disponibile e nel caso pessimo
+occorre aspettare anche 15 minuti!<br>
+Al terminte il dominio <code>NetkitWG</code> sar&agrave; 
+browsable
+<a href="XP-dualSamba-11.png" title="immagine PNG">(screenshot)</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="passwd">Passwd</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per il controllo della complessit&agrav; della password &egrave;
+disponibile nei sorgenti di samba un prototipo da customizzare
+nella directory <code>examples/auth/crackcheck</code>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-10-31 16:22:10 $
+</span>
+</address>
+
+
+</body>
+</html>

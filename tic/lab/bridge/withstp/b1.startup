@@ -1,0 +1,18 @@
+# $Id: b1.startup,v 1.1 2006/10/18 21:59:02 doros Exp $
+# The ethX are activated (up) and with MAC address
+ifconfig eth0 0.0.0.0 hw ether 00:00:0C:10:15:04 up
+ifconfig eth1 0.0.0.0 hw ether 10:00:00:00:00:02 up
+ifconfig eth2 0.0.0.0 hw ether 10:00:00:00:00:03 up
+# make a bridge
+brctl addbr br0
+brctl addif br0 eth0
+brctl addif br0 eth1
+brctl addif br0 eth2
+#ifconfig br0 up
+#brctl  setbridgeprio br0 273
+# set cost port to 10
+brctl setpathcost br0 eth0 10
+brctl setpathcost br0 eth1 10
+brctl setpathcost br0 eth2 10
+# enable stp
+brctl stp br0 yes

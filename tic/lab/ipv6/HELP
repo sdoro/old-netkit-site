@@ -1,0 +1,28 @@
+
+
+Attenzione
+
+Per verificare che la macchina e' raggiungibile da un nodo
+qualsiasi IPv6 di internet si puo' usare:
+
+
+   http://www.berkom.blazing.de/tools/ping.cgi
+
+e inserire l'IPv6 da testare.
+
+
+Una lista di nodi IPv6:
+
+  http://www.ipv6.org/v6-www.html
+
+
+Esiste una certificazione gratuita IPv6:
+
+  http://ipv6.he.net/certification/
+
+
+Per vedere il proprio IP:
+
+  http://www.whatismyipv6.net/
+
+

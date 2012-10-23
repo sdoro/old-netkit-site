@@ -1,0 +1,14 @@
+
+To see:
+update-alternatives --config x-www-browser
+
+To set:
+update-alternatives --set x-www-browser /usr/bin/iceweasel
+
+
+To call in text only terminal:
+www-browser
+
+To call in graphical:
+x-www-browser
+

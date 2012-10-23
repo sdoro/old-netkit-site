@@ -1,0 +1,15 @@
+# $Id: nfs4.startup,v 1.2 2009-10-04 14:13:06 doros Exp $
+
+#
+# configure IP address
+ifconfig eth0 192.168.50.4 up
+route add default gw 192.168.50.254
+#
+mkdir /student
+> /student/nfs4.txt
+#
+/etc/init.d/portmap start
+/etc/init.d/nfs-common start
+/etc/init.d/nfs-kernel-server start
+#
+# bot

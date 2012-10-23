@@ -1,0 +1,72 @@
+
+dn: automountMapName=/net,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net
+
+dn: automountMapName=/net/sede,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/sede
+
+# This entry causes autofs to start up another automounter on /net/sede/staff
+dn: automountMapName=/net/sede/staff,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/sede/staff
+description: /net/sede/staff home directories
+
+# This entry causes autofs to start up another automounter on /net/sede/student
+dn: automountMapName=/net/sede/student,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/sede/student
+description: /net/sede/student home directories
+
+# This entry causes autofs to start up another automounter on /net/sede/sysadmin
+dn: automountMapName=/net/sede/sysadmin,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/sede/sysadmin
+description: /net/sede/sysadmin home directories
+
+dn: automountMapName=/net/biennio,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/biennio
+
+# This entry causes autofs to start up another automounter on /net/biennio/all
+dn: automountMapName=/net/biennio/all,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/biennio/all
+description: /net/biennio/all home directories
+
+dn: cn=/,automountMapName=/net/sede/staff,dc=istituto,dc=it
+objectClass: automount
+automountKey: /
+cn: /
+automountInformation: -fstype=nfs nfs2.istituto.it:/dir22/&
+description: generic staff home directory
+
+dn: cn=/,automountMapName=/net/sede/student,dc=istituto,dc=it
+objectClass: automount
+automountKey: /
+cn: /
+automountInformation: -fstype=nfs nfs1.istituto.it:/dir211/&
+description: generic student home directory
+
+dn: cn=/,automountMapName=/net/sede/sysadmin,dc=istituto,dc=it
+objectClass: automount
+automountKey: /
+cn: /
+automountInformation: -fstype=nfs nfs1.istituto.it:/dir1/&
+description: generic sysadmin home directory
+
+dn: cn=/,automountMapName=/net/biennio/all,dc=istituto,dc=it
+objectClass: automount
+automountKey: /
+cn: /
+automountInformation: -fstype=nfs nfs3.istituto.it:/dir212/&
+description: generic biennio home directory
+

@@ -1,0 +1,4 @@
+# $Id: hosts.allow,v 1.2 2006/06/29 22:56:06 doros Exp $
+
+PPTPD: ALL
+ALL:   PPTPD

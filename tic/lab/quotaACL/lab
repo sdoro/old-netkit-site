@@ -1,0 +1,146 @@
+#!/bin/bash
+# $Id: lab,v 1.8 2006/09/19 14:08:23 doros Exp $
+
+SCRIPTNAME=`echo $0 | awk -vFS='/' '{print $NF}'`
+
+waitfinish()
+{
+    SEMAPHORE=$1.booting
+    touch $SEMAPHORE
+    while [ -f $SEMAPHORE ]; do
+        sleep 2
+    done
+    sleep 2
+}
+
+notifyfinish()
+{
+    rm $1.booting
+}
+
+
+
+startvm()
+{
+    X="-q --exec=/hosthome${PWD#$HOME}/${SCRIPTNAME}"
+    export NETKIT_VM_TYPE=sarge
+
+    ########################################### topology
+    #
+    #
+
+    echo "Making backing store ..."
+    rm -f /tmp/backing-store
+    dd if=/dev/zero of=/tmp/backing-store bs=1M seek=20 count=1 2>/dev/null
+    echo "Done."
+    vstart test-xfs --mem=128 --append="ubd1=/tmp/backing-store" $X
+    waitfinish test-xfs
+
+    #
+    #
+    ########################################### end topology
+    echo ""
+    echo " *** all machines started *** "
+}
+
+crashvm()
+{
+    ########################################### crash
+    #
+    #
+    vcrash test-xfs
+    #
+    #
+    ########################################### end crash
+}
+
+
+help_exit()
+{
+        echo "usage: $0 {start|crash}"
+        echo "  Run this script from your home or from a subdir"
+        echo "  lab start"
+        echo "     starts all virtual machines for the lab "
+        echo "     press enter after each virtual machines has booted"
+        echo "  lab crash"
+        echo "     makes all virtual machines to crash and delete .disk files"
+        exit 1
+}
+
+
+if [ "$1" = "start" ]; then
+     startvm
+
+elif [ "$1" = "crash" ]; then
+     crashvm
+     rm -f *.disk   *.booting
+elif [ "$1" = "clean" ]; then
+     rm -f *.disk   *.booting
+elif [ ! -z $1 ]; then
+     help_exit
+
+elif [ -z $1 ]; then
+
+    if [ `id -u` != "0"  ]; then
+        help_exit
+    fi
+
+
+    #
+    # this is executed in the virtual machine by vlab_guest when initializing
+    # and it is NEVER executed by in the host environment
+    #
+    SCRIPTFILE=`cat /proc/cmdline | awk -v FS== -v RS=' ' '{if($1=="exec") print $2}' `
+    SCRIPTDIR=${SCRIPTFILE%/${SCRIPTNAME}}
+    cd $SCRIPTDIR
+
+
+    case "$HOSTNAME" in
+
+    ################################################### machine configurations
+    #
+    #
+
+    test-xfs)
+        echo 'export d='$SCRIPTDIR >> /etc/profile
+        echo 'export SCRIPTDIR='$SCRIPTDIR >> /etc/profile
+        cp $SCRIPTDIR/hosts /etc/hosts
+        # config/start Postfix
+        cp $SCRIPTDIR/main.cf /etc/postfix/main.cf
+        /etc/init.d/postfix start
+        # make xfs filesytem (quiet) into backing file
+        modprobe xfs
+        /sbin/mkfs.xfs -q -f /dev/ubd/1
+        # mount xfs filesystem with quota enabled
+        mkdir /mnt/xfs
+        echo "/dev/ubd/1  /mnt/xfs  xfs  rw,usrquota,grpquota 0 1" >> /etc/fstab
+        mount /mnt/xfs
+        # enable all users to use it
+        chmod a+rwx /mnt/xfs
+        # create two users
+        useradd -d /mnt/xfs/nane -m nane
+        useradd -d /mnt/xfs/toni -m toni
+        # make samples disk usage
+        dd if=/dev/zero of=/mnt/xfs/nane/files bs=1k count=5k 2>/dev/null
+        chown nane:users /mnt/xfs/nane/files
+        dd if=/dev/zero of=/mnt/xfs/toni/files bs=1k count=2k 2>/dev/null
+        chown toni:users /mnt/xfs/toni/files
+        # setquota
+        setquota -u nane 5000 6200 10 11 /dev/ubd/1
+        setquota -u toni 2000 3200 10 11 /dev/ubd/1
+        # setup minumum .muttrc
+        cp $SCRIPTDIR/.muttrc /root/.muttrc
+
+        notifyfinish test-xfs
+        ;;
+
+    #
+    #
+    ################################################# end machine configurations
+
+
+    *)
+        echo internal error: $HOSTNAME
+        exit 1
+    esac
+fi

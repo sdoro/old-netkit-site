@@ -1,0 +1,17 @@
+# /etc/hosts
+# $Id: hosts.client,v 1.1 2005/08/15 19:18:26 doros Exp $
+
+127.0.0.1 localhost client
+
+193.206.185.1 left
+193.206.185.2 right
+
+# The following lines are desirable for IPv6 capable hosts
+# (added automatically by netbase upgrade)
+
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts

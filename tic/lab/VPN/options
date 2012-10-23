@@ -1,0 +1,7 @@
+# /etc/network/options
+# $Id: options,v 1.1 2005/05/21 05:41:44 doros Exp $
+#
+ip_forward=no
+ipv6_forward=no
+spoofprotect=no
+syncookies=no

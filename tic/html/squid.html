@@ -1,0 +1,116 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: squid.html,v 1.3 2004/09/17 20:26:43 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - Proxy Server</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<!--
+<h1 class="center">Modulo 17</h1>
+<h2 class="center">Internet Server</h2>
+-->
+<h3>Squid</h3>
+
+
+<p>
+   Ogni individuo od organizzazione che fornisce il servizio di
+   navigazione WEB deve chiarire per prima cosa il grado di
+   libert&agrave; a disposizione del fruitore. Si
+   passa dalla limitazione estrema organizzata attraverso la
+   pre navigazione e scaricamento in locale delle informazioni
+   necessarie alla libert&agrave; totale. Per posizionarci
+   alla met&agrave; dei due estremi occorre un sistema
+   intermedio che agisca da elemento filtrante.
+</p>
+
+<p>
+   La presenza di un istruttore pu&ograve; essere importante per
+   risolvere problemi tecnici o come guida per il progetto in
+   corso ma non risolve il problema della navigabilit&agrave;.
+</p>
+
+<p>
+   In genere &egrave; riconosciuto da tutti il bisogno, nel
+   rispetto della privacy, di prevenire un uso improprio dello
+   strumento web.
+</p>
+
+<p>
+   La soluzione per questa tipologia di problemi &egrave;
+   l'installazione di un applicativo nel mezzo della comunicazione
+   tra il browser locale e il server remoto. Tecnicamente questo
+   applicativo viene catalogato come "server" nel senso che
+   rimane attivo per tutto il tempo in cui sono possibili dei
+   suoi utilizzi. Pi&ugrave; in particolare l'applicatico
+   viene catalogato nella categoria proxy nel senso che viene
+   visto dal:
+</p>
+   <ul>
+     <li>client (browser) come un surrogato (proxy) del server (WEB)</li>
+     <li>server (WEB) come un surrogato (proxy) del client (browser)</li>
+   </ul>
+<p>
+   Il server proxy, secondo un'altra terminologia, &egrave; catalogato
+   come un firewall applicativo poich&egrave; &egrave; una applicazione
+   che separa il lato browser dal lato server web.
+</p>
+
+<p>
+   L'utilizzo del server proxy &egrave; vantaggioso poich&egrave;
+   permette di definire regole di utilizzo e inoltre aumenta
+   l'efficienza dell'utilizzo della risorsa internet.
+</p>
+
+<p>
+   Nell'universo Open Source l'applicativo pi&ugrave; conosciuto
+   &egrave; Squid.
+   Una ottima guida la puoi trovare su
+   <a href="http://www.merlinobbs.net/Squid-Book/HTML/index.html"
+      title="link esterno">www.merlinobbs.net</a>.
+   Per sperimentare la configurazione
+   di squid prova l'esperienza
+   <a href="uml-bering.html"
+      title="Esperienza Netkit4TIC">Firewall</a>
+   dove squid viene configurato assieme ad un altro proxy
+   server come Dansguardian per rendere pi&ugrave; sicura la navigazione.
+</p>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/09/17 20:26:43 $
+</span>
+</address>
+
+
+</body>
+
+</html>

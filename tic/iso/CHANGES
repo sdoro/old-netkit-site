@@ -1,0 +1,9 @@
+3.0
+  - upgraded the netkit core to 2.6
+  - upgraded the netkit kernel to K2.5
+  - added Visual Netkit 1.1
+  - removed NetML
+  - upgraded Netkit4TIC kernel to 2.6.26 (Debian Lenny)
+  - upgraded the Netkit4TIC file system to Debian Lenny
+  - enlarged Debian guest filesystem to 2GiB
+

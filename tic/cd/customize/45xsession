@@ -1,0 +1,877 @@
+#!/bin/bash
+PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/games:/usr/local/bin:."
+export PATH
+
+umask 022
+
+[ -n "$KDEDIR" ] || KDEDIR="/usr"
+export KDEDIR
+
+[ -n "$HOSTNAME" ] || HOSTNAME="$(hostname)"
+export HOSTNAME
+
+[ -z "$USER" ] && USER="$(id -nu)"
+export USER
+
+[ -z "$HOME" -o "$HOME" = "/" ] && HOME="/home/$USER"
+export HOME
+
+# Set default cursor (artwiz)
+xsetroot -cursor_name left_ptr
+
+# add at least _one_ entry to xauth
+# remove when updated nxclient is available
+
+xauth add $DISPLAY  MIT-MAGIC-COOKIE-1  $(mcookie)
+
+XTERM=rxvt
+type -path rxvt >/dev/null 2>&1 || XTERM=xterm
+
+DONTCHANGE=""
+[ -e $HOME/.kde/share/config/kdeglobals ] && DONTCHANGE="yes"
+
+# Don't use this yet. We don't have TTF equivalents for all
+# Fonts yet.
+# QT_XFT=1
+# export QT_XFT
+
+# sylpheed etc.
+export G_FILENAME_ENCODING=@locale
+
+# We need to source this so that the login screens get translated
+[ -f /etc/profile ] && . /etc/profile
+
+# Read default language/keyboard/background image
+[ -f /etc/sysconfig/knoppix ]  && . /etc/sysconfig/knoppix
+[ -f /etc/sysconfig/i18n ]  && . /etc/sysconfig/i18n
+if [ -n "$LANG" ]; then
+# Try to repair a KDE/locale bug
+LA="$LANG"
+L="${LANG%%@*}"
+C=$(awk '/^'"$LANG"'/{print $2;exit 0}' /etc/locale.gen 2>/dev/null)
+[ -n "$L" -a -n "$C" ] && LANG="$L.$C"
+LC_ALL="$LA"
+export LANG
+fi
+
+if [ -n "$LC_ALL" ]; then
+export LC_ALL
+fi
+
+[ -f /etc/sysconfig/keyboard ]  && . /etc/sysconfig/keyboard
+
+# Read Desktop, currently kde, gnome, larswm and twm are supported in this script
+[ -f /etc/sysconfig/desktop ]  && . /etc/sysconfig/desktop
+
+# Returns 0 if beryl would (probably) work, 1 if not
+berylcheck(){
+ GLXINFO="$(LANG=C glxinfo 2>/dev/null)"
+ for check in "direct rendering: Yes" "GLX_EXT_texture_from_pixmap"; do
+  case "$GLXINFO" in *$check*) continue ;; esac
+  return 1
+ done
+ return 0
+}
+
+# KDE is the default
+[ -z "$DESKTOP" ] && DESKTOP="kde"
+
+# Copy profiles if not already present
+rsync -Ha --ignore-existing /etc/skel/{.acrorc,.Xdefaults,.gimp*,.gconf*,.bashrc,.nessus*,.links,.local,.lynx*,.qt,.xine,.xmms,tmp} $HOME/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/{.gnupg,.acrorc,.Xdefaults,.bashrc,.nessus*,.links,.lynx*,.qt,.xine,tmp} $HOME/ 2>/dev/null
+[ "$USER" = "knoppix" -a -f /usr/share/knoppix/profile/.fonts.cache-1 ] && rsync -H --ignore-existing /usr/share/knoppix/profile/.fonts.cache-1 $HOME/ 2>/dev/null
+
+rsync -Ha --ignore-existing /etc/skel/.devilspie $HOME/ 2>/dev/null
+
+# We DO need the .gnome* directory for some programs that set permissions incorrectly
+mkdir -p $HOME/.gnome/accels $HOME/.gnome_private
+
+FREESPACE="$(df -k "$HOME" | awk '/^\/|^rootfs/{print $4}')"
+
+if [ ! -e $HOME/.netscape -a "$FREESPACE" -gt 1500 ] && [ -d /etc/skel/.netscape -o -d /usr/share/knoppix/profile/.netscape ]; then
+rsync -Ha --ignore-existing /etc/skel/.netscape $HOME/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/.netscape $HOME/ 2>/dev/null
+fi
+if [ ! -e $HOME/.mozilla -a "$FREESPACE" -gt 1500 ] && [ -d /etc/skel/.mozilla -o -d /usr/share/knoppix/profile/.mozilla ]; then
+rsync -Ha --ignore-existing /etc/skel/.mozilla $HOME/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/.mozilla $HOME/ 2>/dev/null
+fi
+if [ ! -e $HOME/.mozilla-thunderbird -a "$FREESPACE" -gt 1500 ] && [ -d /etc/skel/.mozilla-thunderbird -o -d /usr/share/knoppix/profile/.mozilla-thunderbird ]; then
+rsync -Ha --ignore-existing /etc/skel/.mozilla-thunderbird $HOME/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/.mozilla-thunderbird $HOME/ 2>/dev/null
+fi
+
+# It seems to be vital for galeon that a netscape bookmarks file exists
+touch $HOME/.netscape/bookmarks.html >/dev/null 2>&1 || true
+
+if [ -n "$LANGUAGE" ]; then
+# Set mozilla and netscape preferred languages
+for f in `ls -1 $HOME/.mozilla/*/*/prefs.js $HOME/.mozilla-thunderbird/*/prefs.js $HOME/.netscape/preferences.js 2>/dev/null`; do
+echo 'user_pref("intl.accept_languages", "'"$LANGUAGE"', en");' >>"$f"
+case "$LANGUAGE" in
+de|at|ch)
+echo 'user_pref("general.useragent.contentlocale", "DE");' >>"$f"
+echo 'user_pref("general.useragent.locale", "de-DE");' >>"$f" ;;
+esac
+# Else leave default language
+done
+
+for f in `ls -1 $HOME/.mozilla/*/*/chrome/chrome.rdf.$LANGUAGE 2>/dev/null`; do
+\mv -f "$f" "${f%%.${LANGUAGE}}"
+done
+
+fi
+
+# Star/OpenOffice preinstall, now done in soffice startscript
+# [ -f /etc/skel/.sversionrc ] && \cp -au /etc/skel/.sversionrc $HOME/
+# [ -f /etc/skel/.user60.rdb ] && \cp -au /etc/skel/.user60.rdb $HOME/
+# [ -d /etc/skel/office -a "$FREESPACE" -gt 3500 ] && \
+# rsync -Ha --ignore-existing /etc/skel/office $HOME/
+
+playsound(){
+# Play sound if soundcore module present (checking /dev/sndstat is unreliable)
+OGGPLAY=/usr/bin/ogg123
+PLAY=/usr/bin/wavp
+[ -x "$PLAY" ] || PLAY=/usr/bin/play-sample
+[ -x "$PLAY" ] || PLAY=/usr/bin/play
+if [ -x "$OGGPLAY" -a -f /usr/share/sounds/startup.ogg ]; then
+case "$(lsmod)" in *sound*) { $OGGPLAY -q -p 64 /usr/share/sounds/startup.ogg >/dev/null 2>&1 & } ; sleep 1 ;; esac
+elif [ -f /usr/share/sounds/startup.wav -a -x "$PLAY" ]; then
+case "$(lsmod)" in *sound*) { $PLAY /usr/share/sounds/startup.wav >/dev/null 2>&1 & } ; sleep 2 ;; esac
+fi
+}
+
+startkde(){
+# Play sound
+playsound
+
+if [ -z "$DONTCHANGE" ]; then
+# No persistent homedir, copy everything
+rsync -Ha --ignore-existing /etc/skel/{.kde*,Desktop} $HOME/ 2>/dev/null
+ if [ "$USER" = "knoppix" ]; then
+  rsync -Ha --ignore-existing /usr/share/knoppix/profile/{.kde*,Desktop} $HOME/ 2>/dev/null
+  # Build ksycoca database for KDE speedup
+  [ -d /usr/share/knoppix/profile/var/tmp/kdecache-knoppix ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/var/tmp/kdecache-knoppix/ /var/tmp/kdecache-knoppix 2>/dev/null
+ fi
+# And sort icons first time (KDE bug?)
+# Obsolete for KDE 3.2
+#cat >>$HOME/.kde/Autostart/sorticons.desktop <<EOF
+#[Desktop Entry]
+#Name=Sort Icons
+#Name[de]=Symbole aufräumen
+#Exec=kfmclient sortDesktop
+#Type=Application
+#Icon=html
+#Terminal=0
+#EOF
+else
+# Only regenerate the config and Desktop files if missing
+\mkdir -p $HOME/.kde/share $HOME/Desktop
+rsync -Ha --ignore-existing /etc/skel/.kde/share/* $HOME/.kde/share/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/.kde/share/* $HOME/.kde/share/ 2>/dev/null
+rsync -Ha --ignore-existing /etc/skel/Desktop/* $HOME/Desktop/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/Desktop/* $HOME/Desktop/ 2>/dev/null
+rm -f $HOME/.kde/Autostart/sorticons.desktop
+fi
+
+# Check for /index.html (_en), or KNOPPIX/index.html (_en) on this CD
+if [ -e /cdrom/index.html ]; then
+INDEXFILE="/cdrom/index.html"
+else
+for i in index KNOPPIX/index; do
+INDEXFILEDE="/cdrom/${i}.html"
+INDEXFILEEN="/cdrom/${i}_en.html"
+[ -e "$INDEXFILEEN" ] && INDEXFILE="$INDEXFILEEN" && [ "$LANGUAGE" != "de" ] && break
+[ -e "$INDEXFILEDE" ] && INDEXFILE="$INDEXFILEDE" && [ "$LANGUAGE"  = "de" ] && break
+done
+fi
+
+if [ -e "$INDEXFILE" ]; then
+cat >> $HOME/Desktop/KNOPPIX.desktop <<EOF
+[Desktop Entry]
+Name=KNOPPIX
+# Exec=kfmclient openProfile webbrowsing $INDEXFILE
+Exec=konqueror --geometry 850x600+85+70 file:$INDEXFILE
+Type=Application
+Icon=html
+Terminal=0
+EOF
+ln $HOME/Desktop/KNOPPIX.desktop $HOME/.kde/Autostart/showindex.desktop
+fi
+
+# OpenWebSchool
+OPENWEBSCHOOL="/cdrom/Demos/OpenWebSchool/index.html"
+if [ -e "$OPENWEBSCHOOL" ]; then
+cat >> $HOME/Desktop/OWS.desktop <<EOF
+[Desktop Entry]
+Name=OWS
+Comment=Open Web School
+Exec=netscape $OPENWEBSCHOOL
+Type=Application
+Icon=html
+Terminal=0
+EOF
+fi
+
+# Setup language/keyboard
+[ -d $HOME/.kde/share/config ] || mkdir -p $HOME/.kde/share/config
+if [ -z "$DONTCHANGE" ]; then
+touch $HOME/.kde/share/config/kdeglobals
+rm -f $HOME/.kde/share/config/kdeglobals.tmp
+sed -e 's/^Charset=.*$/Charset='"$CHARSET"'/' \
+    -e 's/^Country=.*$/Country='"$COUNTRY"'/' \
+    -e 's/^Language=.*$/Language='"$LANGUAGE"'/' \
+    $HOME/.kde/share/config/kdeglobals > $HOME/.kde/share/config/kdeglobals.tmp
+\mv -f $HOME/.kde/share/config/kdeglobals.tmp $HOME/.kde/share/config/kdeglobals
+if [ -z "$BACKGROUND" -o ! -e "$BACKGROUND" ]; then
+for i in jpg png gif; do
+BACKGROUND=/usr/local/lib/knoppix.$i
+[ -e "$BACKGROUND" ] && break
+done
+fi
+sed -e 's|Wallpaper=.*$|Wallpaper='"$BACKGROUND"'|g' \
+    $HOME/.kde/share/config/kdesktoprc > $HOME/.kde/share/config/kdesktoprc.tmp
+\mv -f $HOME/.kde/share/config/kdesktoprc.tmp $HOME/.kde/share/config/kdesktoprc
+touch -r /etc/skel/.kde/share/config/kdeglobals $HOME/.kde/share/config/kdeglobals 2>/dev/null
+touch $HOME/.kde/share/config/kxkbrc
+rm -f $HOME/.kde/share/config/kxkbrc.tmp
+sed -e 's/^Layout=.*$/Layout='"$KDEKEYBOARD"'/' \
+    -e 's/^Additional=.*$/Additional='"$KDEKEYBOARDS"'/' \
+    $HOME/.kde/share/config/kxkbrc > $HOME/.kde/share/config/kxkbrc.tmp
+\mv -f $HOME/.kde/share/config/kxkbrc.tmp $HOME/.kde/share/config/kxkbrc
+touch -r /etc/skel/.kde/share/config/kxkbrc $HOME/.kde/share/config/kxkbrc 2>/dev/null
+
+# Check for custom splashscreen in /cdrom/KNOPPIX
+if [ -d /cdrom/KNOPPIX/ksplash ]; then
+[ -d $HOME/.kde/share/apps ] || mkdir -p $HOME/.kde/share/apps
+ln -s /cdrom/KNOPPIX/ksplash $HOME/.kde/share/apps/
+fi
+
+fi
+
+# Start KDE3
+echo "kde_restart" >/etc/sysconfig/xsession-commands 2>/dev/null
+export XDM_MANAGED="/etc/sysconfig/xsession-commands,maysd,mayfn,sched,method=classic"
+
+# This is /usr/bin/kde3
+#!/bin/sh
+#
+#  DEFAULT KDE STARTUP SCRIPT ( KDE-3.0.2 )
+#
+
+# Boot sequence:
+#
+# kdeinit is used to fork off processes which improves memory usage
+# and startup time.
+#
+# * kdeinit starts the dcopserver and klauncher first.
+# * Then kded is started. kded is responsible for keeping the sycoca
+#   database up to date. When an up to date database is present it goes
+#   into the background and the startup continues.
+# * Then kdeinit starts kcminit. kcminit performs initialisation of
+#   certain devices according to the user's settings
+#
+# * Then ksmserver is started which in turn starts 
+#   1) the window manager (kwin)
+#   2) everything in $KDEDIR/share/autostart (kdesktop, kicker, etc.)
+#   3) the rest of the session.
+
+# Set a left cursor instead of the standard X11 "X" cursor, since I've heard
+# from some users that they're confused and don't know what to do. This is
+# especially necessary on slow machines, where starting KDE takes one or two
+# minutes until anything appears on the screen.
+#
+# Set the background to plain grey.
+# The standard X background is nasty, causing moire effects and exploding
+# people's heads. We use colours from the standard KDE palette for those with
+# palettised displays.
+
+#test "$XDM_MANAGED" || bkg="-solid #C0C0C0"
+#xsetroot -cursor_name left_ptr $bkg
+
+# The user's personal KDE directory is usually ~/.kde, but this setting
+# may be overridden by setting KDEHOME.
+
+unset DYLD_FORCE_FLAT_NAMESPACE
+
+kdehome="$HOME/.kde"
+[ -n "$KDEHOME" ] && kdehome="$KDEHOME"
+
+# Activate the kde font directories.
+#
+# There are 4 directories that may be used for supplying fonts for KDE.
+#
+# There are two system directories. These belong to the administrator.
+# There are two user directories, where the user may add her own fonts.
+#
+# The 'override' versions are for fonts that should come first in the list,
+# i.e. if you have a font in your 'override' directory, it will be used in
+# preference to any other.
+#
+# The preference order looks like this:
+# user override, system override, X, user, system
+#
+# Where X is the original font database that was set up before this script
+# runs.
+
+#usr_odir=$kdehome/share/fonts/override
+#usr_fdir=$kdehome/share/fonts
+#if test -n "$KDEDIRS"; then
+#  kdedirs_first=`echo $KDEDIRS|sed -e 's/:.*//'`
+#  sys_odir=$kdedirs_first/share/fonts/override
+#  sys_fdir=$kdedirs_first/share/fonts
+#else
+#  sys_odir=$KDEDIR/share/fonts/override
+#  sys_fdir=$KDEDIR/share/fonts
+#fi
+
+# We run mkfontdir on the user's font dirs (if we have permission) to pick
+# up any new fonts they may have installed. If mkfontdir fails, we still
+# add the user's dirs to the font path, as they might simply have been made
+# read-only by the administrator, for whatever reason.
+
+#test -d $usr_odir && (mkfontdir $usr_odir ; xset +fp $usr_odir)
+#test -d $sys_odir && xset +fp $sys_odir
+#test -d $usr_fdir && (mkfontdir $usr_fdir ; xset fp+ $usr_fdir)
+#test -d $sys_fdir && xset fp+ $sys_fdir
+
+#
+# Add any user-installed font directories to the X font path
+#kde_fontsdir=$kdehome/share/fonts
+#kde_fontpaths=$kde_fontsdir/fontpaths
+ 
+#if test -r $kde_fontpaths ; then
+#    for fpath in `cat $kde_fontpaths | grep -v '#'` ; do
+#        if test -s $fpath/fonts.dir ; then
+#            xset fp+ $fpath
+#        fi
+#    done
+#fi
+
+# Ask X11 to rebuild its font list.
+#xset fp rehash
+
+#
+# Get Ghostscript to look into user's KDE fonts dir for additional Fontmap
+#if test -n "$GS_LIB" ; then
+#    GS_LIB=$kde_fontsdir:$GS_LIB
+#    export GS_LIB
+#else
+#    GS_LIB=$kde_fontsdir
+#    export GS_LIB
+#fi
+
+# Link "tmp" resource to directory in /tmp
+# Creates a directory /tmp/kde-$USER and links $KDEHOME/tmp-$HOSTNAME to it.
+lnusertemp tmp >/dev/null
+
+# Link "socket" resource to directory in /tmp
+# Creates a directory /tmp/ksocket-$USER and links $KDEHOME/socket-$HOSTNAME to it.
+lnusertemp socket >/dev/null
+
+# Link "cache" resource to directory in /var/tmp
+# Creates a directory /var/tmp/kdecache-$USER and links $KDEHOME/cache-$HOSTNAME to it.
+lnusertemp cache >/dev/null
+
+# In case of dcop sockets left by a previous session, cleanup
+dcopserver_shutdown
+
+# run KPersonalizer before the session, if this is the first login
+# grep 'FirstLogin=false' $kdehome/share/config/kpersonalizerrc >/dev/null 2>/dev/null
+# if test $? -ne 0; then
+#     # start only dcopserver, don't start whole kdeinit (takes too long)
+#    dcopserver
+#    kwin &
+#    kpersonalizer --before-session
+#    # handle kpersonalizer restarts (language change)
+#    while test $? -eq 1; do
+#        kpersonalizer --r --before-session
+#    done
+#    dcopserver_shutdown
+#    # shutdown will also make kwin quit, give it time to do so
+#    sleep 1
+# fi
+
+# If USE_BERYL is on, start beryl window manager instead of kwin.
+if [ -n "$USE_BERYL" -a -x /usr/bin/beryl -a -x /usr/bin/emerald ]; then
+ beryl --sm-disable &
+ KDEWM="/usr/bin/emerald"
+ sleep 6
+ ( sleep 20 ; exec beryl-manager --no-force-window-manager --no-force-decorator ) &
+fi
+
+kstartupconfig
+
+# load the splashscreen and progress indicator
+# KDE_IS_PRELINKED="true" ksplash --nodcop
+ksplash --nodcop
+sleep 2
+
+# Create automatic Desktop icons
+mkdesktophdicons
+
+# certain features such as Konqueror preloading work only with full KDE running
+# KDE_FULL_SESSION=true
+# export KDE_FULL_SESSION
+# xprop -root -f KDE_FULL_SESSION 8t -set KDE_FULL_SESSION true >/dev/null 2>&1
+
+# Set LD_BIND_NOW to increase the efficiency of kdeinit.
+# kdeinit unsets this variable before loading applications.
+# LD_BIND_NOW=true
+start_kdeinit --new-startup +kcminit_startup +kded +kdesktop || \
+  { xmessage -geometry 500x100 "Couldn't start kdeinit. Check your installation."; return 1; }
+
+sleep 4
+
+# finally, give the session control to the session manager
+# Syntax:   ksmserver [--restore] [--windowmanager <wm>]
+# if no windowmanager is specified, ksmserver will ensure kwin is started.
+# [--restore] should be controlled by kdm
+# kwrapper is used to reduce startup time and memory usage
+test -n "$KDEWM" && KDEWM="--windowmanager $KDEWM"
+kwrapper ksmserver $KDEWM
+if [ "$?" -eq 255 ]; then
+xmessage -geometry 500x100 "Couldn't start ksmserver. Check your installation."
+return 1
+fi
+
+# Clean up - normally not necessary when running from CD
+( kdeinit_shutdown ; dcopserver_shutdown --wait ; artsshell -q terminate ) >/dev/null 2>&1 </dev/null
+# EOF /usr/bin/kde3
+killall kdeinit 2>/dev/null
+exit 0
+}
+# End startkde
+
+# starttwm: This is also the error fallback windowmanager. It should display
+# an error message if it was started as such.
+# Paraeters: "reasoncode" "reasoncode-specific description"
+starttwm(){
+
+$XTERM -geometry +0-0 -bg black -fg green -T Shell &
+
+MESSAGE=""
+if [ -n "$1" ]; then
+ case "$1" in
+  lowmem)
+   case "$LANGUAGE" in
+    de|at|ch) MESSAGE="
+Nicht genug Speicher zum Start von $DESKTOP!
+(Mindestens $2 MB benötigt.)
+
+Starte stattdessen den TWM Windowmanager.
+Achtung: Nicht alle Programme im linke-
+Maustaste-Menü werden funktionieren!
+"
+    ;;
+    es) MESSAGE="
+No hay suficiente memoria para arrancar $DESKTOP!
+(Se necesitan al menos $2 MB.)
+
+Usando el gestor de ventanas TWM en su lugar.
+Aviso: ¡No todos los programas en
+el menú que aparece al pulsar el botón izquierdo
+del ratón funcionarán aquí!
+"
+    ;;
+    *) MESSAGE="
+Not enough memory to start $DESKTOP!
+(At least $2 MB required.)
+
+Using TWM windowmanager instead.
+Caution: Not all programs in
+the left-Mousebutton-Menu will
+work here!
+"
+    ;;
+   esac
+   ;;
+  invalidwm)
+   case "$LANGUAGE" in
+    de|at|ch) MESSAGE="
+Desktop-Manager '$DESKTOP' wird nicht unterstützt!
+
+Starte stattdessen den TWM Windowmanager.
+Achtung: Nicht alle Programme im linke-
+Maustaste-Menü werden funktionieren!
+"
+    ;;
+    es) MESSAGE="
+El gestor de ventanas '$DESKTOP' no esta soportado!
+
+Usando el gestor de ventanas TWM en su lugar.
+Aviso: ¡No todos los programas en
+el menú que aparece al pulsar el botón izquierdo
+del ratón funcionarán aquí!
+"
+    ;;
+    *) MESSAGE="
+Desktop manager '$DESKTOP' is not supported!
+
+Using TWM windowmanager instead.
+Caution: Not all programs in
+the left-Mousebutton-Menu will
+work here!
+"
+    ;;
+   esac
+  ;;
+ esac
+fi
+
+if [ -n "$MESSAGE" ]; then
+( xmessage -geometry -0+0 "
+$MESSAGE
+"
+) &
+sleep 4
+fi
+
+playsound
+exec twm
+}
+
+startgnome(){
+
+type gnome-session >/dev/null 2>&1 || starttwm
+rsync -Ha --ignore-existing /etc/skel/{.gnome*,.gtk*,.metacity*,GNUstep,.sawfish,.nautilus,Nautilus} $HOME/ 2>/dev/null
+[ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/{.gnome*,GNUstep,.sawfish,.nautilus,Nautilus} $HOME/ 2>/dev/null
+#sed -e 's/^font=.*$/-*-fixed-medium-r-normal-*-14-*-*-*-*-*-'"$CHARSET"'/g' \
+#  $HOME/.gnome/Terminal > $HOME/.gnome/Terminal.tmp
+#\mv -f  $HOME/.gnome/Terminal.tmp $HOME/.gnome/Terminal
+# Add HD partitions to GNOME desktop
+#rm -f $HOME/.gnome-desktop/[hs]d[a-z][1-9]* 2>/dev/null
+#[ ! -d $HOME/.gnome-desktop ] && mkdir -p $HOME/.gnome-desktop
+#[ -f /cdrom/KNOPPIX/KNOPPIX ] && ln -s /cdrom $HOME/.gnome-desktop/ 2>/dev/null
+#HDS="`ls -1d /mnt/[hs]d[a-z][1-9]* /mnt/cdrom* 2>/dev/null`"
+#[ -n "$HDS" ] && ln -s $HDS $HOME/.gnome-desktop/ 2>/dev/null
+#OPENWEBSCHOOL="/cdrom/Demos/OpenWebSchool"
+#[ -e "$OPENWEBSCHOOL" ] && ln -s "$OPENWEBSCHOOL" $HOME/.gnome-desktop/OWS
+playsound
+
+# Create automatic Desktop icons
+# mkdesktophdicons
+# nautilus2 cannot handle KDE icons correctly, so we have to remove them to avoid confusion
+find $HOME/Desktop -type f -size -2k -maxdepth 1 | while read f; do grep -qi '^\[.*Desktop Entry.*\]' "$f" && rm -f "$f"; done 2>/dev/null
+
+# Remove old .gnome-desktop
+mv -f .gnome-desktop .gnome-desktop.removed 2>/dev/null
+
+# Nautilus2 and others seem to depend on XFT
+# GDK_USE_XFT=1 exec gnome-session --purge-delay=4000
+GDK_USE_XFT=1 exec gnome-session
+}
+
+startlarswm(){
+[ -e "$HOME"/.larswmrc ] || rsync -Ha --ignore-existing /etc/skel/.larswmrc $HOME/ 2>/dev/null
+playsound
+exec larswm
+}
+
+startwindowmaker(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+GDK_USE_XFT=1 exec wmaker
+}
+
+starticewm(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+GDK_USE_XFT=1 exec icewm
+}
+
+startfluxbox(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+GDK_USE_XFT=1 exec fluxbox
+}
+
+startenlightenment(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+GDK_USE_XFT=1 exec enlightenment
+}
+
+startxfce(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+
+GDK_USE_XFT=1
+export GDK_USE_XFT
+
+[ -e $HOME/.xfce ] || mkdir $HOME/.xfce
+XFWM=xfwm
+
+exec $XFWM
+}
+
+startratpoison(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+
+GDK_USE_XFT=1
+export GDK_USE_XFT
+exec ratpoison
+}
+
+startevilwm(){
+
+$XTERM -geometry +0-0 -bg black -fg green -T Shell &
+
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+
+GDK_USE_XFT=1
+export GDK_USE_XFT
+exec evilwm
+}
+
+startlg3d(){
+playsound
+GDK_USE_XFT=1
+export GDK_USE_XFT
+
+export JAVA_HOME="$(ls -1d /usr/lib/j2se/*/jre | tail -1)"
+export PATH="${JAVA_HOME}/bin:${PATH}"
+# First try
+exec /opt/lg3d/bin/lg3d-session
+# Second try
+exec lg3d
+}
+
+startopenbox(){
+playsound
+GDK_USE_XFT=1
+export GDK_USE_XFT
+exec openbox
+}
+
+startxfce4(){
+# Create automatic Desktop icons
+mkdesktophdicons
+
+playsound
+
+GDK_USE_XFT=1
+export GDK_USE_XFT
+
+# XFCE4 setup
+if [ ! -e $HOME/.xfce4 ]; then
+rsync -Ha --ignore-existing /etc/skel/.xf* /usr/share/knoppix/profile/.xf* $HOME/ 2>/dev/null
+[ ! -d $HOME/.xfce4 ] && mkdir -p $HOME/.xfce4
+echo "$BACKGROUND
+auto" >$HOME/.xfce4/xfbdrc
+fi
+# Start the background graphics daemon
+exec xfbd4 >/dev/null 2>&1 &
+# This one may not exist yet - xfce4 settings manager
+exec xfce-mcs-manager >/dev/null 2>&1 &
+# The window manager component
+exec xfwm4 --daemon >/dev/null 2>&1 &
+exec xftaskbar4 >/dev/null 2>&1 &
+exec xfdeskmenu -button=3 >/dev/null 2>&1 &
+exec xfdesktop >/dev/null 2>&1 &
+exec xfce4-iconbox >/dev/null 2>&1 &
+# The background menu is started last
+XFWM=xfce4-panel
+exec $XFWM
+}
+
+stringinstring(){
+case "$2" in *$1*) return 0;; esac
+return 1
+}
+
+# Reread boot command line; echo last parameter's argument or return false.
+
+getbootparam(){
+stringinstring " $1=" "$CMDLINE" || return 1
+result="${CMDLINE##*$1=}"
+result="${result%%[     ]*}"
+echo "$result"
+return 0
+}
+
+startkiosk()
+{
+playsound
+GDK_USE_XFT=1 
+
+CMDLINE=$(cat /proc/cmdline) # FIXME!
+
+url=$(getbootparam url)
+
+cat <<EOF > $HOME/kiosk.html
+<html>
+<head>
+<script language="javascript">
+<!--
+function StartKiosk(){
+window.open("$url","","fullscreen,toolbar=yes,scrollbars=yes");
+timeoutID=setTimeout("CloseLauncher()", 100);
+}
+function CloseLauncher(){
+window.close();
+}
+-->
+</script>
+</head>
+<body onLoad="StartKiosk()">
+</body>
+</html>
+EOF
+
+echo 'user_pref("privacy.popups.first_popup", false);' >> $HOME/.mozilla/knoppix/ujixazk6.slt/prefs.js
+echo 'user_pref("dom.allow_scripts_to_close_windows", true);' >> $HOME/.mozilla/knoppix/ujixazk6.slt/prefs.js
+echo 'user_pref("browser.toolbars.showbutton.print", false);' >> $HOME/.mozilla/knoppix/ujixazk6.slt/prefs.js
+
+while [ "$DESKTOP" = "kiosk" -o "$DESKTOP" = "KIOSK" ]
+do
+  mozilla $HOME/kiosk.html
+  [ -f /etc/sysconfig/desktop ]  && . /etc/sysconfig/desktop
+done
+}
+
+startrdp()
+{
+  CMDLINE=$(cat /proc/cmdline) # FIXME!
+
+  rdp_host=$(getbootparam rdp_host)
+  
+  #start some window manager
+  kwin &
+
+  # start rdesktop
+  rdesktop "$rdp_host" || xmessage "Could not connect to server $rdp_host."
+}
+
+startnx()
+{
+  CMDLINE=$(cat /proc/cmdline) # FIXME!
+  
+  # Create .nx config ...
+  mkdir -p $HOME/.nx/config
+
+  nx_ssl=$(getbootparam nx_ssl)
+
+  nx_desktop=$(getbootparam nx_desktop)
+  nx_link_speed=$(getbootparam nx_link_speed)
+  nx_resolution=$(getbootparam nx_resolution)
+  nx_server_host=$(getbootparam nx_server_host)
+  nx_server_port=$(getbootparam nx_server_port)
+  nx_session=$(getbootparam nx_session)
+  
+  nx_auth=$(getbootparam nx_auth)
+  nx_password=$(getbootparam nx_password)
+  nx_user=$(getbootparam nx_user)
+
+  # FIXME for 1.4.0
+  cat <<EOF > $HOME/.nx/config/termserv.nxs
+<!DOCTYPE KSettings>
+<KSettings application="nxclient" version="1.3" >
+<group name="Advanced" >
+<option key="Enable SSL encryption" value="${nx_ssl:-true}" />
+</group>
+<group name="General" >
+<option key="Desktop" value="${nx_desktop:-KDE}" />
+<option key="Link speed" value="${nx_link_speed:-modem}" />
+<option key="Resolution" value="${nx_resolution:-fullscreen}" />
+<option key="Resolution height" value="600" />
+<option key="Resolution width" value="800" />
+<option key="Server host" value="${nx_server_host:-localhost}" />
+<option key="Server port" value="${nx_server_port:-22}" />
+<option key="Session" value="${nx_session:-Unix}" />
+</group>
+<group name="Login" >
+<option key="Auth" value="${nx_auth}" />
+<option key="Password" value="${nx_password}" />
+<option key="User" value="${nx_user:-knoppix}" />
+</group>
+<group name="VNC Session" >
+<option key="Password" value="" />
+</group>
+<group name="Windows Session" >
+<option key="Password" value="" />
+</group>
+</KSettings>
+EOF
+
+  cat <<EOF > $HOME/.nx/config/nxclient.conf
+<!DOCTYPE NXClientSettings>
+<NXClientSettings application="nxclient" version="1.3" >
+<group name="General" >
+<option key="Personal NX dir" value="/home/knoppix/.nx" />
+</group>
+</NXClientSettings>
+EOF
+
+  #start some window manager
+  kwin &
+
+  # start nxclient and do that in an endless loop
+  while true;
+  do
+    NXPROCESSES=`pgrep -c nx`
+    # do not start multiple login windows
+    if [ "$NXPROCESSES" = "0" ]; then
+      nxclient --session "termserv"
+      sleep 2
+    fi
+  done
+}
+
+# Check for sufficient Real Memory for starting KDE or GNOME
+# (We don't want to end in a swap-a-lot loop.)
+REALMEM="$(awk '/MemTotal/{print $2}' /proc/meminfo)"
+FREEMEM="$(awk 'BEGIN{m=0};/MemFree|Cached|SwapFree/{m+=$2};END{print m}' /proc/meminfo)"
+if [ "$REALMEM" -lt 25000 ]; then
+starttwm
+else
+case "$DESKTOP" in
+        kde|KDE) [ "$FREEMEM" -ge "60000" ] && startkde   || starttwm lowmem 82; ;;
+    gnome|GNOME) [ "$FREEMEM" -ge "45000" ] && startgnome || starttwm lowmem 67; ;;
+  larswm|LARSWM) [ "$FREEMEM" -ge "35000" ] && startlarswm || starttwm lowmem 64; ;;
+  enlightenment|ENLIGHTENMENT) [ "$FREEMEM" -ge "35000" ] && startenlightenment || starttwm lowmem 64; ;;
+  evilwm|EVILWM) [ "$FREEMEM" -ge "35000" ] && startevilwm || starttwm lowmem 64; ;;
+fluxbox|FLUXBOX) [ "$FREEMEM" -ge "35000" ] && startfluxbox || starttwm lowmem 64; ;;
+      xfce|xfce3|XFCE|XFCE3) [ "$FREEMEM" -ge "35000" ] && startxfce || starttwm lowmem 64; ;;
+      xfce4|XFCE4) [ "$FREEMEM" -ge "35000" ] && startxfce4 || starttwm lowmem 64; ;;
+windowmaker|wmaker|WINDOWMAKER|WMAKER) [ "$FREEMEM" -ge "35000" ] && startwindowmaker || starttwm lowmem 64; ;;
+    icewm|ICEWM) [ "$FREEMEM" -ge "35000" ] && starticewm || starttwm lowmem 64; ;;
+           lg3d) [ "$FREEMEM" -ge "60000" ] && startlg3d || starttwm lowmem 82; ;;
+       openbox) [ "$FREEMEM" -ge "35000" ] && startopenbox || starttwm lowmem 40; ;;
+      ratpoison) [ "$FREEMEM" -ge "35000" ] && startratpoison || starttwm lowmem 40; ;;
+      beryl|compiz|3d)
+       if [ "$FREEMEM" -ge "200000" ]; then
+        if berylcheck; then
+	 [ "$USER" = "knoppix" ] && rsync -Ha --ignore-existing /usr/share/knoppix/profile/{.beryl,.emerald} $HOME/ 2>/dev/null
+	 USE_BERYL="yes" startkde
+	else
+         xmessage -geometry 500x100 "No AIGLX extension for your graphics card, sorry, no 3D Desktop."
+	 startkde
+	fi
+       else
+        xmessage -geometry 500x100 "Not enough memory to start 3D Desktop, at least 200MB required."
+	startkde
+       fi ;;
+          nx|NX) startnx ;;
+          kiosk|kiosk) startkiosk ;;
+          rdp|rdp) startrdp ;;
+        twm|TWM) starttwm;   ;;
+              *) starttwm invalidwm;   ;;
+esac
+fi

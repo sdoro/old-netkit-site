@@ -1,0 +1,15 @@
+
+
+con
+node#ip -6 addr show dev eth0
+3: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qlen 1000
+    inet6 2001:5c0:1101:f701:200:ff:fe00:3/64 scope global dynamic 
+       valid_lft 2591954sec preferred_lft 604754sec
+    inet6 fe80::200:ff:fe00:3/64 scope link 
+       valid_lft forever preferred_lft forever
+router# ip -6 addr show dev eth0
+3: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qlen 1000
+    inet6 2001:5c0:1101:f701::3/64 scope global 
+       valid_lft forever preferred_lft forever
+    inet6 fe80::200:ff:fe00:1/64 scope link 
+       valid_lft forever preferred_lft forever

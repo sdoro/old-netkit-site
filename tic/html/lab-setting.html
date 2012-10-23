@@ -1,0 +1,484 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: lab-setting.html,v 1.29 2007-12-09 13:31:58 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - lab-setting: Netkit4TIC</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h2>Configurazione del laboratorio virtuale Netkit4TIC</h2>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <!--
+  <td class=navigation>
+    <a href="index.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-bridge.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  -->
+  </tr>
+</table>
+
+
+
+
+
+<p>
+</p>
+
+
+<ul>
+  <li><a href="#realMachine">La distribuzione GNU/Linux della macchina reale</a>
+      (<a href="#knoppix">download live-{CD,USB}</a>)</li>
+  <li><a href="#network">La configurazione della rete</a></li>
+  <li><a href="#custom">La specializzazione di Netkit</a></li>
+  <li><a href="#qemu">La specializzazione di QEMU</a></li>
+</ul>
+
+
+
+
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3><a id=realMachine>La distribuzione GNU/Linux della macchina reale (Download live-{CD,USB})</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p id="knoppix">
+Quando ho iniziato nel 2003 a utilizzare Netkit come strumento base
+di laboratorio di reti ho avuto parecchie difficolt&agrave;
+nella installazione poich&egrave; in alcune distribuzioni GNU/Linux il
+sistema era particolarmente instabile o addirittura inusabile. Questo
+era un problema ancora pi&ugrave; grave per quei corsisti con
+poca dimestichezza con Linux. La soluzione a un certo punto &egrave;
+affiorata con la distribuzione
+<a id=iso href="http://www.knoppix.net/"
+   title="link esterno">Knoppix</a>
+che ha reso disponibile una piattaforma
+per la costruzione di un sistema specializzato per Netkit.
+L'impacchettamento di
+<a href="Knoppix.html" title="approfondimento">Netkit su Knoppix</a>
+&egrave; stato inizialmente realizzato da Giovanni Coffaro corsista
+C2 dell'Istituto Gramsci di Padova.
+</p>
+
+<p>
+Netkit4TIC &egrave; composto da due parti:
+<ul>
+  <li>
+    Le esperienze virtuali scaricabili da
+<a href="http://www.tic.fdns.net/tic/html/lab.html"
+   title="Netkit4TIC home page">Netkit4TIC home page</a>
+grazie alla disponibilit&agrave; dell'infrastruttura
+dell'IT "C.Zuccante" di Mestre-Venezia (e in precedenza
+dell'IT "F.Severi" di Padova).</li>
+  <li>
+    Il live-{CD,USB} scaricabile da
+<a href="http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/Netkit4TIC.iso"
+   title="immagine iso">http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/Netkit4TIC.iso</a>
+(<a href="http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/md5sum.txt" title="md5sum immagine iso">md5sum</a>,
+<a href="http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/VERSION" title="versione">VERSION</a>,
+<a href="http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/cover.jpg" title="cover">Cover</a>,
+<a href="http://tocai.dia.uniroma3.it/~netkit/contrib/LATEST/logoCD.jpg.jpg" title="logo">logo</a>)
+grazie al
+Dipartimento di Informatica e Automatica
+dell'Universit&agrave; di Roma Tre che 
+ha messo a disposizione lo spazio e la banda
+per il download dell'immagine iso (e in precedenza dal dominio
+<code>bug.it</code>).</li>
+</ul>
+
+<p>
+Come nelle migliori storie per bambini, l'anatroccolo si dimostra un
+cigno, e dalla release v2.3 il live-CD si trasforma in una USB key
+con tempi di boot e di esecuzione uguali a una distribuzione
+installata su disco fisso.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3><a id=network>La configurazione della rete</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+<p>
+La capacit&agrave;
+di scambiare pacchetti tra la macchina virtuale e la
+macchina reale &egrave; resa disponibile dal modulo
+<code>tun.o</code> (altrimenti gi&agrave; presente nel kernel).
+Riportiamo dalla FAQ su openvpn la differenza tra
+TUN device e TAP device:
+"A TAP device is a virtual ethernet adapter, while
+a TUN device is a virtual point-to-poin IP link".
+Per prima cosa verifica quindi se al boot della tua
+Linux box &egrave; gi&agrave; presente nel kernel il
+sopracitato modulo:
+</p>
+
+<pre>
+realHost$ dmesg | grep TUN
+</pre>
+
+<p>
+dovrebbe essere visualizzato un messaggio del tipo:
+</p>
+
+<pre>
+Universal TUN/TAP device driver X.Y (C)1999-2002 Maxim Krasnyansky
+</pre>
+
+<p>
+In caso negativo prova a vedere se &egrave; possibile caricare
+il modulo (da utente root):
+</p>
+
+<pre>
+realHost# modprobe tun
+</pre>
+
+<p>
+Nel caso in cui venga visualizzata una diagnostica di errore
+non &egrave; possibile usare il meccanismo che
+stiamo per spiegare;
+esistono altri sistemi, quali il multicast.
+Nel caso invece che il modulo sia stato caricato correttamente (lo
+puoi verificare con <code>lsmod</code>) 
+controlla se esiste gi&agrave; il
+device <code>/dev/net/tun</code> altrimenti occorre una tantum crearlo e  
+definirne i permessi con:
+</p>
+
+<pre>
+realHost# mkdir /dev/net; \
+          mknod /dev/net/tun c 10 200; \
+          chmod 666 /dev/net/tun
+</pre>
+
+<p>
+Ci sono svariati modi di interconnettere la macchina reale con
+una macchina virtuale. Ne elenchiamo di seguito cinque facendo
+l'ipotesi che la macchina reale sia nella LIS 192.168.100.0/24:
+</p>
+
+<ol>
+ <li id="ip"> <span class="yellow">OSI L3 (routing)</span>: caso in cui
+     l'IP della vm sia in uno diverso
+     network (LIS) di quello della macchina reale. In questo caso
+     la macchina reale si comporta da router tra le due LIS ed
+     &egrave; necessario il solo IP dalla rete reale per la macchina
+     reale.
+<pre>
+         +---- eth0
+         |
+realHost +                            + virtualHost
+         |                            |
+         +---- tap0          eth0 ----+
+</pre>
+     Sono mostrati di seguito la costruzione di tap0, del
+     routing e l'assegnazione dell'IP address alla virtual machine:
+<pre>
+realHost$ sudo tunctl -u `whoami`
+Set 'tap0' persistent and owned by uid 1000
+
+realHost# ifconfig tap0 192.168.77.1; \
+          echo "1" &gt; /proc/sys/net/ipv4/ip_forward
+
+virtualHost# ifconfig eth0 192.168.77.2 up; \
+             route add default gateway 192.168.77.1
+</pre>
+ </li>
+ <li id="bridge"> <span class="yellow">OSI L2 (bridging)</span>: caso in cui
+     la macchina reale sia attivata
+     come bridge e quindi perda il livello 3 a favore della vm.
+<pre>
+                       +---- eth0
+                       |
+realHost +--- br0 -----+                        + virtualHost
+                       |                        |
+                       +---- tap0      eth0 ----+
+</pre>
+    Sono mostrati di seguito la costruzione di tap0, del bridge
+    con eth0 e tap0 e l'assegnazione dell'IP address alla virtual machine:
+
+<pre>
+realHost$ sudo tunctl -u `whoami`
+Set 'tap0' persistent and owned by uid 1000
+
+realHost# ifconfig eth0 0.0.0.0 up; \
+          ifconfig tap0 0.0.0.0 up; \
+          brctl addbr br0; \
+          brctl addif br0 eth0; \
+          brctl addif br0 tap0; \
+          ifconfig br0 0.0.0.0 up
+
+virtualHost# ifconfig eth0 REAL-IP up; \
+             route add default gateway REAL-GATEWAY
+</pre>
+     </li>
+  <li id="proxy-arp">  <span class="yellow">OSI L2 (arping)</span>: caso
+       in cui la vm sia nello stesso
+       network (LIS) della macchina reale e la macchina
+       reale si attiva come proxy ARP.
+       In questo caso occorrono in totale tre IP della rete reale, ad esempio:
+<ul>
+  <li>192.168.100.1 per la macchina reale</li>
+  <li>192.168.100.254 per proxy ARP (lato realHost)</li>
+  <li>192.168.100.253 per proxy ARP (lato virtualHost)</li>
+</ul>
+Sono mostrati di seguito la costruzione di tap0, del proxy ARP e
+l'assegnazione dell'IP address alla virtual machine:
+
+<pre>
+realHost$ sudo tunctl -u `whoami`
+Set 'tap0' persistent and owned by uid 1000
+
+realHost# ifconfig tap0 192.168.100.254; \
+          echo "1" &gt; /proc/sys/net/ipv4/ip_forward; \
+          route add -host 192.168.100.253 dev tap0; \
+          echo "1" &gt; /proc/sys/net/ipv4/conf/tap0/proxy_arp; \
+          arp -Ds 192.168.100.253 eth0 pub
+
+virtualHost# ifconfig eth0 192.168.100.253 up
+</pre>
+ </li>
+ <li id="masq"> <span class="yellow">OSI L3 (routing+masq)</span>: un'altra
+     soluzione pu&ograve; essere il mascheramento
+     che possiamo intendere come una variazione del caso 1 e in cui
+     l'IP address della vm viene mascherato dall'IP address della macchina
+     reale.
+     Sono mostrati di seguito la costruzione di tap0, del
+     routing/mascheramento e l'assegnazione dell'IP address alla vm:
+<pre>
+realHost$ sudo tunctl -u `whoami`
+Set 'tap0' persistent and owned by uid 1000
+
+realHost# ifconfig tap0 192.168.77.1; \
+          echo "1" &gt; /proc/sys/net/ipv4/ip_forward; \
+          iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+virtualHost# ifconfig eth0 192.168.77.2 up
+             route add default gateway 192.168.77.1
+</pre>
+ </li>
+ <li id="masq"> <span class="yellow">OSI L2/L3 (VLAN tagging+bridging)</span>: un'altra
+     soluzione pu&ograve; essere l'uso delle Virtual LAN.
+<pre>
+                       +---- eth0.2
+                       |
+realHost +--- br2 -----+                           + virtualHost
+(VLAN-aware)           |                           | (VLAN-unaware)
+                       +---- tap2         eth0 ----+
+</pre>
+     Sono mostrati di seguito la costruzione della
+     VLAN, del bridge  e l'assegnazione dell'IP address alla vm
+     (VLAN-unaware):
+<pre>
+realHost$ sudo tunctl -u `whoami` -t tap2
+Set 'tap2' persistent and owned by uid X
+
+realHost# modprobe 8021q; \
+          vconfig add eth0 2
+
+realHost# ifconfig eth0.2 0.0.0.0 up; \
+realHost# ifconfig tap2 0.0.0.0 up
+
+realHost# brctl addbr br2; \
+          brctl addif br2 eth0.2; \
+          brctl addif br2 tap2; \
+          ifconfig br2 0.0.0.0 up
+
+virtualHost# ifconfig eth0 192.168.77.2 up
+</pre>
+ </li>
+</ol>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3><a id="custom">La specializzazione di Netkit per i corsi TIC</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Il nostro scopo &egrave; quello di mettere a disposizione un
+ambiente virtuale che sia il pi&ugrave; simile all'ambiente
+reale su cui andremo ad operare.<br>
+Per questo motivo
+proponiamo server <span class="yellow">virtuali e reali</span> con distribuzione Debian Sarge
+e proponiamo firewall/router/"packet filter" <span class="yellow">virtuali e reali</span> con distribuzione
+LEAF/Bering uClibc.
+
+<h4>Guest Kernels</h4>
+<p>
+In rispetto alle versioni di kernel presenti in Debian Sarge e in
+Bering uClibc sono stati costruiti i relativi kernel uml della
+serie 2.4.
+Il guest kernel per Debian Sarge &egrave; il 2.4.27 e in futuro
+vedremo se possibile di produrre anche il 2.6.8. Il guest kernel
+per Bering uClibc &egrave; il 2.4.32.<br>
+Il kernel di default &egrave; quello originale di Netkit.
+</p>
+
+
+<h4>Script</h4>
+<p>
+&Egrave; stato modificato un unico file del "core" di netkit
+<code>bin/script_utils</code> per aggiungere la "specializzazione"
+Netkit4TIC. Questa consiste semplicemente in una serie di
+variabili d'ambiente che influenzano il comportamento
+degli script rimasti immodificati:
+</p>
+
+<ul>
+  <li><code>NETKIT_VM_TYPE</code> &egrave; valorizzabile con
+      <span class="yellow">sarge</span> o con <span class="yellow">bering</span>
+      e pilota la scelta del kernel che viene lanciato dal comando
+      <code>vstart</code>. Nel caso di scelta bering viene anche
+      scelto il filesystem della bering e vengono impostati i parametri
+      per il boot.</li>
+
+  <li><code>NETKIT_BERING_FD</code> &egrave; valorizzabile con
+     il nome del file che contiene il boot floppy per bering.</li>
+</ul>
+
+
+<p>
+Per la costruzione di una vm in modo che l'interfaccia eth0
+sia connessa con l'interfaccia tap0 del mondo reale per
+questioni legate alla compatibilit&agrave; con le esperienze
+gi&agrave; realizzate abbiamo deciso di realizzarla con
+il comando:
+</p>
+
+<pre>
+realHost$ vstart test <span class="red">--append="eth0=tuntap,tap0"</span>
+</pre>
+
+
+
+
+<h4>Filesystems</h4>
+<p>
+I filesystem inclusi sono due:
+<ul>
+  <li><code>Debian Sarge</code> con tutti packages
+      necessari per le esercitazioni (in rari casi sono stati usati i sorgenti
+      di alcuni pacchetti).</li>
+  <li><code>LEAF/Bering uClibc</code> completo.
+Nella realt&agrave; il firewall &egrave; contenuto
+in un singolo floppy da cui la macchina fa il boot e che in seguito
+viene caricato in RAM.
+Nel mondo virtuale compie gli stessi passi e quindi usa
+un &quot;initial root  file-system&quot; presente in <code>initrd</code>.
+Da questa modalit&agrave; di caricamento ne segue che il filesystem
+montati sono in read-only e viene mantenuta una <span class="yellow">stretta corrispondenza
+tra sistema virtuale e sistema reale</span>.
+</li>
+</ul>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  <h3><a id="qemu">La specializzazione di QEMU</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La versione attualmente installata &egrave; la 0.8.2 e le
+istruzioni per il suo uso sono in
+<a href="qemu.html"
+   title="link interno">approfondimento</a>.
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-12-09 13:31:58 $
+</span>
+</address>
+
+
+
+</body>
+
+</html>

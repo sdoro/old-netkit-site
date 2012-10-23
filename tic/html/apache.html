@@ -1,0 +1,104 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: apache.html,v 1.15 2004/05/23 17:12:08 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - apache</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Modulo 17</h1>
+<h2 class="center">Internet Server</h2>
+<h3>Apache</h3>
+
+<p>
+    La documentazione in lingua inglese fornita nell'installazione la puoi
+	trovare <a href="link-apache/index.html.en" title="documentazione locale"> localmente</a>.
+	
+	<br>
+	
+	Questo &egrave; il server http a cui sei collegato.
+	&Egrave; operativo da met&agrave aprile 2003 e se vuoi vedere la
+	statistica dettagliata degli accessi costruita da
+	<a href="http://www.mrunix.net/webalizer/" title="link esterno">webalizer</a> clicca
+	<a href="../../webalizer/index.html" title="statistiche">qu&igrave</a>. &Egrave;
+	configurato per funzionare solo in modalit&agrave; cifrata per due
+	motivi:
+</p>
+
+	<ul>
+	  <li> per una necessit&agrave pratica dovuta al fatto che la porta
+	       80 &egrave; gi&agrave; occupata;</li>
+	  <li> in contrapposizione con il MIUR che dal 2003  
+	       ci ha dato la possibilit&agrave; della e-mail nel dominio <i>istruzione.it</i>
+		   ma con il protocollo http/pop e quindi senza alcuna attenzione alla privacy.
+		   Prova a pensare a cosa potrebbe succedere se gli studenti si mettessero
+		   a sniffare sulla rete compiti, giudizi etc e questo non &egrave;
+		   molto lontano dalla realt&agrave;. Ma allora di questa
+		   e-mail e di tutte le nostre e-mail non cifrate che cosa ne facciamo ?
+		  </li>
+	</ul>
+
+	<p>
+    Se vuoi vedere una introduzione alle possibilit&agrave;
+	di configurazione dai una letta ad
+	<a id=apache-ssl HREF="http://www.modssl.org/docs/apachecon2001/index.html" title="link esterno"><b>ApacheCon 2001</b></a>
+    dove sono raccolte delle slide presentate alla conferenza ApacheCon2001
+	con un insieme completo di soluzioni basate sul protocollo SSL/TLS.
+	Se vuoi entrare nei dettagli studia la documentazione completa di 
+	<a href="http://www.modssl.org/" title="link esterno">modssl</a> 
+	che nella distribuzione Debian si trova nel pacchetto
+	<code>libapache-mod-ssl-doc</code> e la puoi trovare
+	<a href="link-apache-mod-ssl/index.html" title="documentazione locale"> localmente</a>.<br>
+	Il numero di incidenti che ha subito in questi pochi mesi &egrave;
+	piuttosto alto ma mai dovuto a problemi software:
+    </p>
+
+	<ul>
+	  <li>interruzione alimentazione da allarme anticendio;</li>
+	  <li>interruzione alimentazione per prove antincendio;</li>
+	  <li>interruzione connessione dovuta al tranciamento cavi di rete;</li>
+	  <li>interruzione alimentazione causa temporali estivi;</li>
+	  <li>blocco macchina per RAM guasta;</li>
+	  <li>blocco macchina per disco Maxtor guasto e perdita completa dei dati;</li>
+	  <li>blocco della rete per continui blackout energetici.</li>
+	</ul>
+	
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2004/05/23 17:12:08 $
+</span>
+</address>
+
+
+</body>
+
+</html>

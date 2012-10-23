@@ -1,0 +1,383 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-beringDMZ.html,v 1.10 2007-02-19 17:35:47 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-bering</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su firewall LEAF/Bering uClibc con DMZ (&quot;a tre interfacce&quot;)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-bering.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-QoS.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>)</span>.
+</p>
+
+
+<p>
+Riportiamo la mappa
+(<a href="pdf/firewall-DMZ.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/firewall-DMZ.xml" title="file per Dia">xml</a>)
+della rete 
+dell'esperienza. Lo schema di numerazione &egrave;
+conforme alla proposta di numerazione presentata in
+<a href="/net/html/area.html#area" title="Approfondimento">Numerazione Aree</a>
+dove per l'area interna e per l'area perimetrale abbiamo adottato
+la numerazione riportata come &quot;area backbone&quot;.
+</p>
+
+<p>
+In questa esercitazione sono configurati i seguenti nodi:
+</p>
+
+<ul>
+  <li>nella zona DMZ &egrave; configurato il nodo <code>services</code> con:
+    <ul>
+      <li>DNS (bind) autoritativo per i domini
+          <code>tic.fdns.net</code> e <code>net.fdns.net</code></li>
+      <li>SSH (OpenSSH)</li>
+      <li>WEB (apache)</li>
+    </ul>
+  </li>
+  <li>Nell'area interna &egrave; configurato il nodo <code>proxy</code>:
+    <ul>
+      <li>http proxy (squid)</li>
+      <li>web filter (dansguardian)</li>
+      <li>WEB (apache)</li>
+      <li>mrtg</li>
+    </ul>
+  </li>
+</ul>
+
+<p>
+Scarica il <a href="FirewallDMZ.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente lo script che genera l'intera esercitazione:
+</p>
+
+
+<pre>
+realhost$ lstart
+</pre>
+
+<p>
+<a href="fw-desktop.png" title="screenshot">(screenshot)</a>
+</p>
+
+<p>
+La policy che abbiamo scelto:
+</p>
+
+<pre>
+# /etc/shorewall/policy
+#SOURCE    DEST       POLICY        LOG LEVEL
+loc        net        ACCEPT
+net        all        DROP          info
+all        all        REJECT        info
+</pre>
+
+<p>
+Le eccezioni alla policy:
+</p>
+
+<pre>
+# /etc/shorewall/rules
+#ACTION         SOURCE    DEST
+DNS/ACCEPT      fw        net
+DNS/ACCEPT      dmz       net
+#
+# Forward the request to 192.168.1.222 in DMZ
+#
+DNS/DNAT        net       dmz:192.168.1.222
+Web/DNAT        net       dmz:192.168.1.222
+#
+# To manage fw from loc network
+#
+SNMP/ACCEPT     loc       fw
+</pre>
+
+
+<p>
+Proviamo a vedere quali porte sono aperte dal lato Internet:
+</p>
+
+<pre>
+router-ext# nmap 80.204.240.182 -p 1-200<span class="blue">
+Starting nmap 3.75 ( http://www.insecure.org/nmap/ ) at 2005-05-29 19:31 CEST
+Interesting ports on ns1.tic.fdns.net (80.204.240.182):
+(The 1661 ports scanned but not shown below are in state: filtered)
+PORT    STATE  SERVICE
+53/tcp  open   domain
+80/tcp  open   http
+113/tcp closed auth
+MAC Address: FE:FD:50:CC:F0:B6 (Unknown)
+
+Nmap run completed -- 1 IP address (1 host up) scanned in 37.089 seconds</span>
+</pre>
+
+<p>
+Proviamo la risoluzione dei nomi da Internet:
+</p>
+
+<pre>
+router-ext# host www.tic.fdns.net<span class="blue">
+www.tic.fdns.net is an alias for ns1.tic.fdns.net.
+ns1.tic.fdns.net has address 80.204.240.182</span>
+</pre>
+
+
+
+<p>
+e ora proviamo l'accesso WEB da Internet:
+</p>
+
+<pre>
+roter-ext# lynx -dump http://www.tic.fdns.net | strings<span class="blue">
+   Benvenuto 80.204.240.177 su www.tic.fdns.net</span>
+</pre>
+
+<p>
+Stessa cosa per l'accesso WEB dalla rete locale:
+</p>
+
+<pre>
+aclnt# lynx -dump http://www.tic.fdns.net | strings<span class="blue">
+   Benvenuto 192.168.2.221 su www.tic.fdns.net</span>
+</pre>
+
+<p>
+&Egrave; possibile anche interrogare l'agente SNMP configurato
+nel firewall. Ad esempio per conoscere il nome della quarta
+interfaccia di rete del firewall:
+</p>
+
+<pre>
+aclnt# snmpwalk -Os -c public -v 1 192.168.2.254 \
+  .iso.org.dod.internet.mgmt.mib-2.interfaces.ifTable.ifEntry.ifDescr.5<span class="blue">
+ifDescr.5 = STRING: eth1</span>
+</pre>
+
+<p>
+L'agent SNMP in combinazione con <code>mrtg</code> possono essere
+impiegati per la raccolta di statistiche sullo stato degli apparati.
+Nel nostro caso abbiamo configurato tramite il <code>cron</code>
+la raccolta ogni 5 minuti del traffico sulle tre interfacce di rete
+del firewall. &Egrave; possibile osservare i grafici statistici
+anche da un browser della macchina reale:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://192.168.77.2/mrtg/firewall.eth{0,1,2}.html
+</pre>
+
+<p>
+Per l'uso del proxy si pu&ograve; forzarne l'uso impedendo qualsiasi
+uso di intenet/dmz da parte di nodi locali:
+</p>
+
+<pre>
+# /etc/shorewall/policy
+#SOURCE    DEST       POLICY        LOG LEVEL    LIMIT:BURST
+<strike>loc        net        ACCEPT</strike>
+<strike>loc        dmz        ACCEPT</strike>
+loc        net        DROP          info
+loc        dmz        DROP          info
+</pre>
+
+<p>
+e permettere l'uscita al solo nodo proxy:
+</p>
+
+<pre>
+# /etc/shorewall/rules
+#ACTION       SOURCE              DEST
+<strike>Web/ACCEPT    loc                 net</strike>
+<strike>Web/ACCEPT    loc                 dmz</strike>
+Web/ACCEPT    loc:192.168.2.222   net
+Web/ACCEPT    loc:192.168.2.222   dmz
+</pre>
+
+<p>
+Facciamo ripartire shorewall:
+</p>
+
+<pre>
+fw# /etc/init.d/shorewall restart
+</pre>
+
+<p>
+Ora riproviamo impostando il proxy:
+</p>
+
+<pre>
+aclnt# export http_proxy="http://192.168.2.222:8080/"
+aclnt# lynx -dump http://www.tic.fdns.net | strings<span class="blue">
+   Benvenuto 192.168.2.222 su www.tic.fdns.net</span>
+</pre>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3 id=virtualhost>Configurazione apache virtual host</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per verificare la risoluzione dei nomi basta provare:
+</p>
+
+<pre>
+router-ext# host www.tic.fdns.net<span class="blue">
+www.tic.fdns.net is an alias for ns1.tic.fdns.net.
+ns1.tic.fdns.net has address 80.204.240.182</span>
+router-ext# host www.net.fdns.net<span class="blue">
+www.net.fdns.net is an alias for ns1.net.fdns.net.
+ns1.net.fdns.net has address 80.204.240.182</span>
+
+aclnt# host www.tic.fdns.net<span class="blue">
+www.tic.fdns.net is an alias for ns1.tic.fdns.net.
+ns1.tic.fdns.net has address 192.168.1.102</span>
+aclnt# host www.net.fdns.net<span class="blue">
+www.net.fdns.net is an alias for ns1.net.fdns.net.
+ns1.net.fdns.net has address 192.168.1.102</span>
+</pre>
+
+<p>
+Nello stesso nodo &egrave; configurato
+un server WEB apache con il sistema di "virtual host" che permette
+di configurare un server virtuale per dominio. Nel file di
+configurazione abbiamo usato:
+</p>
+
+<pre>
+# /etc/apache/httpd.conf
+[...]
+NameVirtualHost *
+
+&lt;VirtualHost *&gt;
+    ServerName <span class="yellow">www.tic.fdns.net</span>
+    DocumentRoot /var/www/tic
+    ErrorLog /var/log/apache/tic-error.log
+    CustomLog /var/log/apache/tic-access.log combined
+&lt;VirtualHost&gt;
+
+&lt;VirtualHost *&gt;
+    ServerName <span class="yellow">www.net.fdns.net</span>
+    DocumentRoot /var/www/net
+    ErrorLog /var/log/apache/net-error.log
+    CustomLog /var/log/apache/net-access.log combined
+&lt;VirtualHost&gt;
+</pre>
+
+<p>
+Abbiamo preparato un file <code>index.php</code> con il seguente contenuto:
+</p>
+
+<pre>
+[...]
+&lt;?php
+echo "&lt;p&gt; Benvenuto $REMOTE_ADDR su $HTTP_HOST &lt;/p&gt;";
+?&gt;
+[...]
+</pre>
+
+<p>
+e lo abbiamo inserito sia sulla directory
+<code>/var/www/tic</code> che sulla directory <code>/var/www/net</code>.
+In questo modo per testare se il virtual host funziona basta fare un
+accesso dall'interno o dall'esterno:
+</p>
+
+<pre>
+router-ext# lynx -dump http://www.tic.fdns.net/index.php | strings<span class="blue">
+   Benvenuto 80.204.240.177 su www.tic.fdns.net</span>
+router-ext# lynx -dump http://www.net.fdns.net/index.php | strings<span class="blue">
+   Benvenuto 80.204.240.177 su www.net.fdns.net</span>
+
+aclnt# lynx -dump http://www.tic.fdns.net/index.php | strings<span class="blue">
+   Benvenuto 192.168.2.221 su www.tic.fdns.net</span>
+aclnt# lynx -dump http://www.net.fdns.net/index.php | strings<span class="blue">
+   Benvenuto 192.168.2.221 su www.net.fdns.net</span>
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-19 17:35:47 $
+</span>
+</address>
+
+
+</body>
+
+</html>

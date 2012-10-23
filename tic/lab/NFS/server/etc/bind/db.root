@@ -1,0 +1,19 @@
+; /etc/bind/db.root
+; $Id: db.root,v 1.1 2008-12-09 15:51:54 doros Exp $
+;
+$TTL   60000
+@               IN      SOA     ROOT-SERVER.    root.ROOT-SERVER. (
+                        2002102801 ; serial
+                        28800 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+
+@               IN      NS      ROOT-SERVER.
+ROOT-SERVER.    IN      A       192.168.50.10
+istituto.it.    IN      NS      ns.istituto.it.
+ns.istituto.it. IN      A       192.168.50.10
+
+;
+;; bot

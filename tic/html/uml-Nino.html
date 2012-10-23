@@ -1,0 +1,164 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-Nino.html,v 1.20 2007-02-10 08:08:01 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-Nino</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p> 
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 4 - Individuazione dei malfunzionamenti</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su SNMP</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-IDS.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-CVS.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+
+<p>
+Per mostrare un sistema per la gestione della rete useremo
+una soluzione Open Source di nome
+<a href="http://sourceforge.net/projects/nino/" title="link esterno">Nino</a>
+(Nino Is Not OpenView) che pu&ograve; essere installata anche su piattaforma
+M$ ma che ovviamente nel nostro ambiente virtuale vedremo su piattaforma
+Linux. Nino pu&ograve; essere configurato per monitorare il traffico di rete,
+lo stato della rete e gli eventi straordinari. La sua interfaccia &egrave;
+basata su Web.
+
+ <br>
+
+
+La mappa della rete &egrave; minimale: una macchina di nome <code>server</code>
+dove ho configurato Nino ed una macchina di nome <code>client</code> dove ho
+configurato un agent SNMP. Il server &egrave;
+connesso con la macchina reale per cui sono visibili tutti gli agent
+disposti nella rete reale.
+<br>
+
+Scarica il <a href="Nino.tgz" title="esperienza Netkit4TIC">tarball</a> (15KB) contenente
+lo script <code>lab</code> che genera l'intera esercitazione. Nino &egrave;
+stato gi&agrave; installato sul filesystem della macchina virtuale come
+file non in formato Debian. La release usata &egrave; la 3.15 e le istruzioni
+seguite per l'installazione le trovi nel file
+<a href="../lab/Nino/INSTALL" title="descrizione installazione">INSTALL</a>.
+Nino prevede la presenza di apache (magari con il modulo perl), di varie librerie
+snmp e del database MySql che troviamo gi&agrave; presenti nel filesystem.
+</p>
+
+<p>
+Dopo aver settato correttamente l'ambiente Netkit
+lancia lo script che costruisce i due host e i relativi hub:
+</p>
+
+<pre>
+realHost$ ./lab start
+</pre>
+
+<p>
+Ora prova ad attivare il browser con il seguente URL:
+</p>
+
+<pre>
+realHost$ mozilla-firefox http://192.168.77.2/
+</pre>
+
+<p>
+e otterrai la pagina principale dell'home page del progetto. Occorre
+per prima cosa inizializzare il database e quindi occorre selezionare
+la voce &quot;Start INSTALL&quot; dal menu e poi seguire le istruzioni.
+</p>
+
+<pre>
+To start:
+
+realHost$ mozilla http://192.168.77.2/mod_perl/main.pl
+realHost$ mozilla http://192.168.77.2/install.html
+
+
+NinoAdminPasswd: private
+</pre>
+
+
+<p>
+In seguito occorre inserire i devices. Un primo device &egrave; la macchina
+<code>client</code> dove per l'appunto ho
+<a href="../lab/Nino/snmpd.conf" title="file di configurazione">configurato</a>
+e attivato un agent SNMP. Un secondo agent SNMP di solito lo attivo sulla
+macchina reale e si possono dopo un numero adeguato di <code>route add -net</code>
+e di <code>man route</code> ;-) aggiungere tutti gli agent della rete reale.
+</p>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-10 08:08:01 $
+</span>
+</address>
+
+
+</body>
+
+</html>

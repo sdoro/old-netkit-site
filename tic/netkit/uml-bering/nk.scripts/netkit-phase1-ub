@@ -1,0 +1,195 @@
+#!/bin/sh
+# $Id: netkit-phase1-ub,v 1.6 2006/06/27 20:02:52 doros Exp $
+
+RCDLINKS="0,K99 S,S39 6,K10"
+
+case "$1" in
+  start)
+      echo
+      echo "--- Starting Netkit phase 1 startup script"
+
+      ASSIGN_VARIABLES1=`cat /proc/cmdline | awk -v FS== -v RS=' ' '($1=="name") {print "export HOSTNAME=" $2} ($1=="hosthome") {print "HOSTHOME=" $2} ($1=="hostlab") {print "HOSTLAB=" $2} ($1=="hostwd") {print "HOSTWD=" $2} ($1=="title") {print "TITLE=" $2}'`
+      ASSIGN_VARIABLES2=`cat /proc/cmdline | awk -v FS== -v RS=' ' '($1=="modules") {print "MODULES=" $2}($1=="def_route") {print "DEFAULT_ROUTE=" $2}($1=="ubd0") {print "FILESYSTEM=" $2}'`
+
+      eval "$ASSIGN_VARIABLES1"
+      eval "$ASSIGN_VARIABLES2"
+      COW=`echo $FILESYSTEM|awk -v FS=, '{print $2}'`
+
+
+      AUTOCONF_INTERFACES=`cat /proc/cmdline | awk -v FS== -v RS=' ' '(match($1,"autoconf_eth[0-9]+")) {
+                     gsub("autoconf_","",$1)
+                     gsub("\n","",$2)
+                     print "echo \"Bringing up interface " $1 " (" $2 ")...\""
+                     print "ip addr add " $2 " dev " $1 " label " $1
+                     print "ip link set " $1 " up"
+                 } '`
+
+      export HOSTNAME
+
+      #
+      # configure terminal window title
+      #
+
+      if [ -n $TITLE ]; then
+          echo
+          echo "Setting terminal title to $TITLE"
+          echo -ne "\033]2;${TITLE}\007"
+      fi
+
+      #
+      # mount the host home directory
+      #
+
+      if [ -n $HOSTHOME ]; then
+          echo
+          echo  "Mounting host home ($HOSTHOME) on /hosthome..."
+          mkdir -p /hosthome
+          mount none /hosthome -t hostfs -o rw,$HOSTHOME
+      else
+          echo "Invalid hosthome parameter provided"
+      fi
+
+      #
+      # mount the host lab directory
+      #
+
+      if [ -n "$HOSTLAB" ]; then
+          echo  "Mounting host lab ($HOSTLAB) on /hostlab ..."
+          mkdir -p /hostlab
+          mount none /hostlab -t hostfs -o rw,$HOSTLAB
+      fi
+
+      #
+      # mount the host working directory
+      #
+
+      if [ -n "$HOSTWD" ]; then
+          echo  "Mounting host working directory ($HOSTWD) on /hostwd ..."
+          mkdir -p /hostwd
+          mount none /hostwd -t hostfs -o rw,$HOSTWD
+      fi
+
+      if [ -d /hostlab ]; then
+
+            # Read lab configuration file, if present
+
+            if [ -r "/hostlab/lab.conf" ]; then
+                # Filter out unuseful (and potentially invalid) lab.conf contents.
+                eval `grep -E "(LAB_VERSION)|(LAB_AUTHOR)|(LAB_EMAIL)|(LAB_WEB)|(LAB_DESCRIPTION)" /hostlab/lab.conf`
+            fi
+
+            [ -z "$LAB_VERSION" ] && LAB_VERSION="<none>"
+            [ -z "$LAB_AUTHOR" ] && LAB_AUTHOR="<none>"
+            [ -z "$LAB_EMAIL" ] && LAB_EMAIL="<none>"
+            [ -z "$LAB_WEB" ] && LAB_WEB="<none>"
+            [ -z "$LAB_DESCRIPTION" ] && LAB_DESCRIPTION="<none>"
+
+            echo
+            echo "Lab directory:    /hostlab ($HOSTLAB on the host)"
+            echo "Version: $LAB_VERSION"
+            echo "Author:  $LAB_AUTHOR"
+            echo "Email:   $LAB_EMAIL"
+            echo "Web:     $LAB_WEB"
+            echo "Description:"
+            echo "$LAB_DESCRIPTION"
+        fi
+
+        #
+        # Configure virtual host for the first boot
+        #
+
+        if [ ! -e /etc/vhostconfigured ]; then
+
+            if [ -n "$HOSTNAME" ]; then
+                echo
+
+                echo "Modifying /etc/hostname ..."
+                echo $HOSTNAME > /etc/hostname
+                #hostname --file /etc/hostname
+                hostname $HOSTNAME
+
+                echo "Modifying /etc/hosts ..."
+                mv /etc/hosts /etc/hosts.tmp
+                echo 127.0.0.1 $HOSTNAME > /etc/hosts
+                cat /etc/hosts.tmp >> /etc/hosts
+                rm /etc/hosts.tmp
+            fi
+            if [ "`echo /hostlab/shared/*`" != "/hostlab/shared/*" ]; then
+                echo
+                echo "Copying shared files from /hostlab/shared/ to / ..."
+                cp -f -r /hostlab/shared/* /
+                find /hostlab/shared -type f
+            fi
+
+            if [ "`echo /hostlab/$HOSTNAME/*`" != "/hostlab/$HOSTNAME/*" ]; then
+                echo
+                echo "Copying $HOSTNAME specific files from /hostlab/$HOSTNAME/ to / ..."
+                cp -f -r /hostlab/$HOSTNAME/* /
+                find /hostlab/$HOSTNAME -type f
+            fi
+
+            [ ! -z "$COW" ] && touch /etc/vhostconfigured
+        fi
+
+        #
+        # Autoconfigure interfaces, if asked to
+        #
+
+        if [ -n "$AUTOCONF_INTERFACES" ]; then
+            eval "$AUTOCONF_INTERFACES"
+        fi
+
+        #
+        # Insert a default entry in the routing table, if asked to
+        # (this must be done after autoconfiguring interfaces)
+        #
+
+        if [ -n "$DEFAULT_ROUTE" ]; then
+            echo "Configuring default gateway: $DEFAULT_ROUTE..."
+            #route add default gateway $DEFAULT_ROUTE
+            ip link add 0.0.0.0/0 via $DEFAULT_ROUTE
+        fi
+
+        echo
+        echo "--- Netkit phase 1 init script terminated"
+        ;;
+
+  stop)
+        echo
+        echo "--- Starting Netkit phase 1 shutdown script"
+        echo
+
+        if [ -d /hostlab ]; then
+
+            echo  "Unmounting and removing /hostlab"
+            umount /hostlab
+            rmdir /hostlab
+
+            echo  "Unmounting and removing /hostwd"
+            umount /hostwd
+            rmdir /hostwd
+        fi
+
+        KERNEL_VERSION=`uname -r`
+        if [ -f /lib/modules/$KERNEL_VERSION/modules.dep ]; then
+
+            echo "Unmounting /lib/modules"
+            umount /lib/modules
+
+        fi
+
+        echo  "Unmounting and removing /hosthome"
+        umount /hosthome
+        rmdir /hosthome
+
+        echo
+        echo "--- Netkit phase 1 shutdown script terminated"
+        ;;
+
+
+  *)
+      echo "Usage: $0 {start|stop}"
+      exit 1
+    ;;
+
+esac

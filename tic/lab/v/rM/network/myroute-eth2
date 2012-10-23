@@ -1,0 +1,16 @@
+# /etc/network/myroute-eth2
+# $Id:$
+
+# OEN1
+#route add -net 192.168.65.0 netmask 255.255.255.0 gw 192.168.100.129
+ip route add 192.168.65.0/24 via 192.168.100.129
+
+# LASA
+#route add -net 192.168.66.0 netmask 255.255.255.0 gw 192.168.100.130
+ip route add 192.168.66.0/24 via 192.168.100.130
+
+# Next
+#route add -net 192.168.67.0 netmask 255.255.255.0 gw 192.168.100.131
+ip route add 192.168.67.0/24 via 192.168.100.131
+
+# bot

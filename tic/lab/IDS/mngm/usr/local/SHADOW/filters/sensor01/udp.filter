@@ -1,0 +1,62 @@
+udp and (not src net 172.21)
+    and (not (src port 123 and dst port 123))
+    and
+    (
+    (udp[2:2] < 20)
+    or
+    (udp[0:2] < 20)
+    or
+    (dst port 67)
+    or
+    (dst port 68)
+    or
+    (dst port 69)
+    or
+    (dst port 88)
+    or
+    (dst port 111)
+    or
+    (dst port 135)
+    or
+    (dst port 136)
+    or
+    (dst port 138)
+    or
+    (dst port 139)
+    or
+    (dst port 143)
+    or
+    ((port 161) or (port 162))
+    or
+    (dst port 177)
+    or
+    (dst port 179)
+    or
+    (dst port 512)
+    or
+    (dst port 513)
+    or
+    (dst port 514)
+    or
+    (dst port 517)
+    or
+    (dst port 518)
+    or
+    (dst port 666)
+    or
+    (dst port 2049)
+    or
+    (dst port 3129)
+    or
+    (dst port 5631)
+    or
+    (port 31337)
+    or
+    (port 18753)
+    or
+    (port 20433)
+    or
+    (port 34555 or port 35555)
+    or
+    (udp[4:2] < 0) or (udp[4:2] > 1500)
+    )

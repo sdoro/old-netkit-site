@@ -1,0 +1,5 @@
+AFS_CLIENT=false
+AFS_AFSDB=true
+AFS_CRYPT=true
+AFS_DYNROOT=false
+AFS_FAKESTAT=true

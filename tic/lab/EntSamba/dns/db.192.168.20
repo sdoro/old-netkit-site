@@ -1,0 +1,19 @@
+; reverse lookup database 
+; /etc/bind/db.192.168.20
+; $Id: db.192.168.20,v 1.3 2004/10/16 05:40:40 doros Exp $
+;
+$ORIGIN .
+$TTL   38400      ; 10 hours 40 minutes
+20.168.192.in-addr.arpa IN SOA  ROOT-SERVER.    root.ROOT-SERVER. (
+                                2004102802 ; serial
+                                10800      ; refresh (3 hours)
+                                3600       ; retry (1 hour)
+                                604800     ; expire (1 week)
+                                38400      ; minimum (10 hours 40 minutes)
+                                )
+                        NS      ROOT-SERVER.
+$ORIGIN 20.168.192.in-addr.arpa.
+1                       PTR     BDC1.
+2                       PTR     CLNT2.
+3                       PTR     R.
+4                       PTR     ldapa2.

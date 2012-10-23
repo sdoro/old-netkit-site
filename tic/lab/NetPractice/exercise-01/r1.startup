@@ -1,0 +1,11 @@
+# $Id: r1.startup,v 1.1 2006/10/07 09:37:21 doros Exp $
+# configure IP address
+ifconfig eth0 192.200.96.62 up \
+         netmask 255.255.255.192 \
+         broadcast 192.200.96.63 up
+ifconfig eth1 192.200.96.161 \
+         netmask 255.255.255.252 \
+         broadcast 192.200.96.163 up
+ifconfig eth2 192.200.96.165 \
+         netmask 255.255.255.252 \
+         broadcast 192.200.96.167 up

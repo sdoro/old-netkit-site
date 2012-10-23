@@ -1,0 +1,25 @@
+; reverse lookup database
+; $Id: db.217.57.5,v 1.3 2004/08/04 22:31:45 doros Exp $
+$TTL    1
+$ORIGIN 5.57.217.in-addr.arpa.
+@               IN      SOA     5.57.217.in-addr.arpa.    root.ns.fdns.net. (
+                        2002102802 ; serial
+                        28 ; refresh
+                        14 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+@               IN      NS      5.57.217.in-addr.arpa.
+
+123 PTR CentoVentiTre.
+
+216/29     NS         ns1.tic.fdns.net.
+
+;$ORIGIN 216/29.5.57.217.IN-ADDR.ARPA.
+;$GENERATE 218-222 $ CNAME $.216/29
+219 CNAME 219.216/29.5.57.217.in-addr.arpa.
+220 CNAME 220.216/29.5.57.217.in-addr.arpa.
+;217.5.57.217.in-addr.arpa. CNAME 217.216/29.5.57.217.in-addr.arpa.
+; ...
+
+; bot

@@ -1,0 +1,30 @@
+# $Id: hosts.ldif,v 1.2 2004-10-18 15:17:35 doros Exp $
+
+dn: cn=localhost,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 127.0.0.1
+cn: localhost
+
+dn: cn=server,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.1
+cn: server
+
+dn: cn=rserver,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.2
+cn: rserver
+
+dn: cn=client,ou=Hosts,dc=istituto,dc=it
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.50.3
+cn: client
+

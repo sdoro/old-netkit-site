@@ -1,0 +1,13 @@
+# /etc/cron.d/ids
+# $Id: ids,v 1.3 2003-10-06 12:57:37 doros Exp $
+
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file.
+# This file also has a username field, that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+17 23 * * * root rdate -s 10.10.20.29
+18 23 * * * root hwclock -u -w
+0  *  * * * root /usr/local/SHADOW/sensor/sensor_driver.pl std > /dev/null 2>&1

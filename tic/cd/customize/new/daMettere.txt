@@ -1,0 +1,1 @@
+libflashplayer.so e spostatelo in /usr/lib/mozilla/plugins.

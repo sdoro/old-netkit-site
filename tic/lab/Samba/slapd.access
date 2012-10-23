@@ -1,0 +1,78 @@
+# /etc/ldap/slapd.access
+# $Id: slapd.access,v 1.4 2005/12/10 18:55:33 doros Exp $
+
+
+# The userPassword by default can be changed
+# by the entry owning it if they are authenticated.
+# Others should not be able to see it, except the
+# admin entry below
+# users can authenticate and change their password
+access to attrs=userPassword,sambaNTPassword,sambaLMPassword,sambaPwdLastSet,sambaPwdMustChange,sambaPasswordHistory
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=nssuser,ou=DSA,dc=istituto,dc=it" read
+      by anonymous auth
+      by self write
+      by * none
+# some attributes need to be readable anonymously so that 'id user' can answer correctly
+access to attrs=objectClass,entry,gecos,homeDirectory,uid,uidNumber,gidNumber,cn,memberUid
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by * read
+# somme attributes can be writable by users themselves
+access to attrs=description,telephoneNumber
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by self write
+      by * read
+# some attributes need to be writable for samba
+access to attrs=cn,sambaLMPassword,sambaNTPassword,sambaPwdLastSet,sambaLogonTime,sambaLogoffTime,sambaKickoffTime,sambaPwdCanChange,sambaPwdMustChange,sambaAcctFlags,displayName,sambaHomePath,sambaHomeDrive,sambaLogonScript,sambaProfilePath,description,sambaUserWorkstations,sambaPrimaryGroupSID,sambaDomainName,sambaSID,sambaGroupType,sambaNextRid,sambaNextGroupRid,sambaNextUserRid,sambaAlgorithmicRidBase,sambaPasswordHistory
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by self read
+      by * none
+# samba need to be able to create the samba domain account
+access to dn.base="dc=istituto,dc=it"
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by * none
+# samba need to be able to create new users account
+access to dn="ou=Users,dc=istituto,dc=it"
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by * none
+# samba need to be able to create new groups account
+access to dn="ou=Groups,dc=istituto,dc=it"
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by * none
+# samba need to be able to create new computers account
+access to dn="ou=Computers,dc=istituto,dc=it"
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by * none
+# samba need to be able to create Idmap
+access to dn="ou=Idmap,dc=istituto,dc=it"
+      by dn="cn=samba,ou=DSA,dc=istituto,dc=it" write
+      by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+      by * none
+
+# Ensure read access to the base for things like
+# supportedSASLMechanisms.  Without this you may
+# have problems with SASL not knowing what
+# mechanisms are available and the like.
+# Note that this is covered by the 'access to *'
+# ACL below too but if you change that as people
+# are wont to do you'll still need this if you
+# want SASL (and possible other things) to work 
+# happily.
+access to dn.base="" by * read
+
+# The admin dn has full write access, everyone else
+# can read everything.
+access to *
+        by dn="cn=admin,ou=DSA,dc=istituto,dc=it" write
+        by * read
+
+#
+# bot

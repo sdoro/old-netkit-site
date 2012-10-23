@@ -1,0 +1,19 @@
+# /etc/shorewall/rules
+# $Id:$
+#
+#ACTION         SOURCE      DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+# For fw node:
+#
+SMTP/ACCEPT     fw          net
+DNS/ACCEPT      fw          net
+SSH/ACCEPT      loc         fw
+SSH/ACCEPT      net         fw
+Ping/ACCEPT     loc         fw
+Ping/ACCEPT     net         fw
+Ping/ACCEPT     fw          loc
+Ping/ACCEPT     fw          net
+#
+MySQL/ACCEPT    fw          net
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

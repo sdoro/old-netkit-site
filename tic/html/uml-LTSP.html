@@ -1,0 +1,415 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-LTSP.html,v 1.29 2007-02-10 08:07:40 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-LTSP</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 7 - Sistemi operativi di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Linux Terminal Server (LTSP)</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-email.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-KTS.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a> con la rete reale (leggere il file <code>README</code>).</span>
+Inoltre occorre procurarsi un hub e un paio di vecchi pc
+con una scheda di rete ciascuno.
+</p>
+
+
+<p>
+La rete con il relativo schema di numerazione assume
+l'esistenza di una rete reale con numerazione  192.168.100.0/24
+come illustrato
+nella mappa 
+(<a href="pdf/LTSP.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/LTSP.xml" title="file per Dia">xml</a>).
+L'esperienza (<a href="LTSP.tgz" title="esperienza Netkit4TIC">tarball</a>)
+&egrave; limitata alla messa in funzione di un "fat" client
+con la sola interfaccia a caratteri attraverso l'utilizzazione
+della versione 3.0 del progetto
+<a href="http://www.ltsp.org/" title="link esterno">LTSP</a>.<br>
+Nella vm sono stati gi&agrave; installati
+<code>ltsp-core-i386</code> e
+<code>ltsp-kernel-2.4.22-i386</code>
+scaricati dal sito <code>termserv.berlios.de</code>
+e installati tramite <code>apt</code>.<br>
+Nel caso volessimo attivare la modalit&agrave; grafica e perci&ograve; X
+occorrer&agrave; installare
+<code>ltsp-x-core-i386</code>,
+<code>ltsp-x-fonts-i386</code> e, ad esempio, nel caso di scheda
+grafica Mach64
+<code>x-xserver-mach64-3.3.6-i386</code>.
+</p>
+
+
+<p>
+Dopo aver settato correttamente l'ambiente
+Netkit lancia lo script:
+</p>
+
+<pre>
+user@realHost$ ./lab start
+</pre>
+
+<p>
+che attiva e configura un macchina virtuale di nome <code>lts</code>
+con i seguenti servizi:
+</p>
+
+<ul>
+  <li><code>dhcp</code>: per l'assegnazione degli IP a partire dai MAC address</li>
+  <li><code>tftp</code>: per il trasferimento del kernel</li>
+  <li><code>nfs</code>: per la condivisione del filesystem</li>
+  <li><code>xinetd</code>: per l'attivazione di tftp</li>
+</ul>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="dhcp"></a>Verifica funzionamento DHCP</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per verificare il corretto funzionamento del server DHCP almeno sulla
+rete 192.168.77.0/24 possiamo provare l'applicativo <code>pump</code>.
+Per prima cosa assegniamo un particolare MAC (00:00:00:00:00:01)
+address all'interfaccia <code>tap0</code>. Prima facciamo lo
+shutdown dell'interfaccia e poi, dopo aver cambiato il MAC,
+ritiriamo su l'interfaccia :
+</p>
+
+<pre>
+root@realHost# ifconfig tap0 down; \
+               ifconfig tap0 hw ether  00:00:00:00:00:01; \
+               ifconfig tap0 192.168.77.1
+</pre>
+
+<p>
+Configuriamo il servizio DHCP in modo tale che assegni a tale
+MAC address l'ip 192.168.77.1:
+</p>
+
+<pre>
+# /etc/dhcp3/dhcpd.conf
+[...]
+host test {
+  hardware ethernet     00:00:00:00:00:01;
+  fixed-address         192.168.77.1;
+}
+</pre>
+
+<p>
+e ora possiamo sperimentare rispettivamente il leasing, il rinnovo (-R) e
+il rilascio (-r) di IP Address.
+Poich&egrave; non vogliamo cambiare la configurazione
+del default gateway e del name server del nodo specificheremo questa
+volont&agrave; nelle opzioni del comando:
+</p>
+
+<pre>
+root@realHost# export PARMS=--no-gateway --no-dns --no-gateway --no-resolvconf; \
+               pump -i tap0 $PARMS; \
+               pump -R -i tap0 $PARMS; \
+               pump -r -i tap0 $PARMS
+</pre>
+
+<p>
+Abbiamo registrato la cattura
+<a href="../capture/LTSP-dhcp.acp"
+   title="file per Ethereal">(File ACP)</a>
+del traffico effettuata con il comando:
+</p>
+
+<pre>
+root@realHost# tcpdump -i any -n -s 1524 -w LTSP-dhcp udp
+</pre>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="tftp"></a>Verifica funzionamento TFTP</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per verificare il funzionamento del trivial FTP ci poniamo
+nel realHost e diamo il comando get:
+</p>
+
+<pre>
+user@realHost$ tftp 192.168.77.2<span class="blue">
+tftp&gt;</span> get lts/vmlinuz-2.4.22-ltsp-2<span class="blue">
+Received 1731429 bytes in 6.2 seconds
+tftp&gt;</span> quit
+</pre>
+
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="network"></a>Considerazioni sulla rete reale</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Nel caso assai probabile di utilizzo in una rete di laboratorio con una
+numerazione 
+diversa da <span class="red">192.168.100.0/24</span> occorre apportare delle modifiche ai
+file <code>/etc/exports</code>, <code>/etc/hosts.allow</code> e
+<code>/etc/dhcp3/dhcpd.conf</code>
+segnalate di seguito in <span class="red">colore</span>:
+</p>
+
+<pre>
+# /etc/hosts.allow
+[...]
+in.tftpd:  <span class="red">192.168.100.</span>
+portmap:   <span class="red">192.168.100.</span>
+mountd:    <span class="red">192.168.100.</span>
+</pre>
+
+<pre>
+# /etc/exports
+/opt/ltsp/i386  <span class="red">192.168.100.0</span>/255.255.255.0(ro,no_root_squash)
+</pre>
+
+<pre>
+# /etc/dhcp3/dhcpd.conf
+[...]
+
+option broadcast-address      <span class="red">192.168.100.255</span>;
+option routers                <span class="red">192.168.100.100</span>;
+option domain-name-servers    <span class="red">192.168.100.100</span>;
+
+[...]
+
+shared-network WORKSTATIONS {
+    subnet <span class="red">192.168.100.0</span> netmask 255.255.255.0 {
+    }
+}
+
+group {
+    use-host-decl-names       on;
+    option log-servers        <span class="red">192.168.100.100</span>;
+    # The following is _NOT_ a MAC address!
+    option option-128         e4:45:74:68:00:00;
+
+    host ws002 {
+        hardware ethernet     00:10:a7:17:30:a5;
+        fixed-address         <span class="red">192.168.100.2</span>;
+        filename              "/tftpboot/lts/vmlinuz-2.4.22-ltsp-2";
+    }
+    host ws102 {
+        hardware ethernet     00:60:97:51:20:7e;
+        fixed-address         <span class="red">192.168.100.3</span>;
+        filename              "/tftpboot/lts/vmlinuz-2.4.22-ltsp-2";
+        # this is mandatory for ISA card:
+        option option-129     "NIC=3c509";
+    }
+}
+</pre>
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id="experience"></a>Esperienza</h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+La rete reale dove stanno le workstation &egrave; distinta
+dalla rete virtuale dove &egrave; installato il servizio Terminal
+con il server dhcp e quindi occorre
+attivare il servizio di dhcp relay nel &quot;router&quot; in modo che
+avvenga il forward verso il server:
+</p>
+
+<pre>
+root@realHost# dhcrelay3 192.168.77.2
+</pre>
+
+<p>
+Ora per ogni vecchio pc a disposizione occorre
+identificare la marca e il modello della scheda di rete
+e quindi punta il tuo browser sull'URL:
+</p>
+
+<pre>
+user@realHost$ firefox http://www.rom-o-matic.net/5.2.2/
+</pre>
+
+<p>
+e seleziona la scheda di rete appropriata, poi
+premi &quot;Get ROM&quot; e costruisci il dischetto di boot
+per il vecchio pc:
+</p>
+
+<pre>
+root@realHost# cat eb-5.2.2-tuaScheda.zdsk &gt; /dev/fd0
+</pre>
+
+<p>
+Prendi un hub e collegalo al pc su cui &egrave; installato
+Netkit4TIC e ora collega anche il vecchio pc all'hub.<br>
+Ora puoi inserire il floppy nel vecchio pc e accenderlo. La prima
+cosa da fare &egrave; scoprire il MAC address della scheda
+di rete. Per far questo basta visualizzare il file di log
+del server (virtuale):
+</p>
+ 
+<pre>
+root@lts# tail -f /var/log/syslog
+[...] DHCPDISCOVER from 00:60:97:51:20:7e via 192.168.100.100
+</pre>
+
+<p>
+ma lo visualizza anche la stessa workstation al momento del boot
+da floppy.
+Inserisci il MAC nel file <code>/etc/dhcpd.conf</code>
+e fai ripartire il server dhcp:
+</p>
+
+<pre>
+root@lts# /etc/init.d/dhcp3-server restart
+</pre>
+
+<p>
+A questo punto resettiamo il vecchio pc e poco dopo lo vedremo
+accettare il leasing dell'IP address, poi chieder&agrave;,
+attraverso tftp, il download del kernel che poi caricher&agrave;
+in memoria. In seguito, dopo aver identificato la scheda di rete
+lo script di inizializzazione compier&agrave; una seconda
+richiesta di leasing dhcp.
+Come ultimo passo verr&agrave; montato via NFS una parte del filesystem
+e al termine apparir&agrave; il prompt della shell.
+</p>
+
+<p>
+Ecco uno
+<a href="LTSP-desktop.png" title="screen-shot">screenshot</a>
+del desktop della macchina reale con il file di log e lo schema
+della rete.
+</p>
+
+
+
+
+
+
+
+<p>
+Il live-{CD,USB} contiene una configurazione di Terminal Server che
+puoi provare in
+<a href="uml-KTS.html"
+   title="esperienza Netkit4TIC">Knoppix Terminal server</a>.
+</p>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content> 
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2007-02-10 08:07:40 $
+</span>
+</address>
+
+
+</body>
+
+</html>

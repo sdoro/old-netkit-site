@@ -1,0 +1,35 @@
+;; $Id: netkit4tic.ds,v 1.2 2007-01-31 16:39:57 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "router-ext")
+  (begin
+      (geometry "484x190+536+30")
+    )
+  )
+
+(if (contains (application_name) "services")
+  (begin
+      (geometry "484x304+4+177")
+    )
+  )
+
+(if (contains (application_name) "fw")
+  (begin
+      (geometry "484x173+536+309")
+    )
+  )
+
+(if (contains (application_name) "aclnt")
+  (begin
+      (geometry "484x160+4+557")
+    )
+  )
+
+(if (contains (application_name) "proxy")
+  (begin
+      (geometry "484x160+536+557")
+    )
+  )
+
+
+)

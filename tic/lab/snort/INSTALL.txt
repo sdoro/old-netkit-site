@@ -1,0 +1,8 @@
+
+
+dpkg-reconfigure -plow snort-mysql
+
+
+/usr/share/doc/snort-mysql/README-database.Debian
+
+rm -f /etc/snort/db-pending-config

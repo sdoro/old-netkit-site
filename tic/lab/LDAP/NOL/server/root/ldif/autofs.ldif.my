@@ -1,0 +1,81 @@
+
+dn: ou=Automount,dc=istituto,dc=it
+ou: Automount
+objectClass: top
+objectClass: organizationalUnit
+
+
+
+
+dn: ou=auto.master,ou=Automount,dc=istituto,dc=it
+ou: auto.master
+objectClass: top
+objectClass: automountMap
+
+dn: cn=/nas,ou=auto.master,ou=Automount,dc=istituto,dc=it
+cn: /nas
+objectClass: automount
+automountInformation: ldap:ou=auto.nas,ou=Automount,dc=istituto,dc=it --timeout=60 --ghost
+description: data stored in ldap
+
+
+
+
+dn: ou=auto.nas,ou=Automount,dc=istituto,dc=it
+ou: auto.nas
+objectClass: top
+objectClass: automountMap
+
+dn: cn=dir1, ou=auto.nas,ou=Automount,dc=istituto,dc=it
+cn: dir1
+objectClass: automount
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192  nfs1.istituto.it:/dir1
+description: NFS mount
+
+dn: cn=dir2, ou=auto.nas,ou=Automount,dc=istituto,dc=it
+cn: dir2
+objectClass: automount
+automountInformation: ldap:ou=auto.dir2,ou=Automount,dc=istituto,dc=it --timeout=60 --ghost
+description: data stored in ldap
+
+
+
+
+dn: ou=auto.dir21,ou=Automount,dc=istituto,dc=it
+ou: auto.dir21
+objectClass: top
+objectClass: automountMap
+
+dn: cn=dir211, ou=auto.dir21,ou=Automount,dc=istituto,dc=it
+cn: dir211
+objectClass: automount
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192  nfs1.istituto.it:/dir211
+description: NFS mount
+
+dn: cn=dir212, ou=auto.dir21,ou=Automount,dc=istituto,dc=it
+cn: dir212
+objectClass: automount
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192  nfs2.istituto.it:/dir212
+description: NFS mount
+
+
+
+
+dn: ou=auto.dir2,ou=Automount,dc=istituto,dc=it
+ou: auto.dir2
+objectClass: top
+objectClass: automountMap
+
+dn: cn=dir21, ou=auto.dir2,ou=Automount,dc=istituto,dc=it
+cn: dir21
+objectClass: automount
+automountInformation: ldap:ou=auto.dir21,ou=Automount,dc=istituto,dc=it --timeout=60 --ghost
+description: data stored in ldap
+
+dn: cn=dir22, ou=auto.dir2,ou=Automount,dc=istituto,dc=it
+cn: dir22
+objectClass: automount
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192  nfs2.istituto.it:/dir22
+description: NFS mount
+
+

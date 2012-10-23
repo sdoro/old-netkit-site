@@ -1,0 +1,52 @@
+
+dn: automountMapName=/net,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net
+
+dn: cn=dir1,automountMapName=/net,dc=istituto,dc=it
+objectClass: automount
+automountKey: dir1
+cn: dir1
+automountInformation: -fstype=nfs nfs1.istituto.it:/dir1
+
+dn: cn=dir2,automountMapName=/net,dc=istituto,dc=it
+objectClass: automount
+automountKey: dir2
+cn: dir2
+automountInformation: -fstype=autofs ldap://ldap.istituto.it/automountMapName=/net/dir2, dc=istituto,dc=it
+
+dn: automountMapName=/net/dir2,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/dir2
+
+dn: cn=dir21,automountMapName=/net/dir2,dc=istituto,dc=it
+objectClass: automount
+automountKey: dir21
+cn: dir21
+automountInformation: -fstype=autofs ldap://ldap.istituto.it/automountMapName=/net/dir2/dir21, dc=istituto,dc=it
+
+dn: cn=dir22,automountMapName=/net/dir2,dc=istituto,dc=it
+objectClass: automount
+automountKey: dir22
+cn: dir22
+automountInformation: -fstype=nfs nfs2.istituto.it:/dir22
+
+dn: automountMapName=/net/dir2/dir21,dc=istituto,dc=it
+objectClass: top
+objectClass: automountMap
+automountMapName: /net/dir2/dir21
+
+dn: cn=dir211,automountMapName=/net/dir2/dir21,dc=istituto,dc=it
+objectClass: automount
+automountKey: dir211
+cn: dir211
+automountInformation: -fstype=nfs nfs1.istituto.it:/dir211
+
+dn: cn=dir212,automountMapName=/net/dir2/dir21,dc=istituto,dc=it
+objectClass: automount
+automountKey: dir212
+cn: dir212
+automountInformation: -fstype=nfs nfs3.istituto.it:/dir212
+

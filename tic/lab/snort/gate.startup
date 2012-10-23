@@ -1,0 +1,8 @@
+# $Id: www.startup,v 1.1 2006/11/18 21:26:29 doros Exp $
+#/etc/init.d/klogd start
+#/etc/init.d/sysklogd start
+# IP address
+ifconfig eth0 192.168.77.2
+route add default gw 192.168.77.1
+ifconfig eth0 192.168.0.1
+#

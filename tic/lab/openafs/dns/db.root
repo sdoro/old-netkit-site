@@ -1,0 +1,16 @@
+; /etc/bind/db.root
+; $Id: db.root,v 1.1 2005/09/01 19:49:33 doros Exp $
+;
+$TTL   60000
+@               IN      SOA     ROOT-SERVER.    root.ROOT-SERVER. (
+                        2002102801 ; serial
+                        28800 ; refresh
+                        14400 ; retry
+                        3600000 ; expire
+                        0 ; default_ttl
+                        )
+
+@               3600000 IN  NS      ROOT-SERVER.
+ROOT-SERVER.    3600000 IN  A       192.168.10.4
+istituto.it.    3600000 IN  NS      ns.istituto.it.
+ns.istituto.it. 3600000 IN  A       192.168.10.4

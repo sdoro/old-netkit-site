@@ -1,0 +1,4 @@
+ip_forward=no
+ipv6_forward=no
+spoofprotect=yes
+syncookies=no

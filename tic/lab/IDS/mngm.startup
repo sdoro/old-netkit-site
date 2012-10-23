@@ -1,0 +1,52 @@
+# $Id: mngm.startup,v 1.2 2007-05-07 07:49:14 doros Exp $
+
+# cleanup old e-mail
+rm -f /var/spool/mqueue-client/*
+# restart  sysklog daemon
+chmod a+x /etc/init.d/sysklogd
+/etc/init.d/sysklogd restart
+# config IP for tap device
+ifconfig eth0 192.168.78.2
+route add default gw 192.168.78.1
+# config IP for IDS network
+ifconfig eth1 10.10.20.29 \
+   netmask 255.255.255.224 broadcast 10.10.20.31 up
+#
+# ssh access to sensor0X for shadow user
+chmod go= /home/SHADOW/.ssh/id_dsa
+chown shadow:shadowids /home/SHADOW/.ssh /home/SHADOW/.ssh/*
+# move SHADOW in home
+pushd /usr/local/SHADOW/httpd/home
+  cp * /home/SHADOW/html
+  cp .htaccess /home/SHADOW/html
+  chown -R shadow:shadowids /home/SHADOW
+popd
+# start web server
+/etc/init.d/apache start
+# start cron daemon
+/etc/init.d/cron start
+# setup SHADOW directories
+chown -R shadow:shadowids /home/SHADOW/
+mkdir -p /var/spool/SHADOW/Incidents-Reports
+chown -R shadow:shadowids /var/spool/SHADOW/Incidents-Reports
+chown -R shadow:shadowids /usr/local/SHADOW/
+# ACID/mysql/Snort
+# MySQL
+/etc/init.d/mysql start
+# Snort
+mysql < /root/mksnort.sql
+mysql snort < /root/create_mysql.sql
+# ACID
+ln -s /usr/share/acidlab /home/SHADOW/html/acidlabS
+# BASE
+cd /var/www
+tar zxf /root/base-1.3.5.tar.gz
+mv base-1.3.5 base
+chmod 777 base
+# fix bug in 1.3.5 BASE release
+cp /root/base_qry_common.php /var/www/base/base_qry_common.php
+# install Image_*
+pear install /root/Image_*
+
+#
+# EOF

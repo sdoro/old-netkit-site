@@ -1,0 +1,19 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.4 2007-02-19 17:35:05 doros Exp $
+#
+##############################################################################
+#ACTION         SOURCE    DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+DNS/ACCEPT      fw        net
+DNS/ACCEPT      dmz       net
+#
+# Forward the request to 192.168.1.222 in DMZ
+#
+DNS/DNAT        net       dmz:192.168.1.222
+Web/DNAT        net       dmz:192.168.1.222
+#
+# To manage fw from loc network
+#
+SNMP/ACCEPT     loc       fw
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

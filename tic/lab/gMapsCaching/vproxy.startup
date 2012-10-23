@@ -1,0 +1,20 @@
+# $Id: vproxy.startup,v 1.2 2008-08-26 07:09:06 doros Exp $
+# setup IP address
+ifconfig eth0 192.168.77.254
+route add default gw 192.168.77.1
+# install precompiled squid-2.HEAD-2008011
+(cd /tmp; \
+ tar zxf /hostlab/squid-2.HEAD-20080119-precompiled.tgz; \
+ cd squid-2.HEAD-20080119; \
+ make install 1>/dev/null)
+# setup squid directory
+chown nobody /usr/local/squid/var/logs
+mkdir -p /usr/local/squid/var/cache
+chown nobody /usr/local/squid/var/cache
+cp /usr/local/squid/etc/squid.conf.netkit /usr/local/squid/etc/squid.conf
+# make squid cache directory
+/usr/local/squid/sbin/squid -z
+# startup squid
+/usr/local/squid/sbin/squid -f /usr/local/squid/etc/squid.conf.netkit
+#
+# bot

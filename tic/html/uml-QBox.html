@@ -1,0 +1,129 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-QBox.html,v 1.2 2006/06/30 07:42:44 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-QBox</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 6 - Hardware di rete</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su Quality of Service: QBox</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-QoS.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-proxyArp.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+
+<p>
+Per la realizzazione di questo modulo useremo
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la 
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+Questo esercitazione sorge da un nuovo progetto denominato
+<a href="http://content.cs.luc.edu/projects/comp412/q-box"
+   title="link esterno">QBox</a>
+che ha lo scopo di verificare la possibilit&agrave; di produrre
+a basso costo (&lt;200 $ USD) QoS appliance. Allo stato attuale
+il progetto &egrave; alla release 0.1 ma il numero molto basso
+non significa nulla dal momento che parte da una base
+consolidata che &egrave; la distribuzione LEAF/Bering uClibc 2.3.
+</p>
+
+<p>
+Al momento
+<a href="QBox.tgz" title="esperienza Netkit4TIC">l'esercitazione</a>
+consiste nella sola configurazione
+e verifica del funzionamento a livello di bridge e della
+interfaccia web. In seguito verranno aggiunti grafici e test
+su particolari traffici.
+</p>
+
+<p>
+Dopo il lancio dello script:
+</p>
+
+<pre>
+user@realHost$ lstart
+</pre>
+
+<p>
+la situzione si presenta come
+<a href="QBox-desktop.png" title="immagine PNG">desktop</a>
+con
+questa
+<a href="QBox-firefox.png" title="immagine PNG">interfaccia web</a>.
+</p>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/06/30 07:42:44 $
+</span>
+</address>
+
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+
+Distribuzione IPv6
+
+IPv6 a disposizione per account go6:
+
+2^16*64
+4194304
+
+Per un massimo di 4096 utenti:
+
+2^16*64/8192
+512
+
+Quindi potremmo distribuire 512 indirizzi IPv6 ad agnuno
+dei potenziali 8192 (max) utenti dell'Istituto. In genere
+gli utenti sono poco piu' di un migliaio ma ci teniamo
+larghi per ospitare esterni.
+
+Quindi in base a:
+
+2001:5c0:1101:f700:0:0:0:1/56
+
+Verrebbero assegnate reti:
+
+2001:5c0:1101:f700::/5  ?????????
+
+
+
+installare :
+# apt-get install ipv6calc
+
+dopo si possono fare dei conti:
+
+# ip -6 addr show tap0 |grep global | \
+     awk '{print $2}' | xargs ipv6calc -q --out ipv6 -U
+2001:5c0:1101:f700:0:0:0:1/64
+
+# ip -6 addr show tun |grep global | \
+     awk '{print $2}' | xargs ipv6calc -q --out ipv6 -U
+2001:5c0:1000:b:0:0:0:1767/128
+
+
+
+
+
+Goals:
+
+    * Ensure your router interfaces are configured with IPv6 addresses
+    * Ping a neighboring router using IPv6 ICMP.
+    * Verify that you are sending IPv6 BGP routes to neighboring routers, where appropriate.
+    * Verify you are receiving IPv6 BGP routes.
+    * Verify connectivity around the workshop lab.
+    * If your workshop lab is connected to the global IPv6 Internet, verify you can ping and traceroute to a host on the global IPv6 Internet.
+    * Verify lab client computer (laptop) is receiving router advertisements. 

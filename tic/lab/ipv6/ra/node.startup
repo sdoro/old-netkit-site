@@ -1,0 +1,8 @@
+#
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+#
+ifconfig eth0 hw ether 00:00:00:00:00:03
+ifconfig eth0 0.0.0.0 up
+#
+# bot

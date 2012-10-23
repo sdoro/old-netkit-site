@@ -1,0 +1,14 @@
+/etc/init.d/klogd start
+/etc/init.d/sysklogd start
+# configure IP address
+ifconfig eth0 192.168.50.4 up
+route add default gw 192.168.50.2
+#
+mkdir /dir22
+> /dir22/nfs2.txt
+#
+/etc/init.d/portmap start
+/etc/init.d/nfs-common start
+/etc/init.d/nfs-kernel-server start
+#
+# bot

@@ -1,0 +1,26 @@
+# /etc/shorewall/rules
+# $Id: rules,v 1.6 2007-02-19 13:21:32 doros Exp $
+#
+#ACTION         SOURCE    DEST        PROTO  DEST    SOURCE     ORIGINAL
+#
+# For fw node:
+#
+SMTP/ACCEPT     fw        net
+DNS/ACCEPT      fw        net
+SSH/ACCEPT      loc       fw
+SSH/ACCEPT      net       fw
+Ping/ACCEPT     loc       fw
+Ping/ACCEPT     net       fw
+Ping/ACCEPT     fw        loc
+Ping/ACCEPT     fw        net
+#
+# Forward the http connection request to internal private network
+#
+Web/DNAT        net       loc:10.10.10.65
+#
+# To manage fw from loc network
+#
+SNMP/ACCEPT     loc       fw
+Web/ACCEPT      loc       fw
+#
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE

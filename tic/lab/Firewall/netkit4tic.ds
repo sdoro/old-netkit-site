@@ -1,0 +1,40 @@
+;; $Id: netkit4tic.ds,v 1.1 2006/06/29 10:07:20 doros Exp $
+(begin
+;;(debug)
+(if (contains (application_name) "net")
+  (begin
+      (geometry "484x160+525+60")
+    )
+  )
+
+(if (contains (application_name) "fw")
+  (begin
+      (geometry "484x173+525+300")
+    )
+  )
+
+(if (contains (application_name) "fwtp")
+  (begin
+      (geometry "484x173+525+319")
+    )
+  )
+
+(if (contains (application_name) "loc01")
+  (begin
+      (geometry "484x160+8+556")
+    )
+  )
+
+(if (contains (application_name) "proxy")
+  (begin
+      (geometry "484x160+525+556")
+    )
+  )
+
+(if (contains (application_name) "proxytp")
+  (begin
+      (geometry "484x160+525+556")
+    )
+  )
+
+)

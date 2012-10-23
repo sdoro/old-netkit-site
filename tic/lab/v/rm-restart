@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export NETKIT_VM_TYPE=bering
+export NETKIT_BERING_FD=rM/fd0.fs
+vstart rM --eth0=A  --eth1=B --eth2=C --mem=32 -q \
+    --exec=/hosthome${PWD#$HOME}/lab

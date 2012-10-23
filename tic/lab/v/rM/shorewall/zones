@@ -1,0 +1,10 @@
+#
+# /etc/shorewall/zones
+# $Id:$
+#
+#ZONE	DISPLAY		COMMENTS
+net	Net		Internet
+dmz	DMZ		DMZ networks
+loc	Local		Local networks
+vpn	VPN		Remote Subnet
+#LAST LINE -- ADD YOUR ENTRIES ABOVE THIS LINE -- DO NOT REMOVE

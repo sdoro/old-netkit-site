@@ -1,0 +1,6 @@
+# $Id: aclnt.startup,v 1.1 2007-01-31 16:39:28 doros Exp $
+# configure IP address
+ifconfig eth0 192.168.2.221 up
+route add default gw 192.168.2.254
+#
+# EOF

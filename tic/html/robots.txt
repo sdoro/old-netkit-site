@@ -1,0 +1,15 @@
+# robots.txt
+# $Id: robots.txt,v 1.7 2006/10/30 14:21:08 doros Exp $
+#
+# see: http://en.wikipedia.org/wiki/Robots_Exclusion_Standard
+#
+
+User-agent: *                # match all bots
+Disallow: /tic/iso/
+Disallow: /webalizer/
+Disallow: /tic/netkit/ssh/
+Disallow: /cgi-bin/
+Disallow: /phpbb/
+
+#
+# bot

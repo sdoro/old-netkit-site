@@ -1,0 +1,15 @@
+# $Id: client1.startup,v 1.4 2010-06-01 12:11:19 doros Exp $
+
+# configure IP address
+ifconfig eth0 192.168.50.101 up
+route add default gw 192.168.50.254
+#
+mkdir /net
+> /net/.dont_remove
+#
+/etc/init.d/portmap start
+/etc/init.d/nfs-common start
+#
+/etc/init.d/autofs start
+#
+# bot

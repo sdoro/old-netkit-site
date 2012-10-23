@@ -1,0 +1,238 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: las.html,v 1.22 2006/10/08 13:36:26 doros Exp $ -->
+
+
+<head>
+  <title>GNU/Linux@School</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+<h1 class="center">Informazioni sul corso avanzato</h1>
+<h2 class="center">Linux@School<br>
+                   (GNU/Linux@Zuccante)</h2>
+<h3 class="center">Copyright <img alt="Creative Commons License" src="cc-favicon.ico"> 2005, 2006
+            <a name=tutor href="mailto:this.is.not@my.real.address" title="e-mail tutor" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">Sandro Doro</a></h3>
+
+
+<p>
+Il corso di GNU/Linux si colloca all'interno del progetto
+<a href="http://www.istruzione.it/innovazione/progetti/linux.shtml"
+   title="link esterno">Linux@School</a> realizzato in collaborazione
+con il MIUR e con il Politecnico di Milano.
+Gli argomenti trattati riguardano sia l'amministrazione
+di un singolo nodo che l'amministrazione di una rete.
+Oltre ai materiali disponibili
+all'interno del progetto, faremo principalmente riferimento ad un'opera in
+italiano scritta da Daniele Giacomini dal
+titolo "Appunti di Informatica Libera" reperibile presso
+<a href="http://cdn.mirror.garr.it/mirrors/AppuntiLinux/"
+   title="link esterno">http://cdn.mirror.garr.it/mirrors/AppuntiLinux/</a>
+o consultabile presso
+<a href="http://a2.pluto.it/"
+   title="link esterno">http://a2.pluto.it/</a>.
+</p>
+
+<p>
+Gli incontri sono basati sul laboratorio virtuale
+Netkit4TIC come metodo per lo studio, la discussione e
+la verifica del funzionamento delle configurazioni proposte.<br>
+Gli incontri si terranno al <code>LASA</code> dell'Istituto Zuccante di
+Mestre il marted&igrave; dalle ore 14 alle ore 16.
+</p>
+
+<p>
+&Egrave; stato allestito un
+<a href="/phpbb" title="forum">forum</a> dedicato principalmente ai corsisti
+ma aperto a tutti. Per poter intervenire occorre registrarsi
+e fornire un indirizzo email valido che sar&agrave; mantenuto nascosto
+a meno che lo stesso utente non voglia renderlo publico. Per cortesia
+registratevi con "Nome Cognome" con lo spazio in mezzo e le maiuscole.
+</p>
+
+
+<p>Amministrazione di un nodo</p>
+<ul>
+  <li>01/03/2005 Lezione 0<br>
+      Introduzione al corso<br>
+      Presentazione e uso di
+      <a href="lab.html" title="Netkit4TIC"><span class="yellow">Netkit4TIC</span></a> (&ge;v.1.2)<br>
+         <ul>
+           <li>Costruzione di una singola vm</li>
+           <li>Descrizione di una rete attraverso script v-command
+               (<a href="scripting.html"
+                   title="Approfondimento">scripting (low level)</a>)</li>
+           <li>Descrizione di una rete attraverso script l-command
+               (<a href="lcommand.html"
+                   title="Approfondimento">scripting (high level)</a>)</li>
+           <li>Descrizione di una rete attraverso NetML
+               (<a href="netml.html"
+                   title="Approfondimento">(XML language)</a>)</li>
+           <li>Interfaccia tra filesystem reale e virtuali</li>
+           <li>Interfaccia tra reti reale e virtuale</li>
+           <li>Strumenti per la rete
+               (<a href="module4.html"
+                   title="Approfondimento">tools</a>)</li>
+         </ul>
+      </li>
+  <li>08/03/2005 Lezione 1<br>
+      I filesystems (<a href="http://www.forensics.nl/filesystems"
+                        title="link esterno">"Filesystem Specifications - Links & Whitepapers"</a>)
+         <ul>
+           <li><a href="http://a2.pluto.it/file_e_directory.htm"
+                  title="Appunti di informatica libera di Daniele Giacomini"
+               >File e Directory</a> (Directory, Archiviazione, Device)</li>
+           <li><a href="http://a2.pluto.it/gestione_di_dischi_e_file_nbsp_system.htm"
+                  title="Appunti di informatica libera di Daniele Giacomini"
+               >Gestione di dischi e file system</a></li>
+           <li><a href="http://a2.pluto.it/gerarchia_del_file_nbsp_system.htm"
+                  title="Appunti di informatica libera di Daniele Giacomini"
+               >Gerarchia del file system</a></li>
+           <li>Approfondimento su <a href="uml-perms.html" title="esperienza Netkit4TIC"><span class="yellow">file/directory permissions</span></a>
+           <li>I filesystems <a href="http://e2fsprogs.sourceforge.net/ext2intro.html" title="link esterno: Design and Implementation of the Second Extended Filesystem">ext2</a> ed
+               <a href="http://olstrans.sourceforge.net/release/OLS2000-ext3/OLS2000-ext3.html" title="link esterno:  EXT3, Journaling Filesystem">ext3</a></li>
+           <li>Il filesystem XFS con quota e ACL
+<a href="uml-quotaACL.html" title="esperienza Netkit4TIC"><span class="yellow">Quota e ACL</span></a>
+           </li>
+         </ul>
+      </li>
+  <li>15/03/2005 Lezione 2<br>
+      Autorizzazioni
+         <ul>
+           <li><a href="http://a2.pluto.it/moduli_pam.htm"
+                  title="Appunti di informatica libera di Daniele Giacomini">Pluggable authentication modules</a>
+           <li><a href="http://www.kernel.org/pub/linux/libs/pam/Linux-PAM-html/pam.html" title="link esterno">The Linux-PAM system administrators' guide</a>
+           <li>Sperimentazione di alcuni moduli 
+<a href="uml-pam.html" title="esperienza Netkit4TIC"><span class="yellow">PAM</span></a>
+           </li>
+           <li>Letture: Una raccolta di <a href="http://www.kernel.org/pub/linux/libs/pam/pre/doc" title="link esterno">documenti</a> su Linux PAM tra cui rfc86.0. Una serie di tre articoli su "Writing PAM Modules"
+(<a href="http://www.linuxdevcenter.com/lpt/a/1700" title="">1</a>,
+<a href="http://www.linuxdevcenter.com/lpt/a/1703" title="">2</a>,
+<a href="http://www.linuxdevcenter.com/lpt/a/1702" title="">3</a>)
+di Jennifer Vesperman</li>
+         </ul>
+      </li>
+</ul>
+<p>Amministrazione di rete</p>
+<ul>
+  <li>22/03/2005 Lezione 3<br>
+      <a href="http://a2.pluto.it/introduzione_alle_reti.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">Introduzione alle reti e al TCP/IP</a><br>
+      <a href="http://a2.pluto.it/ipv4_configurazione_delle_interfacce_di_rete.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">IPv4: configurazione delle interfacce di rete</a><br>
+      <a href="http://a2.pluto.it/ipv4_instradamento_locale.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">IPv4: instradamento locale</a><br>
+      <a href="http://a2.pluto.it/ipv4_instradamento_oltre_l_x0027_ambito_della_rete_locale.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">IPv4: instradamento oltre l'ambito della rete locale</a><br>
+      Approfondimento su
+         <ul>
+           <li>Esempio di tre LAN connesse con due router
+<a href="http://www.netkit.org/docs/netkit-arp-02.pdf" title="esperienza Netkit">ISO-OSI-2/3</a>
+           <li>Esempio di due LAN connesse con router
+<a href="uml-RLab.html" title="esperienza Netkit4TIC"><span class="yellow">RLab</span></a>
+           </li>
+           <li>Esempio di una rete tipo
+<a href="uml-NET.html" title="esperienza Netkit4TIC"><span class="yellow">NET</span></a>
+           </li>
+         </ul>
+  <li>30/03/2005 Lezione 4<br>
+      <a href="http://a2.pluto.it/dhcp.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">DHCP</a><br>
+      <a href="http://a2.pluto.it/dns_introduzione.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">DNS: introduzione</a><br>
+      <a href="http://a2.pluto.it/dns_dettagli_ulteriori.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">DNS: dettagli ulteriori</a><br>
+      Approfondimento su
+         <ul>
+           <li>Configurazione DHCP come servizio base per
+<a href="uml-LTSP.html" title="esperienza Netkit4TIC"><span class="yellow">Linux Terminal Server</span></a>
+           </li>
+           <li>Esemplificazione del funzionamento del
+<a href="uml-dns.html" title="esperienza Netkit4TIC"><span class="yellow">DNS</span></a>
+           </li>
+           <li>Configurazione DNS su una rete tipo
+<a href="uml-NET.html" title="esperienza Netkit4TIC"><span class="yellow">NET</span></a>
+           </li>
+         </ul>
+  <li>05/04/2005 Lezione 5<br>
+      <a href="http://a2.pluto.it/posta_elettronica.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">Posta Elettronica</a><br>
+      Configurazione di Postfix<br>
+      Approfondimento su
+         <ul>
+           <li>Esemplificazione del funzionamento del
+<a href="uml-email.html" title="esperienza Netkit4TIC"><span class="yellow">servizio e-mail</span></a>
+           </li>
+           <li>Configurazione Postfix e IMAP/POP su una rete tipo
+<a href="uml-NET.html" title="esperienza Netkit4TIC"><span class="yellow">NET</span></a>
+           </li>
+         </ul>
+  <li>12/04/2005 Lezione 6<br>
+      Una serie di tre articoli di &AElig;leen Frisch su Linux Magazine
+      dal titolo &quot;Exploring LDAP&quot;
+      (<a href="http://www.linux-mag.com/index2.php?option=com_content&amp;task=view&amp;id=935&amp;Itemid=2036&amp;pop=1&amp;page=0"
+          title="link esterno">Part&nbsp;I</a>,
+       <a href="http://www.linux-mag.com/index2.php?option=com_content&amp;task=view&amp;id=961&amp;Itemid=2037&amp;pop=1&amp;page=0"
+          title="link esterno">Part&nbsp;II</a>,
+       <a href="http://www.linux-mag.com/index2.php?option=com_content&amp;task=view&amp;id=986&amp;Itemid=2038&amp;pop=1&amp;page=0"
+          title="link esterno">Part&nbsp;III</a>)
+         <ul>
+           <li>Esempio di utilizzo LDAP per accounting
+<a href="uml-LDAP.html" title="esperienza Netkit4TIC"><span class="yellow">LDAP</span></a> con replica
+           </li>
+         </ul>
+  <li>19/04/2005 Lezione 7<br>
+      <a href="http://a2.pluto.it/reti_e_rete_internet.htm"
+         title="Appunti di informatica libera di Daniele Giacomini">Samba</a><br>
+      Approfondimento su Samba 3.0.x con LDAP backend
+         <ul>
+           <li>Costruzione e configurazione di un server 
+               <a href="uml-Samba.html"
+                  title="esperienza Netkit4TIC"><span class="yellow">Samba</span></a>.
+           </li>
+           <li>Costruzione e configurazione di un Workgroup distribuito
+               su tre subnet
+               <a href="uml-EntSamba.html"
+                  title="esperienza Netkit4TIC"><span class="yellow">Enterprise Samba</span></a>
+           </li>
+         </ul>
+      <li><a href="las-verifica.html" title="test">Verifica conclusiva</a></li>
+</ul>
+
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE CULTURE"
+        src="freeculture.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/10/08 13:36:26 $
+</span>
+</address>
+
+
+</body>
+
+</html>

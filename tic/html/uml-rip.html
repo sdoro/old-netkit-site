@@ -1,0 +1,348 @@
+<!doctype html public "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html lang=it>
+<!-- $Id: uml-rip.html,v 1.4 2006/11/20 07:44:18 doros Exp $ -->
+
+<head>
+  <title>Gestione della infrastruttura tecnologica - uml-RIP</TITLE>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="StyleSheet" href="my.css" type="text/css"  media="screen">
+  <link rel="Alternate StyleSheet" href="myp.css" type="text/css" media="print">
+</head>
+
+<body>
+
+<p>
+<a name="up"></a>
+</p>
+
+<h1 class="center">Laboratorio</h1>
+<h2 class="center">Modulo 8 - Reti di reti: routing RIP</h2>
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3>Esperienza su routing RIP</h3>
+  </td>
+  <td class=navigation>
+    <a href="uml-mlinks.html"><img src="/icons/left.gif" alt="left" title="left"></a>
+  </td>
+  <td class=navigation>
+    <a href="lab.html"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  <td class=navigation>
+    <a href="uml-ospf.html"><img src="/icons/right.gif" alt="right" title="right"></a>
+  </td>
+  </tr>
+</table>
+
+<p>
+Per la realizzazione di questo modulo useremo 
+<a href="lab.html" title="il laboratorio virtuale">Netkit4TIC</a>
+<span class="yellow">con la
+<a href="lab-setting.html#network" title="approfondimento">connettivit&agrave;</a>
+con la rete reale (leggere il file <code>README</code>).</span>
+</p>
+
+<p>
+Scarica il
+<a href="rip.tgz" title="esperienza Netkit4TIC">tarball</a>
+contenente il tutto, e come al solito si parte scompattandolo
+in una sottodirectory della <code>HOME</code> dell'utente.
+</p>
+
+<p>
+Questa esperienza si basa sulla rete di laboratorio usata nel
+libro &quot;InterNETworking&quot; di Baldi e Nicoletti. Il protocollo
+RIP &egrave; trattato nel capitolo 6 del libro ed &egrave; messo
+a disposizione in internet
+come documento
+<a href="http://staff.polito.it/mario.baldi/Internetworking/configurazioni/RIP/"
+title="link esterno">riassuntivo</a>.<br>
+Il nostro intento &egrave; stato quello di provare la stessa configurazione
+pur non avendo alcun router Cisco o BayNetworks. Mi sembra che ci siamo
+riusciti ma grazie alle ottime spiegazioni e indicazioni del libro
+e al pacchetto Open Source di nome
+<a href="http://www.zebra.org/" title="link esterno">Zebra</a>.<br>
+La configurazione della rete &egrave; riassunta in 
+(<a href="pdf/rip.pdf" title="documento pdf">pdf</a>,
+<a href="../dia/rip.xml" title="file per Dia">xml</a>) ed esiste
+connettivit&agrave; con la rete reale attraverso il router AN2.
+</p>
+
+<p>
+Dopo aver fatto partire lo script
+<a href="rip-desktop.png" title="immagine PNG">(screenshot)</a>:
+</p>
+
+<pre>
+realHost$ ./lab start
+</pre>
+
+<p>
+che configura a livello di IP address e di zebra tutti i router,
+occorre far partire zebra stesso su tutti i router:
+</p>
+
+<pre>
+Cisco2503a# /etc/init.d/zebra start
+Cisco2503b# /etc/init.d/zebra start
+Cisco1600# /etc/init.d/zebra start
+Cisco2503c# /etc/init.d/zebra start
+AN2# /etc/init.d/zebra start
+AN1# /etc/init.d/zebra start
+</pre>
+
+<p>
+Per accedere alla configurazione di zebra si usa <code>telnet</code> 
+con password <code>zebra</code>:
+</p>
+
+<pre>
+Cisco2503a# telnet localhost zebra
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+
+Hello, this is zebra (version 0.93b).
+Copyright 1996-2002 Kunihiro Ishiguro.
+
+
+User Access Verification
+
+Password:
+Cisco2503a&gt;enable
+Password: 
+Cisco2503a#
+</pre>
+
+<p>
+Per la raggiungibilit&agrave; della macchina
+reale con le macchine della rete virtuale occorre aggiungere questa
+regola di routing:
+</p>
+
+<pre>
+realHost# route add -net 192.168.0.0/24 gw 192.168.77.2
+</pre>
+
+<p>
+Costruita tale connettivit&agrave; possiamo usare il tool
+Multi-Router Looking Glass che attraverso un browser ci permette
+di consultare le tabelle di routing determinate
+dall'algoritmo ospf:
+</p>
+
+<pre>
+realHost$ firefox http://192.168.77.2/cgi-bin/mrlg.cgi
+</pre>
+
+<p>
+Dai test sul laboratorio virtuale 
+abbiamo reso disponibili le seguenti informazioni:
+</p>
+
+<ul>
+  <li>Configurazione:
+    <a href="../lab/rip/Cisco2503a-ripd.conf"
+       title="file di configurazione Zebra">Cisco2503a</a>,
+    <a href="../lab/rip/Cisco2503b-ripd.conf"
+       title="file di configurazione Zebra">Cisco2503b</a>,
+    <a href="../lab/rip/Cisco1600-ripd.conf"
+       title="file di configurazione Zebra">Cisco1600</a>,
+    <a href="../lab/rip/Cisco2503c-ripd.conf"
+       title="file di configurazione Zebra">Cisco2503c</a>,
+    <a href="../lab/rip/AN2-ripd.conf"
+       title="file di configurazione Zebra">AN2</a>,
+    <a href="../lab/rip/AN1-ripd.conf"
+       title="file di configurazione Zebra">AN1</a>.
+  </li>
+  <li>Tabelle di routing:
+    <a href="../lab/rip/Cisco2503a-route.txt"
+       title="tabella di routing">Cisco2503a</a>
+    <a href="../lab/rip/Cisco2503b-route.txt"
+       title="tabella di routing">Cisco2503</a>
+    <a href="../lab/rip/Cisco1600-route.txt"
+       title="tabella di routing">Cisco1600</a>
+    <a href="../lab/rip/Cisco2503c-route.txt"
+       title="tabella di routing">Cisco2503c</a>
+    <a href="../lab/rip/AN2-route.txt"
+       title="tabella di routing">AN2</a>
+    <a href="../lab/rip/AN1-route.txt"
+       title="tabella di routing">AN1</a>
+  </li>
+  <li>Catture: Cisco2503a
+    (<a href="../capture/rip-Cisco2503a-eth0.acp"
+       title="file per Ethereal">eth0</a>,
+    <a href="../capture/rip-Cisco2503a-eth1.acp"
+       title="file per Ethereal">eth1</a>,
+    <a href="../capture/rip-Cisco2503a-eth2.acp"
+       title="file per Ethereal">eth2</a>),
+	Cisco2503b
+    (<a href="../capture/rip-Cisco2503b-eth0.acp"
+       title="file per Ethereal">eth0</a>,
+    <a href="../capture/rip-Cisco2503b-eth1.acp"
+       title="file per Ethereal">eth1</a>,
+    <a href="../capture/rip-Cisco2503b-eth2.acp"
+       title="file per Ethereal">eth2</a>),
+	Cisco1600
+    (<a href="../capture/rip-Cisco1600-eth0.acp"
+       title="file per Ethereal">eth0</a>,
+    <a href="../capture/rip-Cisco1600-eth1.acp"
+       title="file per Ethereal">eth1</a>,
+    <a href="../capture/rip-Cisco1600-eth2.acp"
+       title="file per Ethereal">eth2</a>),
+	Cisco2503c
+    (<a href="../capture/rip-Cisco2503c-eth0.acp"
+       title="file per Ethereal">eth0</a>,
+    <a href="../capture/rip-Cisco2503c-eth1.acp"
+       title="file per Ethereal">eth1</a>),
+	AN2
+    (<a href="../capture/rip-AN2-eth1.acp"
+       title="file per Ethereal">eth1</a>,
+    <a href="../capture/rip-AN2-eth2.acp"
+       title="file per Ethereal">eth2</a>),
+	AN1
+    (<a href="../capture/rip-AN1-eth0.acp"
+       title="file per Ethereal">eth0</a>,
+    <a href="../capture/rip-AN1-eth1.acp"
+       title="file per Ethereal">eth1</a>,
+    <a href="../capture/rip-AN1-eth2.acp"
+       title="file per Ethereal">eth2</a>).
+  </li>
+</ul>
+
+<p>
+Per completare la rete, possiamo costruire manualmente anche i singoli pc:
+</p>
+
+
+<pre>
+realHost$ vstart pcA --eth0=A --mem=32; \
+          vstart pcD --eth0=D --mem=32; \
+          vstart pcF --eth0=F --mem=32; \
+          vstart pcH --eth0=H --mem=32
+</pre>
+
+<p>
+e poi configurare gli IP:
+</p>
+
+<pre>
+pcA# ifconfig eth0 192.168.128.254
+pcA# route add default gw 192.168.128.1
+
+pcD# ifconfig eth0 192.168.64.254
+pcD# route add default gw 192.168.64.4
+
+pcF# ifconfig eth0 192.168.16.254
+pcF# route add default gw 192.168.16.3
+
+pcH# ifconfig eth0 192.168.65.254
+pcH# route add default gw 192.168.65.7
+
+</pre>
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  <h3><a id=ethereal>Analisi del traffico RIP attraverso Ethereal</a></h3>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr> 
+</table>
+
+<p>
+Il pacchetto Ethereal ci permette di controllare l'evolversi
+dell'algoritmo eseguito in parallelo dai router della rete.
+Nel pacchetto <code>ethereal-common</code>, un prerequisito
+dello stesso <code>ethereal</code>, viene inclusa l'utility
+<code>mergecap</code> che &egrave; in grado di fare il merge di
+pi&ugrave; file di catture.<br>
+Ad esempio, supponiamo di voler costruire un unico file <code>all.acp</code>
+contente tutte le catture su tutte le interfacce di questa esperienza:
+</p>
+
+<pre>
+realHost$ mergecap -s 1520 -w /tmp/all.acp rip-*.acp
+</pre>
+
+<p>
+Ora possiamo pensare di procedere ad esempio evidenziando tutti i
+pacchetti RIPv1 e RIPv2 che riguardano la rete 192.168.67.0.
+Costruiamo un paio di filtri di nome
+<span class="yellow"><code>f192.168.67.0-v2</code></span> e
+<span class="red"><code>f192.168.67.0-v1</code></span> come segue:
+</p>
+
+<pre>
+<span class="red">rip.ip == 192.168.67.0 &amp;&amp; rip.version == 2</span>
+<span class="yellow">rip.ip == 192.168.67.0 &amp;&amp; rip.version == 1</span>
+</pre>
+
+<p>
+<a href="rip-filters.png"
+   title="screenshot">(screenshot)</a>
+e un filtro di visualizzazione come segue:
+</p>
+
+<pre>
+rip  &amp;&amp; rip.command == response
+</pre>
+
+<p>
+<a href="rip-2filters.png"
+   title="screenshot">(screenshot)</a>
+
+
+
+
+<p>
+<table class=layout>
+  <tr>
+  <td class=content>
+  </td>
+  <td class=navigation>
+    <a href="#up"><img src="/icons/up.gif" alt="up" title="up"></a>
+  </td>
+  </tr>
+</table>
+
+
+<address>
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/by/1.0/">
+   <img alt="Creative Commons License"
+        src="somerights.gif"></a>
+<!-- /Creative Commons License -->
+<a href="http://eldred.cc/">
+   <img alt="FREE THE MOUSE"
+        src="mouse.gif"></a>
+<a href="http://validator.w3.org/check/referer">
+   <img style='border:0;width:88px;height:31px'
+        src="valid-html401.png"
+        alt="Valid HTML!"></a>
+<script type="text/javascript">
+function obf_email()
+{
+  email_middle = "doro@istruzio";
+  email_start = "mailto:sandro.";
+  email_end = "ne.it";
+  return email_start + email_middle + email_end;
+}
+</script>
+<span class="copyright">
+Sandro Doro (<a href="mailto:this.is.not@my.real.address" onclick="this.href=obf_email();" onmouseover="window.status=obf_email();return true;" onmouseout="window.status='';return true;">email me</a>)<br>
+Ultima modifica: $Date: 2006/11/20 07:44:18 $
+</span>
+</address>
+
+
+</body>
+
+</html>

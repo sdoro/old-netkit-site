@@ -1,0 +1,4 @@
+# /etc/fstab
+# $Id: fstab.client,v 1.1 2005/08/15 19:12:10 doros Exp $
+
+193.206.185.11:/nfs       /mnt/nfs                nfs     noauto          0 0

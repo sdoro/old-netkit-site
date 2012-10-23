@@ -1,0 +1,37 @@
+# $Id: base.ldif,v 1.2 2004-10-18 15:15:59 doros Exp $
+
+dn: ou=Group,dc=istituto,dc=it
+ou: Group
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Netgroup,dc=istituto,dc=it
+ou: Netgroup
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Hosts,dc=istituto,dc=it
+ou: Hosts
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Services,dc=istituto,dc=it
+ou: Services
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Mounts,dc=istituto,dc=it
+ou: Mounts
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Aliases,dc=istituto,dc=it
+ou: Aliases
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Protocols,dc=istituto,dc=it
+ou: Protocols
+objectClass: top
+objectClass: organizationalUnit
+

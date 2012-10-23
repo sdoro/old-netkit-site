@@ -1,0 +1,12 @@
+# $Id: dnsnano.startup,v 1.1 2007-01-19 08:46:12 doros Exp $
+/sbin/ifconfig eth0 192.168.0.22 up
+/etc/init.d/bind9 start
+# config and start xinetd
+/etc/init.d/xinetd start
+# config/start Postfix
+/etc/init.d/postfix start
+# add user
+(sleep 4; echo "not24get"; sleep 4; echo "not24get") | \
+  adduser --gecos 'Tizio' tizio
+#
+# EOF
